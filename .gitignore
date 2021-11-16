@@ -11,6 +11,8 @@ gradle-app.setting
 application-dev.properties
 application-production.properties
 
+## Directory-based project format:
+.idea/
 
 ### Java ###
 # Compiled class file
