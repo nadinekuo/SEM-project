@@ -1,5 +1,6 @@
 package nl.tudelft.sem.template.config;
 
+import javax.persistence.Transient;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

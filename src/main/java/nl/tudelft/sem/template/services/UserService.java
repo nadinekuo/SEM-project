@@ -5,6 +5,7 @@ import nl.tudelft.sem.template.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Transient;
 import java.util.Optional;
 
 @Service

@@ -5,6 +5,7 @@ import nl.tudelft.sem.template.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Transient;
 import java.util.Optional;
 
 @RestController
