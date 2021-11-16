@@ -20,7 +20,7 @@ plugins {
 	id 'checkstyle'
 
 	// PMD
-	//id 'pmd'
+	id 'pmd'
 
 	// PITest
 	id 'info.solidsoft.pitest' version '1.5.2'
@@ -99,9 +99,9 @@ checkstyle {
 	configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
 }
 
-//pmd {
-//	incrementalAnalysis = true
-//}
+pmd {
+	incrementalAnalysis = true
+}
 
 apply plugin: 'info.solidsoft.pitest'
 pitest {

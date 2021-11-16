@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class H2Config {
 
     @Autowired
-    private Environment environment;
+    private transient Environment environment;
 
     /**
      * Set up the connection to the database.

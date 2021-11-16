@@ -31,6 +31,7 @@ public class User {
     }
 
     /** Constructor User.
+     *
      * @param id - Long
      * @param username - String
      * @param password - String
@@ -47,8 +48,29 @@ public class User {
         return id;
     }
 
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPremiumUser(boolean premiumUser) {
+        this.premiumUser = premiumUser;
     }
 
     public boolean isPremiumUser() {

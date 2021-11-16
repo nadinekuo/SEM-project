@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("users")
 public class UserController {
 
-    private final UserService userService;
+    private final transient UserService userService;
 
     /**
      * Autowired constructor for the class.
