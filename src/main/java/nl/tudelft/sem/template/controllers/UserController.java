@@ -3,10 +3,11 @@ package nl.tudelft.sem.template.controllers;
 import nl.tudelft.sem.template.entities.User;
 import nl.tudelft.sem.template.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.persistence.Transient;
-import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("users")
@@ -16,6 +17,7 @@ public class UserController {
 
     /**
      * Autowired constructor for the class.
+     *
      * @param userService userService
      */
     @Autowired
@@ -25,6 +27,7 @@ public class UserController {
 
     /**
      * GET mapping.
+     *
      * @param userId the id of the required student
      * @return a student with a specific id
      */
@@ -37,27 +40,26 @@ public class UserController {
 
     // Examples of other API requests (POST, PUT, DELETE, GET)
 
-//    /**
-//     * POST mapping, adds a new student to a room.
-//     * @param data the JSON of a Student object to be added to the DB
-//     * @return id of the new student
-//     */
-//    @PostMapping("/addUser/Student")
-//    @ResponseBody
-//    public Long addStudent(@RequestBody String data) {
-//        return userService.addUser(data);
-//
-//
-//    /**
-//     * DELETE mapping, removes a user from the DB.
-//     * @param userId the ID of the user
-//     * @return true if the user has been removed successfully and false otherwise
-//     */
-//    @DeleteMapping("/removeUser/{userId}")
-//    @ResponseBody
-//    public boolean removeUser(@PathVariable long userId) {
-//        return userService.removeUser(userId);
-//    }
+    //    /**
+    //     * POST mapping, adds a new student to a room.
+    //     * @param data the JSON of a Student object to be added to the DB
+    //     * @return id of the new student
+    //     */
+    //    @PostMapping("/addUser/Student")
+    //    @ResponseBody
+    //    public Long addStudent(@RequestBody String data) {
+    //        return userService.addUser(data);
+    //
+    //
+    //    /**
+    //     * DELETE mapping, removes a user from the DB.
+    //     * @param userId the ID of the user
+    //     * @return true if the user has been removed successfully and false otherwise
+    //     */
+    //    @DeleteMapping("/removeUser/{userId}")
+    //    @ResponseBody
+    //    public boolean removeUser(@PathVariable long userId) {
+    //        return userService.removeUser(userId);
+    //    }
 
-
-    }
+}
