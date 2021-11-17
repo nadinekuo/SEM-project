@@ -1,10 +1,19 @@
 package nl.tudelft.sem.template.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -20,6 +29,40 @@ public class User {
     private String password;   // Spring Security
     private boolean premiumUser;
 
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_groups",
+        joinColumns = {
+            @JoinColumn(name = "user_id", referencedColumnName = "id",
+                nullable = false, updatable = false)},
+        inverseJoinColumns = {
+            @JoinColumn(name = "group_id", referencedColumnName = "groupId",
+                nullable = false, updatable = false)})
+    private List<Group> groupsForTeamSports;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "lesson_attendees",
+        joinColumns = {
+            @JoinColumn(name = "user_id", referencedColumnName = "id",
+                nullable = false, updatable = false)},
+        inverseJoinColumns = {
+            @JoinColumn(name = "lesson_id", referencedColumnName = "lessonId",
+                nullable = false, updatable = false)})
+    private List<Lesson> lessonsBooked;
+
+    @OneToMany(mappedBy = "borrower", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JsonManagedReference
+    private List<Equipment> equipmentBorrowed;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "reservation_users",
+        joinColumns = {
+            @JoinColumn(name = "user_id", referencedColumnName = "id",
+                nullable = false, updatable = false)},
+        inverseJoinColumns = {
+            @JoinColumn(name = "reservation_id", referencedColumnName = "reservationId",
+                nullable = false, updatable = false)})
+    private List<Reservation> reservations;
 
 
 
@@ -39,6 +82,18 @@ public class User {
      */
     public User(long id, String username, String password, boolean premiumUser) {
         this.id = id;
+        this.username = username;
+        this.password = password;
+        this.premiumUser = premiumUser;
+    }
+
+    /** Constructor User without id.
+     *
+     * @param username - String
+     * @param password - String
+     * @param premiumUser - boolean
+     */
+    public User(String username, String password, boolean premiumUser) {
         this.username = username;
         this.password = password;
         this.premiumUser = premiumUser;
@@ -77,9 +132,36 @@ public class User {
         return premiumUser;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, password, premiumUser);
+    public List<Group> getGroupsForTeamSports() {
+        return groupsForTeamSports;
+    }
+
+    public void setGroupsForTeamSports(List<Group> groupsForTeamSports) {
+        this.groupsForTeamSports = groupsForTeamSports;
+    }
+
+    public List<Lesson> getLessonsBooked() {
+        return lessonsBooked;
+    }
+
+    public void setLessonsBooked(List<Lesson> lessonsBooked) {
+        this.lessonsBooked = lessonsBooked;
+    }
+
+    public List<Equipment> getEquipmentBorrowed() {
+        return equipmentBorrowed;
+    }
+
+    public void setEquipmentBorrowed(List<Equipment> equipmentBorrowed) {
+        this.equipmentBorrowed = equipmentBorrowed;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 
     @Override
@@ -91,8 +173,12 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return id == user.id && premiumUser == user.premiumUser && Objects
-            .equals(password, user.password);
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override

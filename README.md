@@ -48,7 +48,7 @@ This file is ignored by git, thus any changes you make to it will not be pushed 
 The same can be done for H2 by using the `application-dev.template.properties` file instead.
 
 
-When using PostgreSQL, all tables will be inserted into a database named 'Question',
+When using PostgreSQL, all tables will be inserted into a database named 'sportscentre',
 thus this database will have to be created beforehand.
 
 
