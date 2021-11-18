@@ -87,6 +87,18 @@ public class Group {
         this.groupMembers = groupMembers;
     }
 
+
+    /** A new member is added to this group, to be referenced to later when reserving team sport
+     *  fields/halls.
+     *
+     * @param memberToAdd - User to be added to this group.
+     */
+    public void addUserToGroup(User memberToAdd) {
+        if (!groupMembers.contains(memberToAdd)) {
+            this.groupMembers.add(memberToAdd);
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
