@@ -1,16 +1,28 @@
 package nl.tudelft.sem.template.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class User {
 
     @Id
     @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
@@ -18,9 +30,6 @@ public class User {
     private long id;
     private String username;
     private String password;   // Spring Security
-    private boolean premiumUser;
-
-
 
 
     /**
@@ -35,13 +44,21 @@ public class User {
      * @param id - Long
      * @param username - String
      * @param password - String
-     * @param premiumUser - boolean
      */
-    public User(long id, String username, String password, boolean premiumUser) {
+    public User(long id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.premiumUser = premiumUser;
+    }
+
+    /** Constructor User without id.
+     *
+     * @param username - String
+     * @param password - String
+     */
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     public long getId() {
@@ -69,18 +86,6 @@ public class User {
         this.password = password;
     }
 
-    public void setPremiumUser(boolean premiumUser) {
-        this.premiumUser = premiumUser;
-    }
-
-    public boolean isPremiumUser() {
-        return premiumUser;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, password, premiumUser);
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -91,13 +96,13 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return id == user.id && premiumUser == user.premiumUser && Objects
-            .equals(password, user.password);
+        return id == user.id;
     }
 
     @Override
-    public String toString() {
-        return "User{" + "id=" + id + ", username='" + username + '\'' + ", password='" + password
-            + '\'' + ", premiumUser=" + premiumUser + '}';
+    public int hashCode() {
+        return Objects.hash(id);
     }
+
+
 }
