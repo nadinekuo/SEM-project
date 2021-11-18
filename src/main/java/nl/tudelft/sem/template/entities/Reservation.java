@@ -39,7 +39,7 @@ public class Reservation {
     // Can be 1 person or a group for team sports
     @ManyToMany(mappedBy = "reservations", fetch = FetchType.LAZY)
     @JsonManagedReference
-    private List<User> reservationUsers;
+    private List<Customer> reservationUsers;
 
     @ManyToMany(mappedBy = "equipmentReservations", fetch = FetchType.LAZY)
     @JsonManagedReference
@@ -94,11 +94,11 @@ public class Reservation {
         this.timeSlot = timeSlot;
     }
 
-    public List<User> getReservationUsers() {
+    public List<Customer> getReservationUsers() {
         return reservationUsers;
     }
 
-    public void setReservationUsers(List<User> reservationUsers) {
+    public void setReservationUsers(List<Customer> reservationUsers) {
         this.reservationUsers = reservationUsers;
     }
 

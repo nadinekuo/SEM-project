@@ -35,7 +35,7 @@ public class Equipment {
         inverseJoinColumns = {
             @JoinColumn(name = "user_id", referencedColumnName = "id",
                 nullable = false, updatable = false)})
-    private List<User> borrowersQueued;
+    private List<Customer> borrowersQueued;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "equipment_reservations",
@@ -99,11 +99,11 @@ public class Equipment {
         this.relatedSport = relatedSport;
     }
 
-    public List<User> getBorrowersQueued() {
+    public List<Customer> getBorrowersQueued() {
         return borrowersQueued;
     }
 
-    public void setBorrowersQueued(List<User> borrowersQueued) {
+    public void setBorrowersQueued(List<Customer> borrowersQueued) {
         this.borrowersQueued = borrowersQueued;
     }
 

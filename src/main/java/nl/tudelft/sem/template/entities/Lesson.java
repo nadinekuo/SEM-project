@@ -26,7 +26,7 @@ public class Lesson {
 
     @ManyToMany(mappedBy = "lessonsBooked", fetch = FetchType.EAGER)
     @JsonManagedReference
-    private List<User> lessonAttendees;
+    private List<Customer> lessonAttendees;
 
     /**
      * Empty constructor needed for Spring JPA.
@@ -41,7 +41,7 @@ public class Lesson {
      * @param title           - String
      * @param lessonAttendees - List of Users
      */
-    public Lesson(long lessonId, String title, List<User> lessonAttendees) {
+    public Lesson(long lessonId, String title, List<Customer> lessonAttendees) {
         this.lessonId = lessonId;
         this.title = title;
         this.lessonAttendees = lessonAttendees;
@@ -63,11 +63,11 @@ public class Lesson {
         this.title = title;
     }
 
-    public List<User> getLessonAttendees() {
+    public List<Customer> getLessonAttendees() {
         return lessonAttendees;
     }
 
-    public void setLessonAttendees(List<User> lessonAttendees) {
+    public void setLessonAttendees(List<Customer> lessonAttendees) {
         this.lessonAttendees = lessonAttendees;
     }
 

@@ -35,7 +35,7 @@ public class Group {
 
     @ManyToMany(mappedBy = "groupsForTeamSports", fetch = FetchType.EAGER)
     @JsonManagedReference
-    private List<User> groupMembers;
+    private List<Customer> groupMembers;
 
 
 
@@ -51,14 +51,14 @@ public class Group {
      * @param groupName - String
      * @param groupMembers - List<User></User>
      */
-    public Group(long groupId, String groupName, List<User> groupMembers) {
+    public Group(long groupId, String groupName, List<Customer> groupMembers) {
         this.groupId = groupId;
         this.groupName = groupName;
         this.groupMembers = groupMembers;
     }
 
 
-    public Group(String groupName, List<User> groupMembers) {
+    public Group(String groupName, List<Customer> groupMembers) {
         this.groupName = groupName;
         this.groupMembers = groupMembers;
     }
@@ -79,11 +79,11 @@ public class Group {
         this.groupName = groupName;
     }
 
-    public List<User> getGroupMembers() {
+    public List<Customer> getGroupMembers() {
         return groupMembers;
     }
 
-    public void setGroupMembers(List<User> groupMembers) {
+    public void setGroupMembers(List<Customer> groupMembers) {
         this.groupMembers = groupMembers;
     }
 
@@ -93,7 +93,7 @@ public class Group {
      *
      * @param memberToAdd - User to be added to this group.
      */
-    public void addUserToGroup(User memberToAdd) {
+    public void addUserToGroup(Customer memberToAdd) {
         if (!groupMembers.contains(memberToAdd)) {
             this.groupMembers.add(memberToAdd);
         }

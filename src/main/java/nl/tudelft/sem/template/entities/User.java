@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -19,7 +21,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class User {
 
     @Id
     @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
@@ -27,43 +30,6 @@ public class User {
     private long id;
     private String username;
     private String password;   // Spring Security
-    private boolean premiumUser;
-
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_groups",
-        joinColumns = {
-            @JoinColumn(name = "user_id", referencedColumnName = "id",
-                nullable = false, updatable = false)},
-        inverseJoinColumns = {
-            @JoinColumn(name = "group_id", referencedColumnName = "groupId",
-                nullable = false, updatable = false)})
-    private List<Group> groupsForTeamSports;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "lesson_attendees",
-        joinColumns = {
-            @JoinColumn(name = "user_id", referencedColumnName = "id",
-                nullable = false, updatable = false)},
-        inverseJoinColumns = {
-            @JoinColumn(name = "lesson_id", referencedColumnName = "lessonId",
-                nullable = false, updatable = false)})
-    private List<Lesson> lessonsBooked;
-
-    @ManyToMany(mappedBy = "borrowersQueued", fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<Equipment> equipmentBorrowed;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "reservation_users",
-        joinColumns = {
-            @JoinColumn(name = "user_id", referencedColumnName = "id",
-                nullable = false, updatable = false)},
-        inverseJoinColumns = {
-            @JoinColumn(name = "reservation_id", referencedColumnName = "reservationId",
-                nullable = false, updatable = false)})
-    private List<Reservation> reservations;
-
 
 
     /**
@@ -78,25 +44,21 @@ public class User {
      * @param id - Long
      * @param username - String
      * @param password - String
-     * @param premiumUser - boolean
      */
-    public User(long id, String username, String password, boolean premiumUser) {
+    public User(long id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.premiumUser = premiumUser;
     }
 
     /** Constructor User without id.
      *
      * @param username - String
      * @param password - String
-     * @param premiumUser - boolean
      */
-    public User(String username, String password, boolean premiumUser) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.premiumUser = premiumUser;
     }
 
     public long getId() {
@@ -124,45 +86,6 @@ public class User {
         this.password = password;
     }
 
-    public void setPremiumUser(boolean premiumUser) {
-        this.premiumUser = premiumUser;
-    }
-
-    public boolean isPremiumUser() {
-        return premiumUser;
-    }
-
-    public List<Group> getGroupsForTeamSports() {
-        return groupsForTeamSports;
-    }
-
-    public void setGroupsForTeamSports(List<Group> groupsForTeamSports) {
-        this.groupsForTeamSports = groupsForTeamSports;
-    }
-
-    public List<Lesson> getLessonsBooked() {
-        return lessonsBooked;
-    }
-
-    public void setLessonsBooked(List<Lesson> lessonsBooked) {
-        this.lessonsBooked = lessonsBooked;
-    }
-
-    public List<Equipment> getEquipmentBorrowed() {
-        return equipmentBorrowed;
-    }
-
-    public void setEquipmentBorrowed(List<Equipment> equipmentBorrowed) {
-        this.equipmentBorrowed = equipmentBorrowed;
-    }
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -181,9 +104,5 @@ public class User {
         return Objects.hash(id);
     }
 
-    @Override
-    public String toString() {
-        return "User{" + "id=" + id + ", username='" + username + '\'' + ", password='" + password
-            + '\'' + ", premiumUser=" + premiumUser + '}';
-    }
+
 }
