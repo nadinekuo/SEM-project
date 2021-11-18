@@ -1,11 +1,15 @@
 package nl.tudelft.sem.template.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -23,15 +27,25 @@ public class Equipment {
     @JsonBackReference
     private Sport relatedSport;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "id", nullable = false)
-    @JsonBackReference
-    private User borrower;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "equipment_users",
+        joinColumns = {
+            @JoinColumn(name = "equipment_name", referencedColumnName = "name",
+                nullable = false, updatable = false)},
+        inverseJoinColumns = {
+            @JoinColumn(name = "user_id", referencedColumnName = "id",
+                nullable = false, updatable = false)})
+    private List<User> borrowersQueued;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "reservation_id", nullable = false)
-    @JsonBackReference
-    private Reservation reservation;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "equipment_reservations",
+        joinColumns = {
+            @JoinColumn(name = "equipment_name", referencedColumnName = "name",
+                nullable = false, updatable = false)},
+        inverseJoinColumns = {
+            @JoinColumn(name = "reservation_id", referencedColumnName = "reservationId",
+                nullable = false, updatable = false)})
+    private List<Reservation> equipmentReservations;
 
     /**
      *  Empty constructor needed for Spring JPA.
@@ -85,20 +99,20 @@ public class Equipment {
         this.relatedSport = relatedSport;
     }
 
-    public User getBorrower() {
-        return borrower;
+    public List<User> getBorrowersQueued() {
+        return borrowersQueued;
     }
 
-    public void setBorrower(User borrower) {
-        this.borrower = borrower;
+    public void setBorrowersQueued(List<User> borrowersQueued) {
+        this.borrowersQueued = borrowersQueued;
     }
 
-    public Reservation getReservation() {
-        return reservation;
+    public List<Reservation> getEquipmentReservations() {
+        return equipmentReservations;
     }
 
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
+    public void setEquipmentReservations(List<Reservation> equipmentReservations) {
+        this.equipmentReservations = equipmentReservations;
     }
 
     @Override

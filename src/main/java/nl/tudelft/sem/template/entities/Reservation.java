@@ -41,7 +41,7 @@ public class Reservation {
     @JsonManagedReference
     private List<User> reservationUsers;
 
-    @OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "equipmentReservations", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Equipment> equipmentBorrowed;
 

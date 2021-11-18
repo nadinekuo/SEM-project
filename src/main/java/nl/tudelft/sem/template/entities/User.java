@@ -50,7 +50,7 @@ public class User {
                 nullable = false, updatable = false)})
     private List<Lesson> lessonsBooked;
 
-    @OneToMany(mappedBy = "borrower", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "borrowersQueued", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Equipment> equipmentBorrowed;
 
