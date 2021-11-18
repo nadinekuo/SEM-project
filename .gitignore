@@ -11,17 +11,22 @@ gradle-app.setting
 application-dev.properties
 application-production.properties
 
+
+# Copy the following to your local git/info/exclude folder! (cannot be put in this shared gitignore)
+
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
 
-*.iml
+#*.iml
 
 ## Directory-based project format:
-.idea/
+#.idea/
 
 
 # IntelliJ
-/out/
+#/out/
+
+
 
 ### Java ###
 # Compiled class file
