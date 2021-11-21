@@ -19,8 +19,6 @@ public class Admin extends User {
      */
     public Admin(long id, String username, String password) {
 
-        // TODO: Person implementing admin login should generate a random password
-
         super(id, username, password);
     }
 
