@@ -35,16 +35,25 @@ public class Sport {
     @OneToMany(mappedBy = "relatedSport", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<Equipment> equipmentList;
+    private int minTeamSize;
+
 
 
     public Sport() {
     }
 
 
-
-    public Sport(String sportName, boolean teamSport) {
+    /** Constructor.
+     *
+     * @param sportName - String, ID
+     * @param teamSport - boolean
+     * @param minTeamSize - int, constraint for group reservations: > 1 if teamSport = true, else 1
+     *
+     */
+    public Sport(String sportName, boolean teamSport, int minTeamSize) {
         this.sportName = sportName;
         this.teamSport = teamSport;
+        this.minTeamSize = minTeamSize;
     }
 
 
@@ -80,7 +89,13 @@ public class Sport {
         this.equipmentList = equipmentList;
     }
 
+    public int getMinTeamSize() {
+        return minTeamSize;
+    }
 
+    public void setMinTeamSize(int minTeamSize) {
+        this.minTeamSize = minTeamSize;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -5,7 +5,6 @@ import java.util.List;
 import nl.tudelft.sem.template.entities.Admin;
 import nl.tudelft.sem.template.entities.Customer;
 import nl.tudelft.sem.template.entities.Group;
-import nl.tudelft.sem.template.entities.User;
 import nl.tudelft.sem.template.repositories.GroupRepository;
 import nl.tudelft.sem.template.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
