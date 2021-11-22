@@ -1,0 +1,52 @@
+### Gradle ###
+
+.gradle
+build/
+gradle-app.setting
+!gradle/wrapper/gradle-wrapper.jar
+**/build/
+.gradletasknamecache
+
+# Ignore .properties containing db credentials
+application-dev.properties
+application-production.properties
+
+
+# Copy the following to your local git/info/exclude folder! (cannot be put in this shared gitignore)
+
+### JetBrains template
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
+
+#*.iml
+
+## Directory-based project format:
+#.idea/
+
+
+# IntelliJ
+#/out/
+
+
+
+### Java ###
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# "temporary" build files
+/target
+
