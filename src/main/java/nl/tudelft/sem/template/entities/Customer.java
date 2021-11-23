@@ -36,10 +36,6 @@ public class Customer extends User {
     })
     private List<Lesson> lessonsBooked;
 
-    @ManyToMany(mappedBy = "borrowersQueued", fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<Equipment> equipmentBorrowed;
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "reservation_users", joinColumns = {
         @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable =
@@ -76,7 +72,6 @@ public class Customer extends User {
         this.premiumSubscription = premiumSubscription;
         this.groupsForTeamSports = groupsForTeamSports;
         this.lessonsBooked = lessonsBooked;
-        this.equipmentBorrowed = equipmentBorrowed;
         this.reservations = reservations;
     }
 
@@ -104,13 +99,6 @@ public class Customer extends User {
         this.lessonsBooked = lessonsBooked;
     }
 
-    public List<Equipment> getEquipmentBorrowed() {
-        return equipmentBorrowed;
-    }
-
-    public void setEquipmentBorrowed(List<Equipment> equipmentBorrowed) {
-        this.equipmentBorrowed = equipmentBorrowed;
-    }
 
     public List<Reservation> getReservations() {
         return reservations;

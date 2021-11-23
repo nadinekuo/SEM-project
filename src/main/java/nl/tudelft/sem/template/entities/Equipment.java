@@ -28,16 +28,6 @@ public class Equipment {
     private Sport relatedSport;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "equipment_users",
-        joinColumns = {
-            @JoinColumn(name = "equipment_name", referencedColumnName = "name",
-                nullable = false, updatable = false)},
-        inverseJoinColumns = {
-            @JoinColumn(name = "user_id", referencedColumnName = "id",
-                nullable = false, updatable = false)})
-    private List<Customer> borrowersQueued;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "equipment_reservations",
         joinColumns = {
             @JoinColumn(name = "equipment_name", referencedColumnName = "name",
@@ -99,13 +89,6 @@ public class Equipment {
         this.relatedSport = relatedSport;
     }
 
-    public List<Customer> getBorrowersQueued() {
-        return borrowersQueued;
-    }
-
-    public void setBorrowersQueued(List<Customer> borrowersQueued) {
-        this.borrowersQueued = borrowersQueued;
-    }
 
     public List<Reservation> getEquipmentReservations() {
         return equipmentReservations;
