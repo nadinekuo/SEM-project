@@ -4,7 +4,7 @@ plugins {
     id 'java'
 }
 
-group = 'sem.lesson'
+group = 'sem.sportfacilities'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
