@@ -4,4 +4,6 @@ include 'eureka-service'
 include 'lesson'
 include 'user'
 include 'sportfacilities'
+include 'reservation'
+include 'security'
 
