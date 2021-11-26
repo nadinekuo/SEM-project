@@ -1,5 +1,6 @@
-package client;
+package userPackage;
 
+import userPackage.client.UserControllerEureka;
 import com.netflix.discovery.EurekaClient;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class UserApplication implements UserController {
+public class UserApplication implements UserControllerEureka {
 
     @Autowired
     @Lazy
