@@ -1,9 +1,11 @@
 spring:
     application:
-        name: eureka-client
+        name: test-client
 server:
-    port: 8083
+    port: 8081
 eureka:
     client:
         serviceUrl:
-            defaultZone: "http://localhost:8761/eureka"
+            defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+    instance:
+        preferIpAddress: true
