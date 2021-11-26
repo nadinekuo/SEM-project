@@ -1,7 +1,7 @@
-package config;
+package lessonPackage.config;
 
-import entities.Lesson;
-import repositories.LessonRepository;
+import lessonPackage.entities.Lesson;
+import lessonPackage.repositories.LessonRepository;
 import java.util.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;

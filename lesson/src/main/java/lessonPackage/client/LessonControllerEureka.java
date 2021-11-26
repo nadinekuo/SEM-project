@@ -1,4 +1,4 @@
-package client;
+package lessonPackage.client;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 

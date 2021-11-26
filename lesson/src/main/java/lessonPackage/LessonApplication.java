@@ -1,6 +1,7 @@
-package client;
+package lessonPackage;
 
 import com.netflix.discovery.EurekaClient;
+import lessonPackage.client.LessonControllerEureka;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
