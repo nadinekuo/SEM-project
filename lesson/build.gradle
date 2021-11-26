@@ -46,6 +46,11 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    // Local test database (in-memory)
+    implementation 'com.h2database:h2'
+    developmentOnly 'org.hibernate:hibernate-entitymanager'
+    runtimeOnly 'org.postgresql:postgresql'
 }
 
 dependencyManagement {

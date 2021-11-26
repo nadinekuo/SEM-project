@@ -1,10 +1,14 @@
-package lessonPackage.entities;
+package nl.tudelft.sem.template.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -19,7 +23,10 @@ public class Lesson {
     private long lessonId;
 
     private String title;
-    private int size;     // how many enrolled attendees
+
+    @ManyToMany(mappedBy = "lessonsBooked", fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<Customer> lessonAttendees;
 
     /**
      * Empty constructor needed for Spring JPA.
@@ -32,19 +39,12 @@ public class Lesson {
      *
      * @param lessonId        - long
      * @param title           - String
+     * @param lessonAttendees - List of Users
      */
-    public Lesson(long lessonId, String title) {
+    public Lesson(long lessonId, String title, List<Customer> lessonAttendees) {
         this.lessonId = lessonId;
         this.title = title;
-        this.size = 0;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
+        this.lessonAttendees = lessonAttendees;
     }
 
     public long getLessonId() {
@@ -63,6 +63,13 @@ public class Lesson {
         this.title = title;
     }
 
+    public List<Customer> getLessonAttendees() {
+        return lessonAttendees;
+    }
+
+    public void setLessonAttendees(List<Customer> lessonAttendees) {
+        this.lessonAttendees = lessonAttendees;
+    }
 
     @Override
     public int hashCode() {
@@ -83,6 +90,7 @@ public class Lesson {
 
     @Override
     public String toString() {
-        return "Lesson{" + "lessonId=" + lessonId + ", title='" + title;
+        return "Lesson{" + "lessonId=" + lessonId + ", title='" + title + '\''
+            + ", lessonAttendees=" + lessonAttendees + '}';
     }
 }
