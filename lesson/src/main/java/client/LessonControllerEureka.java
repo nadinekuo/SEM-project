@@ -2,7 +2,7 @@ package client;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
-public interface LessonController {
+public interface LessonControllerEureka {
     @RequestMapping("/greeting")
     String greeting();
 }

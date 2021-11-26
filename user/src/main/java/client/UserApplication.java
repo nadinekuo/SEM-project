@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class LessonApplication implements LessonControllerEureka {
+public class UserApplication implements UserController {
 
     @Autowired
     @Lazy
@@ -20,7 +20,7 @@ public class LessonApplication implements LessonControllerEureka {
     private String appName;
 
     public static void main(String[] args) {
-        SpringApplication.run(LessonApplication.class, args);
+        SpringApplication.run(UserApplication.class, args);
     }
 
     @Override

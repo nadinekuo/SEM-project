@@ -1,6 +1,5 @@
 package nl.tudelft.sem.template.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

@@ -1,4 +1,4 @@
-package nl.tudelft.sem.template.entities;
+package entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
@@ -45,6 +45,14 @@ public class Lesson {
         this.lessonId = lessonId;
         this.title = title;
         this.lessonAttendees = lessonAttendees;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     public long getLessonId() {

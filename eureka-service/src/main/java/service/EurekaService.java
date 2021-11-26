@@ -12,5 +12,3 @@ public class EurekaService {
         SpringApplication.run(EurekaService.class, args);
     }
 }
-
-//a comment for testing
