@@ -51,12 +51,12 @@ The same can be done for H2 by using the `application-dev.template.properties` f
 When using PostgreSQL, all tables will be inserted into a database whose name is defined in the `application-production.template.properties` file (see below). 
 For our reservation microservice, the expected database name is `reservations` for example.
 
-![img.png](img.png)
+![img.png](docs/img.png)
 
 Thus, for each microservice, this database will have to be created beforehand. (except for our gateway microservice)
 Then, in IntelliJ you can add all required Postgres data sources, one for each database.
 
-![img_2.png](img_2.png)
+![img_2.png](docs/img_2.png)
 
 After running any application that has a database config file in the `config` package, you will see this for example:
-![img_1.png](img_1.png)
+![img_1.png](docs/img_1.png)
