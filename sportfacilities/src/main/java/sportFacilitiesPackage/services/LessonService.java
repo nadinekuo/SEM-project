@@ -1,9 +1,10 @@
-package lessonPackage.services;
+package sportFacilitiesPackage.services;
 
-import lessonPackage.entities.Lesson;
-import lessonPackage.repositories.LessonRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sportFacilitiesPackage.entities.Lesson;
+import sportFacilitiesPackage.repositories.LessonRepository;
 
 @Service
 public class LessonService {

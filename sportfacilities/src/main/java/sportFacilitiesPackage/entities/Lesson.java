@@ -1,4 +1,4 @@
-package lessonPackage.entities;
+package sportFacilitiesPackage.entities;
 
 import java.util.Objects;
 import javax.persistence.Entity;

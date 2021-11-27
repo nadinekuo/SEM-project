@@ -29,11 +29,11 @@ public class Customer extends User {
 
     // not persistent currently, since it does not allow to store lists of primitives in database
 
-    @Transient
-    private List<Long> reservationsIds;
-
-    @Transient
-    private List<Long> lessonsIdsBooked;
+//    @Transient
+//    private List<Long> reservationsIds;
+//
+//    @Transient
+//    private List<Long> lessonsIdsBooked;
 
 
 
@@ -51,8 +51,6 @@ public class Customer extends User {
     public Customer(String username, String password, boolean premiumSubscription) {
         super(username, password);
         this.premiumSubscription = premiumSubscription;
-        this.lessonsIdsBooked = new ArrayList<>();
-        this.reservationsIds = new ArrayList<>();
     }
 
     /**
@@ -63,8 +61,6 @@ public class Customer extends User {
         super(id, username, password);
         this.premiumSubscription = premiumSubscription;
         this.groupsForTeamSports = groupsForTeamSports;
-        this.lessonsIdsBooked = new ArrayList<>();
-        this.reservationsIds = new ArrayList<>();
     }
 
     public boolean isPremiumUser() {
@@ -92,21 +88,6 @@ public class Customer extends User {
         this.premiumSubscription = premiumSubscription;
     }
 
-    public List<Long> getReservationsIds() {
-        return reservationsIds;
-    }
-
-    public void setReservationsIds(List<Long> reservationsIds) {
-        this.reservationsIds = reservationsIds;
-    }
-
-    public List<Long> getLessonsIdsBooked() {
-        return lessonsIdsBooked;
-    }
-
-    public void setLessonsIdsBooked(List<Long> lessonsIdsBooked) {
-        this.lessonsIdsBooked = lessonsIdsBooked;
-    }
 
     @Override
     public String toString() {

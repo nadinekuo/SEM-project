@@ -1,22 +1,19 @@
-package lessonPackage.controllers;
+package sportFacilitiesPackage.controllers;
 
-
-import lessonPackage.entities.Lesson;
-import lessonPackage.services.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import sportFacilitiesPackage.entities.Lesson;
+import sportFacilitiesPackage.services.LessonService;
 
 @RestController
 @RequestMapping("lessons")
 public class LessonController {
 
-
     private final transient LessonService lessonService;
-
 
     /**
      * Autowired constructor for the class.
@@ -27,7 +24,6 @@ public class LessonController {
     public LessonController(LessonService lessonService) {
         this.lessonService = lessonService;
     }
-
 
     /**
      * GET mapping.
@@ -41,7 +37,6 @@ public class LessonController {
 
         return lessonService.getLessonById(lessonId);
     }
-
 
 
 }

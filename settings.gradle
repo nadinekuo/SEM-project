@@ -1,7 +1,7 @@
 rootProject.name = 'template'
 include 'eureka-client'
 include 'eureka-service'
-include 'lesson'
+include 'gateway'
 include 'user'
 include 'sportfacilities'
 include 'reservation'

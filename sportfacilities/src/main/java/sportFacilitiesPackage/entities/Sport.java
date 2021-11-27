@@ -19,10 +19,9 @@ public class Sport {
 
     @Id
     private String sportName;
-
     private boolean teamSport;
-    private int minTeamSize;
-    private int maxTeamSize;
+    private int minTeamSize;   //  1 if not team sport
+    private int maxTeamSize;   //  -1 if not team sport
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "sport_locations",

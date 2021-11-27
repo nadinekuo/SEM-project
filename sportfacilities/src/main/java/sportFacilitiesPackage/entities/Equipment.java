@@ -3,33 +3,28 @@ package sportFacilitiesPackage.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "equipment")
 public class Equipment {
 
     @Id
-    private String name;  // example: "hockeystick1"
+    private String name;
+
     private int inventory;
-    private int inUse;     // available = inventory - inUse
+    private int inUse;       // available = inventory - inUse
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "sport_name", nullable = false)
     @JsonBackReference
     private Sport relatedSport;
 
-    @Transient
-    private List<Long> equipmentReservationsIds;
 
     /**
      *  Empty constructor needed for Spring JPA.
@@ -81,14 +76,6 @@ public class Equipment {
 
     public void setRelatedSport(Sport relatedSport) {
         this.relatedSport = relatedSport;
-    }
-
-    public List<Long> getEquipmentReservationsIds() {
-        return equipmentReservationsIds;
-    }
-
-    public void setEquipmentReservationsIds(List<Long> equipmentReservationsIds) {
-        this.equipmentReservationsIds = equipmentReservationsIds;
     }
 
     @Override

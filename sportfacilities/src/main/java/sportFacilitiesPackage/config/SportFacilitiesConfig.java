@@ -4,8 +4,10 @@ import java.util.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import sportFacilitiesPackage.entities.Equipment;
 import sportFacilitiesPackage.entities.Sport;
 import sportFacilitiesPackage.entities.SportRoom;
+import sportFacilitiesPackage.repositories.EquipmentRepository;
 import sportFacilitiesPackage.repositories.SportRepository;
 import sportFacilitiesPackage.repositories.SportRoomRepository;
 
@@ -15,7 +17,8 @@ public class SportFacilitiesConfig {
 
     @Bean
     CommandLineRunner userCommandLineRunner(SportRoomRepository sportRoomRepository,
-                                            SportRepository sportRepository) {
+                                            SportRepository sportRepository,
+                                            EquipmentRepository equipmentRepository) {
 
         return args -> {
 
@@ -27,7 +30,6 @@ public class SportFacilitiesConfig {
             Sport zumba = new Sport("zumba", false, 1, -1);
             Sport kickboxing = new Sport("kickbox", false, 1, -1);
 
-
             sportRepository.saveAll(List.of(soccer, hockey, volleyball, tennis, yoga, zumba, kickboxing));
 
             SportRoom hallX1 = new SportRoom("X1", List.of(soccer, hockey), 10, 50);
@@ -36,6 +38,12 @@ public class SportFacilitiesConfig {
             SportRoom hallX3 = new SportRoom("X3", List.of(yoga, zumba, kickboxing), 12, 55);
 
             sportRoomRepository.saveAll(List.of(hallX1, hallX2, hallX3));
+
+            Equipment hockeystick = new Equipment("hockeystick", 60, 12, hockey);
+            Equipment kickboxGloves = new Equipment("kickboxGloves", 35, 6, kickboxing);
+            Equipment soccerBall = new Equipment("soccerBallWhite", 40, 23, soccer);
+
+            equipmentRepository.saveAll(List.of(hockeystick, kickboxGloves, soccerBall));
         };
     }
 

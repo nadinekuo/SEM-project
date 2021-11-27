@@ -33,13 +33,9 @@ public class Reservation {
 
     private long timeSlot;  // in hours
 
-    @Transient
-    private List<Long> reservationCustomerIds;
-
-    @Transient
-    private List<String> equipmentIdsBorrowed;
-
-    private String sportRoomIdReserved;
+    private Long customerId;   // for group reservations, there will be separate reservations
+    private Long equipmentBorrowedId;  // for each piece reserved, there is a separate reservation
+    private String sportRoomReservedId;
 
 
     /**
@@ -84,28 +80,28 @@ public class Reservation {
         this.timeSlot = timeSlot;
     }
 
-    public List<Long> getReservationCustomerIds() {
-        return reservationCustomerIds;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setReservationCustomerIds(List<Long> reservationCustomerIds) {
-        this.reservationCustomerIds = reservationCustomerIds;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
-    public List<String> getEquipmentIdsBorrowed() {
-        return equipmentIdsBorrowed;
+    public Long getEquipmentBorrowedId() {
+        return equipmentBorrowedId;
     }
 
-    public void setEquipmentIdsBorrowed(List<String> equipmentIdsBorrowed) {
-        this.equipmentIdsBorrowed = equipmentIdsBorrowed;
+    public void setEquipmentBorrowedId(Long equipmentBorrowedId) {
+        this.equipmentBorrowedId = equipmentBorrowedId;
     }
 
-    public String getSportRoomIdReserved() {
-        return sportRoomIdReserved;
+    public String getSportRoomReservedId() {
+        return sportRoomReservedId;
     }
 
-    public void setSportRoomIdReserved(String sportRoomIdReserved) {
-        this.sportRoomIdReserved = sportRoomIdReserved;
+    public void setSportRoomReservedId(String sportRoomReservedId) {
+        this.sportRoomReservedId = sportRoomReservedId;
     }
 
     @Override
