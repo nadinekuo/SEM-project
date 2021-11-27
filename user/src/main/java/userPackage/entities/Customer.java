@@ -27,14 +27,6 @@ public class Customer extends User {
     })
     private List<Group> groupsForTeamSports;
 
-    // not persistent currently, since it does not allow to store lists of primitives in database
-
-//    @Transient
-//    private List<Long> reservationsIds;
-//
-//    @Transient
-//    private List<Long> lessonsIdsBooked;
-
 
 
     public Customer() {

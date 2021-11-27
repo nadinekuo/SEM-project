@@ -48,8 +48,15 @@ This file is ignored by git, thus any changes you make to it will not be pushed 
 The same can be done for H2 by using the `application-dev.template.properties` file instead.
 
 
-When using PostgreSQL, all tables will be inserted into a database named 'sportscentre',
-thus this database will have to be created beforehand.
+When using PostgreSQL, all tables will be inserted into a database whose name is defined in the `application-production.template.properties` file (see below). 
+For our reservation microservice, the expected database name is `reservations` for example.
 
+![img.png](img.png)
 
-In the folder `nl.tudelft.sem.template.config`, our Config files can be found, serving as database loaders.
+Thus, for each microservice, this database will have to be created beforehand. (except for our gateway microservice)
+Then, in IntelliJ you can add all required Postgres data sources, one for each database.
+
+![img_2.png](img_2.png)
+
+After running any application that has a database config file in the `config` package, you will see this for example:
+![img_1.png](img_1.png)
