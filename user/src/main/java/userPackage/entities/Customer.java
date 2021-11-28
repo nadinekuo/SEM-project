@@ -1,5 +1,6 @@
-package nl.tudelft.sem.template.entities;
+package userPackage.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "customers")
@@ -25,25 +27,7 @@ public class Customer extends User {
     })
     private List<Group> groupsForTeamSports;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "lesson_attendees", joinColumns = {
-        @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable =
-            false)},
-        inverseJoinColumns = {
-        @JoinColumn(name = "lesson_id", referencedColumnName = "lessonId", nullable = false,
-            updatable = false)
-    })
-    private List<Lesson> lessonsBooked;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "reservation_users", joinColumns = {
-        @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable =
-            false)},
-        inverseJoinColumns = {
-        @JoinColumn(name = "reservation_id", referencedColumnName = "reservationId", nullable =
-            false, updatable = false)
-    })
-    private List<Reservation> reservations;
 
     public Customer() {
 
@@ -65,13 +49,10 @@ public class Customer extends User {
      * Constructor with id.
      */
     public Customer(long id, String username, String password, boolean premiumSubscription,
-                    List<Group> groupsForTeamSports, List<Lesson> lessonsBooked,
-                    List<Equipment> equipmentBorrowed, List<Reservation> reservations) {
+                    List<Group> groupsForTeamSports) {
         super(id, username, password);
         this.premiumSubscription = premiumSubscription;
         this.groupsForTeamSports = groupsForTeamSports;
-        this.lessonsBooked = lessonsBooked;
-        this.reservations = reservations;
     }
 
     public boolean isPremiumUser() {
@@ -90,22 +71,6 @@ public class Customer extends User {
         this.groupsForTeamSports = groupsForTeamSports;
     }
 
-    public List<Lesson> getLessonsBooked() {
-        return lessonsBooked;
-    }
-
-    public void setLessonsBooked(List<Lesson> lessonsBooked) {
-        this.lessonsBooked = lessonsBooked;
-    }
-
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
 
     public boolean isPremiumSubscription() {
         return premiumSubscription;
@@ -114,6 +79,7 @@ public class Customer extends User {
     public void setPremiumSubscription(boolean premiumSubscription) {
         this.premiumSubscription = premiumSubscription;
     }
+
 
     @Override
     public String toString() {
