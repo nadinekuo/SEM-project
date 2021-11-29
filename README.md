@@ -40,16 +40,45 @@ Before starting the server, you might want to configure your database settings.
 We worked with Spring Profiles to switch between H2 for development purposes, and PostgreSQL for production purposes.
 This can be done by navigating to `application.properties` and set `spring.profiles.active= ` to either `development` for H2 or `production` for PostgreSQL.
 These will invoke the H2Config and PostgresConfig files respectively.
+Default is H2 (development).
 
-For setting up PostgreSQL, copy the contents of the `application-production.template.properties` file into a new file named `application-production.properties`.
-Here, a username and password can be added. Also, `spring.jpa.hibernate.ddl-auto=` can be set to either `create-drop` or `validate`,
-causing data to be dropped or preserved respectively after server restart.
-This file is ignored by git, thus any changes you make to it will not be pushed to remote.
-The same can be done for H2 by using the `application-dev.template.properties` file instead.
+### H2
+Since this is the default Spring profile, you can leave `spring.profiles.active=development` in `application.properties` as it is.
+You do have to add a new file under `resources` named `application-dev.properties`. 
+Copy the contents of `application-dev.template.properties` file and paste it in this new file. 
+Now you only have to enter your username and password still. (default credentials: `user` and `pass`) 
+
+When running any (Eureka client) application (after having started the Eureka server app of course),
+you can access this H2 database by going to `http://localhost:<app-port>/h2-console` in your browser.
+For our Reservation client app this is `http://localhost:8086/h2-console` e.g.
+<br /> 
+
+Here you are expected to enter the same credentials you used in the `application-dev.properties` file. 
+![img_1.png](docs/img_4.png)
+
+After logging in, you can expect to see something like this:
+![img.png](docs/img_3.png)
 
 
-When using PostgreSQL, all tables will be inserted into a database named 'sportscentre',
-thus this database will have to be created beforehand.
+### PostgreSQL
+For setting up PostgreSQL, copy the contents of the `application-production.template.properties` file into a new file named `application-production.properties`, again, under `resources`.
+Here, your username and password can be added. 
+Also, `spring.jpa.hibernate.ddl-auto=` can be set to either `create-drop` or `validate`, causing data to be dropped or preserved respectively after server restart.
+
+When using PostgreSQL, all tables will be inserted into a database whose name is defined in the `application-production.template.properties` file (see below) of the respective microservice (module) you are in. 
+For our Reservation microservice, the expected database name is `reservations` for example.
+
+![img.png](docs/img.png)
+
+Thus, for each microservice this database will have to be created beforehand (in your terminal).
+Then, in IntelliJ you can add all required Postgres data sources, one for each database.
+
+![img_2.png](docs/img_2.png)
+
+After running any (Eureka client) application that has a database config file in the `config` package, 
+Hibernate will insert all dummy values configured into the corresponding database, which should look like this:
+![img_1.png](docs/img_1.png)
 
 
-In the folder `nl.tudelft.sem.template.config`, our Config files can be found, serving as database loaders.
+
+Both  `application-dev.properties` and `application-production.properties` are ignored by git, thus database credentials will not be pushed to remote.
