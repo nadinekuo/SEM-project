@@ -34,7 +34,7 @@ public class SportRoom {
     private int minCapacity;
     private int maxCapacity;
 
-
+    boolean isSportsHall;
 
     /**
      *  Empty constructor needed for Spring JPA.
@@ -54,6 +54,14 @@ public class SportRoom {
         this.sports = sports;
         this.minCapacity = minCapacity;
         this.maxCapacity = maxCapacity;
+    }
+
+    public boolean isSportsHall() {
+        return isSportsHall;
+    }
+
+    public void setSportsHall(boolean sportsHall) {
+        isSportsHall = sportsHall;
     }
 
     public String getSportRoomName() {

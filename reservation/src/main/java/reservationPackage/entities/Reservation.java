@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.springframework.cglib.core.Local;
 
 @Entity
 @Table(name = "reservations")
@@ -34,9 +35,7 @@ public class Reservation {
     private long timeSlot;  // in hours
 
     private Long customerId;   // for group reservations, there will be separate reservations
-    private Long equipmentBorrowedId;  // for each piece reserved, there is a separate reservation
     private String sportRoomReservedId;
-
 
     /**
      *  Empty constructor needed for Spring JPA.
@@ -86,14 +85,6 @@ public class Reservation {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
-    }
-
-    public Long getEquipmentBorrowedId() {
-        return equipmentBorrowedId;
-    }
-
-    public void setEquipmentBorrowedId(Long equipmentBorrowedId) {
-        this.equipmentBorrowedId = equipmentBorrowedId;
     }
 
     public String getSportRoomReservedId() {
