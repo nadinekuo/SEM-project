@@ -26,10 +26,11 @@ public class ReservationController {
         return reservationService.getStartingTime(reservationId);
     }
 
-//    @GetMapping("/{sportRoomId}/{date}/isAvailable")
-//    @ResponseBody
-//    public boolean isAvailable(@PathVariable Long sportRoomId, @PathVariable LocalDateTime date) {
-//        return reservationService.isAvailable(sportRoomId, date);
-//    }
+    //    @GetMapping("/{sportRoomId}/{date}/isAvailable")
+    //    @ResponseBody
+    //    public boolean isAvailable(@PathVariable Long sportRoomId, @PathVariable LocalDateTime
+    //    date) {
+    //        return reservationService.isAvailable(sportRoomId, date);
+    //    }
 
 }
