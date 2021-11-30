@@ -24,16 +24,7 @@ public class Equipment {
 
     private String name;
 
-    public long getEquipmentId() {
-        return equipmentId;
-    }
-
-    public void setEquipmentId(long equipmentId) {
-        this.equipmentId = equipmentId;
-    }
-
-    private int inventory;
-    private int inUse;       // available = inventory - inUse
+    private boolean isInUse;       // available = inventory - inUse
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "sport_name", nullable = false)
@@ -46,19 +37,27 @@ public class Equipment {
     public Equipment() {
     }
 
-    /**
-     * Constructor Equipment.
-     *
-     * @param name         - String
-     * @param inventory    - int
-     * @param inUse        - int
-     * @param relatedSport - Sport
-     */
-    public Equipment(String name, int inventory, int inUse, Sport relatedSport) {
+    public Equipment(long equipmentId, String name, boolean isInUse, Sport relatedSport) {
+        this.equipmentId = equipmentId;
         this.name = name;
-        this.inventory = inventory;
-        this.inUse = inUse;
+        this.isInUse = isInUse;
         this.relatedSport = relatedSport;
+    }
+
+    public boolean isInUse() {
+        return isInUse;
+    }
+
+    public void setInUse(boolean inUse) {
+        isInUse = inUse;
+    }
+
+    public long getEquipmentId() {
+        return equipmentId;
+    }
+
+    public void setEquipmentId(long equipmentId) {
+        this.equipmentId = equipmentId;
     }
 
     public String getName() {
@@ -67,22 +66,6 @@ public class Equipment {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getInventory() {
-        return inventory;
-    }
-
-    public void setInventory(int inventory) {
-        this.inventory = inventory;
-    }
-
-    public int getInUse() {
-        return inUse;
-    }
-
-    public void setInUse(int inUse) {
-        this.inUse = inUse;
     }
 
     public Sport getRelatedSport() {
@@ -112,7 +95,7 @@ public class Equipment {
 
     @Override
     public String toString() {
-        return "Equipment{" + "name='" + name + '\'' + ", inventory=" + inventory + ", inUse="
-            + inUse + ", relatedSport=" + relatedSport + '}';
+        return "Equipment{" + "equipmentId=" + equipmentId + ", name='" + name + '\'' + ", isInUse="
+            + isInUse + ", relatedSport=" + relatedSport + '}';
     }
 }

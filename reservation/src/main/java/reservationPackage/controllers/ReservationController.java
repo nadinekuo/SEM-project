@@ -14,6 +14,12 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
+    @GetMapping("/hey")
+    @ResponseBody
+    public Long getReservation() {
+        return reservationService.getReservation(1L).getCustomerId();
+    }
+
     @GetMapping("/{reservationId}")
     @ResponseBody
     public Reservation getReservation(@PathVariable Long reservationId) {

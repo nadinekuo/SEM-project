@@ -9,8 +9,8 @@ import sportFacilitiesPackage.entities.SportRoom;
 @Repository
 public interface SportRoomRepository extends JpaRepository<SportRoom, String> {
 
-    Optional<SportRoom> findById(Long sportRoomId);
+    Optional<SportRoom> findBySportRoomId(Long sportRoomId);
 
     @Transactional
-    void deleteById(Long sportRoomId);
+    void deleteBySportRoomId(Long sportRoomId);
 }

@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "sportroom")
@@ -26,7 +27,9 @@ public class SportRoom {
         allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sportroom_sequence")
     private long sportRoomId;
-    private String sportRoomName;   // example: X1, X2, X3 ...
+    private String sportRoomName;// example: X1, X2, X3 ...
+
+    @Transient
     @ManyToMany(mappedBy = "sportLocations", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Sport> sports;   // Only sport halls will store multiple sports
