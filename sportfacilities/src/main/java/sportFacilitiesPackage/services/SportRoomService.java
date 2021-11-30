@@ -20,7 +20,7 @@ public class SportRoomService {
     }
 
     public SportRoom getSportRoom(Long sportRoomId) throws NoSuchFieldException {
-        return sportRoomRepository.findById(sportRoomId).orElseThrow();
+        return sportRoomRepository.findBySportRoomId(sportRoomId).orElseThrow();
     }
 
 }

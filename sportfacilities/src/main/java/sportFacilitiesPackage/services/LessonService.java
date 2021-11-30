@@ -21,7 +21,7 @@ public class LessonService {
     }
 
     public Lesson getLessonById(long lessonId) {
-        return lessonRepository.findById(lessonId);
+        return lessonRepository.findById(lessonId).orElseThrow();
     }
 
 }

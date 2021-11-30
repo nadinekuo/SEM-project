@@ -12,6 +12,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "sports")
@@ -20,10 +21,12 @@ public class Sport {
     @Id
     private String sportName;
 
+
     private boolean teamSport;
     private int minTeamSize;   //  1 if not team sport
     private int maxTeamSize;   //  -1 if not team sport
 
+    @Transient
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "sport_locations", joinColumns = {
         @JoinColumn(name = "sport_name", referencedColumnName = "sportName", nullable = false,
@@ -34,6 +37,7 @@ public class Sport {
     })
     private List<SportRoom> sportLocations;
 
+    @Transient
     @OneToMany(mappedBy = "relatedSport", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<Equipment> equipmentList;
