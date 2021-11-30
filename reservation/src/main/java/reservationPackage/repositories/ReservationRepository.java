@@ -17,7 +17,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query(value =
         "SELECT reservation_id " +
         "FROM reservations " +
-            "WHERE sport_facility_reserved_id = ?1 AND starting_time IS null",
+            "WHERE sport_facility_reserved_id = ?1 AND starting_time = ?2",
         nativeQuery = true)
     Optional <Long> findBySportRoomIdAndTime(Long sportRoomId, LocalDateTime time);
 
