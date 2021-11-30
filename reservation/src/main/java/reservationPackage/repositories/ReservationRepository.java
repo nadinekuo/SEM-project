@@ -2,6 +2,7 @@ package reservationPackage.repositories;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,9 +14,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     Reservation findById(long reservationId);
 
-    @Query(value = "SELECT id FROM reservations WHERE sportRoomId = sportRoomId AND startingTime "
-        + "= time", nativeQuery = true)
-    Reservation findByIdAndTime(String sportRoomId, LocalDateTime time);
+    @Query(value =
+        "SELECT reservation_id " +
+        "FROM reservations " +
+            "WHERE sport_facility_reserved_id = ?1 AND starting_time IS null",
+        nativeQuery = true)
+    Optional <Long> findBySportRoomIdAndTime(Long sportRoomId, LocalDateTime time);
 
     LocalDate findStartingTimeByReservationId(long reservationId);
 

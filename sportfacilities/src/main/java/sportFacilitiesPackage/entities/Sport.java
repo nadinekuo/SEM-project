@@ -19,6 +19,7 @@ public class Sport {
 
     @Id
     private String sportName;
+
     private boolean teamSport;
     private int minTeamSize;   //  1 if not team sport
     private int maxTeamSize;   //  -1 if not team sport

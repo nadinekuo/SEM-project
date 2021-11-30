@@ -1,6 +1,7 @@
 package reservationPackage.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Entity;
@@ -9,6 +10,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import org.apache.tomcat.jni.Local;
+
+enum Type {
+    EQUIPMENT, SPORTS_FACILITY, LESSON
+}
 
 @Entity
 @Table(name = "reservations")
@@ -20,13 +26,22 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_sequence")
     private long reservationId;
 
+
+    private Type typeOfReservation; //equipment, lesson or sportroom
+    private Long customerId;   // for group reservations, there will be separate reservations
+    private Long sportFacilityReservedId;
+    private Long equipmentId;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startingTime;
 
-    private long timeSlot;  // in hours
+/*    private ReservationSorting reservationSorting;
 
-    private Long customerId;   // for group reservations, there will be separate reservations
-    private String sportRoomReservedId;
+    public Reservation(ReservationSorting reservationSorting) {
+        this.reservationSorting = reservationSorting;
+    }*/
+
+   //public void executeStrategy(ArrayList<Reservation> reservations);
 
     /**
      * Empty constructor needed for Spring JPA.
@@ -34,16 +49,13 @@ public class Reservation {
     public Reservation() {
     }
 
-    /** Constructor Reservation.
-     *
-     * @param reservationId - long
-     * @param startingTime - LocalDateTime
-     * @param timeSlot - long
-     */
-    public Reservation(long reservationId, LocalDateTime startingTime, long timeSlot) {
-        this.reservationId = reservationId;
-        this.startingTime = startingTime;
-        this.timeSlot = timeSlot;
+
+    public Type getTypeOfReservation() {
+        return typeOfReservation;
+    }
+
+    public void setTypeOfReservation(Type typeOfReservation) {
+        this.typeOfReservation = typeOfReservation;
     }
 
     public long getReservationId() {

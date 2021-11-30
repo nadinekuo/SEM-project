@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -19,19 +22,21 @@ public class SportRoom {
 
     boolean isSportsHall;
     @Id
+    @SequenceGenerator(name = "sportroom_sequence", sequenceName = "sportroom_sequence",
+        allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sportroom_sequence")
+    private long sportRoomId;
     private String sportRoomName;   // example: X1, X2, X3 ...
     @ManyToMany(mappedBy = "sportLocations", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Sport> sports;   // Only sport halls will store multiple sports
     private int minCapacity;
     private int maxCapacity;
-
     /**
      * Empty constructor needed for Spring JPA.
      */
     public SportRoom() {
     }
-
     /**
      * Constructor SportRoom.
      *
@@ -45,6 +50,14 @@ public class SportRoom {
         this.sports = sports;
         this.minCapacity = minCapacity;
         this.maxCapacity = maxCapacity;
+    }
+
+    public long getSportRoomId() {
+        return sportRoomId;
+    }
+
+    public void setSportRoomId(long sportRoomId) {
+        this.sportRoomId = sportRoomId;
     }
 
     public boolean isSportsHall() {

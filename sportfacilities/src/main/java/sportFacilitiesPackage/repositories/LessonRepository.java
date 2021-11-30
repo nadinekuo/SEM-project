@@ -9,7 +9,7 @@ import sportFacilitiesPackage.entities.Lesson;
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
-    Lesson findById(long lessonId);
+    Lesson findById(Long lessonId);
 
     @Transactional
     void deleteById(Long lessonId);
