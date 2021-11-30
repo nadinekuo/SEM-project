@@ -18,6 +18,7 @@ public class EquipmentController {
 
     private final transient EquipmentService equipmentService;
 
+    @Autowired
     private RestTemplate restTemplate;
 
     /**
@@ -44,7 +45,7 @@ public class EquipmentController {
 
     @GetMapping("/hello")
     public Long getId() {
-        Long a = restTemplate.getForObject("http://localhost:eureka-reservation/hey", Long.class);
+        Long a = restTemplate.getForObject("http://eureka-reservation/reservation/hey", Long.class);
         return a;
     }
 
