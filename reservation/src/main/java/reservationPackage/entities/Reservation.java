@@ -12,9 +12,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.apache.tomcat.jni.Local;
 
-enum Type {
-    EQUIPMENT, SPORTS_FACILITY, LESSON
-}
 
 @Entity
 @Table(name = "reservations")
@@ -27,10 +24,9 @@ public class Reservation {
     private long reservationId;
 
 
-    private Type typeOfReservation; //equipment, lesson or sportroom
+    private ReservationType typeOfReservation; //equipment, lesson or sportroom
     private Long customerId;   // for group reservations, there will be separate reservations
     private Long sportFacilityReservedId;
-    private Long equipmentId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startingTime;
@@ -54,7 +50,7 @@ public class Reservation {
         return typeOfReservation;
     }
 
-    public void setTypeOfReservation(Type typeOfReservation) {
+    public void setTypeOfReservation(ReservationType typeOfReservation) {
         this.typeOfReservation = typeOfReservation;
     }
 

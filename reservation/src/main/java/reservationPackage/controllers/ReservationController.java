@@ -28,9 +28,9 @@ public class ReservationController {
 
         @GetMapping("/{sportRoomId}/{date}/isAvailable")
         @ResponseBody
-        public boolean isAvailable(@PathVariable Long sportRoomId, @PathVariable LocalDateTime
+        public boolean isAvailable(@PathVariable Long sportRoomId, @PathVariable String
         date) {
-            return reservationService.isAvailable(sportRoomId, date);
+            return reservationService.isAvailable(sportRoomId, LocalDateTime.parse(date));
         }
 
 }
