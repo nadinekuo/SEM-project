@@ -19,8 +19,8 @@ public class SportRoomService {
         this.sportRoomRepository = sportRoomRepository;
     }
 
-    public SportRoom getSportRoomByName(String sportRoomName) throws NoSuchFieldException {
-        return sportRoomRepository.findById(sportRoomName).orElseThrow();
+    public SportRoom getSportRoom(Long sportRoomId) throws NoSuchFieldException {
+        return sportRoomRepository.findById(sportRoomId).orElseThrow();
     }
 
 }

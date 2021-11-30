@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -14,7 +17,20 @@ import javax.persistence.Table;
 public class Equipment {
 
     @Id
+    @SequenceGenerator(name = "equipment_sequence", sequenceName = "equipment_sequence",
+        allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "equipment_sequence")
+    private long equipmentId;
+
     private String name;
+
+    public long getEquipmentId() {
+        return equipmentId;
+    }
+
+    public void setEquipmentId(long equipmentId) {
+        this.equipmentId = equipmentId;
+    }
 
     private int inventory;
     private int inUse;       // available = inventory - inUse

@@ -29,9 +29,9 @@ public class SportRoomController {
 
     @GetMapping("/{sportRoomName}")
     @ResponseBody
-    public SportRoom getSportRoom(@PathVariable String sportRoomName) {
+    public SportRoom getSportRoom(@PathVariable Long sportRoomId) {
         try {
-            return sportRoomService.getSportRoomByName(sportRoomName);
+            return sportRoomService.getSportRoom(sportRoomId);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
             return null;
@@ -40,9 +40,9 @@ public class SportRoomController {
 
     @GetMapping("/{sportRoomName}/getMaximumCapacity")
     @ResponseBody
-    public int getSportRoomMaximumCapacity(@PathVariable String sportRoomName) {
+    public int getSportRoomMaximumCapacity(@PathVariable Long sportRoomId) {
         try {
-            return sportRoomService.getSportRoomByName(sportRoomName).getMaxCapacity();
+            return sportRoomService.getSportRoom(sportRoomId).getMaxCapacity();
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
             return -1;
@@ -51,9 +51,9 @@ public class SportRoomController {
 
     @GetMapping("/{sportRoomName}/getMinimumCapacity")
     @ResponseBody
-    public int getSportRoomMinimumCapacity(@PathVariable String sportRoomName) {
+    public int getSportRoomMinimumCapacity(@PathVariable Long sportRoomId) {
         try {
-            return sportRoomService.getSportRoomByName(sportRoomName).getMinCapacity();
+            return sportRoomService.getSportRoom(sportRoomId).getMinCapacity();
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
             return -1;

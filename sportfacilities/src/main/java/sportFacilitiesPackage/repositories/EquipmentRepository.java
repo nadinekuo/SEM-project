@@ -9,9 +9,9 @@ import sportFacilitiesPackage.entities.Equipment;
 @Repository
 public interface EquipmentRepository extends JpaRepository<Equipment, String> {
 
-    Optional<Equipment> findById(String equipmentName);
+    Optional<Equipment> findById(long equipmentId);
 
     @Transactional
-    void deleteById(String equipmentName);
+    void deleteById(long equipmentId);
 
 }
