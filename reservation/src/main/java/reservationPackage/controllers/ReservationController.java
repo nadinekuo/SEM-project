@@ -26,11 +26,39 @@ public class ReservationController {
         return reservationService.getStartingTime(reservationId);
     }
 
-        @GetMapping("/{sportRoomId}/{date}/isAvailable")
-        @ResponseBody
-        public boolean isAvailable(@PathVariable Long sportRoomId, @PathVariable String
-        date) {
-            return reservationService.isAvailable(sportRoomId, LocalDateTime.parse(date));
-        }
+    @DeleteMapping("/{reservationId}")
+    @ResponseBody
+    public void deleteReservation(@PathVariable Long reservationId) {
+        reservationService.deleteReservation(reservationId);
+    }
+
+    @GetMapping("/{sportRoomId}/{date}/isAvailable")
+    @ResponseBody
+    public boolean isAvailable(@PathVariable Long sportRoomId, @PathVariable String date) {
+        return reservationService.isAvailable(sportRoomId, LocalDateTime.parse(date));
+    }
+
+
+    @PostMapping("/{userId}/{sportRoomId}/{date}/{type}/makeBooking")
+    @ResponseBody
+    public boolean makeSportRoomReservation(
+        @PathVariable Long userId,
+        @PathVariable Long sportRoomId,
+        @PathVariable String date,
+        @PathVariable String type) {
+
+        //can throw errors
+        LocalDateTime dateTime = LocalDateTime.parse(date);
+        ReservationType reservationType = ReservationType.valueOf(type);
+
+        if (!reservationService.isAvailable(sportRoomId, dateTime)) return false;
+
+        Reservation reservation = new Reservation(userId, sportRoomId, dateTime, reservationType);
+        Reservation reservationMade =
+            reservationService.makeSportRoomReservation(reservation);
+        return true;
+    }
+
+
 
 }
