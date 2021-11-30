@@ -24,31 +24,28 @@ public class Sport {
     private int maxTeamSize;   //  -1 if not team sport
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "sport_locations",
-        joinColumns = {
-            @JoinColumn(name = "sport_name", referencedColumnName = "sportName",
-                nullable = false, updatable = false)},
-        inverseJoinColumns = {
-            @JoinColumn(name = "sportroom_name", referencedColumnName = "sportRoomName",
-                nullable = false, updatable = false)})
+    @JoinTable(name = "sport_locations", joinColumns = {
+        @JoinColumn(name = "sport_name", referencedColumnName = "sportName", nullable = false,
+            updatable = false)
+    }, inverseJoinColumns = {
+        @JoinColumn(name = "sportroom_name", referencedColumnName = "sportRoomName", nullable =
+            false, updatable = false)
+    })
     private List<SportRoom> sportLocations;
 
     @OneToMany(mappedBy = "relatedSport", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<Equipment> equipmentList;
 
-
-
     public Sport() {
     }
 
-
-    /** Constructor.
+    /**
+     * Constructor.
      *
-     * @param sportName - String, ID
-     * @param teamSport - boolean
+     * @param sportName   - String, ID
+     * @param teamSport   - boolean
      * @param minTeamSize - int, constraint for group reservations: > 1 if teamSport = true, else 1
-     *
      */
     public Sport(String sportName, boolean teamSport, int minTeamSize, int maxTeamSize) {
         this.sportName = sportName;
@@ -56,7 +53,6 @@ public class Sport {
         this.minTeamSize = minTeamSize;
         this.maxTeamSize = maxTeamSize;
     }
-
 
     public String getSportName() {
         return sportName;
@@ -98,13 +94,17 @@ public class Sport {
         this.minTeamSize = minTeamSize;
     }
 
-
     public int getMaxTeamSize() {
         return maxTeamSize;
     }
 
     public void setMaxTeamSize(int maxTeamSize) {
         this.maxTeamSize = maxTeamSize;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sportName, teamSport);
     }
 
     @Override
@@ -117,11 +117,6 @@ public class Sport {
         }
         Sport sport = (Sport) o;
         return teamSport == sport.teamSport && Objects.equals(sportName, sport.sportName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(sportName, teamSport);
     }
 
     @Override

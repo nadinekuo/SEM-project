@@ -1,14 +1,11 @@
 package sportFacilitiesPackage.controllers;
 
-import javax.ws.rs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import sportFacilitiesPackage.entities.Sport;
 import sportFacilitiesPackage.entities.SportRoom;
 import sportFacilitiesPackage.services.SportRoomService;
 
@@ -41,7 +38,6 @@ public class SportRoomController {
         }
     }
 
-
     @GetMapping("/{sportRoomName}/getMaximumCapacity")
     @ResponseBody
     public int getSportRoomMaximumCapacity(@PathVariable String sportRoomName) {
@@ -69,6 +65,5 @@ public class SportRoomController {
     public List<Sport> getSports(@PathVariable String sportRoomName) {
 
     }*/
-
 
 }

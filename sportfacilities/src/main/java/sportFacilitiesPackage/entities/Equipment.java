@@ -1,7 +1,6 @@
 package sportFacilitiesPackage.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,18 +24,18 @@ public class Equipment {
     @JsonBackReference
     private Sport relatedSport;
 
-
     /**
-     *  Empty constructor needed for Spring JPA.
+     * Empty constructor needed for Spring JPA.
      */
     public Equipment() {
     }
 
-    /** Constructor Equipment.
+    /**
+     * Constructor Equipment.
      *
-     * @param name - String
-     * @param inventory - int
-     * @param inUse - int
+     * @param name         - String
+     * @param inventory    - int
+     * @param inUse        - int
      * @param relatedSport - Sport
      */
     public Equipment(String name, int inventory, int inUse, Sport relatedSport) {
@@ -79,6 +78,11 @@ public class Equipment {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -88,11 +92,6 @@ public class Equipment {
         }
         Equipment equipment = (Equipment) o;
         return Objects.equals(name, equipment.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
     }
 
     @Override

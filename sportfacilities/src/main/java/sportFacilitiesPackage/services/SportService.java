@@ -1,6 +1,5 @@
 package sportFacilitiesPackage.services;
 
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import sportFacilitiesPackage.entities.Sport;
 import sportFacilitiesPackage.repositories.SportRepository;

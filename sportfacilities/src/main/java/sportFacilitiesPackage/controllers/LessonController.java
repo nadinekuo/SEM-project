@@ -38,5 +38,4 @@ public class LessonController {
         return lessonService.getLessonById(lessonId);
     }
 
-
 }
