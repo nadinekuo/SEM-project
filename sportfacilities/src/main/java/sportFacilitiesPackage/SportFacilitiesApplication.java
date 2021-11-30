@@ -23,12 +23,6 @@ public class SportFacilitiesApplication implements SportFacilitiesControllerEure
     @Value("${spring.application.name}")
     private String appName;
 
-    @Bean
-    @LoadBalanced
-    public RestTemplate getRestTemplate(){
-        return new RestTemplate();
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(SportFacilitiesApplication.class, args);
     }

@@ -45,8 +45,8 @@ public class EquipmentController {
 
     @GetMapping("/hello")
     public Long getId() {
-        Long a = restTemplate.getForObject("http://eureka-reservation/reservation/hey", Long.class);
-        return a;
+        String methodSpecificUrl = "/hey";
+        return restTemplate.getForObject(EurekaHelperFields.reservationUrl + methodSpecificUrl, Long.class);
     }
 
 }
