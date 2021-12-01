@@ -7,21 +7,25 @@ import javax.validation.constraints.Email;
 
 public class ChronologicalStrategy implements ReservationSortingStrategy {
 
-    @Override
-    public void executeStrategy(ArrayList<Reservation> reservations) {
-        // Insertion Sort
-        for(int i = 1; i < reservations.size(); i++) {
-            int j = i-1;
-            int index = i;
-            while(j >= 0) {
-                if(reservations.get(index).getStartingTime().isAfter(reservations.get(i).getStartingTime())) {
-                    Reservation temp = reservations.get(index);
-                    reservations.set(index, reservations.get(j));
-                    reservations.set(j, temp);
-                    index--;
-                }
-                j--;
-            }
+    public Reservation getNextReservation(List<Reservation> reservations) {
+        if (reservations == null || reservations.isEmpty())
+            return null;
+        this.sort(reservations);
+        return reservations.get(0);
+    }
+    private void sort(List<Reservation> list) {
+        Collections.sort(list, new ReservationComparator());
+    }
+    protected class ReservationComparator implements Comparator {
+        @Override
+        public int compare(Object o1, Object o2) {
+            Reservation reservation1 = (Reservation) o1;
+            Reservation reservation2 = (Reservation) o2;
+            if (reservation1.getStartingTime().isBefore(reservation2.getStartingTime()))
+                return -1;
+            if (reservation1.getStartingTime().isAfter(reservation2.getStartingTime()))
+                return +1;
+            return 0;
         }
     }
 
