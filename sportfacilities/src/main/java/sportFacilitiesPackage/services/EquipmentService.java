@@ -1,5 +1,6 @@
 package sportFacilitiesPackage.services;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +29,10 @@ public class EquipmentService {
     public Equipment getEquipment(Long equipmentId) throws NoSuchFieldException {
         return equipmentRepository.findByEquipmentId(equipmentId);
     }
+
+
+
+
 
     @Bean
     @LoadBalanced
