@@ -1,5 +1,7 @@
 package reservationPackage.controllers;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,9 @@ public class ReservationController {
 
     private final transient ReservationService reservationService;
 
-    static String equipmentUrl = "http://eureka-sport-facilities/equipment";
+    static String sportFacilityUrl = "http://eureka-sport-facilities";
+
+    protected static final Gson gson = new Gson();
 
     @Autowired
     private final RestTemplate restTemplate;
@@ -77,6 +81,8 @@ public class ReservationController {
         @PathVariable Long sportRoomId,
         @PathVariable String date) {
 
+        String methodSpecificUrl = "/{sportRoomId}/exists";
+
         //can throw errors
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
@@ -97,13 +103,22 @@ public class ReservationController {
         @PathVariable String date,
         @PathVariable String equipmentName
         ) {
-        String methodSpecificUrl = "/" + equipmentName + "/getAvailableEquipment";
 
-        //can throw errors
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
-        Long equipmentId = restTemplate.getForObject(equipmentUrl + methodSpecificUrl, Long.class);
-        if (equipmentId == null) return false;
+        String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
+
+        ResponseEntity<String> response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl,
+            ResponseEntity.class);
+
+        Long equipmentId = gson
+            .fromJson(response.getBody(), new TypeToken<Long>() {
+            }.getType());
+
+        if(!response.getStatusCode().equals(Response.status(Response.Status.OK))) {
+            return response;
+        }
 
         Reservation reservation = new Reservation(ReservationType.EQUIPMENT, userId,
             equipmentId, dateTime);
@@ -112,6 +127,8 @@ public class ReservationController {
         return true;
         //return Response.status(Response.Status.ACCEPTED);
     }
+
+
 
 
 

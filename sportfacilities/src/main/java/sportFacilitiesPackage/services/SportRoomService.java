@@ -23,4 +23,10 @@ public class SportRoomService {
         return sportRoomRepository.findBySportRoomId(sportRoomId).orElseThrow();
     }
 
+    public Boolean sportRoomExists(Long sportRoomId) {
+        return sportRoomRepository.findBySportRoomId(sportRoomId).isPresent();
+    }
+
+
+
 }

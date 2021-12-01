@@ -38,6 +38,12 @@ public class SportRoomController {
         }
     }
 
+    @GetMapping("//{sportRoomId}/exists")
+    @ResponseBody
+    public Boolean sportRoomExists(@PathVariable Long sportRoomId) {
+        return sportRoomExists(sportRoomId);
+    }
+
     @GetMapping("/{sportRoomName}/getMaximumCapacity")
     @ResponseBody
     public int getSportRoomMaximumCapacity(@PathVariable Long sportRoomId) {
