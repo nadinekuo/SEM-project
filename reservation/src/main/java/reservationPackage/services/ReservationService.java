@@ -35,7 +35,7 @@ public class ReservationService {
         return reservationRepository.findBySportRoomIdAndTime(sportRoomId, time).isPresent();
     }
 
-    public Reservation makeSportRoomReservation(Reservation reservation) {
+    public Reservation makeSportFacilityReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
 

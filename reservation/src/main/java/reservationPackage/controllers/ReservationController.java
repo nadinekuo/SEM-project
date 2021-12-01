@@ -3,6 +3,8 @@ package reservationPackage.controllers;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,8 @@ import reservationPackage.services.ReservationService;
 public class ReservationController {
 
     private final transient ReservationService reservationService;
+
+    static String equipmentUrl = "http://eureka-sport-facilities/equipment";
 
     @Autowired
     private final RestTemplate restTemplate;
@@ -66,25 +70,49 @@ public class ReservationController {
     }
 
 
-    @PostMapping("/{userId}/{sportRoomId}/{date}/{type}/makeBooking")
+    @PostMapping("/{userId}/{sportRoomId}/{date}/makeSportRoomBooking")
     @ResponseBody
     public boolean makeSportRoomReservation(
         @PathVariable Long userId,
         @PathVariable Long sportRoomId,
-        @PathVariable String date,
-        @PathVariable String type) {
+        @PathVariable String date) {
 
         //can throw errors
         LocalDateTime dateTime = LocalDateTime.parse(date);
-        ReservationType reservationType = ReservationType.valueOf(type);
 
-        if (!reservationService.isAvailable(sportRoomId, dateTime)) return false;
+        if (!reservationService.isAvailable(sportRoomId, dateTime))
+            return new ResponseEntity<>("Sport Room is NOT available.", HttpStatus.NOT_FOUND);
 
-        Reservation reservation = new Reservation(reservationType, userId, sportRoomId, dateTime);
+        Reservation reservation = new Reservation(ReservationType.SPORTS_FACILITY, userId,
+            sportRoomId, dateTime);
         Reservation reservationMade =
-            reservationService.makeSportRoomReservation(reservation);
-        return true;
+            reservationService.makeSportFacilityReservation(reservation);
+        return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
     }
+
+    @PostMapping("/{userId}/{equipmentName}/{date}/makeEquipmentBooking")
+    @ResponseBody
+    public boolean makeEquipmentReservation(
+        @PathVariable Long userId,
+        @PathVariable String date,
+        @PathVariable String equipmentName
+        ) {
+        String methodSpecificUrl = "/" + equipmentName + "/getAvailableEquipment";
+
+        //can throw errors
+        LocalDateTime dateTime = LocalDateTime.parse(date);
+
+        Long equipmentId = restTemplate.getForObject(equipmentUrl + methodSpecificUrl, Long.class);
+        if (equipmentId == null) return false;
+
+        Reservation reservation = new Reservation(ReservationType.EQUIPMENT, userId,
+            equipmentId, dateTime);
+        Reservation reservationMade =
+            reservationService.makeSportFacilityReservation(reservation);
+        return true;
+        //return Response.status(Response.Status.ACCEPTED);
+    }
+
 
 
 

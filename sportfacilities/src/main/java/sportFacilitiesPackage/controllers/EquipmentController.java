@@ -22,6 +22,7 @@ public class EquipmentController {
     @Autowired
     private final RestTemplate restTemplate;
 
+
     /**
      * Autowired constructor for the class.
      *
@@ -42,6 +43,32 @@ public class EquipmentController {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @GetMapping("/{equipmentName}/getAvailableEquipment")
+    @ResponseBody
+    public Long getAvailableEquipment(@PathVariable String equipmentName) {
+        try {
+            Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
+            equipmentService.setEquipmentToInUse(equipmentId);
+            return equipmentId;
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    @PostMapping("/{equipmentId}/broughtBack")
+    @ResponseBody
+    public void equipmentBroughtBack(@PathVariable Long equipmentId) {
+        equipmentService.setEquipmentToNotInUse(equipmentId);
+    }
+
+    @PostMapping("/{equipmentId}/reserved")
+    @ResponseBody
+    public void equipmentReserved(@PathVariable Long equipmentId) {
+        equipmentService.setEquipmentToInUse(equipmentId);
     }
 
 
