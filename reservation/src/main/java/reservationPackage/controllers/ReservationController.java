@@ -1,8 +1,28 @@
 package reservationPackage.controllers;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import reservationPackage.entities.Reservation;
+import reservationPackage.entities.ReservationType;
+import reservationPackage.services.ReservationService;
+
+@RestController
+@RequestMapping("reservation")
 public class ReservationController {
 
     private final transient ReservationService reservationService;
+
+    @Autowired
+    private final RestTemplate restTemplate;
 
     /**
      * Autowired constructor for the class.
@@ -12,6 +32,7 @@ public class ReservationController {
     @Autowired
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
+        this.restTemplate = reservationService.restTemplate();
     }
 
     @GetMapping("/hey")
@@ -26,11 +47,11 @@ public class ReservationController {
         return reservationService.getReservation(reservationId);
     }
 
-    @GetMapping("/{reservationId}/getStartingTime")
-    @ResponseBody
-    public LocalDate getReservationSportRoom(@PathVariable Long reservationId) {
-        return reservationService.getStartingTime(reservationId);
-    }
+//    @GetMapping("/{reservationId}/getStartingTime")
+//    @ResponseBody
+//    public LocalDate getReservationSportRoom(@PathVariable Long reservationId) {
+//        return reservationService.getStartingTime(reservationId);
+//    }
 
     @DeleteMapping("/{reservationId}")
     @ResponseBody

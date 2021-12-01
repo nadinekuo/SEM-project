@@ -23,7 +23,27 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
+    public Reservation getReservation(long reservationId) {
+        return reservationRepository.findById(reservationId);
+    }
 
+    public void deleteReservation(Long reservationId) {
+        reservationRepository.deleteById(reservationId);
+    }
+
+    public boolean isAvailable(Long sportRoomId, LocalDateTime time) {
+        return reservationRepository.findBySportRoomIdAndTime(sportRoomId, time).isPresent();
+    }
+
+    public Reservation makeSportRoomReservation(Reservation reservation) {
+        return reservationRepository.save(reservation);
+    }
+
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 }
 
 

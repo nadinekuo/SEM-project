@@ -16,6 +16,12 @@ public class EquipmentService {
 
     private final transient EquipmentRepository equipmentRepository;
 
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
     /**
      * Constructor for UserService.
      *

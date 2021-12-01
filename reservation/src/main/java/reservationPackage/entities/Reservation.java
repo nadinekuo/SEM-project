@@ -1,7 +1,6 @@
 package reservationPackage.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Entity;
@@ -10,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import org.apache.tomcat.jni.Local;
-
 
 @Entity
 @Table(name = "reservations")
@@ -23,13 +20,29 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_sequence")
     private long reservationId;
 
-
     private ReservationType typeOfReservation; //equipment, lesson or sportroom
     private Long customerId;   // for group reservations, there will be separate reservations
     private Long sportFacilityReservedId;
-
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startingTime;
+
+    public Reservation( ReservationType typeOfReservation, Long customerId,
+                       Long sportFacilityReservedId, LocalDateTime startingTime) {
+
+        this.typeOfReservation = typeOfReservation;
+        this.customerId = customerId;
+        this.sportFacilityReservedId = sportFacilityReservedId;
+        this.startingTime = startingTime;
+    }
+    /**
+     * Empty constructor needed for Spring JPA.
+     */
+    public Reservation() {
+    }
+
+    public Long getSportFacilityReservedId() {
+        return sportFacilityReservedId;
+    }
 
 /*    private ReservationSorting reservationSorting;
 
@@ -37,16 +50,13 @@ public class Reservation {
         this.reservationSorting = reservationSorting;
     }*/
 
-   //public void executeStrategy(ArrayList<Reservation> reservations);
+    //public void executeStrategy(ArrayList<Reservation> reservations);
 
-    /**
-     * Empty constructor needed for Spring JPA.
-     */
-    public Reservation() {
+    public void setSportFacilityReservedId(Long sportFacilityReservedId) {
+        this.sportFacilityReservedId = sportFacilityReservedId;
     }
 
-
-    public Type getTypeOfReservation() {
+    public ReservationType getTypeOfReservation() {
         return typeOfReservation;
     }
 
@@ -70,28 +80,12 @@ public class Reservation {
         this.startingTime = startingTime;
     }
 
-    public long getTimeSlot() {
-        return timeSlot;
-    }
-
-    public void setTimeSlot(long timeSlot) {
-        this.timeSlot = timeSlot;
-    }
-
     public Long getCustomerId() {
         return customerId;
     }
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
-    }
-
-    public String getSportRoomReservedId() {
-        return sportRoomReservedId;
-    }
-
-    public void setSportRoomReservedId(String sportRoomReservedId) {
-        this.sportRoomReservedId = sportRoomReservedId;
     }
 
     @Override
@@ -111,9 +105,4 @@ public class Reservation {
         return reservationId == that.reservationId;
     }
 
-    @Override
-    public String toString() {
-        return "Reservation{" + "reservationId=" + reservationId + ", startingTime=" + startingTime
-            + ", timeSlot=" + timeSlot;
-    }
 }
