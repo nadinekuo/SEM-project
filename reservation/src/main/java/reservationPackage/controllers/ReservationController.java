@@ -2,8 +2,8 @@ package reservationPackage.controllers;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +23,9 @@ import reservationPackage.services.ReservationService;
 @RequestMapping("reservation")
 public class ReservationController {
 
-    private final transient ReservationService reservationService;
-
-    static String sportFacilityUrl = "http://eureka-sport-facilities";
-
     protected static final Gson gson = new Gson();
-
+    static String sportFacilityUrl = "http://eureka-sport-facilities";
+    private final transient ReservationService reservationService;
     @Autowired
     private final RestTemplate restTemplate;
 
@@ -55,11 +52,11 @@ public class ReservationController {
         return reservationService.getReservation(reservationId);
     }
 
-//    @GetMapping("/{reservationId}/getStartingTime")
-//    @ResponseBody
-//    public LocalDate getReservationSportRoom(@PathVariable Long reservationId) {
-//        return reservationService.getStartingTime(reservationId);
-//    }
+    //    @GetMapping("/{reservationId}/getStartingTime")
+    //    @ResponseBody
+    //    public LocalDate getReservationSportRoom(@PathVariable Long reservationId) {
+    //        return reservationService.getStartingTime(reservationId);
+    //    }
 
     @DeleteMapping("/{reservationId}")
     @ResponseBody
@@ -73,64 +70,79 @@ public class ReservationController {
         return reservationService.isAvailable(sportRoomId, LocalDateTime.parse(date));
     }
 
-
     @PostMapping("/{userId}/{sportRoomId}/{date}/makeSportRoomBooking")
     @ResponseBody
-    public boolean makeSportRoomReservation(
-        @PathVariable Long userId,
-        @PathVariable Long sportRoomId,
-        @PathVariable String date) {
+    //@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Parameters input for the request "
+    //    + "were wrong")
+    public ResponseEntity<String> makeSportRoomReservation(@PathVariable Long userId,
+                                                           @PathVariable Long sportRoomId,
+                                                           @PathVariable String date) {
 
         String methodSpecificUrl = "/{sportRoomId}/exists";
 
         //can throw errors
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
-        if (!reservationService.isAvailable(sportRoomId, dateTime))
-            return new ResponseEntity<>("Sport Room is NOT available.", HttpStatus.NOT_FOUND);
+        if (dateTime.isBefore(LocalDateTime.now())) {
+            return new ResponseEntity<>("Date and time has to be after now",
+                HttpStatus.BAD_REQUEST);
+        }
 
-        Reservation reservation = new Reservation(ReservationType.SPORTS_FACILITY, userId,
-            sportRoomId, dateTime);
-        Reservation reservationMade =
-            reservationService.makeSportFacilityReservation(reservation);
+        if ((dateTime.getHour() < 16) || (dateTime.getHour() == 23)) {
+            return new ResponseEntity<>("Time has to be between 16:00 and 23:00.",
+                HttpStatus.NOT_FOUND);
+        }
+
+        if (!reservationService.isAvailable(sportRoomId, dateTime)) {
+            return new ResponseEntity<>("Sport Room is already booked.", HttpStatus.NOT_FOUND);
+        }
+
+        Boolean sportHallExists =
+            restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
+                Boolean.class);
+
+        if (sportHallExists == null || !sportHallExists) {
+            return new ResponseEntity<>("The SportRoom requested doesn't exist",
+                HttpStatus.NOT_FOUND);
+        }
+
+        Reservation reservation =
+            new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime);
+        Reservation reservationMade = reservationService.makeSportFacilityReservation(reservation);
         return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
     }
 
     @PostMapping("/{userId}/{equipmentName}/{date}/makeEquipmentBooking")
     @ResponseBody
-    public boolean makeEquipmentReservation(
-        @PathVariable Long userId,
-        @PathVariable String date,
-        @PathVariable String equipmentName
-        ) {
+    public ResponseEntity<String> makeEquipmentReservation(@PathVariable Long userId,
+                                                           @PathVariable String date,
+                                                           @PathVariable String equipmentName) {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
+        if (dateTime.isBefore(LocalDateTime.now())) {
+            return new ResponseEntity<>("Date and time has to be after now",
+                HttpStatus.BAD_REQUEST);
+        }
+        if ((dateTime.getHour() < 16) || (dateTime.getHour() == 23)) {
+            return new ResponseEntity<>("Time has to be between 16:00 and 23:00.",
+                HttpStatus.NOT_FOUND);
+        }
 
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
         ResponseEntity<String> response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl,
-            ResponseEntity.class);
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, ResponseEntity.class);
 
-        Long equipmentId = gson
-            .fromJson(response.getBody(), new TypeToken<Long>() {
-            }.getType());
-
-        if(!response.getStatusCode().equals(Response.status(Response.Status.OK))) {
+        if (!response.getStatusCode().equals(Response.status(Response.Status.OK))) {
             return response;
         }
 
-        Reservation reservation = new Reservation(ReservationType.EQUIPMENT, userId,
-            equipmentId, dateTime);
-        Reservation reservationMade =
-            reservationService.makeSportFacilityReservation(reservation);
-        return true;
-        //return Response.status(Response.Status.ACCEPTED);
+        Long equipmentId = gson.fromJson(response.getBody(), new TypeToken<Long>() {}.getType());
+
+        Reservation reservation =
+            new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
+        Reservation reservationMade = reservationService.makeSportFacilityReservation(reservation);
+        return new ResponseEntity<>("Successful", HttpStatus.OK);
     }
-
-
-
-
-
 
 }

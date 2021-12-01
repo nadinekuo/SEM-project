@@ -48,7 +48,8 @@ public class SportFacilitiesConfig {
             Equipment soccerBall2 = new Equipment(7L, "soccerBall", soccer, true);
             Equipment soccerBall3 = new Equipment(8L, "soccerBall", soccer, false);
 
-            //equipmentRepository.saveAll(List.of(hockeystick, kickboxGloves, soccerBall));
+            equipmentRepository.saveAll(List.of(hockeyStick, boxingGloves1, boxingGloves2,
+                boxingGloves3, boxingGloves4,  soccerBall1, soccerBall2, soccerBall3));
         };
     }
 

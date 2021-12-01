@@ -2,8 +2,11 @@ package sportFacilitiesPackage.controllers;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,14 +50,15 @@ public class EquipmentController {
 
     @GetMapping("/{equipmentName}/getAvailableEquipment")
     @ResponseBody
-    public Long getAvailableEquipment(@PathVariable String equipmentName) {
+    public ResponseEntity<String> getAvailableEquipment(@PathVariable String equipmentName) {
         try {
             Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
             equipmentService.setEquipmentToInUse(equipmentId);
-            return equipmentId;
+            return new ResponseEntity<String>(equipmentId.toString(), HttpStatus.CREATED);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
-            return null;
+            return new ResponseEntity<String>("Specified equipment was not found",
+                HttpStatus.BAD_REQUEST);
         }
     }
 
