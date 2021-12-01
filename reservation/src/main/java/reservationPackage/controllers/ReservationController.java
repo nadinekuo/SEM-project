@@ -80,7 +80,7 @@ public class ReservationController {
 
         if (!reservationService.isAvailable(sportRoomId, dateTime)) return false;
 
-        Reservation reservation = new Reservation(userId, sportRoomId, dateTime, reservationType);
+        Reservation reservation = new Reservation(reservationType, userId, sportRoomId, dateTime);
         Reservation reservationMade =
             reservationService.makeSportRoomReservation(reservation);
         return true;

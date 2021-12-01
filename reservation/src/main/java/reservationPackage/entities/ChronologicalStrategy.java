@@ -1,8 +1,11 @@
 package reservationPackage.entities;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import javax.validation.constraints.Email;
 
-public class Chronological implements ReservationSorting{
+public class ChronologicalStrategy implements ReservationSortingStrategy {
 
     @Override
     public void executeStrategy(ArrayList<Reservation> reservations) {

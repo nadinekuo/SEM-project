@@ -21,8 +21,8 @@ public class ReservationConfig {
                     LocalDateTime.of(2020,1,1,1,1), ReservationType.EQUIPMENT );
 
             Reservation reservation2 =
-                new Reservation(2L, 2L,
-                    LocalDateTime.of(2020,1,1,1,1), ReservationType.EQUIPMENT );
+                new Reservation(ReservationType.EQUIPMENT ,2L, 2L,
+                    LocalDateTime.of(2020,1,1,1,1) );
 
             reservationRepository.saveAll(List.of(reservation1, reservation2));
 
