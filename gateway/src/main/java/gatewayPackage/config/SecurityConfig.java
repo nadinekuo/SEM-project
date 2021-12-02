@@ -30,6 +30,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             // allow all who are accessing "eureka-security" service
             .antMatchers(jwtConfig.getUri()).permitAll()
+            //must be an admin to access these methods
+            .antMatchers("/eureka-reservation/**" + "/admin/**").hasRole("ADMIN")
+            .antMatchers("/eureka-sport-facilities/**" + "/admin/**").hasRole("ADMIN")
+            .antMatchers("/eureka-user/**" + "/admin/**").hasRole("ADMIN")
             // Any other request must be authenticated
             .anyRequest().authenticated();
     }
