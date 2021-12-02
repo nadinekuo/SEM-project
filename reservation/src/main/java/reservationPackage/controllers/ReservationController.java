@@ -26,6 +26,7 @@ public class ReservationController {
     protected static final Gson gson = new Gson();
     static String sportFacilityUrl = "http://eureka-sport-facilities";
     private final transient ReservationService reservationService;
+
     @Autowired
     private final RestTemplate restTemplate;
 
@@ -78,8 +79,6 @@ public class ReservationController {
                                                            @PathVariable Long sportRoomId,
                                                            @PathVariable String date) {
 
-        String methodSpecificUrl = "/{sportRoomId}/exists";
-
         //can throw errors
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
@@ -96,6 +95,8 @@ public class ReservationController {
         if (!reservationService.isAvailable(sportRoomId, dateTime)) {
             return new ResponseEntity<>("Sport Room is already booked.", HttpStatus.NOT_FOUND);
         }
+
+        String methodSpecificUrl = "/" + sportRoomId.toString() + "/exists";
 
         Boolean sportHallExists =
             restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,

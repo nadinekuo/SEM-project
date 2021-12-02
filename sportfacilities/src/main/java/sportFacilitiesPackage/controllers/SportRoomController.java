@@ -27,7 +27,7 @@ public class SportRoomController {
 
     // Get sport room
 
-    @GetMapping("/{sportRoomName}")
+    @GetMapping("/{sportRoomId}")
     @ResponseBody
     public SportRoom getSportRoom(@PathVariable Long sportRoomId) {
         try {
@@ -38,10 +38,10 @@ public class SportRoomController {
         }
     }
 
-    @GetMapping("//{sportRoomId}/exists")
+    @GetMapping("/{sportRoomId}/exists")
     @ResponseBody
     public Boolean sportRoomExists(@PathVariable Long sportRoomId) {
-        return sportRoomExists(sportRoomId);
+        return sportRoomService.sportRoomExists(sportRoomId);
     }
 
     @GetMapping("/{sportRoomName}/getMaximumCapacity")
