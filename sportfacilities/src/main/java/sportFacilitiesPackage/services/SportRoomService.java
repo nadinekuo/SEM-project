@@ -1,7 +1,10 @@
 package sportFacilitiesPackage.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import sportFacilitiesPackage.entities.SportRoom;
 import sportFacilitiesPackage.repositories.SportRoomRepository;
 
@@ -25,6 +28,12 @@ public class SportRoomService {
 
     public Boolean sportRoomExists(Long sportRoomId) {
         return sportRoomRepository.findBySportRoomId(sportRoomId).isPresent();
+    }
+
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
 

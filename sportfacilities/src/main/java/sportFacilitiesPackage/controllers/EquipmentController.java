@@ -1,5 +1,7 @@
 package sportFacilitiesPackage.controllers;
 
+import static sportFacilitiesPackage.controllers.EurekaHelperFields.reservationUrl;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -79,7 +81,7 @@ public class EquipmentController {
     @GetMapping("/hello")
     public Long getId() {
         String methodSpecificUrl = "/hey";
-        return restTemplate.getForObject(EurekaHelperFields.reservationUrl + methodSpecificUrl, Long.class);
+        return restTemplate.getForObject(reservationUrl + methodSpecificUrl, Long.class);
     }
 
 }

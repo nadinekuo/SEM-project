@@ -21,7 +21,6 @@ public abstract class User {
     private long id;
     private String username;
     private String password;   // Spring Security
-    private boolean isPremium;
 
 
     /**
@@ -37,19 +36,10 @@ public abstract class User {
      * @param username - String
      * @param password - String
      */
-    public User(long id, String username, String password, boolean isPremium) {
+    public User(long id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.isPremium = isPremium;
-    }
-
-    public boolean isPremium() {
-        return isPremium;
-    }
-
-    public void setPremium(boolean premium) {
-        isPremium = premium;
     }
 
     /** Constructor User without id.

@@ -53,7 +53,6 @@ public class EquipmentService {
     @LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate();
-
     }
 
 

@@ -113,6 +113,8 @@ public class ReservationController {
         return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
     }
 
+
+
     @PostMapping("/{userId}/{equipmentName}/{date}/makeEquipmentBooking")
     @ResponseBody
     public ResponseEntity<String> makeEquipmentReservation(@PathVariable Long userId,
