@@ -74,6 +74,10 @@ public class ReservationController {
         return reservationService.isAvailable(sportRoomId, LocalDateTime.parse(date));
     }
 
+
+    // TODO: the 2 methods below have to be combined into 1 Reservation method, which allows
+    //  combining Equipment and SportRooms
+
     @PostMapping("/{userId}/{sportRoomId}/{date}/makeSportRoomBooking")
     @ResponseBody
     //@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Parameters input for the request "
@@ -81,6 +85,9 @@ public class ReservationController {
     public ResponseEntity<String> makeSportRoomReservation(@PathVariable Long userId,
                                                            @PathVariable Long sportRoomId,
                                                            @PathVariable String date) {
+
+        // TODO: check if userId exists
+
         //can throw errors
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
@@ -94,12 +101,35 @@ public class ReservationController {
                 HttpStatus.NOT_FOUND);
         }
 
+        // TODO: To be moved to another method (Chain of Responsibility) and should be applied to
+        //  whole Reservation (equipment and sportRoom may be combined in 1 reservation)
+
+        String yearMonthDay = date.substring(0, 9);
+        int reservationBalanceOnDate = getReservationBalance(userId, yearMonthDay);
+
+        // Basic users can have 1 reservation per day (Equipment and SportRoom are separated!)
+        if (!getUserIsPremium(userId) && reservationBalanceOnDate == 1) {
+            return new ResponseEntity<>("No more than 1 reservation per day can be made. "
+                + "Please try another date, or get a premium subscription to be able to make up "
+                + "to 3 reservations per day.",
+                HttpStatus.BAD_REQUEST);
+        }
+
+        // Premium users can have up to 3 reservations per day
+        if (getUserIsPremium(userId) && reservationBalanceOnDate == 3) {
+            return new ResponseEntity<>("No more than 3 reservations per day can be made. "
+                + "Please try another date.",
+                HttpStatus.BAD_REQUEST);
+        }
+
         if (!reservationService.isAvailable(sportRoomId, dateTime)) {
-            return new ResponseEntity<>("Sport Room is already booked.", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Sport Room is already booked for this time slot.",
+                HttpStatus.NOT_FOUND);
         }
 
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/exists";
 
+        // Call to SportRoomController in Sport Facilities microservice
         Boolean sportHallExists =
             restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
                 Boolean.class);
@@ -123,7 +153,8 @@ public class ReservationController {
                                                            @PathVariable String date,
                                                            @PathVariable String equipmentName) {
 
-        //some code duplication that should be removed when implementing chain of responsibility
+        // TODO: some code duplication that should be removed when implementing chain of
+        //  responsibility
         LocalDateTime dateTime = LocalDateTime.parse(date);
         if (dateTime.isBefore(LocalDateTime.now())) {
             return new ResponseEntity<>("Date and time has to be after now",
@@ -134,8 +165,32 @@ public class ReservationController {
                 HttpStatus.BAD_REQUEST);
         }
 
+        // TODO: check if equipment available (enough stock)
+
+        // TODO: To be moved to another method (Chain of Responsibility) and should be applied to
+        //  whole Reservation (equipment and sportRoom may be combined in 1 reservation)
+
+        String yearMonthDay = date.substring(0, 9);
+        int reservationBalanceOnDate = getReservationBalance(userId, yearMonthDay);
+
+        // Basic users can have 1 reservation per day
+        if (!getUserIsPremium(userId) && reservationBalanceOnDate == 1) {
+            return new ResponseEntity<>("No more than 1 reservation per day can be made. "
+                + "Please try another date, or get a premium subscription to be able to make up "
+                + "to 3 reservations per day.",
+                HttpStatus.BAD_REQUEST);
+        }
+
+        // Premium users can have up to 3 reservations per day
+        if (getUserIsPremium(userId) && reservationBalanceOnDate == 3) {
+            return new ResponseEntity<>("No more than 3 reservations per day can be made. "
+                + "Please try another date.",
+                HttpStatus.BAD_REQUEST);
+        }
+
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
+        // Call to EquipmentController in Sport Facilities microservice
         ResponseEntity<String> response =
             restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, ResponseEntity.class);
 
@@ -151,13 +206,25 @@ public class ReservationController {
         return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
     }
 
+
+
+    @GetMapping("/{userId}/isPremium")
+    @ResponseBody
     public Boolean getUserIsPremium(@PathVariable Long userId){
         String methodSpecificUrl = "/user/" + userId + "/isPremium";
 
-        Boolean b =
+        Boolean isPremium =
             restTemplate.getForObject(userUrl + methodSpecificUrl, Boolean.class);
 
-        return b;
+        return isPremium;
     }
+
+
+    @GetMapping("/{userId}/{date}/getReservationCountOnDay")
+    @ResponseBody
+    public int getReservationBalance(@PathVariable Long userId, @PathVariable String date){
+        return reservationService.getUserReservationCountOnDay(date, userId);
+    }
+
 
 }

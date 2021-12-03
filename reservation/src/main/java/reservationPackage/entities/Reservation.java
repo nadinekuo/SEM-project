@@ -20,9 +20,10 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_sequence")
     private long reservationId;
 
-    private ReservationType typeOfReservation; //equipment, lesson or sportroom
+    private ReservationType typeOfReservation;    // 0 = Equipment, 1 = SportRoom, 2 = Lesson
     private Long customerId;   // for group reservations, there will be separate reservations
-    private Long sportFacilityReservedId;
+    private Long sportFacilityReservedId;   // EquipmentId, LessonId or sportRoomId
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startingTime;
 

@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -31,12 +32,17 @@ public class ReservationService {
         reservationRepository.deleteById(reservationId);
     }
 
+    // All Reservations start at full hours, so only start time has to be checked.
     public boolean isAvailable(Long sportRoomId, LocalDateTime time) {
         return reservationRepository.findBySportRoomIdAndTime(sportRoomId, time).isEmpty();
     }
 
     public Reservation makeSportFacilityReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
+    }
+
+    public int getUserReservationCountOnDay(String date, long userId) {
+        return reservationRepository.findReservationByStartingTimeContains(date).size();
     }
 
     @Bean
