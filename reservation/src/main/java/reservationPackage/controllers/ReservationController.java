@@ -131,7 +131,7 @@ public class ReservationController {
         }
         if ((dateTime.getHour() < 16) || (dateTime.getHour() == 23)) {
             return new ResponseEntity<>("Time has to be between 16:00 and 23:00.",
-                HttpStatus.NOT_FOUND);
+                HttpStatus.BAD_REQUEST);
         }
 
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";

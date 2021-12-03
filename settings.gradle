@@ -7,4 +7,5 @@ include 'sportfacilities'
 include 'reservation'
 include 'security'
 include 'test'
+include 'test'
 

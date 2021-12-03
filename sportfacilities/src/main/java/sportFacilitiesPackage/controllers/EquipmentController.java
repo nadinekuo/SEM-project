@@ -9,11 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import sportFacilitiesPackage.entities.Equipment;
+import sportFacilitiesPackage.entities.Sport;
 import sportFacilitiesPackage.entities.SportRoom;
 import sportFacilitiesPackage.services.EquipmentService;
 import sportFacilitiesPackage.services.SportRoomService;
@@ -64,6 +66,13 @@ public class EquipmentController {
         }
     }
 
+    @PutMapping("/{equipmentName}/{relatedSport}/{inUse}")
+    @ResponseBody
+    public void addNewEquipment(@PathVariable String equipmentName,
+                                @PathVariable Sport relatedSport,
+                                @PathVariable Boolean inUse) {
+        equipmentService.addEquipment(new Equipment(1L ,equipmentName, relatedSport, inUse));
+    }
 
     @PostMapping("/{equipmentId}/broughtBack")
     @ResponseBody

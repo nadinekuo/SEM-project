@@ -55,5 +55,7 @@ public class EquipmentService {
         return new RestTemplate();
     }
 
-
+    public void addEquipment(Equipment equipment) {
+        equipmentRepository.save(equipment);
+    }
 }
