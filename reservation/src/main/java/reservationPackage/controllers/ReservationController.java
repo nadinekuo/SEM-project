@@ -151,7 +151,8 @@ public class ReservationController {
         return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
     }
 
-    public Boolean getUserIsPremium(@PathVariable Long userId){
+
+    public Boolean getUserIsPremium(Long userId){
         String methodSpecificUrl = "/user/" + userId + "/isPremium";
 
         Boolean b =

@@ -39,6 +39,7 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
+
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
