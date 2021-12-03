@@ -73,15 +73,7 @@ public class SportRoomController {
             return -1;
         }
     }
-    
-    public Boolean getUserIsPremium(@PathVariable Long userId){
-        String methodSpecificUrl = "/user/" + userId + "/isPremium";
 
-        Boolean b =
-            restTemplate.getForObject(userUrl + methodSpecificUrl, Boolean.class);
-
-        return b;
-    }
 
 
 /*    @GetMapping("/{sportRoomName}/getSports")

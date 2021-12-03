@@ -24,7 +24,9 @@ import reservationPackage.services.ReservationService;
 public class ReservationController {
 
     protected static final Gson gson = new Gson();
-    static String sportFacilityUrl = "http://eureka-sport-facilities";
+    private static final String sportFacilityUrl = "http://eureka-sport-facilities";
+    private static final String userUrl = "http://eureka-user";
+
     private final transient ReservationService reservationService;
 
     @Autowired
@@ -41,6 +43,7 @@ public class ReservationController {
         this.restTemplate = reservationService.restTemplate();
     }
 
+    //To see how eureka works
     @GetMapping("/hey")
     @ResponseBody
     public Long getReservation() {
@@ -78,7 +81,6 @@ public class ReservationController {
     public ResponseEntity<String> makeSportRoomReservation(@PathVariable Long userId,
                                                            @PathVariable Long sportRoomId,
                                                            @PathVariable String date) {
-
         //can throw errors
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
@@ -121,6 +123,7 @@ public class ReservationController {
                                                            @PathVariable String date,
                                                            @PathVariable String equipmentName) {
 
+        //some code duplication that should be removed when implementing chain of responsibility
         LocalDateTime dateTime = LocalDateTime.parse(date);
         if (dateTime.isBefore(LocalDateTime.now())) {
             return new ResponseEntity<>("Date and time has to be after now",
@@ -145,7 +148,16 @@ public class ReservationController {
         Reservation reservation =
             new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
         Reservation reservationMade = reservationService.makeSportFacilityReservation(reservation);
-        return new ResponseEntity<>("Successful", HttpStatus.OK);
+        return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
+    }
+
+    public Boolean getUserIsPremium(@PathVariable Long userId){
+        String methodSpecificUrl = "/user/" + userId + "/isPremium";
+
+        Boolean b =
+            restTemplate.getForObject(userUrl + methodSpecificUrl, Boolean.class);
+
+        return b;
     }
 
 }
