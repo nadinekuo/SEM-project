@@ -44,14 +44,6 @@ public class Reservation {
         return sportFacilityReservedId;
     }
 
-/*    private ReservationSorting reservationSorting;
-
-    public Reservation(ReservationSorting reservationSorting) {
-        this.reservationSorting = reservationSorting;
-    }*/
-
-    //public void executeStrategy(ArrayList<Reservation> reservations);
-
     public void setSportFacilityReservedId(Long sportFacilityReservedId) {
         this.sportFacilityReservedId = sportFacilityReservedId;
     }
@@ -91,6 +83,13 @@ public class Reservation {
     @Override
     public int hashCode() {
         return Objects.hash(reservationId);
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" + "reservationId=" + reservationId + ", typeOfReservation="
+            + typeOfReservation + ", customerId=" + customerId + ", sportFacilityReservedId="
+            + sportFacilityReservedId + ", startingTime=" + startingTime + '}';
     }
 
     @Override

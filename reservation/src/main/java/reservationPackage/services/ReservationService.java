@@ -42,7 +42,7 @@ public class ReservationService {
 
     @Bean
     @LoadBalanced
-    public RestTemplate restTemplate() {
+    public static RestTemplate restTemplate() {
         return new RestTemplate();
     }
 }

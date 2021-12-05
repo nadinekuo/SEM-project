@@ -2,6 +2,7 @@ package reservationPackage.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.client.RestTemplate;
 
 public class BookingSystem {
 
@@ -9,15 +10,16 @@ public class BookingSystem {
     private ReservationSortingStrategy sortingStrategy;
     private List<Reservation> bookings;
 
-    public BookingSystem(ReservationSortingStrategy sortingStrategy,
-                         List<Reservation> reservationList) {
+    public BookingSystem(ReservationSortingStrategy sortingStrategy) {
         this.sortingStrategy = sortingStrategy;
         this.bookings = new ArrayList<>();
     }
 
-    public BookingSystem(ChronologicalStrategy sortingStrategy) {
+   /* public BookingSystem(ChronologicalStrategy sortingStrategy) {
+    }*/
 
-    }
+    //public BookingSystem(BasicPremiumUserStrategy sortingStrategy) {
+   // }
 
     public void addReservation(Reservation reservation) {
         bookings.add(reservation);
