@@ -1,12 +1,17 @@
 package userPackage.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import userPackage.config.UserDTOConfig;
 import userPackage.entities.Customer;
 import userPackage.services.UserService;
 
@@ -17,7 +22,6 @@ public class UserController {
 
     @Autowired
     private final RestTemplate restTemplate;
-
 
     /**
      * Autowired constructor for the class.
@@ -36,5 +40,19 @@ public class UserController {
         Customer customer = (Customer) userService.getUserById(userId);
         return customer.isPremiumUser();
     }
-    
+
+    @PostMapping("/registerCustomer")
+    public void customerRegistration(HttpServletRequest request) throws IOException {
+        UserDTOConfig data =
+            new ObjectMapper().readValue(request.getInputStream(), UserDTOConfig.class);
+        userService.registerCustomer(data);
+    }
+
+    @PostMapping("/registerAdmin/admin")
+    public void adminRegistration(HttpServletRequest request) throws IOException {
+        UserDTOConfig data =
+            new ObjectMapper().readValue(request.getInputStream(), UserDTOConfig.class);
+        userService.registerAdmin(data);
+    }
+
 }

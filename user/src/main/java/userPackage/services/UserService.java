@@ -1,11 +1,15 @@
 package userPackage.services;
 
 
+import com.netflix.discovery.converters.Auto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import userPackage.config.UserDTOConfig;
 import userPackage.entities.Admin;
 import userPackage.entities.Customer;
 import userPackage.entities.User;
@@ -43,7 +47,23 @@ public class UserService {
     @LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
 
+    public void registerCustomer(UserDTOConfig data) {
+        Customer customer = new Customer();
+        customer.setUsername(data.getUsername());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        customer.setPassword(passwordEncoder.encode(data.getPassword()));
+        customer.setPremiumUser(data.isPremiumSubscription());
+        customerRepository.save(customer);
+    }
+
+    public void registerAdmin(UserDTOConfig data) {
+        Admin admin = new Admin();
+        admin.setUsername(data.getUsername());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        admin.setPassword(passwordEncoder.encode(data.getPassword()));
+        adminRepository.save(admin);
     }
 
 }
