@@ -39,11 +39,17 @@ public class SportFacilitiesConfig {
 
             sportRoomRepository.saveAll(List.of(hallX1, hallX2, hallX3));
 
-            Equipment hockeystick = new Equipment("hockeystick", 60, 12, hockey);
-            Equipment kickboxGloves = new Equipment("kickboxGloves", 35, 6, kickboxing);
-            Equipment soccerBall = new Equipment("soccerBallWhite", 40, 23, soccer);
+            Equipment hockeyStick = new Equipment(1L, "hockeyStick", hockey, true);
+            Equipment boxingGloves1 = new Equipment(2L, "boxingGloves",  kickboxing, false);
+            Equipment boxingGloves2 = new Equipment(3L, "boxingGloves",  kickboxing, true);
+            Equipment boxingGloves3 = new Equipment(4L, "boxingGloves",  kickboxing, false);
+            Equipment boxingGloves4 = new Equipment(5L, "boxingGloves",  kickboxing, true);
+            Equipment soccerBall1 = new Equipment(6L, "soccerBall", soccer, false);
+            Equipment soccerBall2 = new Equipment(7L, "soccerBall", soccer, true);
+            Equipment soccerBall3 = new Equipment(8L, "soccerBall", soccer, false);
 
-            equipmentRepository.saveAll(List.of(hockeystick, kickboxGloves, soccerBall));
+            equipmentRepository.saveAll(List.of(hockeyStick, boxingGloves1, boxingGloves2,
+                boxingGloves3, boxingGloves4,  soccerBall1, soccerBall2, soccerBall3));
         };
     }
 

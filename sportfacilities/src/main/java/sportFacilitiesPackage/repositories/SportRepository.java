@@ -9,7 +9,7 @@ import sportFacilitiesPackage.entities.Sport;
 @Repository
 public interface SportRepository extends JpaRepository<Sport, String> {
 
-    Optional<Sport> findById(String sportName);
+    //Optional<Sport> findById(String sportName);
 
     @Transactional
     void deleteById(String sportName);
