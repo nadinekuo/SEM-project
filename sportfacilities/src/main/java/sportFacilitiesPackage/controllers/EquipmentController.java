@@ -68,15 +68,15 @@ public class EquipmentController {
         }
     }
 
-    //this is for admins only
-    @PutMapping("/{equipmentName}/{relatedSport}/addNewEquipment")
+
+    @PutMapping("/{equipmentName}/{relatedSport}/addNewEquipment/admin")
     @ResponseBody
     public void addNewEquipment(@PathVariable String equipmentName,
                                 @PathVariable Sport relatedSport) {
         equipmentService.addEquipment(new Equipment(equipmentName, relatedSport, true));
     }
 
-    @PostMapping("/{equipmentId}/broughtBack")
+    @PostMapping("/{equipmentId}/broughtBack/admin")
     @ResponseBody
     public void equipmentBroughtBack(@PathVariable Long equipmentId) {
         equipmentService.setEquipmentToNotInUse(equipmentId);

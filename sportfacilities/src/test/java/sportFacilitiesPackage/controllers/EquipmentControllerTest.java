@@ -33,7 +33,7 @@ public class EquipmentControllerTest {
     private final Sport relatedSport = box;
     private final boolean inUse = true;
 
-    private final Equipment equipment = new Equipment(1L, name, relatedSport, inUse);
+    private final Equipment equipment = new Equipment( name, relatedSport, inUse);
 
     @Mock
     EquipmentService equipmentService;
