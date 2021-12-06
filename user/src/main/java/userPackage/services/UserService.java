@@ -39,11 +39,20 @@ public class UserService {
         return customerRepository.findById(userId);
     }
 
+    /**
+     * Finds User by userName
+     *
+     * @param userName - String
+     * @return Optional of User having this name
+     */
+    public User getUserByUsername(String userName) {
+        return customerRepository.findByUsername(userName);
+    }
+
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate();
-
     }
 
 }

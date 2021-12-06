@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import userPackage.entities.Customer;
+import userPackage.entities.User;
 import userPackage.services.UserService;
 
 @RestController
@@ -36,5 +37,12 @@ public class UserController {
         Customer customer = (Customer) userService.getUserById(userId);
         return customer.isPremiumUser();
     }
-    
+
+    @GetMapping("/{userId}/getInfo")
+    @ResponseBody
+    public User getUserInfo(@PathVariable String userName) {
+        User user = (User) userService.getUserByUsername(userName);
+        return user;
+    }
+
 }
