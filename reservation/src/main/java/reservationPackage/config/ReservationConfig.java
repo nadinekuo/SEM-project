@@ -18,11 +18,11 @@ public class ReservationConfig {
         return args -> {
             Reservation reservation1 =
                 new Reservation(ReservationType.EQUIPMENT, 1L, 2L,
-                    LocalDateTime.of(2020,1,1,1,1));
+                    LocalDateTime.of(2020,1,1,1,1), false);
 
             Reservation reservation2 =
                 new Reservation(ReservationType.EQUIPMENT ,2L, 2L,
-                    LocalDateTime.of(2020,1,1,1,1) );
+                    LocalDateTime.of(2020,1,1,1,1), false);
 
             reservationRepository.saveAll(List.of(reservation1, reservation2));
 

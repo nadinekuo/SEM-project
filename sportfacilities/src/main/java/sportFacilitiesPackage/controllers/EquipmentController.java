@@ -3,6 +3,7 @@ package sportFacilitiesPackage.controllers;
 import static sportFacilitiesPackage.controllers.EurekaHelperFields.reservationUrl;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,12 +60,16 @@ public class EquipmentController {
             Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
             equipmentService.setEquipmentToInUse(equipmentId);
             ResponseEntity<String> response = new ResponseEntity<String>(equipmentId.toString(),
-            HttpStatus.OK);
+                HttpStatus.OK);
             return response;
+        } catch (NoSuchElementException e) {
+            //e.printStackTrace();
+            return new ResponseEntity<String>("The equipment requested is not in stock or the "
+                + "equipment name was not found",
+                HttpStatus.BAD_REQUEST);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
-            return new ResponseEntity<String>("Specified equipment was not found",
-                HttpStatus.BAD_REQUEST);
+            return null;
         }
     }
 

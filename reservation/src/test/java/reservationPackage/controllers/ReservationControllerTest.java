@@ -67,80 +67,80 @@ public class ReservationControllerTest {
     }
 
 
+    //    @Test
+    //    public void makeEquipmentReservationOKTest() throws Exception {
+    //        mockMvc.perform(post("/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking",
+    //                userId,
+    //                equipmentName, validDate))
+    //            .andExpect(status().isOk())
+    //            .andExpect((ResultMatcher) content().string(containsString("Equipment reservation "
+    //            + "was successful!")));
+    //        verify(reservationService).makeSportFacilityReservation(reservation);
+    //    }
+
 //    @Test
-//    public void makeEquipmentReservationOKTest() throws Exception {
+//    public void makeEquipmentReservationDateInThePast() throws Exception {
+//        String pastDate = "1990-01-06T17:00:00";
 //        mockMvc.perform(post("/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking",
-//                userId,
-//                equipmentName, validDate))
-//            .andExpect(status().isOk())
-//            .andExpect((ResultMatcher) content().string(containsString("Equipment reservation "
-//            + "was successful!")));
-//        verify(reservationService).makeSportFacilityReservation(reservation);
+//            userId,
+//            equipmentName, pastDate))
+//            .andExpect(status().isBadRequest())
+//            //.andExpect((ResultMatcher) content().string(containsString("Date and time has to be "
+//            //+ "after now")))
+//            .andDo(MockMvcResultHandlers.print());;
+//        verify(reservationService, never()).makeSportFacilityReservation(reservation);
+//
 //    }
-
-    @Test
-    public void makeEquipmentReservationDateInThePast() throws Exception {
-        String pastDate = "1990-01-06T17:00:00";
-        mockMvc.perform(post("/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking",
-                userId,
-                equipmentName, pastDate))
-            .andExpect(status().isBadRequest())
-            //.andExpect((ResultMatcher) content().string(containsString("Date and time has to be "
-            //+ "after now")))
-            .andDo(MockMvcResultHandlers.print());;
-        verify(reservationService, never()).makeSportFacilityReservation(reservation);
-
-    }
-
-    @Test
-    public void makeEquipmentReservationOutsideOfTimeslotEdgeCase1() throws Exception {
-        String invalidTime = "2099-01-06T15:59:59";
-
-        mockMvc.perform(post("/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking",
-                userId,
-                equipmentName, invalidTime))
-            .andExpect(status().isBadRequest())
-            .andDo(MockMvcResultHandlers.print());;
-        verify(reservationService, never()).makeSportFacilityReservation(reservation);
-    }
-
-    @Test
-    public void makeEquipmentReservationOutsideOfTimeslotEdgeCase2() throws Exception {
-        String invalidTime = "2099-01-06T23:00:00";
-
-        mockMvc.perform(post("/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking",
-                userId,
-                equipmentName, invalidTime))
-            .andExpect(status().isBadRequest())
-            //.andExpect((ResultMatcher) content().string("hi"))
-            .andDo(MockMvcResultHandlers.print());
-        verify(reservationService, never()).makeSportFacilityReservation(reservation);
-    }
-
+//
 //    @Test
-//    public void makeEquipmentReservationInsideOfTimeslotEdgeCase1() throws Exception {
-//        String time = "2099-01-06T16:00:00";
+//    public void makeEquipmentReservationOutsideOfTimeslotEdgeCase1() throws Exception {
+//        String invalidTime = "2099-01-06T15:59:59";
 //
 //        mockMvc.perform(post("/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking",
-//                userId,
-//                equipmentName, time))
-//            .andExpect(status().isOk())
-//            .andExpect((ResultMatcher) content().string(containsString("Equipment reservation "
-//                + "was successful!")));
-//        verify(reservationService).makeSportFacilityReservation(reservation);
+//            userId,
+//            equipmentName, invalidTime))
+//            .andExpect(status().isBadRequest())
+//            .andDo(MockMvcResultHandlers.print());;
+//        verify(reservationService, never()).makeSportFacilityReservation(reservation);
 //    }
-
+//
 //    @Test
-//    public void makeEquipmentReservationInsideOfTimeslotEdgeCase2() throws Exception {
-//        String time = "2099-01-06T22:59:59";
+//    public void makeEquipmentReservationOutsideOfTimeslotEdgeCase2() throws Exception {
+//        String invalidTime = "2099-01-06T23:00:00";
 //
 //        mockMvc.perform(post("/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking",
-//                userId, equipmentName, time))
-//            .andExpect(status().isOk())
-//            .andExpect((ResultMatcher) content().string(containsString("Equipment reservation "
-//                + "was successful!")));
-//        verify(reservationService).makeSportFacilityReservation(reservation);
+//            userId,
+//            equipmentName, invalidTime))
+//            .andExpect(status().isBadRequest())
+//            //.andExpect((ResultMatcher) content().string("hi"))
+//            .andDo(MockMvcResultHandlers.print());
+//        verify(reservationService, never()).makeSportFacilityReservation(reservation);
 //    }
+
+    //    @Test
+    //    public void makeEquipmentReservationInsideOfTimeslotEdgeCase1() throws Exception {
+    //        String time = "2099-01-06T16:00:00";
+    //
+    //        mockMvc.perform(post("/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking",
+    //                userId,
+    //                equipmentName, time))
+    //            .andExpect(status().isOk())
+    //            .andExpect((ResultMatcher) content().string(containsString("Equipment reservation "
+    //                + "was successful!")));
+    //        verify(reservationService).makeSportFacilityReservation(reservation);
+    //    }
+
+    //    @Test
+    //    public void makeEquipmentReservationInsideOfTimeslotEdgeCase2() throws Exception {
+    //        String time = "2099-01-06T22:59:59";
+    //
+    //        mockMvc.perform(post("/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking",
+    //                userId, equipmentName, time))
+    //            .andExpect(status().isOk())
+    //            .andExpect((ResultMatcher) content().string(containsString("Equipment reservation "
+    //                + "was successful!")));
+    //        verify(reservationService).makeSportFacilityReservation(reservation);
+    //    }
 
 
 
