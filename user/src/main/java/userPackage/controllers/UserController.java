@@ -38,11 +38,11 @@ public class UserController {
         return customer.isPremiumUser();
     }
 
-    @GetMapping("/{userId}/getInfo")
+    @GetMapping("/{userName}/getInfo")
     @ResponseBody
-    public User getUserInfo(@PathVariable String userName) {
-        User user = (User) userService.getUserByUsername(userName);
-        return user;
+    public Customer getUserInfo(@PathVariable String userName) {
+        Customer customer = (Customer) userService.getUserByUsername(userName);
+        return customer;
     }
 
 }

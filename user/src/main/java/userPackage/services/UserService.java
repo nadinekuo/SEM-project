@@ -40,12 +40,12 @@ public class UserService {
     }
 
     /**
-     * Finds User by userName
+     * Finds Customer by userName
      *
      * @param userName - String
-     * @return Optional of User having this name
+     * @return Optional of Customer having this name
      */
-    public User getUserByUsername(String userName) {
+    public Customer getUserByUsername(String userName) {
         return customerRepository.findByUsername(userName);
     }
 
