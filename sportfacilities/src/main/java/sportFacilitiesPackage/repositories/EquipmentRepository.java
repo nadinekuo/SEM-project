@@ -1,19 +1,20 @@
 package sportFacilitiesPackage.repositories;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import sportFacilitiesPackage.entities.Equipment;
-import sportFacilitiesPackage.entities.Sport;
 
 @Repository
 public interface EquipmentRepository extends JpaRepository<Equipment, String> {
 
+    Equipment findByEquipmentId(long equipmentId);
 
-    Optional<Equipment> findById(String equipmentName);
 
     @Transactional
-    void deleteById(String equipmentName);
+    void deleteByEquipmentId(long equipmentId);
 
 }

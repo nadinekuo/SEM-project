@@ -30,8 +30,8 @@ public class Lesson {
     /**
      * Constructor Lesson.
      *
-     * @param lessonId        - long
-     * @param title           - String
+     * @param lessonId - long
+     * @param title    - String
      */
     public Lesson(long lessonId, String title) {
         this.lessonId = lessonId;
@@ -62,7 +62,6 @@ public class Lesson {
     public void setTitle(String title) {
         this.title = title;
     }
-
 
     @Override
     public int hashCode() {

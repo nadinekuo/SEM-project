@@ -1,13 +1,15 @@
 package sportFacilitiesPackage.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -15,35 +17,47 @@ import javax.persistence.Table;
 public class Equipment {
 
     @Id
+    @SequenceGenerator(name = "equipment_sequence", sequenceName = "equipment_sequence",
+        allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "equipment_sequence")
+    private long equipmentId;
+
     private String name;
 
-    private int inventory;
-    private int inUse;       // available = inventory - inUse
+    private boolean isInUse;       // available = inventory - inUse
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "sport_name", nullable = false)
     @JsonBackReference
     private Sport relatedSport;
 
-
     /**
-     *  Empty constructor needed for Spring JPA.
+     * Empty constructor needed for Spring JPA.
      */
     public Equipment() {
     }
 
-    /** Constructor Equipment.
-     *
-     * @param name - String
-     * @param inventory - int
-     * @param inUse - int
-     * @param relatedSport - Sport
-     */
-    public Equipment(String name, int inventory, int inUse, Sport relatedSport) {
+    public Equipment(long equipmentId, String name, boolean isInUse, Sport relatedSport) {
+        this.equipmentId = equipmentId;
         this.name = name;
-        this.inventory = inventory;
-        this.inUse = inUse;
+        this.isInUse = isInUse;
         this.relatedSport = relatedSport;
+    }
+
+    public boolean isInUse() {
+        return isInUse;
+    }
+
+    public void setInUse(boolean inUse) {
+        isInUse = inUse;
+    }
+
+    public long getEquipmentId() {
+        return equipmentId;
+    }
+
+    public void setEquipmentId(long equipmentId) {
+        this.equipmentId = equipmentId;
     }
 
     public String getName() {
@@ -54,28 +68,17 @@ public class Equipment {
         this.name = name;
     }
 
-    public int getInventory() {
-        return inventory;
-    }
-
-    public void setInventory(int inventory) {
-        this.inventory = inventory;
-    }
-
-    public int getInUse() {
-        return inUse;
-    }
-
-    public void setInUse(int inUse) {
-        this.inUse = inUse;
-    }
-
     public Sport getRelatedSport() {
         return relatedSport;
     }
 
     public void setRelatedSport(Sport relatedSport) {
         this.relatedSport = relatedSport;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
     @Override
@@ -91,13 +94,8 @@ public class Equipment {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
-
-    @Override
     public String toString() {
-        return "Equipment{" + "name='" + name + '\'' + ", inventory=" + inventory + ", inUse="
-            + inUse + ", relatedSport=" + relatedSport + '}';
+        return "Equipment{" + "equipmentId=" + equipmentId + ", name='" + name + '\'' + ", isInUse="
+            + isInUse + ", relatedSport=" + relatedSport + '}';
     }
 }
