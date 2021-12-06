@@ -3,6 +3,7 @@ package reservationPackage.controllers;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,13 +42,6 @@ public class ReservationController {
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
         this.restTemplate = reservationService.restTemplate();
-    }
-
-    //To see how eureka works
-    @GetMapping("/hey")
-    @ResponseBody
-    public Long getReservation() {
-        return reservationService.getReservation(1L).getCustomerId();
     }
 
     @GetMapping("/{reservationId}")
@@ -136,14 +130,17 @@ public class ReservationController {
 
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
-        ResponseEntity<String> response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, ResponseEntity.class);
+        //temporary fix
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl,
+                String.class);
 
-        if (!response.getStatusCode().equals(Response.status(Response.Status.OK))) {
-            return response;
-        }
+//        if (!response.getStatusCode().equals(Response.status(Response.Status.OK))) {
+//            return null;
+//        }
 
-        Long equipmentId = gson.fromJson(response.getBody(), new TypeToken<Long>() {}.getType());
+        Long equipmentId = Long.valueOf(response);//gson.fromJson(response.getBody(),new TypeToken<Long>() {}.getType
+        // ());
 
         Reservation reservation =
             new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);

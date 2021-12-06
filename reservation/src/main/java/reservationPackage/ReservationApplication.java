@@ -27,11 +27,6 @@ public class ReservationApplication implements ReservationControllerEureka {
     @Value("${spring.application.name}")
     private String appName;
 
-    @Bean
-    @LoadBalanced
-    public RestTemplate getRestTemplate(){
-        return new RestTemplate();
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(ReservationApplication.class, args);

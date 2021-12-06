@@ -37,8 +37,7 @@ public class Equipment {
     public Equipment() {
     }
 
-    public Equipment(long equipmentId, String name, Sport relatedSport, boolean inUse) {
-        this.equipmentId = equipmentId;
+    public Equipment( String name, Sport relatedSport, boolean inUse) {
         this.name = name;
         this.relatedSport = relatedSport;
         this.inUse = inUse;

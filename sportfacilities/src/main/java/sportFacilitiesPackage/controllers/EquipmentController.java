@@ -58,7 +58,9 @@ public class EquipmentController {
         try {
             Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
             equipmentService.setEquipmentToInUse(equipmentId);
-            return new ResponseEntity<String>(equipmentId.toString(), HttpStatus.CREATED);
+            ResponseEntity<String> response = new ResponseEntity<String>(equipmentId.toString(),
+            HttpStatus.OK);
+            return response;
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
             return new ResponseEntity<String>("Specified equipment was not found",
@@ -66,12 +68,12 @@ public class EquipmentController {
         }
     }
 
-    @PutMapping("/{equipmentName}/{relatedSport}/{inUse}")
+    //this is for admins only
+    @PutMapping("/{equipmentName}/{relatedSport}/addNewEquipment")
     @ResponseBody
     public void addNewEquipment(@PathVariable String equipmentName,
-                                @PathVariable Sport relatedSport,
-                                @PathVariable Boolean inUse) {
-        equipmentService.addEquipment(new Equipment(1L ,equipmentName, relatedSport, inUse));
+                                @PathVariable Sport relatedSport) {
+        equipmentService.addEquipment(new Equipment(equipmentName, relatedSport, true));
     }
 
     @PostMapping("/{equipmentId}/broughtBack")
@@ -86,11 +88,5 @@ public class EquipmentController {
         equipmentService.setEquipmentToInUse(equipmentId);
     }
 
-
-    @GetMapping("/hello")
-    public Long getId() {
-        String methodSpecificUrl = "/hey";
-        return restTemplate.getForObject(reservationUrl + methodSpecificUrl, Long.class);
-    }
 
 }
