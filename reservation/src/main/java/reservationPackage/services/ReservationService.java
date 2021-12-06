@@ -32,10 +32,10 @@ public class ReservationService {
     }
 
     public boolean isAvailable(Long sportRoomId, LocalDateTime time) {
-        return reservationRepository.findBySportRoomIdAndTime(sportRoomId, time).isPresent();
+        return reservationRepository.findBySportRoomIdAndTime(sportRoomId, time).isEmpty();
     }
 
-    public Reservation makeSportRoomReservation(Reservation reservation) {
+    public Reservation makeSportFacilityReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
 

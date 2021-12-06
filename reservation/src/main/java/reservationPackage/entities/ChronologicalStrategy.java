@@ -4,8 +4,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.validation.constraints.Email;
+import reservationPackage.controllers.ReservationController;
+import reservationPackage.services.ReservationService;
 
 public class ChronologicalStrategy implements ReservationSortingStrategy {
+
+
 
     public Reservation getNextReservation(List<Reservation> reservations) {
         if (reservations == null || reservations.isEmpty())
@@ -14,7 +18,7 @@ public class ChronologicalStrategy implements ReservationSortingStrategy {
         return reservations.get(0);
     }
     private void sort(List<Reservation> list) {
-        Collections.sort(list, new ReservationComparator());
+        Collections.sort(list, Comparator.comparing(Reservation::getStartingTime).reversed());
     }
     protected class ReservationComparator implements Comparator {
         @Override

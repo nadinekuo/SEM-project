@@ -24,12 +24,12 @@ public class Equipment {
 
     private String name;
 
-    private boolean isInUse;       // available = inventory - inUse
-
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "sport_name", nullable = false)
     @JsonBackReference
     private Sport relatedSport;
+
+    private boolean inUse;
 
     /**
      * Empty constructor needed for Spring JPA.
@@ -37,19 +37,18 @@ public class Equipment {
     public Equipment() {
     }
 
-    public Equipment(long equipmentId, String name, boolean isInUse, Sport relatedSport) {
-        this.equipmentId = equipmentId;
+    public Equipment( String name, Sport relatedSport, boolean inUse) {
         this.name = name;
-        this.isInUse = isInUse;
         this.relatedSport = relatedSport;
+        this.inUse = inUse;
     }
 
     public boolean isInUse() {
-        return isInUse;
+        return inUse;
     }
 
     public void setInUse(boolean inUse) {
-        isInUse = inUse;
+        this.inUse = inUse;
     }
 
     public long getEquipmentId() {
@@ -95,7 +94,7 @@ public class Equipment {
 
     @Override
     public String toString() {
-        return "Equipment{" + "equipmentId=" + equipmentId + ", name='" + name + '\'' + ", isInUse="
-            + isInUse + ", relatedSport=" + relatedSport + '}';
+        return "Equipment{" + "equipmentId=" + equipmentId + ", name='" + name + '\''
+            + ", relatedSport=" + relatedSport + '}';
     }
 }

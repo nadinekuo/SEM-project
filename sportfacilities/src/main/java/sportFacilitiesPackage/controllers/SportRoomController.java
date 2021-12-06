@@ -1,17 +1,24 @@
 package sportFacilitiesPackage.controllers;
 
+import static sportFacilitiesPackage.controllers.EurekaHelperFields.userUrl;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import sportFacilitiesPackage.entities.SportRoom;
 import sportFacilitiesPackage.services.SportRoomService;
 
 @RestController
 @RequestMapping("sportRoom")
 public class SportRoomController {
+
+    @Autowired
+    private final RestTemplate restTemplate;
 
     private final transient SportRoomService sportRoomService;
 
@@ -23,11 +30,12 @@ public class SportRoomController {
     @Autowired
     public SportRoomController(SportRoomService sportRoomService) {
         this.sportRoomService = sportRoomService;
+        this.restTemplate = sportRoomService.restTemplate();
     }
 
     // Get sport room
 
-    @GetMapping("/{sportRoomName}")
+    @GetMapping("/{sportRoomId}")
     @ResponseBody
     public SportRoom getSportRoom(@PathVariable Long sportRoomId) {
         try {
@@ -36,6 +44,12 @@ public class SportRoomController {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @GetMapping("/{sportRoomId}/exists")
+    @ResponseBody
+    public Boolean sportRoomExists(@PathVariable Long sportRoomId) {
+        return sportRoomService.sportRoomExists(sportRoomId);
     }
 
     @GetMapping("/{sportRoomName}/getMaximumCapacity")
@@ -59,6 +73,8 @@ public class SportRoomController {
             return -1;
         }
     }
+
+
 
 /*    @GetMapping("/{sportRoomName}/getSports")
     @ResponseBody
