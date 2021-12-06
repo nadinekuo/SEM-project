@@ -3,6 +3,7 @@ package reservationPackage.controllers;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -78,13 +79,14 @@ public class ReservationController {
     // TODO: the 2 methods below have to be combined into 1 Reservation method, which allows
     //  combining Equipment and SportRooms
 
-    @PostMapping("/{userId}/{sportRoomId}/{date}/makeSportRoomBooking")
+    @PostMapping("/{userId}/{sportRoomId}/{date}/{isCombined}/makeSportRoomBooking")
     @ResponseBody
     //@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Parameters input for the request "
     //    + "were wrong")
     public ResponseEntity<String> makeSportRoomReservation(@PathVariable Long userId,
                                                            @PathVariable Long sportRoomId,
-                                                           @PathVariable String date) {
+                                                           @PathVariable String date,
+                                                           @PathVariable boolean isCombined) {
 
         // TODO: check if userId exists
 
@@ -96,29 +98,28 @@ public class ReservationController {
                 HttpStatus.BAD_REQUEST);
         }
 
+        // TODO: check if no other Sport room booked by that user for the same time
+
         if ((dateTime.getHour() < 16) || (dateTime.getHour() == 23)) {
             return new ResponseEntity<>("Time has to be between 16:00 and 23:00.",
                 HttpStatus.NOT_FOUND);
         }
 
-        // TODO: To be moved to another method (Chain of Responsibility) and should be applied to
-        //  whole Reservation (equipment and sportRoom may be combined in 1 reservation)
+        // TODO: To be moved to another method (Chain of Responsibility)
 
         String yearMonthDay = date.substring(0, 9);
-        int reservationBalanceOnDate = getReservationBalance(userId, yearMonthDay);
+        int reservationBalanceOnDate =
+            reservationService.getUserReservationCountOnDay(yearMonthDay, userId);
 
         // Basic users can have 1 reservation per day (Equipment and SportRoom are separated!)
         if (!getUserIsPremium(userId) && reservationBalanceOnDate == 1) {
-            return new ResponseEntity<>("No more than 1 reservation per day can be made. "
-                + "Please try another date, or get a premium subscription to be able to make up "
-                + "to 3 reservations per day.",
+            return new ResponseEntity<>("No more than 1 reservation per day can be made. ",
                 HttpStatus.BAD_REQUEST);
         }
 
         // Premium users can have up to 3 reservations per day
         if (getUserIsPremium(userId) && reservationBalanceOnDate == 3) {
-            return new ResponseEntity<>("No more than 3 reservations per day can be made. "
-                + "Please try another date.",
+            return new ResponseEntity<>("No more than 3 reservations per day can be made.",
                 HttpStatus.BAD_REQUEST);
         }
 
@@ -140,18 +141,19 @@ public class ReservationController {
         }
 
         Reservation reservation =
-            new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime);
+            new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime, isCombined);
         Reservation reservationMade = reservationService.makeSportFacilityReservation(reservation);
         return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
     }
 
 
 
-    @PostMapping("/{userId}/{equipmentName}/{date}/makeEquipmentBooking")
+    @PostMapping("/{userId}/{equipmentName}/{date}/{isCombined}/makeEquipmentBooking")
     @ResponseBody
     public ResponseEntity<String> makeEquipmentReservation(@PathVariable Long userId,
                                                            @PathVariable String date,
-                                                           @PathVariable String equipmentName) {
+                                                           @PathVariable String equipmentName,
+                                                           @PathVariable boolean isCombined) {
 
         // TODO: some code duplication that should be removed when implementing chain of
         //  responsibility
@@ -167,24 +169,21 @@ public class ReservationController {
 
         // TODO: check if equipment available (enough stock)
 
-        // TODO: To be moved to another method (Chain of Responsibility) and should be applied to
-        //  whole Reservation (equipment and sportRoom may be combined in 1 reservation)
+        // TODO: To be moved to another method (Chain of Responsibility)
 
         String yearMonthDay = date.substring(0, 9);
-        int reservationBalanceOnDate = getReservationBalance(userId, yearMonthDay);
+        int reservationBalanceOnDate =
+            reservationService.getUserReservationCountOnDay(yearMonthDay, userId);
 
         // Basic users can have 1 reservation per day
         if (!getUserIsPremium(userId) && reservationBalanceOnDate == 1) {
-            return new ResponseEntity<>("No more than 1 reservation per day can be made. "
-                + "Please try another date, or get a premium subscription to be able to make up "
-                + "to 3 reservations per day.",
+            return new ResponseEntity<>("No more than 1 reservation per day can be made.",
                 HttpStatus.BAD_REQUEST);
         }
 
         // Premium users can have up to 3 reservations per day
         if (getUserIsPremium(userId) && reservationBalanceOnDate == 3) {
-            return new ResponseEntity<>("No more than 3 reservations per day can be made. "
-                + "Please try another date.",
+            return new ResponseEntity<>("No more than 3 reservations per day can be made. ",
                 HttpStatus.BAD_REQUEST);
         }
 
@@ -201,7 +200,7 @@ public class ReservationController {
         Long equipmentId = gson.fromJson(response.getBody(), new TypeToken<Long>() {}.getType());
 
         Reservation reservation =
-            new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
+            new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime, isCombined);
         Reservation reservationMade = reservationService.makeSportFacilityReservation(reservation);
         return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
     }

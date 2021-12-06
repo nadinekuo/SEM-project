@@ -26,8 +26,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     LocalDate findStartingTimeByReservationId(long reservationId);
 
 
-    // yyyy-MM-dd
-    List<Reservation> findReservationByStartingTimeContains(String date);
+    List<Reservation> findReservationByStartingTimeContainsAndCustomerId(String date,
+                                                                         Long customerId);
 
     @Transactional
     void deleteById(Long reservationId);
