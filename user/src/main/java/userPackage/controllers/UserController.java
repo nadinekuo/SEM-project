@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import userPackage.entities.Admin;
 import userPackage.entities.Customer;
 import userPackage.entities.User;
 import userPackage.services.UserService;
@@ -40,9 +41,17 @@ public class UserController {
 
     @GetMapping("/{userName}/getInfo")
     @ResponseBody
-    public Customer getUserInfo(@PathVariable String userName) {
-        Customer customer = (Customer) userService.getUserByUsername(userName);
-        return customer;
+    public User getUserInfo(@PathVariable String userName) {
+        Customer customer = (Customer) userService.getCustomerByUsername(userName);
+        Admin admin = (Admin) userService.getAdminByUsername(userName);
+
+        if (customer == null && admin != null) {
+            return admin;
+        }
+        if (admin == null && customer != null) {
+            return customer;
+        }
+        return null;
     }
 
 }
