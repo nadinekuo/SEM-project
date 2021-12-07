@@ -1,22 +1,14 @@
 package reservationPackage.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "reservations")
@@ -28,32 +20,61 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_sequence")
     private long reservationId;
 
+    private ReservationType typeOfReservation;    // 0 = Equipment, 1 = SportRoom, 2 = Lesson
+    private Long customerId;   // for group reservations, there will be separate reservations
+    private Long sportFacilityReservedId;   // EquipmentId, LessonId or sportRoomId
+    private boolean isCombined;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startingTime;
 
-    private long timeSlot;  // in hours
+    public Reservation( ReservationType typeOfReservation, Long customerId,
+                        Long sportFacilityReservedId, LocalDateTime startingTime) {
 
-    private Long customerId;   // for group reservations, there will be separate reservations
-    private Long equipmentBorrowedId;  // for each piece reserved, there is a separate reservation
-    private String sportRoomReservedId;
+        this.typeOfReservation = typeOfReservation;
+        this.customerId = customerId;
+        this.sportFacilityReservedId = sportFacilityReservedId;
+        this.startingTime = startingTime;
+        this.isCombined = false;
+    }
 
+    public Reservation( ReservationType typeOfReservation, Long customerId,
+                       Long sportFacilityReservedId, LocalDateTime startingTime, boolean isCombined) {
 
+        this.typeOfReservation = typeOfReservation;
+        this.customerId = customerId;
+        this.sportFacilityReservedId = sportFacilityReservedId;
+        this.startingTime = startingTime;
+        this.isCombined = isCombined;
+    }
     /**
-     *  Empty constructor needed for Spring JPA.
+     * Empty constructor needed for Spring JPA.
      */
     public Reservation() {
     }
 
-    /** Constructor Reservation.
-     *
-     * @param reservationId - long
-     * @param startingTime - LocalDateTime
-     * @param timeSlot - long
-     */
-    public Reservation(long reservationId, LocalDateTime startingTime, long timeSlot) {
-        this.reservationId = reservationId;
-        this.startingTime = startingTime;
-        this.timeSlot = timeSlot;
+    public Long getSportFacilityReservedId() {
+        return sportFacilityReservedId;
+    }
+
+/*    private ReservationSorting reservationSorting;
+
+    public Reservation(ReservationSorting reservationSorting) {
+        this.reservationSorting = reservationSorting;
+    }*/
+
+    //public void executeStrategy(ArrayList<Reservation> reservations);
+
+    public void setSportFacilityReservedId(Long sportFacilityReservedId) {
+        this.sportFacilityReservedId = sportFacilityReservedId;
+    }
+
+    public ReservationType getTypeOfReservation() {
+        return typeOfReservation;
+    }
+
+    public void setTypeOfReservation(ReservationType typeOfReservation) {
+        this.typeOfReservation = typeOfReservation;
     }
 
     public long getReservationId() {
@@ -72,14 +93,6 @@ public class Reservation {
         this.startingTime = startingTime;
     }
 
-    public long getTimeSlot() {
-        return timeSlot;
-    }
-
-    public void setTimeSlot(long timeSlot) {
-        this.timeSlot = timeSlot;
-    }
-
     public Long getCustomerId() {
         return customerId;
     }
@@ -88,20 +101,17 @@ public class Reservation {
         this.customerId = customerId;
     }
 
-    public Long getEquipmentBorrowedId() {
-        return equipmentBorrowedId;
+    public boolean isCombined() {
+        return isCombined;
     }
 
-    public void setEquipmentBorrowedId(Long equipmentBorrowedId) {
-        this.equipmentBorrowedId = equipmentBorrowedId;
+    public void setCombined(boolean combined) {
+        isCombined = combined;
     }
 
-    public String getSportRoomReservedId() {
-        return sportRoomReservedId;
-    }
-
-    public void setSportRoomReservedId(String sportRoomReservedId) {
-        this.sportRoomReservedId = sportRoomReservedId;
+    @Override
+    public int hashCode() {
+        return Objects.hash(reservationId);
     }
 
     @Override
@@ -116,14 +126,4 @@ public class Reservation {
         return reservationId == that.reservationId;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(reservationId);
-    }
-
-    @Override
-    public String toString() {
-        return "Reservation{" + "reservationId=" + reservationId + ", startingTime=" + startingTime
-            + ", timeSlot=" + timeSlot;
-    }
 }
