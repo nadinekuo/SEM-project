@@ -31,6 +31,10 @@ public class EquipmentService {
         return equipmentRepository.findByEquipmentId(equipmentId);
     }
 
+    public String getEquipmentName(Long equipmentId) throws NoSuchFieldException {
+        return equipmentRepository.findByEquipmentId(equipmentId).getName();
+    }
+
     public void setEquipmentToNotInUse(Long equipmentId) {
         Equipment equipment = equipmentRepository.findByEquipmentId(equipmentId);
         equipment.setInUse(false);

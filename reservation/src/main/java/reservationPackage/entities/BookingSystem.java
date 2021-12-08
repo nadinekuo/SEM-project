@@ -28,4 +28,9 @@ public class BookingSystem {
     public Reservation getNextReservation() {
         return sortingStrategy.getNextReservation(bookings);
     }
+
+    @Override
+    public String toString() {
+        return "BookingSystem{" + "bookings=" + bookings + '}';
+    }
 }

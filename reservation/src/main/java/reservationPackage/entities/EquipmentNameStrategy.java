@@ -34,21 +34,24 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy{
         public int compare(Object o1, Object o2) {
             Reservation reservation1 = (Reservation) o1;
             Reservation reservation2 = (Reservation) o2;
-            Long userId1 = reservation1.getCustomerId();
-            Long userId2 = reservation2.getCustomerId();
+            Long equipmentId1 = reservation1.getSportFacilityReservedId();
+            Long equipmentId2 = reservation2.getSportFacilityReservedId();
 
-            boolean b1 =
-                restTemplate.getForObject("http://localhost:8084/user/" + userId1 + "/isPremium",
-                    Boolean.class);
-            boolean b2 =
-                restTemplate.getForObject("http://localhost:8084/user/" + userId2 + "/isPremium",
-                    Boolean.class);
+            String equipmentName1 =
+                restTemplate.getForObject("http://localhost:8085/equipment/" + equipmentId1 +
+                        "/getEquipmentName",
+                    String.class);
+            String equipmentName2 =
+                restTemplate.getForObject("http://localhost:8085/equipment/" + equipmentId2 +
+                        "/getEquipmentName",
+                    String.class);
 
-            if (b1 && !b2)
-                return -1;
-            if (!b1 && b2)
-                return +1;
-            return 0;
+            int compareName = equipmentName1.compareTo(equipmentName2);
+            if (compareName != 0) {
+                return compareName;
+            }
+
+            return reservation1.getStartingTime().compareTo(reservation2.getStartingTime());
         }
     }
 }

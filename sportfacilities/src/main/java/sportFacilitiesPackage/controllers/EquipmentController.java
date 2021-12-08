@@ -50,6 +50,17 @@ public class EquipmentController {
         }
     }
 
+    @GetMapping("/{equipmentId}/getEquipmentName")
+    @ResponseBody
+    public String getEquipmentName(@PathVariable Long equipmentId) {
+        try {
+            return equipmentService.getEquipmentName(equipmentId);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @GetMapping("/{equipmentName}/getAvailableEquipment")
     @ResponseBody
     public ResponseEntity<String> getAvailableEquipment(@PathVariable String equipmentName) {
