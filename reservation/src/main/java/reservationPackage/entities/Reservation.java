@@ -20,19 +20,32 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_sequence")
     private long reservationId;
 
-    private ReservationType typeOfReservation; //equipment, lesson or sportroom
+    private ReservationType typeOfReservation;    // 0 = Equipment, 1 = SportRoom, 2 = Lesson
     private Long customerId;   // for group reservations, there will be separate reservations
-    private Long sportFacilityReservedId;
+    private Long sportFacilityReservedId;   // EquipmentId, LessonId or sportRoomId
+    private boolean isCombined;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startingTime;
 
     public Reservation( ReservationType typeOfReservation, Long customerId,
-                       Long sportFacilityReservedId, LocalDateTime startingTime) {
+                        Long sportFacilityReservedId, LocalDateTime startingTime) {
 
         this.typeOfReservation = typeOfReservation;
         this.customerId = customerId;
         this.sportFacilityReservedId = sportFacilityReservedId;
         this.startingTime = startingTime;
+        this.isCombined = false;
+    }
+
+    public Reservation( ReservationType typeOfReservation, Long customerId,
+                       Long sportFacilityReservedId, LocalDateTime startingTime, boolean isCombined) {
+
+        this.typeOfReservation = typeOfReservation;
+        this.customerId = customerId;
+        this.sportFacilityReservedId = sportFacilityReservedId;
+        this.startingTime = startingTime;
+        this.isCombined = isCombined;
     }
     /**
      * Empty constructor needed for Spring JPA.
@@ -78,6 +91,14 @@ public class Reservation {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+    public boolean isCombined() {
+        return isCombined;
+    }
+
+    public void setCombined(boolean combined) {
+        isCombined = combined;
     }
 
     @Override

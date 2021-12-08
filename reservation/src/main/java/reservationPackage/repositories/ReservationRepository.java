@@ -2,6 +2,7 @@ package reservationPackage.repositories;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,6 +25,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     LocalDate findStartingTimeByReservationId(long reservationId);
 
+
+    List<Reservation> findReservationByStartingTimeContainsAndCustomerId(String date,
+                                                                         Long customerId);
 
     @Transactional
     void deleteById(Long reservationId);
