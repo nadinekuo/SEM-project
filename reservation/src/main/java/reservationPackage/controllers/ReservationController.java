@@ -26,8 +26,8 @@ import reservationPackage.services.ReservationService;
 public class ReservationController {
 
     protected static final Gson gson = new Gson();
-    private static final String sportFacilityUrl = "http://eureka-sport-facilities";
-    private static final String userUrl = "http://eureka-user";
+    public static final String sportFacilityUrl = "http://eureka-sport-facilities";
+    public static final String userUrl = "http://eureka-user";
 
     private final transient ReservationService reservationService;
 
@@ -184,19 +184,16 @@ public class ReservationController {
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
         //temporary fix
-        String response =
+        Long response =
             restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl,
-                String.class);
+                Long.class);
 
 //        if (!response.getStatusCode().equals(Response.status(Response.Status.OK))) {
 //            return null;
 //        }
 
-        Long equipmentId = Long.valueOf(response);//gson.fromJson(response.getBody(),new TypeToken<Long>() {}.getType
-        // ());
-
         Reservation reservation =
-            new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime, isCombined);
+            new Reservation(ReservationType.EQUIPMENT, userId, response, dateTime, isCombined);
         Reservation reservationMade = reservationService.makeSportFacilityReservation(reservation);
         return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
     }
