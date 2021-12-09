@@ -193,6 +193,8 @@ public class ReservationController {
             new Reservation(ReservationType.EQUIPMENT, userId, response, dateTime);
         reservationService.makeSportFacilityReservation(reservation);
 
+        // todo: Send through chain of responsibility
+
         return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
     }
 

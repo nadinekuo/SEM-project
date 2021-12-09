@@ -27,6 +27,8 @@ public class Reservation {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startingTime;
 
+    private int timeSlotInMinutes;
+
     /**
      * Instantiates a new Reservation.
      *
@@ -42,6 +44,17 @@ public class Reservation {
         this.customerId = customerId;
         this.sportFacilityReservedId = sportFacilityReservedId;
         this.startingTime = startingTime;
+        this.timeSlotInMinutes = 60;   // Default time slot for Equipment / Sport room reservations
+    }
+
+    public Reservation(ReservationType typeOfReservation, Long customerId,
+                       Long sportFacilityReservedId, LocalDateTime startingTime, int timeSlotInMinutes) {
+
+        this.typeOfReservation = typeOfReservation;
+        this.customerId = customerId;
+        this.sportFacilityReservedId = sportFacilityReservedId;
+        this.startingTime = startingTime;
+        this.timeSlotInMinutes = timeSlotInMinutes;
     }
 
     /**
@@ -96,6 +109,14 @@ public class Reservation {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+    public int getTimeSlotInMinutes() {
+        return timeSlotInMinutes;
+    }
+
+    public void setTimeSlotInMinutes(int timeSlotInMinutes) {
+        this.timeSlotInMinutes = timeSlotInMinutes;
     }
 
     @Override
