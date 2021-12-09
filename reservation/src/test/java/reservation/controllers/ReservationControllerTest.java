@@ -27,7 +27,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
-import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
@@ -42,7 +41,7 @@ public class ReservationControllerTest {
     private final transient String equipmentNameValid = "hockeyStick";
     private final transient String equipmentNameInvalid = "blopp";
     private final transient String validDate = "2099-01-06T17:00:00";
-    transient String equipmentBookingURL =
+    transient String equipmentBookingUrl =
         "/reservation/{userId}/{equipmentName}/{date}/{isCombined}/makeEquipmentBooking";
     transient DateTimeFormatter dateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -74,6 +73,9 @@ public class ReservationControllerTest {
             Arguments.of("2099-01-06T16:00:00"));
     }
 
+    /**
+     * Sets up the tests.
+     */
     @BeforeEach
     @MockitoSettings(strictness = Strictness.LENIENT)
     public void setup() {
@@ -91,12 +93,18 @@ public class ReservationControllerTest {
         verify(reservationService).getReservation(1L);
     }
 
+    /**
+     * Test equipment reservation with invalid dates.
+     *
+     * @param date the date
+     * @throws Exception the mockito exception
+     */
     @ParameterizedTest
     @MethodSource("invalidDateGenerator")
     public void testEquipmentReservationInvalidDates(String date) throws Exception {
 
         MvcResult result =
-            mockMvc.perform(post(equipmentBookingURL, userId, equipmentNameValid, date, true))
+            mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date, true))
                 .andExpect(status().is4xxClientError()).andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo(
@@ -105,6 +113,12 @@ public class ReservationControllerTest {
 
     }
 
+    /**
+     * Test equipment reservation with valid dates.
+     *
+     * @param date the date
+     * @throws Exception that mockito throws
+     */
     @ParameterizedTest
     @MethodSource("validDateGenerator")
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -118,7 +132,7 @@ public class ReservationControllerTest {
             .thenReturn(true);
 
         MvcResult result =
-            mockMvc.perform(post(equipmentBookingURL, userId, equipmentNameValid, date, true))
+            mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date, true))
                 .andExpect(status().isOk()).andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Equipment reservation was successful!");

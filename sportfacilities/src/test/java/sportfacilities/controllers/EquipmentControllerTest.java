@@ -91,17 +91,17 @@ public class EquipmentControllerTest {
             .andExpect(status().isBadRequest()).andReturn();
 
         assertEquals(result.getResponse().getContentAsString(),
-            "The equipment requested is not " + "in " + "stock or the "
+            "The equipment requested is not in stock or the "
                 + "equipment name was not found");
     }
 
-    /*    @Disabled
+    @Test
     public void addNewEquipmentTest() throws Exception {
         Equipment equipment1 = new Equipment(name, relatedSport, inUse);
         mockMvc.perform(put("/equipment/{equipmentName}/{relatedSport}/addNewEquipment/admin", name,
             relatedSport)).andExpect(status().isOk());
         verify(equipmentService).addEquipment(equipment1);
-    }*/
+    }
 
     @Test
     public void equipmentBroughtBackTest() throws Exception {

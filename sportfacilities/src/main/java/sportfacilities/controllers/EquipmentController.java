@@ -82,9 +82,9 @@ public class EquipmentController {
      * Add new equipment.
      *
      * @param equipmentName the equipment name
-     * @param relatedSport  the related sport
+     * @param relatedSportName  the related sport
      */
-    @PutMapping("/{equipmentName}/{relatedSport}/addNewEquipment/admin")
+    @PutMapping("/{equipmentName}/{relatedSportName}/addNewEquipment/admin")
     @ResponseBody
     public void addNewEquipment(@PathVariable String equipmentName,
                                 @PathVariable String relatedSportName) throws NoSuchFieldException {
