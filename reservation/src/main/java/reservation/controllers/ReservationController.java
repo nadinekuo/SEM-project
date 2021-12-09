@@ -210,21 +210,11 @@ public class ReservationController {
 
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
-        //temporary fix
-
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
-
-        //        if (!response.getStatusCode().equals(Response.status(Response.Status.OK))) {
-        //            return null;
-        //        }
-
-        Long equipmentId = Long.valueOf(
-            response); //gson.fromJson(response.getBody(),new TypeToken<Long>() {}.getType
-        // ());
+        Long response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, Long.class);
 
         Reservation reservation =
-            new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime, isCombined);
+            new Reservation(ReservationType.EQUIPMENT, userId, response, dateTime, isCombined);
         reservationService.makeSportFacilityReservation(reservation);
 
         return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
