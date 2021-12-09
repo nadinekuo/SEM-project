@@ -1,4 +1,4 @@
-package securityPackage.config;
+package security.config;
 
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +11,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Profile("production")
+@Profile("development")
 @Configuration
-@EnableJpaRepositories("securityPackage")
-@PropertySource("application-production.properties")
+@EnableJpaRepositories("security")
+@PropertySource("application-dev.properties")
 @EnableTransactionManagement
-public class PostgresConfig {
+public class H2Config {
 
     @Autowired
     private transient Environment environment;
@@ -28,14 +28,11 @@ public class PostgresConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getProperty("spring.datasource.driverClassName"));
-        dataSource.setUrl(environment.getProperty("spring.datasource.url"));
-        dataSource.setUsername(environment.getProperty("spring.datasource.username"));
-        dataSource.setPassword(environment.getProperty("spring.datasource.password"));
+        dataSource.setDriverClassName(environment.getProperty("jdbc.driverClassName"));
+        dataSource.setUrl(environment.getProperty("jdbc.url"));
+        dataSource.setUsername(environment.getProperty("jdbc.user"));
+        dataSource.setPassword(environment.getProperty("jdbc.pass"));
 
         return dataSource;
     }
-
-
-
 }

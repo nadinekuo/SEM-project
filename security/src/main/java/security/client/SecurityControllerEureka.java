@@ -1,4 +1,4 @@
-package securityPackage.client;
+package security.client;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 

@@ -1,4 +1,4 @@
-package securityPackage;
+package security;
 
 import com.netflix.discovery.EurekaClient;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RestController;
-import securityPackage.client.SecurityControllerEureka;
+import security.client.SecurityControllerEureka;
 
 @SpringBootApplication
 @RestController
