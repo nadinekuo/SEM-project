@@ -1,18 +1,14 @@
-package reservationPackage.services;
+package reservation.services;
 
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import reservationPackage.entities.Reservation;
-import reservationPackage.repositories.ReservationRepository;
+import reservation.entities.Reservation;
+import reservation.repositories.ReservationRepository;
 
 @Service
 public class ReservationService {
@@ -41,11 +37,19 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
+    /**
+     * Gets user reservation count on day.
+     *
+     * @param date       the date
+     * @param customerId the customer id
+     * @return the user reservation count for a day
+     */
     public int getUserReservationCountOnDay(String date, long customerId) {
 
         // All reservations on the same day (not time necessarily)
         List<Reservation> reservationsOnDay =
-            reservationRepository.findReservationByStartingTimeContainsAndCustomerId(date, customerId);
+            reservationRepository.findReservationByStartingTimeContainsAndCustomerId(date,
+                customerId);
         int count = 0;
 
         // Combined reservations of equipment(s) and sport room which will count as 1 reservation
@@ -59,7 +63,9 @@ public class ReservationService {
                 combinedReservationFound = true;
             }
         }
-        if (combinedReservationFound) count++;
+        if (combinedReservationFound) {
+            count++;
+        }
         return count;
     }
 

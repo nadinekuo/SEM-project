@@ -1,10 +1,9 @@
-package reservationPackage.entities;
+package reservation.entities;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookingSystem {
-
 
     private ReservationSortingStrategy sortingStrategy;
     private List<Reservation> bookings;

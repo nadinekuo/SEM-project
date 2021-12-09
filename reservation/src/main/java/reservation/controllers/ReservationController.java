@@ -1,11 +1,7 @@
-package reservationPackage.controllers;
+package reservation.controllers;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import reservationPackage.entities.Reservation;
-import reservationPackage.entities.ReservationType;
-import reservationPackage.services.ReservationService;
+import reservation.entities.Reservation;
+import reservation.entities.ReservationType;
+import reservation.services.ReservationService;
 
 @RestController
 @RequestMapping("reservation")
@@ -37,7 +33,7 @@ public class ReservationController {
     /**
      * Autowired constructor for the class.
      *
-     * @param reservationService sportRoomService
+     * @param reservationService the reservation service
      */
     @Autowired
     public ReservationController(ReservationService reservationService) {
@@ -45,6 +41,12 @@ public class ReservationController {
         this.restTemplate = reservationService.restTemplate();
     }
 
+    /**
+     * Gets reservation from id.
+     *
+     * @param reservationId the reservation id
+     * @return the reservation
+     */
     @GetMapping("/{reservationId}")
     @ResponseBody
     public Reservation getReservation(@PathVariable Long reservationId) {
@@ -57,26 +59,44 @@ public class ReservationController {
     //        return reservationService.getStartingTime(reservationId);
     //    }
 
+    /**
+     * Delete reservation by id.
+     *
+     * @param reservationId the reservation id
+     */
     @DeleteMapping("/{reservationId}")
     @ResponseBody
     public void deleteReservation(@PathVariable Long reservationId) {
         reservationService.deleteReservation(reservationId);
     }
 
+    /**
+     * Checks if sport room is available.
+     *
+     * @param sportRoomId the sport room id
+     * @param date        the date
+     * @return if its available or not
+     */
     @GetMapping("/{sportRoomId}/{date}/isAvailable")
     @ResponseBody
     public boolean isAvailable(@PathVariable Long sportRoomId, @PathVariable String date) {
         return reservationService.isAvailable(sportRoomId, LocalDateTime.parse(date));
     }
 
-
     // TODO: the 2 methods below have to be combined into 1 Reservation method, which allows
     //  combining Equipment and SportRooms
 
+    /**
+     * Make sport room reservation.
+     *
+     * @param userId      the user id
+     * @param sportRoomId the sport room id
+     * @param date        the date
+     * @param isCombined  if its part of a combined reservation
+     * @return A response based on what happened when trying to make the reservation
+     */
     @PostMapping("/{userId}/{sportRoomId}/{date}/{isCombined}/makeSportRoomBooking")
     @ResponseBody
-    //@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Parameters input for the request "
-    //    + "were wrong")
     public ResponseEntity<String> makeSportRoomReservation(@PathVariable Long userId,
                                                            @PathVariable Long sportRoomId,
                                                            @PathVariable String date,
@@ -135,13 +155,21 @@ public class ReservationController {
         }
 
         Reservation reservation =
-            new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime, isCombined);
+            new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime,
+                isCombined);
         Reservation reservationMade = reservationService.makeSportFacilityReservation(reservation);
         return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
     }
 
-
-
+    /**
+     * Make equipment reservation.
+     *
+     * @param userId        the user id
+     * @param date          the date
+     * @param equipmentName the equipment name
+     * @param isCombined    the is combined
+     * @return A response based on what happened when trying to make the reservation
+     */
     @PostMapping("/{userId}/{equipmentName}/{date}/{isCombined}/makeEquipmentBooking")
     @ResponseBody
     public ResponseEntity<String> makeEquipmentReservation(@PathVariable Long userId,
@@ -185,14 +213,14 @@ public class ReservationController {
 
         //temporary fix
         String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl,
-                String.class);
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
 
-//        if (!response.getStatusCode().equals(Response.status(Response.Status.OK))) {
-//            return null;
-//        }
+        //        if (!response.getStatusCode().equals(Response.status(Response.Status.OK))) {
+        //            return null;
+        //        }
 
-        Long equipmentId = Long.valueOf(response);//gson.fromJson(response.getBody(),new TypeToken<Long>() {}.getType
+        Long equipmentId = Long.valueOf(
+            response); //gson.fromJson(response.getBody(),new TypeToken<Long>() {}.getType
         // ());
 
         Reservation reservation =
@@ -201,20 +229,20 @@ public class ReservationController {
         return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
     }
 
-
-
+    /**
+     * Gets if user is premium.
+     *
+     * @param userId the user id
+     * @return if the user is premium
+     */
     @GetMapping("/{userId}/isPremium")
     @ResponseBody
-    public Boolean getUserIsPremium(@PathVariable Long userId){
+    public Boolean getUserIsPremium(@PathVariable Long userId) {
         String methodSpecificUrl = "/user/" + userId + "/isPremium";
 
-        Boolean isPremium =
-            restTemplate.getForObject(userUrl + methodSpecificUrl, Boolean.class);
+        Boolean isPremium = restTemplate.getForObject(userUrl + methodSpecificUrl, Boolean.class);
 
         return isPremium;
     }
-
-
-
 
 }

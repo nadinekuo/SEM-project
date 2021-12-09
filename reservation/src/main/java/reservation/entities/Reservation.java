@@ -1,4 +1,4 @@
-package reservationPackage.entities;
+package reservation.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
@@ -28,18 +28,18 @@ public class Reservation {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startingTime;
 
-    public Reservation( ReservationType typeOfReservation, Long customerId,
-                        Long sportFacilityReservedId, LocalDateTime startingTime) {
-
-        this.typeOfReservation = typeOfReservation;
-        this.customerId = customerId;
-        this.sportFacilityReservedId = sportFacilityReservedId;
-        this.startingTime = startingTime;
-        this.isCombined = false;
-    }
-
-    public Reservation( ReservationType typeOfReservation, Long customerId,
-                       Long sportFacilityReservedId, LocalDateTime startingTime, boolean isCombined) {
+    /**
+     * Instantiates a new Reservation.
+     *
+     * @param typeOfReservation       the type of reservation
+     * @param customerId              the customer id
+     * @param sportFacilityReservedId the sport facility reserved id
+     * @param startingTime            the starting time
+     * @param isCombined              if it's a combined reservation
+     */
+    public Reservation(ReservationType typeOfReservation, Long customerId,
+                       Long sportFacilityReservedId, LocalDateTime startingTime,
+                       boolean isCombined) {
 
         this.typeOfReservation = typeOfReservation;
         this.customerId = customerId;
@@ -47,6 +47,7 @@ public class Reservation {
         this.startingTime = startingTime;
         this.isCombined = isCombined;
     }
+
     /**
      * Empty constructor needed for Spring JPA.
      */
@@ -57,7 +58,7 @@ public class Reservation {
         return sportFacilityReservedId;
     }
 
-/*    private ReservationSorting reservationSorting;
+    /*    private ReservationSorting reservationSorting;
 
     public Reservation(ReservationSorting reservationSorting) {
         this.reservationSorting = reservationSorting;

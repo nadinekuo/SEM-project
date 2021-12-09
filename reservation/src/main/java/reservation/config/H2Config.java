@@ -1,4 +1,4 @@
-package reservationPackage.config;
+package reservation.config;
 
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Profile("development")
 @Configuration
-@EnableJpaRepositories("reservationPackage")
+@EnableJpaRepositories("reservation")
 @PropertySource("application-dev.properties")
 @EnableTransactionManagement
 public class H2Config {
@@ -23,7 +23,7 @@ public class H2Config {
 
     /**
      * Set up the connection to the database.
-     *  This config file uses user defined variables from the properties file.
+     * This config file uses user defined variables from the properties file.
      */
     @Bean
     public DataSource dataSource() {
