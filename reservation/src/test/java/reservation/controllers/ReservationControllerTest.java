@@ -107,8 +107,8 @@ public class ReservationControllerTest {
             mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date))
                 .andExpect(status().is4xxClientError()).andReturn();
 
-        assertThat(result.getResponse().getContentAsString()).isEqualTo(
-            "Time has to be between " + "16:00 and 23:00");
+        assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Time has to be between " + "16:00 and 23:00");
         verify(reservationService, never()).makeSportFacilityReservation(reservation);
 
     }
@@ -127,15 +127,16 @@ public class ReservationControllerTest {
             ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
                 + "/getAvailableEquipment", Long.class)).thenReturn(1L);
 
-        Mockito.when(restTemplate.getForObject(
-            ReservationController.userUrl + "/user/" + userId + "/isPremium", Boolean.class))
-            .thenReturn(true);
+        Mockito.when(restTemplate
+            .getForObject(ReservationController.userUrl + "/user/" + userId + "/isPremium",
+                Boolean.class)).thenReturn(true);
 
         MvcResult result =
             mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date))
                 .andExpect(status().isOk()).andReturn();
 
-        assertThat(result.getResponse().getContentAsString()).isEqualTo("Equipment reservation was successful!");
+        assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Equipment reservation was successful!");
         verify(reservationService).makeSportFacilityReservation(reservation);
     }
 

@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
+import reservation.entities.chainofresponsibility.InvalidReservationException;
+import reservation.entities.chainofresponsibility.ReservationValidator;
+import reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
+import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import reservation.services.ReservationService;
 
 @RestController
@@ -155,6 +159,20 @@ public class ReservationController {
         Reservation reservation =
             new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime);
         reservationService.makeSportFacilityReservation(reservation);
+
+        // todo: send through chain of responsibility
+//
+//        ReservationValidator handler = new UserReservationBalanceValidator();
+//        handler.setNext(new SportFacilityAvailabilityValidator());
+//
+//        try {
+//            boolean isValid = handler.handle(reservation);
+//            System.out.println("Reservation status = " + isValid);
+//        } catch(InvalidReservationException e) {
+//            e.printStackTrace();
+//        }
+
+
         return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
     }
 

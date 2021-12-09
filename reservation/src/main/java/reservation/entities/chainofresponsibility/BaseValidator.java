@@ -1,4 +1,6 @@
-package reservation.entities;
+package reservation.entities.chainofresponsibility;
+
+import reservation.entities.Reservation;
 
 public abstract class BaseValidator implements ReservationValidator {
 

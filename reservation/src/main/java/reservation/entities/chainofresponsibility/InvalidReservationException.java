@@ -1,4 +1,4 @@
-package reservation.entities;
+package reservation.entities.chainofresponsibility;
 
 public class InvalidReservationException extends Exception {
 
