@@ -24,7 +24,7 @@ public class EquipmentController {
     private final transient EquipmentService equipmentService;
 
     @Autowired
-    private final RestTemplate restTemplate;
+    private transient final RestTemplate restTemplate;
 
     /**
      * Autowired constructor for the class.

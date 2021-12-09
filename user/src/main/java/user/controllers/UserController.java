@@ -21,7 +21,7 @@ public class UserController {
     private final transient UserService userService;
 
     @Autowired
-    private final RestTemplate restTemplate;
+    private transient final RestTemplate restTemplate;
 
     /**
      * Autowired constructor for the class.

@@ -65,11 +65,11 @@ public class SportRoom {
         this.sportRoomId = sportRoomId;
     }
 
-    public boolean isSportsHall() {
+    public boolean getIsSportsHall() {
         return isSportsHall;
     }
 
-    public void setSportsHall(boolean sportsHall) {
+    public void setIsSportsHall(boolean sportsHall) {
         isSportsHall = sportsHall;
     }
 

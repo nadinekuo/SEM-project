@@ -21,16 +21,16 @@ import sportfacilities.services.EquipmentService;
 @AutoConfigureMockMvc
 public class EquipmentControllerTest {
 
-    private final long equipmentId = 20L;
-    private final String name = "boxingGloves";
-    private final boolean inUse = true;
-    Sport box = new Sport("boxing", false, 2, 4);
-    private final Sport relatedSport = box;
-    private final Equipment equipment = new Equipment(name, relatedSport, inUse);
+    private transient final long equipmentId = 20L;
+    private transient final String name = "boxingGloves";
+    private transient final boolean inUse = true;
+    private transient Sport box = new Sport("boxing", false, 2, 4);
+    private transient final Sport relatedSport = box;
+    private transient final Equipment equipment = new Equipment(name, relatedSport, inUse);
     @Mock
-    EquipmentService equipmentService;
+    private transient EquipmentService equipmentService;
     @Autowired
-    private MockMvc mockMvc;
+    private transient MockMvc mockMvc;
 
     /**
      * Sets up the tests.

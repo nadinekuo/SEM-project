@@ -24,18 +24,20 @@ import reservation.services.ReservationService;
 public class ReservationControllerTest {
 
     private final long reservationId = 1L;
-    private final long userId = 1L;
-    private final long sportFacilityId = 1L;
-    private final String equipmentName = "hockeyStick";
-    String validDate = "2099-01-06T17:00:00";
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    LocalDateTime bookableDate = LocalDateTime.parse("2099-01-06 17:00:00", dateTimeFormatter);
-    private final Reservation reservation =
+    private transient final long userId = 1L;
+    private transient final long sportFacilityId = 1L;
+    private transient final String equipmentName = "hockeyStick";
+    private transient String validDate = "2099-01-06T17:00:00";
+    private transient DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd "
+        + "HH:mm:ss");
+    private transient LocalDateTime bookableDate = LocalDateTime.parse("2099-01-06 17:00:00",
+        dateTimeFormatter);
+    private transient final Reservation reservation =
         new Reservation(ReservationType.EQUIPMENT, userId, sportFacilityId, bookableDate, false);
     @Mock
-    ReservationService reservationService;
+    private transient ReservationService reservationService;
     @Autowired
-    private MockMvc mockMvc;
+    private transient MockMvc mockMvc;
 
     @BeforeEach
     public void setup() {

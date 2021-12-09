@@ -21,6 +21,8 @@ public class SportFacilitiesConfig {
 
         return args -> {
 
+            String boxString = "boxingGloves";
+
             Sport soccer = new Sport("soccer", true, 6, 11);
             Sport hockey = new Sport("hockey", true, 7, 14);
             Sport volleyball = new Sport("volleyball", true, 4, 12);
@@ -40,10 +42,10 @@ public class SportFacilitiesConfig {
             sportRoomRepository.saveAll(List.of(hallX1, hallX2, hallX3));
 
             Equipment hockeyStick = new Equipment("hockeyStick", hockey, true);
-            Equipment boxingGloves1 = new Equipment("boxingGloves", kickboxing, false);
-            Equipment boxingGloves2 = new Equipment("boxingGloves", kickboxing, true);
-            Equipment boxingGloves3 = new Equipment("boxingGloves", kickboxing, false);
-            Equipment boxingGloves4 = new Equipment("boxingGloves", kickboxing, true);
+            Equipment boxingGloves1 = new Equipment(boxString, kickboxing, false);
+            Equipment boxingGloves2 = new Equipment(boxString, kickboxing, true);
+            Equipment boxingGloves3 = new Equipment(boxString, kickboxing, false);
+            Equipment boxingGloves4 = new Equipment(boxString, kickboxing, true);
             Equipment soccerBall1 = new Equipment("soccerBall", soccer, false);
             Equipment soccerBall2 = new Equipment("soccerBall", soccer, true);
             Equipment soccerBall3 = new Equipment("soccerBall", soccer, false);

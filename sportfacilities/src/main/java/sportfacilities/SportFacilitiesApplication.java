@@ -15,10 +15,10 @@ public class SportFacilitiesApplication implements SportFacilitiesControllerEure
 
     @Autowired
     @Lazy
-    private EurekaClient eurekaClient;
+    private transient EurekaClient eurekaClient;
 
     @Value("${spring.application.name}")
-    private String appName;
+    private transient String appName;
 
     public static void main(String[] args) {
         SpringApplication.run(SportFacilitiesApplication.class, args);

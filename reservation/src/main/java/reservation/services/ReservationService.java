@@ -47,25 +47,25 @@ public class ReservationService {
     public int getUserReservationCountOnDay(String date, long customerId) {
 
         // All reservations on the same day (not time necessarily)
-        List<Reservation> reservationsOnDay =
-            reservationRepository.findReservationByStartingTimeContainsAndCustomerId(date,
-                customerId);
+//        List<Reservation> reservationsOnDay =
+//            reservationRepository.findReservationByStartingTimeContainsAndCustomerId(date,
+//                customerId);
         int count = 0;
 
-        // Combined reservations of equipment(s) and sport room which will count as 1 reservation
-        // No more than 1 combined reservation for this same time is possible, since a user cannot
-        // reserve different sport rooms for the same time
-        boolean combinedReservationFound = false;
-        for (Reservation reservation : reservationsOnDay) {
-            if (!reservation.getIsCombined()) {
-                count++;
-            } else {
-                combinedReservationFound = true;
-            }
-        }
-        if (combinedReservationFound) {
-            count++;
-        }
+//        // Combined reservations of equipment(s) and sport room which will count as 1 reservation
+//        // No more than 1 combined reservation for this same time is possible, since a user cannot
+//        // reserve different sport rooms for the same time
+//        boolean combinedReservationFound = false;
+//        for (Reservation reservation : reservationsOnDay) {
+//            if (!reservation.getIsCombined()) {
+//                count++;
+//            } else {
+//                combinedReservationFound = true;
+//            }
+//        }
+//        if (combinedReservationFound) {
+//            count++;
+//        }
         return count;
     }
 

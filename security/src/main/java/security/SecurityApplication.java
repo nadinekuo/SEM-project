@@ -15,10 +15,10 @@ public class SecurityApplication implements SecurityControllerEureka {
 
     @Autowired
     @Lazy
-    private EurekaClient eurekaClient;
+    private transient EurekaClient eurekaClient;
 
     @Value("${spring.application.name}")
-    private String appName;
+    private transient String appName;
 
     public static void main(String[] args) {
         SpringApplication.run(SecurityApplication.class, args);

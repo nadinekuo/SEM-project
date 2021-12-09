@@ -18,7 +18,7 @@ import sportfacilities.services.SportRoomService;
 public class SportRoomController {
 
     @Autowired
-    private final RestTemplate restTemplate;
+    private final transient RestTemplate restTemplate;
 
     private final transient SportRoomService sportRoomService;
 
