@@ -21,10 +21,9 @@ import reservation.services.ReservationService;
 @RequestMapping("reservation")
 public class ReservationController {
 
+    public static final String sportFacilityUrl = "http://eureka-sport-facilities";
+    public static final String userUrl = "http://eureka-user";
     protected static final Gson gson = new Gson();
-    private static final String sportFacilityUrl = "http://eureka-sport-facilities";
-    private static final String userUrl = "http://eureka-user";
-
     private final transient ReservationService reservationService;
 
     @Autowired
@@ -119,22 +118,22 @@ public class ReservationController {
 
         // TODO: To be moved to another method (Chain of Responsibility)
 
-        LocalDateTime startDay = LocalDateTime.parse(date.substring(0, 10) + "T00:00:00");
-        LocalDateTime endDay = LocalDateTime.parse(date.substring(0, 10) + "T23:59:59");
-        int reservationBalanceOnDate =
-            reservationService.getUserReservationCountOnDay(startDay, endDay, userId);
-
-        // Basic users can have 1 reservation per day (Equipment and SportRoom are separated!)
-        if (!getUserIsPremium(userId) && reservationBalanceOnDate == 1) {
-            return new ResponseEntity<>("No more than 1 reservation per day can be made. ",
-                HttpStatus.BAD_REQUEST);
-        }
-
-        // Premium users can have up to 3 reservations per day
-        if (getUserIsPremium(userId) && reservationBalanceOnDate == 3) {
-            return new ResponseEntity<>("No more than 3 reservations per day can be made.",
-                HttpStatus.BAD_REQUEST);
-        }
+//        LocalDateTime startDay = LocalDateTime.parse(date.substring(0, 10) + "T00:00:00");
+//        LocalDateTime endDay = LocalDateTime.parse(date.substring(0, 10) + "T23:59:59");
+//        int reservationBalanceOnDate =
+//            reservationService.getUserReservationCountOnDay(startDay, endDay, userId);
+//
+//        // Basic users can have 1 reservation per day (Equipment and SportRoom are separated!)
+//        if (!getUserIsPremium(userId) && reservationBalanceOnDate == 1) {
+//            return new ResponseEntity<>("No more than 1 reservation per day can be made. ",
+//                HttpStatus.BAD_REQUEST);
+//        }
+//
+//        // Premium users can have up to 3 reservations per day
+//        if (getUserIsPremium(userId) && reservationBalanceOnDate == 3) {
+//            return new ResponseEntity<>("No more than 3 reservations per day can be made.",
+//                HttpStatus.BAD_REQUEST);
+//        }
 
         if (!reservationService.isAvailable(sportRoomId, dateTime)) {
             return new ResponseEntity<>("Sport Room is already booked for this time slot.",
@@ -181,27 +180,19 @@ public class ReservationController {
                 HttpStatus.BAD_REQUEST);
         }
         if ((dateTime.getHour() < 16) || (dateTime.getHour() == 23)) {
-            return new ResponseEntity<>("Time has to be between 16:00 and 23:00.",
+            return new ResponseEntity<>("Time has to be between 16:00 and 23:00",
                 HttpStatus.BAD_REQUEST);
         }
 
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
-        //temporary fix
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
-
-        //        if (!response.getStatusCode().equals(Response.status(Response.Status.OK))) {
-        //            return null;
-        //        }
-
-        Long equipmentId = Long.valueOf(
-            response); //gson.fromJson(response.getBody(),new TypeToken<Long>() {}.getType
-        // ());
+        Long response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, Long.class);
 
         Reservation reservation =
-            new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
+            new Reservation(ReservationType.EQUIPMENT, userId, response, dateTime);
         reservationService.makeSportFacilityReservation(reservation);
+
         return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
     }
 
