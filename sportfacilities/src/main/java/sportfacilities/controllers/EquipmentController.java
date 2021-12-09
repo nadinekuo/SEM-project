@@ -15,26 +15,29 @@ import org.springframework.web.client.RestTemplate;
 import sportfacilities.entities.Equipment;
 import sportfacilities.entities.Sport;
 import sportfacilities.services.EquipmentService;
-
+import sportfacilities.services.SportService;
 
 @RestController
 @RequestMapping("equipment")
 public class EquipmentController {
 
     private final transient EquipmentService equipmentService;
+    private final transient SportService sportService;
 
     @Autowired
-    private transient final RestTemplate restTemplate;
+    private final transient RestTemplate restTemplate;
 
     /**
      * Autowired constructor for the class.
      *
      * @param equipmentService equipmentService
+     * @param sportService
      */
     @Autowired
-    public EquipmentController(EquipmentService equipmentService) {
+    public EquipmentController(EquipmentService equipmentService, SportService sportService) {
         this.equipmentService = equipmentService;
         this.restTemplate = equipmentService.restTemplate();
+        this.sportService = sportService;
     }
 
     /**
@@ -48,8 +51,7 @@ public class EquipmentController {
     public Equipment getEquipment(@PathVariable Long equipmentId) {
         try {
             return equipmentService.getEquipment(equipmentId);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+        } catch (NoSuchFieldException | NoSuchElementException e) {
             return null;
         }
     }
@@ -62,21 +64,17 @@ public class EquipmentController {
      */
     @GetMapping("/{equipmentName}/getAvailableEquipment")
     @ResponseBody
-    public ResponseEntity<String> getAvailableEquipment(@PathVariable String equipmentName) {
+    public ResponseEntity<?> getAvailableEquipment(@PathVariable String equipmentName) {
         try {
             Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
             equipmentService.setEquipmentToInUse(equipmentId);
             ResponseEntity<String> response =
                 new ResponseEntity<String>(equipmentId.toString(), HttpStatus.OK);
             return response;
-        } catch (NoSuchElementException e) {
-            //e.printStackTrace();
-            return new ResponseEntity<String>(
+        } catch (NoSuchElementException | NoSuchFieldException e) {
+            return new ResponseEntity<>(
                 "The equipment requested is not in stock or the " + "equipment name was not found",
                 HttpStatus.BAD_REQUEST);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 
@@ -84,13 +82,15 @@ public class EquipmentController {
      * Add new equipment.
      *
      * @param equipmentName the equipment name
-     * @param relatedSport  the related sport
+     * @param relatedSportName  the related sport
      */
-    @PutMapping("/{equipmentName}/{relatedSport}/addNewEquipment/admin")
+    @PutMapping("/{equipmentName}/{relatedSportName}/addNewEquipment/admin")
     @ResponseBody
     public void addNewEquipment(@PathVariable String equipmentName,
-                                @PathVariable Sport relatedSport) {
-        equipmentService.addEquipment(new Equipment(equipmentName, relatedSport, true));
+                                @PathVariable String relatedSportName) throws NoSuchFieldException {
+
+        Sport sport = sportService.getSportById(relatedSportName);
+        equipmentService.addEquipment(new Equipment(equipmentName, sport, false));
     }
 
     /**
