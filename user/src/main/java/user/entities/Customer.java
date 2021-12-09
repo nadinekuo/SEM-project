@@ -1,6 +1,5 @@
-package userPackage.entities;
+package user.entities;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -9,7 +8,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "customers")
@@ -20,14 +18,12 @@ public class Customer extends User {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_groups", joinColumns = {
         @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable =
-            false)},
-        inverseJoinColumns = {
+            false)
+        }, inverseJoinColumns = {
         @JoinColumn(name = "group_id", referencedColumnName = "groupId", nullable = false,
             updatable = false)
     })
     private List<Group> groupsForTeamSports;
-
-
 
     public Customer() {
 
@@ -71,7 +67,6 @@ public class Customer extends User {
         this.groupsForTeamSports = groupsForTeamSports;
     }
 
-
     public boolean isPremiumSubscription() {
         return premiumSubscription;
     }
@@ -79,7 +74,6 @@ public class Customer extends User {
     public void setPremiumSubscription(boolean premiumSubscription) {
         this.premiumSubscription = premiumSubscription;
     }
-
 
     @Override
     public String toString() {

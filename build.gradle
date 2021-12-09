@@ -80,6 +80,8 @@ subprojects {
         //eureka
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+
 
         //tests
         implementation 'org.jetbrains:annotations:20.1.0'

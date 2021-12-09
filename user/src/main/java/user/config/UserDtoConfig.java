@@ -1,8 +1,8 @@
-package userPackage.config;
+package user.config;
 
 import java.io.Serializable;
 
-public class UserDTOConfig implements Serializable {
+public class UserDtoConfig implements Serializable {
 
     private String username;
 

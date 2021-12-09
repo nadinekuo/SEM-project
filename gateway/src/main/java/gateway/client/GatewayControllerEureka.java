@@ -1,8 +1,11 @@
-package userPackage.client;
+package gateway.client;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
-public interface UserControllerEureka {
+public interface GatewayControllerEureka {
+
+
     @RequestMapping("/greeting")
     String greeting();
+
 }

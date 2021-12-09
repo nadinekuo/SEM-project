@@ -1,4 +1,4 @@
-package userPackage.entities;
+package user.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,10 +10,10 @@ public class Admin extends User {
     public Admin() {
     }
 
-
-    /** Constructor with id.
+    /**
+     * Constructor with id.
      *
-     * @param id - long
+     * @param id       - long
      * @param username - String
      * @param password - String
      */
@@ -21,7 +21,6 @@ public class Admin extends User {
 
         super(id, username, password);
     }
-
 
     public Admin(String username, String password) {
         super(username, password);

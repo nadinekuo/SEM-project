@@ -1,4 +1,4 @@
-package userPackage.entities;
+package user.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
@@ -17,15 +17,8 @@ import javax.persistence.Table;
 public class Group {
 
     @Id
-    @SequenceGenerator(
-        name = "group_sequence",
-        sequenceName = "group_sequence",
-        allocationSize = 1
-    )
-    @GeneratedValue(
-        strategy = GenerationType.SEQUENCE,
-        generator = "group_sequence"
-    )
+    @SequenceGenerator(name = "group_sequence", sequenceName = "group_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_sequence")
     private long groupId;
 
     private String groupName;
@@ -34,18 +27,17 @@ public class Group {
     @JsonManagedReference
     private List<Customer> groupMembers;
 
-
-
     /**
-     *  Empty constructor needed for Spring JPA.
+     * Empty constructor needed for Spring JPA.
      */
     public Group() {
     }
 
-    /** Constructor Group.
+    /**
+     * Constructor Group.
      *
-     * @param groupId - long
-     * @param groupName - String
+     * @param groupId      - long
+     * @param groupName    - String
      * @param groupMembers - List<User></User>
      */
     public Group(long groupId, String groupName, List<Customer> groupMembers) {
@@ -53,7 +45,6 @@ public class Group {
         this.groupName = groupName;
         this.groupMembers = groupMembers;
     }
-
 
     public Group(String groupName, List<Customer> groupMembers) {
         this.groupName = groupName;
@@ -84,9 +75,9 @@ public class Group {
         this.groupMembers = groupMembers;
     }
 
-
-    /** A new member is added to this group, to be referenced to later when reserving team sport
-     *  fields/halls.
+    /**
+     * A new member is added to this group, to be referenced to later when reserving team sport
+     * fields/halls.
      *
      * @param memberToAdd - User to be added to this group.
      */
@@ -94,6 +85,11 @@ public class Group {
         if (!groupMembers.contains(memberToAdd)) {
             this.groupMembers.add(memberToAdd);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(groupId);
     }
 
     @Override
@@ -106,11 +102,6 @@ public class Group {
         }
         Group group = (Group) o;
         return groupId == group.groupId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(groupId);
     }
 
     @Override

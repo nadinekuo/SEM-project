@@ -1,15 +1,14 @@
-package userPackage.config;
+package user.config;
 
 import java.util.List;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import userPackage.entities.Admin;
-import userPackage.entities.Customer;
-import userPackage.entities.Group;
-import userPackage.repositories.GroupRepository;
-import userPackage.repositories.UserRepository;
+import user.entities.Admin;
+import user.entities.Customer;
+import user.entities.Group;
+import user.repositories.GroupRepository;
+import user.repositories.UserRepository;
 
 @Configuration
 public class UserGroupsConfig {

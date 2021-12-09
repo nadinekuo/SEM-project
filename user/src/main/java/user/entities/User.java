@@ -1,4 +1,4 @@
-package userPackage.entities;
+package user.entities;
 
 import java.util.Objects;
 import javax.persistence.Entity;
@@ -22,17 +22,17 @@ public abstract class User {
     private String username;
     private String password;   // Spring Security
 
-
     /**
-     *  Empty constructor needed for Spring JPA.
+     * Empty constructor needed for Spring JPA.
      */
     public User() {
 
     }
 
-    /** Constructor User.
+    /**
+     * Constructor User.
      *
-     * @param id - Long
+     * @param id       - Long
      * @param username - String
      * @param password - String
      */
@@ -42,7 +42,8 @@ public abstract class User {
         this.password = password;
     }
 
-    /** Constructor User without id.
+    /**
+     * Constructor User without id.
      *
      * @param username - String
      * @param password - String
@@ -56,6 +57,9 @@ public abstract class User {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;
@@ -69,14 +73,14 @@ public abstract class User {
         return password;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -89,11 +93,5 @@ public abstract class User {
         User user = (User) o;
         return id == user.id;
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
 
 }
