@@ -10,10 +10,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -39,13 +45,10 @@ public class ReservationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-
-    private final long reservationId = 1L;
     private final long userId = 1L;
     private final long sportFacilityId = 1L;
     private final String equipmentNameValid = "hockeyStick";
     private final String equipmentNameInvalid = "blopp";
-    String validDate = "2099-01-06T17:00:00";
 
     String equipmentBookingURL = "/reservation/{userId}/{equipmentName"
         + "}/{date}/{isCombined}/makeEquipmentBooking";
@@ -62,112 +65,88 @@ public class ReservationControllerTest {
     RestTemplate restTemplate;
 
     @BeforeEach
-    @MockitoSettings(strictness = Strictness.LENIENT)
     public void setup() {
         restTemplate = Mockito.mock(RestTemplate.class);
         Mockito.when(reservationService.restTemplate()).thenReturn(restTemplate);
-
-        Mockito.when(restTemplate.getForObject(ReservationController.sportFacilityUrl +
-                "/equipment/" + equipmentNameValid + "/getAvailableEquipment",
-            Long.class)).thenReturn(1L);
-
-        Mockito.when(restTemplate.getForObject(ReservationController.userUrl +
-                "/user/" + userId + "/isPremium", Boolean.class)).thenReturn(true);
-
-//
-//        Mockito.when(restTemplate.getForObject(ReservationController.sportFacilityUrl +
-//                "/equipment/" + equipmentNameInvalid + "/getAvailableEquipment",
-//            Long.class)).thenReturn()
 
         this.mockMvc =
             MockMvcBuilders.standaloneSetup(new ReservationController(reservationService)).build();
     }
 
-
-    @Disabled
-    public void getReservationId() throws Exception{
+    @Test
+    public void getReservationIdTest() throws Exception{
+        long reservationId = 1L;
         mockMvc.perform(get("/reservation/{reservationId}", reservationId)).andExpect(status().isOk());
         verify(reservationService).getReservation(1L);
     }
 
+    @Test
+    public void makeEquipmentReservationDateInThePastTest() throws Exception {
+        String pastDate = "1990-01-06T17:00:00";
+        MvcResult result = mockMvc.perform(post(equipmentBookingURL,
+            userId, equipmentNameValid, pastDate, true))
+            .andExpect(status().isBadRequest())
+            .andReturn();
 
-    @Disabled
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    public void makeEquipmentReservationOKTest() throws Exception {
+        assertThat(result.getResponse().getContentAsString()).isEqualTo("Date and time has to be "
+            + "after now");
+
+        verify(reservationService, never()).makeSportFacilityReservation(reservation);
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidDateGenerator")
+    public void testEquipmentReservationInvalidDates(String date) throws Exception {
 
         MvcResult result = mockMvc.perform(post(equipmentBookingURL,
-                userId, equipmentNameValid, validDate, true))
+                userId, equipmentNameValid, date, true))
+            .andExpect(status().is4xxClientError())
+            .andReturn();
+
+        assertThat(result.getResponse().getContentAsString()).isEqualTo("Time has to be between "
+            + "16:00 and 23:00");
+        verify(reservationService, never()).makeSportFacilityReservation(reservation);
+
+    }
+
+    private static Stream<Arguments> invalidDateGenerator() {
+        return Stream.of(
+            //just before you can't reserve
+            Arguments.of ("2099-01-06T15:59:59"),
+            //just after you can't reserve
+            Arguments.of ("2099-01-06T23:00:00"));
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("validDateGenerator")
+    public void testEquipmentReservationValidDates(String date) throws Exception {
+        Mockito.when(restTemplate.getForObject(ReservationController.sportFacilityUrl +
+                "/equipment/" + equipmentNameValid + "/getAvailableEquipment",
+            Long.class)).thenReturn(1L);
+
+        Mockito.when(restTemplate.getForObject(ReservationController.userUrl +
+            "/user/" + userId + "/isPremium", Boolean.class)).thenReturn(true);
+
+        MvcResult result = mockMvc.perform(post(equipmentBookingURL,
+                userId, equipmentNameValid, date, true))
             .andExpect(status().isOk())
             .andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Equipment "
             + "reservation was successful!");
         verify(reservationService).makeSportFacilityReservation(reservation);
-    }
-
-
-    @Disabled
-    public void makeEquipmentReservationDateInThePastTest() throws Exception {
-        String pastDate = "1990-01-06T17:00:00";
-        mockMvc.perform(post(equipmentBookingURL,
-            userId, equipmentNameValid, pastDate, true))
-            .andExpect(status().isBadRequest())
-            //.andExpect((ResultMatcher) content().string(containsString("Date and time has to be "
-            //+ "after now")))
-            .andDo(MockMvcResultHandlers.print());;
-        verify(reservationService, never()).makeSportFacilityReservation(reservation);
 
     }
 
-
-    @Disabled
-    public void makeEquipmentReservationOutsideOfTimeslotEdgeCase1() throws Exception {
-        String invalidTime = "2099-01-06T15:59:59";
-
-        mockMvc.perform(post(equipmentBookingURL,
-            userId, equipmentNameValid, invalidTime, true))
-            .andExpect(status().is4xxClientError())
-            .andDo(MockMvcResultHandlers.print());;
-        verify(reservationService, never()).makeSportFacilityReservation(reservation);
+    private static Stream<Arguments> validDateGenerator() {
+        return Stream.of(
+            //valid date
+            Arguments.of ("2099-01-06T21:00:00"),
+            //date a minute before you can't reserve
+            Arguments.of ("2099-01-06T22:59:59"),
+            //just when you can start reserving
+            Arguments.of ("2099-01-06T16:00:00"));
     }
-
-    @Disabled
-    public void makeEquipmentReservationOutsideOfTimeslotEdgeCase2() throws Exception {
-        String invalidTime = "2099-01-06T23:00:00";
-
-        mockMvc.perform(post(equipmentBookingURL,
-            userId, equipmentNameValid, invalidTime, true))
-            .andExpect(status().isBadRequest())
-            //.andExpect((ResultMatcher) content().string("hi"))
-            .andDo(MockMvcResultHandlers.print());
-        verify(reservationService, never()).makeSportFacilityReservation(reservation);
-    }
-
-    @Disabled
-    public void makeEquipmentReservationInsideOfTimeslotEdgeCase1() throws Exception {
-        String time = "2099-01-06T16:00:00";
-
-        mockMvc.perform(post(equipmentBookingURL,
-                userId, equipmentNameValid, time, true))
-            .andExpect(status().isOk())
-            .andExpect((ResultMatcher) content().string(containsString("Equipment reservation "
-                + "was successful!")));
-        verify(reservationService).makeSportFacilityReservation(reservation);
-    }
-
-    @Disabled
-    public void makeEquipmentReservationInsideOfTimeslotEdgeCase2() throws Exception {
-        String time = "2099-01-06T22:59:59";
-
-        mockMvc.perform(post(equipmentBookingURL,
-                userId, equipmentNameValid, time, true))
-            .andExpect(status().isOk())
-            .andExpect((ResultMatcher) content().string(containsString("Equipment reservation "
-                + "was successful!")));
-        verify(reservationService).makeSportFacilityReservation(reservation);
-    }
-
-
-
 
 }

@@ -157,7 +157,7 @@ public class ReservationController {
                 HttpStatus.BAD_REQUEST);
         }
         if ((dateTime.getHour() < 16) || (dateTime.getHour() == 23)) {
-            return new ResponseEntity<>("Time has to be between 16:00 and 23:00.",
+            return new ResponseEntity<>("Time has to be between 16:00 and 23:00",
                 HttpStatus.BAD_REQUEST);
         }
 
