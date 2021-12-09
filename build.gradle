@@ -82,6 +82,8 @@ subprojects {
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
 
+        implementation 'com.sun.jersey.contribs:jersey-apache-client4:1.19.4'
+
 
         //tests
         implementation 'org.jetbrains:annotations:20.1.0'
