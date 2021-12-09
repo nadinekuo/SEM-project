@@ -92,17 +92,15 @@ public class ReservationController {
      * @param userId      the user id
      * @param sportRoomId the sport room id
      * @param date        the date
-     * @param isCombined  if its part of a combined reservation
      * @return A response based on what happened when trying to make the reservation
      */
-    @PostMapping("/{userId}/{sportRoomId}/{date}/{isCombined}/makeSportRoomBooking")
+    @PostMapping("/{userId}/{sportRoomId}/{date}/makeSportRoomBooking")
     @ResponseBody
     public ResponseEntity<String> makeSportRoomReservation(@PathVariable Long userId,
                                                            @PathVariable Long sportRoomId,
-                                                           @PathVariable String date,
-                                                           @PathVariable boolean isCombined) {
+                                                           @PathVariable String date) {
 
-        // TODO: check if userId exists
+        // TODO: check if userId exists ?
 
         //can throw errors
         LocalDateTime dateTime = LocalDateTime.parse(date);
@@ -112,7 +110,7 @@ public class ReservationController {
                 HttpStatus.BAD_REQUEST);
         }
 
-        // TODO: check if no other Sport room booked by that user for the same time
+        // TODO: check if no other Sport room booked by that user for the same time ?
 
         if ((dateTime.getHour() < 16) || (dateTime.getHour() == 23)) {
             return new ResponseEntity<>("Time has to be between 16:00 and 23:00.",
@@ -121,9 +119,10 @@ public class ReservationController {
 
         // TODO: To be moved to another method (Chain of Responsibility)
 
-        String yearMonthDay = date.substring(0, 9);
+        LocalDateTime startDay = LocalDateTime.parse(date.substring(0, 10) + "T00:00:00");
+        LocalDateTime endDay = LocalDateTime.parse(date.substring(0, 10) + "T23:59:59");
         int reservationBalanceOnDate =
-            reservationService.getUserReservationCountOnDay(yearMonthDay, userId);
+            reservationService.getUserReservationCountOnDay(startDay, endDay, userId);
 
         // Basic users can have 1 reservation per day (Equipment and SportRoom are separated!)
         if (!getUserIsPremium(userId) && reservationBalanceOnDate == 1) {
@@ -155,8 +154,7 @@ public class ReservationController {
         }
 
         Reservation reservation =
-            new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime,
-                isCombined);
+            new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime);
         reservationService.makeSportFacilityReservation(reservation);
         return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
     }
@@ -167,15 +165,13 @@ public class ReservationController {
      * @param userId        the user id
      * @param date          the date
      * @param equipmentName the equipment name
-     * @param isCombined    the is combined
      * @return A response based on what happened when trying to make the reservation
      */
-    @PostMapping("/{userId}/{equipmentName}/{date}/{isCombined}/makeEquipmentBooking")
+    @PostMapping("/{userId}/{equipmentName}/{date}/makeEquipmentBooking")
     @ResponseBody
     public ResponseEntity<String> makeEquipmentReservation(@PathVariable Long userId,
                                                            @PathVariable String date,
-                                                           @PathVariable String equipmentName,
-                                                           @PathVariable boolean isCombined) {
+                                                           @PathVariable String equipmentName) {
 
         // TODO: some code duplication that should be removed when implementing chain of
         //  responsibility
@@ -186,26 +182,6 @@ public class ReservationController {
         }
         if ((dateTime.getHour() < 16) || (dateTime.getHour() == 23)) {
             return new ResponseEntity<>("Time has to be between 16:00 and 23:00.",
-                HttpStatus.BAD_REQUEST);
-        }
-
-        // TODO: check if equipment available (enough stock)
-
-        // TODO: To be moved to another method (Chain of Responsibility)
-
-        String yearMonthDay = date.substring(0, 9);
-        int reservationBalanceOnDate =
-            reservationService.getUserReservationCountOnDay(yearMonthDay, userId);
-
-        // Basic users can have 1 reservation per day
-        if (!getUserIsPremium(userId) && reservationBalanceOnDate == 1) {
-            return new ResponseEntity<>("No more than 1 reservation per day can be made.",
-                HttpStatus.BAD_REQUEST);
-        }
-
-        // Premium users can have up to 3 reservations per day
-        if (getUserIsPremium(userId) && reservationBalanceOnDate == 3) {
-            return new ResponseEntity<>("No more than 3 reservations per day can be made. ",
                 HttpStatus.BAD_REQUEST);
         }
 
@@ -224,10 +200,11 @@ public class ReservationController {
         // ());
 
         Reservation reservation =
-            new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime, isCombined);
+            new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
         reservationService.makeSportFacilityReservation(reservation);
         return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
     }
+
 
     /**
      * Gets if user is premium.

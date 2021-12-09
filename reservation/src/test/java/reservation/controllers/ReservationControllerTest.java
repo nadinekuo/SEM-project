@@ -33,7 +33,7 @@ public class ReservationControllerTest {
     private transient LocalDateTime bookableDate = LocalDateTime.parse("2099-01-06 17:00:00",
         dateTimeFormatter);
     private transient final Reservation reservation =
-        new Reservation(ReservationType.EQUIPMENT, userId, sportFacilityId, bookableDate, false);
+        new Reservation(ReservationType.EQUIPMENT, userId, sportFacilityId, bookableDate);
     @Mock
     private transient ReservationService reservationService;
     @Autowired

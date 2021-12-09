@@ -21,7 +21,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     LocalDate findStartingTimeByReservationId(long reservationId);
 
-    List<Reservation> findReservationByStartingTimeContainsAndCustomerId(String date,
+    List<Reservation> findReservationByStartingTimeBetweenAndCustomerId(LocalDateTime start,
+                                                                        LocalDateTime end,
                                                                          Long customerId);
 
     @Transactional

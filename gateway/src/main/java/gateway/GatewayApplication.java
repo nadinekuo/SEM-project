@@ -2,7 +2,6 @@ package gateway;
 
 import com.netflix.discovery.EurekaClient;
 import gateway.client.GatewayControllerEureka;
-import javax.persistence.Transient;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

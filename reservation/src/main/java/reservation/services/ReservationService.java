@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
+import reservation.entities.ReservationType;
 import reservation.repositories.ReservationRepository;
 
 @Service
@@ -40,34 +41,30 @@ public class ReservationService {
     /**
      * Gets user reservation count on day.
      *
-     * @param date       the date
+     * @param start - start of day we want to count reservations for: yyyy-MM-ddT00:00:00
+     * @param end - end of day we want to count reservations for: yyyy-MM-ddT23:59:59
      * @param customerId the customer id
      * @return the user reservation count for a day
      */
-    public int getUserReservationCountOnDay(String date, long customerId) {
+    public int getUserReservationCountOnDay(LocalDateTime start,
+                                            LocalDateTime end, long customerId) {
 
-        // All reservations on the same day (not time necessarily)
-//        List<Reservation> reservationsOnDay =
-//            reservationRepository.findReservationByStartingTimeContainsAndCustomerId(date,
-//                customerId);
+        List<Reservation> reservationsOnDay =
+            reservationRepository.findReservationByStartingTimeBetweenAndCustomerId(start,
+                end, customerId);
         int count = 0;
 
-//        // Combined reservations of equipment(s) and sport room which will count as 1 reservation
-//        // No more than 1 combined reservation for this same time is possible, since a user cannot
-//        // reserve different sport rooms for the same time
-//        boolean combinedReservationFound = false;
-//        for (Reservation reservation : reservationsOnDay) {
-//            if (!reservation.getIsCombined()) {
-//                count++;
-//            } else {
-//                combinedReservationFound = true;
-//            }
-//        }
-//        if (combinedReservationFound) {
-//            count++;
-//        }
+        // Customers have a limit on the number of sport rooms to be reserved
+        // Basic: 1 per day
+        // Premium: 3 per day
+        for (Reservation reservation : reservationsOnDay) {
+            if (reservation.getTypeOfReservation() == ReservationType.SPORTS_FACILITY) {
+                count++;
+            }
+        }
         return count;
     }
+
 
     @Bean
     @LoadBalanced

@@ -23,7 +23,6 @@ public class Reservation {
     private ReservationType typeOfReservation;    // 0 = Equipment, 1 = SportRoom, 2 = Lesson
     private Long customerId;   // for group reservations, there will be separate reservations
     private Long sportFacilityReservedId;   // EquipmentId, LessonId or sportRoomId
-    private boolean isCombined;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startingTime;
@@ -35,17 +34,14 @@ public class Reservation {
      * @param customerId              the customer id
      * @param sportFacilityReservedId the sport facility reserved id
      * @param startingTime            the starting time
-     * @param isCombined              if it's a combined reservation
      */
     public Reservation(ReservationType typeOfReservation, Long customerId,
-                       Long sportFacilityReservedId, LocalDateTime startingTime,
-                       boolean isCombined) {
+                       Long sportFacilityReservedId, LocalDateTime startingTime) {
 
         this.typeOfReservation = typeOfReservation;
         this.customerId = customerId;
         this.sportFacilityReservedId = sportFacilityReservedId;
         this.startingTime = startingTime;
-        this.isCombined = isCombined;
     }
 
     /**
@@ -100,14 +96,6 @@ public class Reservation {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
-    }
-
-    public boolean getIsCombined() {
-        return isCombined;
-    }
-
-    public void setIsCombined(boolean combined) {
-        isCombined = combined;
     }
 
     @Override
