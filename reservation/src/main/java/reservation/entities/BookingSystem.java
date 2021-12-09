@@ -5,8 +5,8 @@ import java.util.List;
 
 public class BookingSystem {
 
-    private ReservationSortingStrategy sortingStrategy;
-    private List<Reservation> bookings;
+    private transient ReservationSortingStrategy sortingStrategy;
+    private transient List<Reservation> bookings;
 
     public BookingSystem(ReservationSortingStrategy sortingStrategy,
                          List<Reservation> reservationList) {

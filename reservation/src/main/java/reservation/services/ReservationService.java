@@ -57,7 +57,7 @@ public class ReservationService {
         // reserve different sport rooms for the same time
         boolean combinedReservationFound = false;
         for (Reservation reservation : reservationsOnDay) {
-            if (!reservation.isCombined()) {
+            if (!reservation.getIsCombined()) {
                 count++;
             } else {
                 combinedReservationFound = true;

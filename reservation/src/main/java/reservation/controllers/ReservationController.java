@@ -28,7 +28,7 @@ public class ReservationController {
     private final transient ReservationService reservationService;
 
     @Autowired
-    private final RestTemplate restTemplate;
+    private final transient RestTemplate restTemplate;
 
     /**
      * Autowired constructor for the class.
@@ -157,7 +157,7 @@ public class ReservationController {
         Reservation reservation =
             new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime,
                 isCombined);
-        Reservation reservationMade = reservationService.makeSportFacilityReservation(reservation);
+        reservationService.makeSportFacilityReservation(reservation);
         return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
     }
 
@@ -225,7 +225,7 @@ public class ReservationController {
 
         Reservation reservation =
             new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime, isCombined);
-        Reservation reservationMade = reservationService.makeSportFacilityReservation(reservation);
+        reservationService.makeSportFacilityReservation(reservation);
         return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
     }
 

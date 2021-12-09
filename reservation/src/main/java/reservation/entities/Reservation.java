@@ -102,11 +102,11 @@ public class Reservation {
         this.customerId = customerId;
     }
 
-    public boolean isCombined() {
+    public boolean getIsCombined() {
         return isCombined;
     }
 
-    public void setCombined(boolean combined) {
+    public void setIsCombined(boolean combined) {
         isCombined = combined;
     }
 

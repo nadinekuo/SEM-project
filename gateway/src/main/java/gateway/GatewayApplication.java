@@ -2,6 +2,7 @@ package gateway;
 
 import com.netflix.discovery.EurekaClient;
 import gateway.client.GatewayControllerEureka;
+import javax.persistence.Transient;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,12 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GatewayApplication implements GatewayControllerEureka {
 
+
     @Autowired
     @Lazy
-    private EurekaClient eurekaClient;
+    private transient EurekaClient eurekaClient;
+
 
     @Value("${spring.application.name}")
-    private String appName;
+    private transient String appName;
 
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);
