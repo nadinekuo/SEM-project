@@ -18,6 +18,7 @@ import reservation.entities.ReservationType;
 import reservation.entities.chainofresponsibility.InvalidReservationException;
 import reservation.entities.chainofresponsibility.ReservationValidator;
 import reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
+import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
 import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import reservation.services.ReservationService;
 
@@ -103,77 +104,21 @@ public class ReservationController {
                                                            @PathVariable Long sportRoomId,
                                                            @PathVariable String date) {
 
-        // TODO: check if userId exists ?
-
-        //can throw errors
         LocalDateTime dateTime = LocalDateTime.parse(date);
-
-        if (dateTime.isBefore(LocalDateTime.now())) {
-            return new ResponseEntity<>("Date and time has to be after now",
-                HttpStatus.BAD_REQUEST);
-        }
-
-        // TODO: check if no other Sport room booked by that user for the same time ?
-
-        if ((dateTime.getHour() < 16) || (dateTime.getHour() == 23)) {
-            return new ResponseEntity<>("Time has to be between 16:00 and 23:00.",
-                HttpStatus.NOT_FOUND);
-        }
-
-        // TODO: To be moved to another method (Chain of Responsibility)
-
-//        LocalDateTime startDay = LocalDateTime.parse(date.substring(0, 10) + "T00:00:00");
-//        LocalDateTime endDay = LocalDateTime.parse(date.substring(0, 10) + "T23:59:59");
-//        int reservationBalanceOnDate =
-//            reservationService.getUserReservationCountOnDay(startDay, endDay, userId);
-//
-//        // Basic users can have 1 reservation per day (Equipment and SportRoom are separated!)
-//        if (!getUserIsPremium(userId) && reservationBalanceOnDate == 1) {
-//            return new ResponseEntity<>("No more than 1 reservation per day can be made. ",
-//                HttpStatus.BAD_REQUEST);
-//        }
-//
-//        // Premium users can have up to 3 reservations per day
-//        if (getUserIsPremium(userId) && reservationBalanceOnDate == 3) {
-//            return new ResponseEntity<>("No more than 3 reservations per day can be made.",
-//                HttpStatus.BAD_REQUEST);
-//        }
-
-        if (!reservationService.isAvailable(sportRoomId, dateTime)) {
-            return new ResponseEntity<>("Sport Room is already booked for this time slot.",
-                HttpStatus.NOT_FOUND);
-        }
-
-        String methodSpecificUrl = "/" + sportRoomId.toString() + "/exists";
-
-        // Call to SportRoomController in Sport Facilities microservice
-        Boolean sportHallExists =
-            restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
-                Boolean.class);
-
-        if (sportHallExists == null || !sportHallExists) {
-            return new ResponseEntity<>("The SportRoom requested doesn't exist",
-                HttpStatus.NOT_FOUND);
-        }
 
         Reservation reservation =
             new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime);
         reservationService.makeSportFacilityReservation(reservation);
 
-        // todo: send through chain of responsibility
-//
-//        ReservationValidator handler = new UserReservationBalanceValidator();
-//        handler.setNext(new SportFacilityAvailabilityValidator());
-//
-//        try {
-//            boolean isValid = handler.handle(reservation);
-//            System.out.println("Reservation status = " + isValid);
-//        } catch(InvalidReservationException e) {
-//            e.printStackTrace();
-//        }
+        boolean isPremium = getUserIsPremium(userId);
+        boolean isValid = reservationService.checkSportRoomReservation(reservation, isPremium);
 
-
-        return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
+        if (isValid) {
+            return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Reservation could not be made.",
+                HttpStatus.FORBIDDEN);
+        }
     }
 
     /**
@@ -204,8 +149,7 @@ public class ReservationController {
 
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
-        Long response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, Long.class);
+        Long response = restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, Long.class);
 
         Reservation reservation =
             new Reservation(ReservationType.EQUIPMENT, userId, response, dateTime);
@@ -215,7 +159,6 @@ public class ReservationController {
 
         return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
     }
-
 
     /**
      * Gets if user is premium.

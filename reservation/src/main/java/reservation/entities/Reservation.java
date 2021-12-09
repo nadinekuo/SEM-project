@@ -47,8 +47,20 @@ public class Reservation {
         this.timeSlotInMinutes = 60;   // Default time slot for Equipment / Sport room reservations
     }
 
+    /**
+     * Instantiates a new Reservation.
+     *
+     * @param typeOfReservation       the type of reservation
+     * @param customerId              the customer id
+     * @param sportFacilityReservedId the sport facility reserved id
+     * @param startingTime            the starting time
+     * @param timeSlotInMinutes       for how long the equipment/sport room can be used, or the
+     *                                lesson duration
+     *
+     */
     public Reservation(ReservationType typeOfReservation, Long customerId,
-                       Long sportFacilityReservedId, LocalDateTime startingTime, int timeSlotInMinutes) {
+                       Long sportFacilityReservedId, LocalDateTime startingTime,
+                       int timeSlotInMinutes) {
 
         this.typeOfReservation = typeOfReservation;
         this.customerId = customerId;

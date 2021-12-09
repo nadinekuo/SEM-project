@@ -68,9 +68,7 @@ public class EquipmentController {
         try {
             Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
             equipmentService.setEquipmentToInUse(equipmentId);
-            ResponseEntity<String> response =
-                new ResponseEntity<String>(equipmentId.toString(), HttpStatus.OK);
-            return response;
+            return new ResponseEntity<Long>(equipmentId, HttpStatus.OK);
         } catch (NoSuchElementException | NoSuchFieldException e) {
             return new ResponseEntity<>(
                 "The equipment requested is not in stock or the " + "equipment name was not found",

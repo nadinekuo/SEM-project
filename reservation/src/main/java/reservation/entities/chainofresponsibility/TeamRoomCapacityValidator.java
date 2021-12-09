@@ -8,6 +8,11 @@ public class TeamRoomCapacityValidator extends BaseValidator {
 
     @Override
     public boolean handle(Reservation reservation) throws InvalidReservationException {
-        return false;
+
+        // Todo: if isSportHall == false --> check team size for team Sport
+
+        // Todo: check min/max capacity of sport room (hall/field)
+
+        return super.checkNext(reservation);
     }
 }

@@ -9,6 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
+import reservation.entities.chainofresponsibility.InvalidReservationException;
+import reservation.entities.chainofresponsibility.ReservationValidator;
+import reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
+import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
+import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import reservation.repositories.ReservationRepository;
 
 @Service
@@ -38,6 +43,29 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
+
+    public boolean checkSportRoomReservation(Reservation reservation, boolean isPremium) {
+
+        // Start chain of responsibility
+        ReservationValidator userBalanceHandler =
+            new UserReservationBalanceValidator(this, isPremium);
+        ReservationValidator sportFacilityHandler =
+            new SportFacilityAvailabilityValidator();
+        userBalanceHandler.setNext(sportFacilityHandler);
+
+        // Only for sports room reservations, we check the room capacity/team size
+        // todo: don't check this for equipment!
+        ReservationValidator capacityHandler = new TeamRoomCapacityValidator();
+        sportFacilityHandler.setNext(capacityHandler);
+
+        try {
+            return userBalanceHandler.handle(reservation);
+        } catch(InvalidReservationException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     /**
      * Gets user reservation count on day.
      *
@@ -55,8 +83,7 @@ public class ReservationService {
         int count = 0;
 
         // Customers have a limit on the number of sport rooms to be reserved
-        // Basic: 1 per day
-        // Premium: 3 per day
+        // Basic: 1 per day, premium: 3 per day
         for (Reservation reservation : reservationsOnDay) {
             if (reservation.getTypeOfReservation() == ReservationType.SPORTS_FACILITY) {
                 count++;
