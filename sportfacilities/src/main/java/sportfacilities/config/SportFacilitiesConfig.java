@@ -1,13 +1,16 @@
 package sportfacilities.config;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import sportfacilities.entities.Equipment;
+import sportfacilities.entities.Lesson;
 import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.repositories.EquipmentRepository;
+import sportfacilities.repositories.LessonRepository;
 import sportfacilities.repositories.SportRepository;
 import sportfacilities.repositories.SportRoomRepository;
 
@@ -17,9 +20,20 @@ public class SportFacilitiesConfig {
     @Bean
     CommandLineRunner userCommandLineRunner(SportRoomRepository sportRoomRepository,
                                             SportRepository sportRepository,
-                                            EquipmentRepository equipmentRepository) {
+                                            EquipmentRepository equipmentRepository,
+                                            LessonRepository lessonRepository) {
 
         return args -> {
+
+            LocalDateTime startingDate = LocalDateTime.of(2021, 1, 1, 1, 1);
+            LocalDateTime endingDate = LocalDateTime.of(2021, 1, 1, 1, 1);
+            Lesson lesson1 = new Lesson("Tango", startingDate, endingDate, 10);
+            Lesson lesson2 = new Lesson("HIT", startingDate, endingDate, 10);
+            Lesson lesson3 = new Lesson("PoleDancing", startingDate, endingDate, 10);
+            Lesson lesson4 = new Lesson("Spinning", startingDate, endingDate, 10);
+
+            lessonRepository.saveAll(List.of(lesson1, lesson2, lesson3, lesson4));
+
 
             String boxString = "boxingGloves";
 

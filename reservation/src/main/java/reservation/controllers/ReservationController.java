@@ -96,7 +96,7 @@ public class ReservationController {
      */
     @PostMapping("/{userId}/{sportRoomId}/{date}/{isCombined}/makeSportRoomBooking")
     @ResponseBody
-    public ResponseEntity<String> makeSportRoomReservation(@PathVariable Long userId,
+    public ResponseEntity<?> makeSportRoomReservation(@PathVariable Long userId,
                                                            @PathVariable Long sportRoomId,
                                                            @PathVariable String date,
                                                            @PathVariable boolean isCombined) {
@@ -171,7 +171,7 @@ public class ReservationController {
      */
     @PostMapping("/{userId}/{equipmentName}/{date}/{isCombined}/makeEquipmentBooking")
     @ResponseBody
-    public ResponseEntity<String> makeEquipmentReservation(@PathVariable Long userId,
+    public ResponseEntity<?> makeEquipmentReservation(@PathVariable Long userId,
                                                            @PathVariable String date,
                                                            @PathVariable String equipmentName,
                                                            @PathVariable boolean isCombined) {
@@ -218,6 +218,30 @@ public class ReservationController {
         reservationService.makeSportFacilityReservation(reservation);
 
         return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
+    }
+
+    @PostMapping("/{userId}/{lessonId}/makeLessonBooking")
+    @ResponseBody
+    public ResponseEntity<?> makeLessonReservation(@PathVariable Long userId,
+                                                      @PathVariable Long lessonId) {
+
+        String methodSpecificUrl = "/lesson/" + lessonId + "/getStartingTime";
+
+        String lessonBegin =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
+
+        if (lessonBegin == null){
+            return new ResponseEntity<>("Lesson doesn't exist", HttpStatus.BAD_REQUEST);
+        }
+
+        LocalDateTime ldt = LocalDateTime.parse(lessonBegin);
+
+        Reservation reservation =
+            new Reservation(ReservationType.LESSON, userId, lessonId, ldt, false);
+
+        reservationService.makeSportFacilityReservation(reservation);
+
+        return new ResponseEntity<>("Lesson booking was successful!", HttpStatus.OK);
     }
 
     /**

@@ -1,5 +1,6 @@
 package sportfacilities.entities;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,8 @@ public class Lesson {
 
     private String title;
     private int size;     // how many enrolled attendees
+    private LocalDateTime startingTime;
+    private LocalDateTime endingTime;
 
     /**
      * Empty constructor needed for Spring JPA.
@@ -29,14 +32,15 @@ public class Lesson {
 
     /**
      * Constructor Lesson.
-     *
-     * @param lessonId - long
      * @param title    - String
+     * @param startingTime
+     * @param endingTime
      */
-    public Lesson(long lessonId, String title) {
-        this.lessonId = lessonId;
+    public Lesson(String title, LocalDateTime startingTime, LocalDateTime endingTime, int size) {
         this.title = title;
-        this.size = 0;
+        this.startingTime = startingTime;
+        this.endingTime = endingTime;
+        this.size = size;
     }
 
     public int getSize() {
@@ -61,6 +65,22 @@ public class Lesson {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public LocalDateTime getStartingTime() {
+        return startingTime;
+    }
+
+    public void setStartingTime(LocalDateTime startingTime) {
+        this.startingTime = startingTime;
+    }
+
+    public LocalDateTime getEndingTime() {
+        return endingTime;
+    }
+
+    public void setEndingTime(LocalDateTime endingTime) {
+        this.endingTime = endingTime;
     }
 
     @Override
