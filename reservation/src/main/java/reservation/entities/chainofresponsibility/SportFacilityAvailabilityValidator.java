@@ -1,40 +1,63 @@
 package reservation.entities.chainofresponsibility;
 
+import java.time.LocalDateTime;
+import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
+import reservation.entities.ReservationType;
 import reservation.entities.chainofresponsibility.BaseValidator;
 import reservation.entities.chainofresponsibility.InvalidReservationException;
+import reservation.services.ReservationService;
 
 public class SportFacilityAvailabilityValidator extends BaseValidator {
+
+    private ReservationService reservationService;
+    private ReservationController reservationController;
+
+    public SportFacilityAvailabilityValidator(ReservationService reservationService,
+                                              ReservationController reservationController) {
+        this.reservationService = reservationService;
+        this.reservationController = reservationController;
+    }
 
     @Override
     public boolean handle(Reservation reservation) throws InvalidReservationException {
 
-        //
-        //        if (dateTime.isBefore(LocalDateTime.now())) {
-        //            return new ResponseEntity<>("Date and time has to be after now",
-        //                HttpStatus.BAD_REQUEST);
-        //        }
-        //
-        //        if ((dateTime.getHour() < 16) || (dateTime.getHour() == 23)) {
-        //            return new ResponseEntity<>("Time has to be between 16:00 and 23:00.",
-        //                HttpStatus.NOT_FOUND);
-        //        }
-        //
-        //        if (!reservationService.isAvailable(sportRoomId, dateTime)) {
-        //            return new ResponseEntity<>("Sport Room is already booked for this time slot.",
-        //                HttpStatus.NOT_FOUND);
-        //        }
-        //
-        //        String methodSpecificUrl = "/" + sportRoomId.toString() + "/exists";
-        //
-        //        // Call to SportRoomController in Sport Facilities microservice
-        //        Boolean sportHallExists = restTemplate
-        //            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, Boolean.class);
-        //
-        //        if (sportHallExists == null || !sportHallExists) {
-        //            return new ResponseEntity<>("The SportRoom requested doesn't exist",
-        //                HttpStatus.NOT_FOUND);
-        //        }
+        if (reservation.getStartingTime().isBefore(LocalDateTime.now())) {
+            throw new InvalidReservationException("Invalid starting time of reservation!");
+        }
+
+        // Only between 16:00 and 23:00 reservations can be made
+        if ((reservation.getStartingTime().getHour() < 16) || (reservation.getStartingTime().getHour() == 23)) {
+            throw new InvalidReservationException("Reservation slot has to be between 16:00 and "
+                + "23:00.");
+        }
+
+        if (reservation.getTypeOfReservation() == ReservationType.SPORTS_FACILITY) {
+
+            long sportsRoomId = reservation.getSportFacilityReservedId();
+
+            // Check if sport room is not reserved already for this time slot (false)
+            // If true, it may not necessarily exist.
+            boolean sportsRoomAvailable = reservationService.sportsFacilityIsAvailable(sportsRoomId,
+                reservation.getStartingTime());
+            if (!sportsRoomAvailable) {
+                throw new InvalidReservationException("Sports room is already booked for this time "
+                    + "slot.");
+            }
+
+            // Call Sports Facilities service: check if sports room exists
+            boolean sportsRoomExists = reservationController.getSportsRoomExists(sportsRoomId);
+            if (!sportsRoomExists) {
+                throw new InvalidReservationException("Sports room does not exist.");
+            }
+
+        } else if (reservation.getTypeOfReservation() == ReservationType.EQUIPMENT) {
+
+            // Check if equipment existing / available instance found
+            if (reservation.getSportFacilityReservedId() == -1L) {
+                throw new InvalidReservationException("Equipment name invalid or not in stock!");
+            }
+        }
 
         return super.checkNext(reservation);
     }

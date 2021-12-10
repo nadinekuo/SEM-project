@@ -59,21 +59,19 @@ public class EquipmentController {
     /**
      * Gets one instance of equipment that is available.
      *
-     * @param equipmentName the equipment name
-     * @return the first available equipment
+     * @param equipmentName the equipment name, example: "hockeyStick"
+     * @return the first available equipment, if not found / unavailable: -1L returned
      */
     @GetMapping("/{equipmentName}/getAvailableEquipment")
     @ResponseBody
     public ResponseEntity<?> getAvailableEquipment(@PathVariable String equipmentName) {
-        try {
-            Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
+
+        Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
+
+        if (equipmentId != -1L) {   // Available / existing equipment found
             equipmentService.setEquipmentToInUse(equipmentId);
-            return new ResponseEntity<Long>(equipmentId, HttpStatus.OK);
-        } catch (NoSuchElementException | NoSuchFieldException e) {
-            return new ResponseEntity<>(
-                "The equipment requested is not in stock or the " + "equipment name was not found",
-                HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<String>(equipmentId.toString(), HttpStatus.OK);
     }
 
     /**

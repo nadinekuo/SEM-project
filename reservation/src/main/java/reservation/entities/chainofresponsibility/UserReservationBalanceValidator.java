@@ -1,6 +1,7 @@
 package reservation.entities.chainofresponsibility;
 
 import java.time.LocalDateTime;
+import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.chainofresponsibility.BaseValidator;
 import reservation.entities.chainofresponsibility.InvalidReservationException;
@@ -9,13 +10,13 @@ import reservation.services.ReservationService;
 public class UserReservationBalanceValidator extends BaseValidator {
 
     private ReservationService reservationService;
-    private boolean isPremium;
+    private ReservationController reservationController;
 
 
     public UserReservationBalanceValidator(ReservationService reservationService,
-                                           boolean isPremium) {
+                                           ReservationController reservationController) {
         this.reservationService = reservationService;
-        this.isPremium = isPremium;
+        this.reservationController = reservationController;
     }
 
     @Override
@@ -29,8 +30,9 @@ public class UserReservationBalanceValidator extends BaseValidator {
         int reservationBalanceOnDate =
             reservationService.getUserReservationCountOnDay(startDay, endDay, reservation.getCustomerId());
 
-        // Basic users can have 1 sports room reservation per day
+        boolean isPremium = reservationController.getUserIsPremium(reservation.getCustomerId());
 
+        // Basic users can have 1 sports room reservation per day
         if (!isPremium && reservationBalanceOnDate == 1) {
             throw new InvalidReservationException("Daily limit of 1 reservation per day has "
                 + "been "

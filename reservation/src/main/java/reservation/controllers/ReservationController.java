@@ -74,21 +74,21 @@ public class ReservationController {
         reservationService.deleteReservation(reservationId);
     }
 
-    /**
-     * Checks if sport room is available.
-     *
-     * @param sportRoomId the sport room id
-     * @param date        the date
-     * @return if its available or not
-     */
-    @GetMapping("/{sportRoomId}/{date}/isAvailable")
-    @ResponseBody
-    public boolean isAvailable(@PathVariable Long sportRoomId, @PathVariable String date) {
-        return reservationService.isAvailable(sportRoomId, LocalDateTime.parse(date));
-    }
+//    /**
+//     * Checks if sport room is available.
+//     *
+//     * @param sportFacilityId the sport room id
+//     * @param date        the date
+//     * @return if its available or not
+//     */
+//    @GetMapping("/{sportRoomId}/{date}/isAvailable")
+//    @ResponseBody
+//    public boolean isAvailable(@PathVariable Long sportFacilityId, @PathVariable String date) {
+//        return reservationService.sportsFacilityIsAvailable(sportFacilityId,
+//            LocalDateTime.parse(date));
+//    }
 
-    // TODO: the 2 methods below have to be combined into 1 Reservation method, which allows
-    //  combining Equipment and SportRooms
+
 
     /**
      * Make sport room reservation.
@@ -106,14 +106,17 @@ public class ReservationController {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
+        // Create reservation object, to be passed through chain of responsibility
         Reservation reservation =
             new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime);
-        reservationService.makeSportFacilityReservation(reservation);
 
-        boolean isPremium = getUserIsPremium(userId);
-        boolean isValid = reservationService.checkSportRoomReservation(reservation, isPremium);
+        // Creates chain of responsibility
+        boolean isValid = reservationService.checkReservation(reservation, this);
+
+        // TODO: check if request gives 200
 
         if (isValid) {
+            reservationService.makeSportFacilityReservation(reservation);
             return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Reservation could not be made.",
@@ -135,29 +138,30 @@ public class ReservationController {
                                                            @PathVariable String date,
                                                            @PathVariable String equipmentName) {
 
-        // TODO: some code duplication that should be removed when implementing chain of
-        //  responsibility
         LocalDateTime dateTime = LocalDateTime.parse(date);
-        if (dateTime.isBefore(LocalDateTime.now())) {
-            return new ResponseEntity<>("Date and time has to be after now",
-                HttpStatus.BAD_REQUEST);
-        }
-        if ((dateTime.getHour() < 16) || (dateTime.getHour() == 23)) {
-            return new ResponseEntity<>("Time has to be between 16:00 and 23:00",
-                HttpStatus.BAD_REQUEST);
-        }
 
+        // Gets first available instance of this equipment name specified
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
-        Long response = restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, Long.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
+        Long equipmentId = Long.valueOf(response);   // will be -1 if non-existent or non-available
 
         Reservation reservation =
-            new Reservation(ReservationType.EQUIPMENT, userId, response, dateTime);
-        reservationService.makeSportFacilityReservation(reservation);
+            new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
 
-        // todo: Send through chain of responsibility
+        // TODO: check if request gives 200
 
-        return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
+        // Creates chain of responsibility
+        boolean isValid = reservationService.checkReservation(reservation, this);
+
+        if (isValid) {
+            reservationService.makeSportFacilityReservation(reservation);
+            return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Reservation could not be made.",
+                HttpStatus.FORBIDDEN);
+        }
     }
 
     /**
@@ -174,6 +178,28 @@ public class ReservationController {
         Boolean isPremium = restTemplate.getForObject(userUrl + methodSpecificUrl, Boolean.class);
 
         return isPremium;
+    }
+
+    /**
+     * Gets if sports room to be reserved exists.
+     *
+     * @param sportsRoomId the sports room id
+     * @return if the user is premium
+     */
+    @GetMapping("/{sportsRoomId}/exists")
+    @ResponseBody
+    public Boolean getSportsRoomExists(@PathVariable Long sportsRoomId) {
+
+        String methodSpecificUrl = "/" + sportsRoomId.toString() + "/exists";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        Boolean sportRoomExists = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, Boolean.class);
+
+        if (sportRoomExists == null) {
+            return false;
+        }
+        return sportRoomExists;
     }
 
 }

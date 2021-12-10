@@ -7,6 +7,7 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.entities.chainofresponsibility.InvalidReservationException;
@@ -35,8 +36,8 @@ public class ReservationService {
     }
 
     // All Reservations start at full hours, so only start time has to be checked.
-    public boolean isAvailable(Long sportRoomId, LocalDateTime time) {
-        return reservationRepository.findBySportRoomIdAndTime(sportRoomId, time).isEmpty();
+    public boolean sportsFacilityIsAvailable(Long sportFacilityId, LocalDateTime time) {
+        return reservationRepository.findBySportFacilityReservedIdAndTime(sportFacilityId, time).isEmpty();
     }
 
     public Reservation makeSportFacilityReservation(Reservation reservation) {
@@ -44,19 +45,21 @@ public class ReservationService {
     }
 
 
-    public boolean checkSportRoomReservation(Reservation reservation, boolean isPremium) {
+    public boolean checkReservation(Reservation reservation, ReservationController reservationController) {
 
         // Start chain of responsibility
         ReservationValidator userBalanceHandler =
-            new UserReservationBalanceValidator(this, isPremium);
+            new UserReservationBalanceValidator(this, reservationController);
         ReservationValidator sportFacilityHandler =
-            new SportFacilityAvailabilityValidator();
+            new SportFacilityAvailabilityValidator(this, reservationController);
         userBalanceHandler.setNext(sportFacilityHandler);
 
         // Only for sports room reservations, we check the room capacity/team size
-        // todo: don't check this for equipment!
-        ReservationValidator capacityHandler = new TeamRoomCapacityValidator();
-        sportFacilityHandler.setNext(capacityHandler);
+        if (reservation.getTypeOfReservation() == ReservationType.SPORTS_FACILITY) {
+            ReservationValidator capacityHandler = new TeamRoomCapacityValidator(this,
+                reservationController);
+            sportFacilityHandler.setNext(capacityHandler);
+        }
 
         try {
             return userBalanceHandler.handle(reservation);
@@ -65,6 +68,7 @@ public class ReservationService {
             return false;
         }
     }
+
 
     /**
      * Gets user reservation count on day.
@@ -98,6 +102,7 @@ public class ReservationService {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
 }
 
 

@@ -1,5 +1,6 @@
 package sportfacilities.services;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -49,8 +50,15 @@ public class EquipmentService {
         equipmentRepository.save(equipment);
     }
 
-    public Long getAvailableEquipmentIdsByName(String equipmentName) throws NoSuchFieldException {
-        return equipmentRepository.findAvailableEquipment(equipmentName).orElseThrow();
+
+    public Long getAvailableEquipmentIdsByName(String equipmentName) {
+        Optional<Long> potentialEquipmentId =
+            equipmentRepository.findAvailableEquipment(equipmentName);
+        if (potentialEquipmentId.isPresent()) {
+            return potentialEquipmentId.get();
+        } else {
+            return -1L;
+        }
     }
 
 
