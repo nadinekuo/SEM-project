@@ -32,7 +32,8 @@ public class Lesson {
 
     /**
      * Constructor Lesson.
-     * @param title    - String
+     *
+     * @param title        - String
      * @param startingTime
      * @param endingTime
      */

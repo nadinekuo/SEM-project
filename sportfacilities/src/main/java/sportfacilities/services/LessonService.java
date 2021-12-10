@@ -1,7 +1,6 @@
 package sportfacilities.services;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sportfacilities.entities.Lesson;
@@ -27,7 +26,8 @@ public class LessonService {
         return lessonRepository.findById(lessonId).orElseThrow();
     }
 
-    public void addNewLesson(String title, LocalDateTime startTime, LocalDateTime endTime, int size) {
+    public void addNewLesson(String title, LocalDateTime startTime, LocalDateTime endTime,
+                             int size) {
         lessonRepository.save(new Lesson(title, startTime, endTime, size));
     }
 

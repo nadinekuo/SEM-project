@@ -75,7 +75,7 @@ public class LessonServiceTest {
 
     @Test
     public void getLessonStartingTimeTest() throws NoSuchFieldException {
-        assertEquals(startingTime, lessonService.getLessonStartingTime(lessonId));
+        assertEquals(startingTime.toString(), lessonService.getLessonStartingTime(lessonId));
     }
 
     @Test
