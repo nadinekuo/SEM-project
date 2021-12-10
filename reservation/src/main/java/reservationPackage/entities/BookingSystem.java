@@ -15,12 +15,6 @@ public class BookingSystem {
         this.bookings = new ArrayList<>();
     }
 
-   /* public BookingSystem(ChronologicalStrategy sortingStrategy) {
-    }*/
-
-    //public BookingSystem(BasicPremiumUserStrategy sortingStrategy) {
-   // }
-
     public void addReservation(Reservation reservation) {
         bookings.add(reservation);
     }
