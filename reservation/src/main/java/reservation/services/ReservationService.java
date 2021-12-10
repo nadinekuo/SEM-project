@@ -27,11 +27,17 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Reservation getReservation(long reservationId) {
-        return reservationRepository.findById(reservationId);
+    public Reservation getReservation(Long reservationId) {
+        return reservationRepository.findById(reservationId)
+            .orElseThrow(() -> new IllegalStateException("Question with id "
+                + reservationId + " does not exist!"));
     }
 
     public void deleteReservation(Long reservationId) {
+        boolean exists = reservationRepository.existsById(reservationId);
+        if (!exists) {
+            throw new IllegalStateException("Question with id " + reservationId + " does not exist!");
+        }
         reservationRepository.deleteById(reservationId);
     }
 
@@ -97,11 +103,15 @@ public class ReservationService {
     }
 
 
+
+
+
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
 
 }
 

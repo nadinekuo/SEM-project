@@ -18,10 +18,11 @@ public class Reservation {
     @SequenceGenerator(name = "reservation_sequence", sequenceName = "reservation_sequence",
         allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_sequence")
-    private long reservationId;
+    private Long reservationId;
 
     private ReservationType typeOfReservation;    // 0 = Equipment, 1 = SportRoom, 2 = Lesson
     private Long customerId;   // for group reservations, there will be separate reservations
+    private Long groupId;     // will be -1 if it's not a group reservation
     private Long sportFacilityReservedId;   // EquipmentId, LessonId or sportRoomId
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -45,6 +46,7 @@ public class Reservation {
         this.sportFacilityReservedId = sportFacilityReservedId;
         this.startingTime = startingTime;
         this.timeSlotInMinutes = 60;   // Default time slot for Equipment / Sport room reservations
+        this.groupId = -1L;    // If not a group reservation
     }
 
     /**
@@ -60,13 +62,14 @@ public class Reservation {
      */
     public Reservation(ReservationType typeOfReservation, Long customerId,
                        Long sportFacilityReservedId, LocalDateTime startingTime,
-                       int timeSlotInMinutes) {
+                       int timeSlotInMinutes, Long groupId) {
 
         this.typeOfReservation = typeOfReservation;
         this.customerId = customerId;
         this.sportFacilityReservedId = sportFacilityReservedId;
         this.startingTime = startingTime;
         this.timeSlotInMinutes = timeSlotInMinutes;
+        this.groupId = groupId;
     }
 
     /**
@@ -75,7 +78,13 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Long getSportFacilityReservedId() {
+
+    public long getId() {
+        return reservationId;
+    }
+
+
+    public long getSportFacilityReservedId() {
         return sportFacilityReservedId;
     }
 
@@ -99,11 +108,11 @@ public class Reservation {
         this.typeOfReservation = typeOfReservation;
     }
 
-    public long getReservationId() {
+    public Long getReservationId() {
         return reservationId;
     }
 
-    public void setReservationId(long reservationId) {
+    public void setReservationId(Long reservationId) {
         this.reservationId = reservationId;
     }
 
@@ -129,6 +138,14 @@ public class Reservation {
 
     public void setTimeSlotInMinutes(int timeSlotInMinutes) {
         this.timeSlotInMinutes = timeSlotInMinutes;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     @Override

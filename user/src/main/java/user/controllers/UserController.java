@@ -18,6 +18,7 @@ import user.services.UserService;
 @RestController
 @RequestMapping("user")
 public class UserController {
+
     private final transient UserService userService;
 
     @Autowired

@@ -174,9 +174,7 @@ public class ReservationController {
     @ResponseBody
     public Boolean getUserIsPremium(@PathVariable Long userId) {
         String methodSpecificUrl = "/user/" + userId + "/isPremium";
-
         Boolean isPremium = restTemplate.getForObject(userUrl + methodSpecificUrl, Boolean.class);
-
         return isPremium;
     }
 
@@ -201,5 +199,140 @@ public class ReservationController {
         }
         return sportRoomExists;
     }
+
+
+    /**
+     * @param sportRoomId the sports room id
+     * @return if the to be reserved sports room is a hall, meaning it holds multiple sports.
+     */
+    @GetMapping("/{sportRoomId}/isHall")
+    @ResponseBody
+    public Boolean getIsSportHall(@PathVariable Long sportRoomId) {
+
+        String methodSpecificUrl = "/" + sportRoomId.toString() + "/isHall";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        Boolean sportRoomIsHall = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, Boolean.class);
+
+        if (sportRoomIsHall == null) {
+            return false;
+        }
+        return sportRoomIsHall;
+    }
+
+
+    /**
+     * Gets sport room maximum capacity.
+     *
+     * @param sportRoomId the sport room id
+     * @return the sport room maximum capacity
+     */
+    @GetMapping("/{sportRoomId}/getMaximumCapacity")
+    @ResponseBody
+    public int getSportRoomMaximumCapacity(@PathVariable Long sportRoomId) {
+
+        String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMaximumCapacity";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        int maxCapacity = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, Integer.class);
+
+        return maxCapacity;    // may be -1, but exception is caught in SportRoomController
+    }
+
+
+    /**
+     * Gets sport room maximum capacity.
+     *
+     * @param sportRoomId the sport room id
+     * @return the sport room maximum capacity
+     */
+    @GetMapping("/{sportRoomId}/getMinimumCapacity")
+    @ResponseBody
+    public int getSportRoomMinimumCapacity(@PathVariable Long sportRoomId) {
+
+        String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMinimumCapacity";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        int minCapacity = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, Integer.class);
+
+        return minCapacity;    // may be -1
+    }
+
+
+
+    /**
+     * @param sportFieldId - id of sport field to be reserved
+     * @return String - name of related Sport (id of Sport)
+     *    example: soccer, hockey, ...
+     */
+    @GetMapping("/{sportFieldId}/getSport")
+    @ResponseBody
+    public String getSportFieldSport(@PathVariable Long sportFieldId) {
+
+        String methodSpecificUrl = "/" + sportFieldId.toString() + "/getSport";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        String relatedSport = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+
+        return relatedSport;
+    }
+
+
+
+    /**
+     * @param sportName the sport id
+     * @return the max team size for this sport
+     */
+    @GetMapping("/{sportName}/getMaxTeamSize")
+    @ResponseBody
+    public int getSportMaxTeamSize(@PathVariable String sportName) {
+
+        String methodSpecificUrl = "/" + sportName.toString() + "/getMaxTeamSize";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        int maxTeamSize = restTemplate
+            .getForObject(sportFacilityUrl + "/sports/" + methodSpecificUrl, Integer.class);
+
+        return maxTeamSize;
+    }
+
+
+
+    /**
+     * @param sportName the sport id
+     * @return the min team size for this sport
+     */
+    @GetMapping("/{sportName}/getMinTeamSize")
+    @ResponseBody
+    public int getSportMinTeamSize(@PathVariable String sportName) {
+
+        String methodSpecificUrl = "/" + sportName.toString() + "/getMinTeamSize";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        int minTeamSize = restTemplate
+            .getForObject(sportFacilityUrl + "/sports/" + methodSpecificUrl, Integer.class);
+
+        return minTeamSize;
+    }
+
+
+    @GetMapping("/{groupId}/getGroupSize")
+    @ResponseBody
+    public int getGroupSize(@PathVariable Long groupId) {
+
+        String methodSpecificUrl = "/" + groupId.toString() + "/getGroupSize";
+
+        // Call to GroupController in User microservice
+        int groupSize = restTemplate
+            .getForObject(userUrl + "/groups/" + methodSpecificUrl, Integer.class);
+
+        return groupSize;
+
+    }
+
 
 }

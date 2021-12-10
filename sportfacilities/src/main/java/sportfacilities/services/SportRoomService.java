@@ -22,8 +22,10 @@ public class SportRoomService {
         this.sportRoomRepository = sportRoomRepository;
     }
 
-    public SportRoom getSportRoom(Long sportRoomId) throws NoSuchFieldException {
-        return sportRoomRepository.findBySportRoomId(sportRoomId).orElseThrow();
+    public SportRoom getSportRoom(Long sportRoomId) {
+        return sportRoomRepository.findBySportRoomId(sportRoomId)
+            .orElseThrow(() -> new IllegalStateException("Sport room with id "
+                    + sportRoomId + " does not exist!"));
     }
 
     public Boolean sportRoomExists(Long sportRoomId) {

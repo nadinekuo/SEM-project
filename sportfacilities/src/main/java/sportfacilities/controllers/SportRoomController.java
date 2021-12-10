@@ -33,7 +33,6 @@ public class SportRoomController {
         this.restTemplate = sportRoomService.restTemplate();
     }
 
-    // Get sport room
 
     /**
      * Gets sport room.
@@ -44,13 +43,9 @@ public class SportRoomController {
     @GetMapping("/{sportRoomId}")
     @ResponseBody
     public SportRoom getSportRoom(@PathVariable Long sportRoomId) {
-        try {
-            return sportRoomService.getSportRoom(sportRoomId);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return sportRoomService.getSportRoom(sportRoomId);
     }
+
 
     /**
      * Indicates if a sportRoom with that id exists.
@@ -64,21 +59,28 @@ public class SportRoomController {
         return sportRoomService.sportRoomExists(sportRoomId);
     }
 
+
+    /**
+     * @param sportRoomId the sports room id
+     * @return if the to be reserved sports room is a hall, meaning it holds multiple sports.,
+     */
+    @GetMapping("/{sportRoomId}/isHall")
+    @ResponseBody
+    public Boolean sportRoomIsHall(@PathVariable Long sportRoomId) {
+        return sportRoomService.getSportRoom(sportRoomId).getIsSportsHall();
+    }
+
+
     /**
      * Gets sport room maximum capacity.
      *
      * @param sportRoomId the sport room id
      * @return the sport room maximum capacity
      */
-    @GetMapping("/{sportRoomName}/getMaximumCapacity")
+    @GetMapping("/{sportRoomId}/getMaximumCapacity")
     @ResponseBody
     public int getSportRoomMaximumCapacity(@PathVariable Long sportRoomId) {
-        try {
-            return sportRoomService.getSportRoom(sportRoomId).getMaxCapacity();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            return -1;
-        }
+        return sportRoomService.getSportRoom(sportRoomId).getMaxCapacity();
     }
 
     /**
@@ -87,23 +89,23 @@ public class SportRoomController {
      * @param sportRoomId the sport room id
      * @return the sport room minimum capacity
      */
-    @GetMapping("/{sportRoomName}/getMinimumCapacity")
+    @GetMapping("/{sportRoomId}/getMinimumCapacity")
     @ResponseBody
     public int getSportRoomMinimumCapacity(@PathVariable Long sportRoomId) {
-        try {
-            return sportRoomService.getSportRoom(sportRoomId).getMinCapacity();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            return -1;
-        }
+        return sportRoomService.getSportRoom(sportRoomId).getMinCapacity();
     }
 
-
-
-    /*    @GetMapping("/{sportRoomName}/getSports")
+    /**
+     * @param sportFieldId - id of sport field to be reserved
+     * @return String - name of related Sport (id of Sport)
+     *    example: soccer, hockey, ...
+     */
+    @GetMapping("/{sportFieldId}/getSport")
     @ResponseBody
-    public List<Sport> getSports(@PathVariable String sportRoomName) {
+    public String getSportFieldSport(@PathVariable Long sportFieldId) {
+        return sportRoomService.getSportRoom(sportFieldId).getSports()
+            .get(0).toString();
+    }
 
-    }*/
 
 }
