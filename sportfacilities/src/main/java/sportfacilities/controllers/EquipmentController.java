@@ -49,30 +49,23 @@ public class EquipmentController {
     @GetMapping("/{equipmentId}")
     @ResponseBody
     public Equipment getEquipment(@PathVariable Long equipmentId) {
-        try {
-            return equipmentService.getEquipment(equipmentId);
-        } catch (NoSuchFieldException | NoSuchElementException e) {
-            return null;
-        }
+        return equipmentService.getEquipment(equipmentId);
     }
 
     /**
      * Gets one instance of equipment that is available.
      *
      * @param equipmentName the equipment name, example: "hockeyStick"
-     * @return the first available equipment, if not found / unavailable: -1L returned
+     * @return the first available equipment
      */
     @GetMapping("/{equipmentName}/getAvailableEquipment")
     @ResponseBody
     public ResponseEntity<?> getAvailableEquipment(@PathVariable String equipmentName) {
 
         Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
-
-        if (equipmentId != -1L) {   // Available / existing equipment found
-            equipmentService.setEquipmentToInUse(equipmentId);
-        }
         return new ResponseEntity<String>(equipmentId.toString(), HttpStatus.OK);
     }
+
 
     /**
      * Add new equipment.

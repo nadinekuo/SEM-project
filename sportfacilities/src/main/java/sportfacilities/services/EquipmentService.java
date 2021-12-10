@@ -24,8 +24,17 @@ public class EquipmentService {
         this.equipmentRepository = equipmentRepository;
     }
 
-    public Equipment getEquipment(Long equipmentId) throws NoSuchFieldException {
-        return equipmentRepository.findByEquipmentId(equipmentId);
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+
+    public Equipment getEquipment(Long equipmentId) {
+        return equipmentRepository.findByEquipmentId(equipmentId)
+            .orElseThrow(() -> new IllegalStateException("Equipment with id "
+                + equipmentId + " does not exist!"));
     }
 
     /**
@@ -34,7 +43,13 @@ public class EquipmentService {
      * @param equipmentId the equipment id
      */
     public void setEquipmentToNotInUse(Long equipmentId) {
-        Equipment equipment = equipmentRepository.findByEquipmentId(equipmentId);
+
+        boolean exists = equipmentRepository.existsById(equipmentId);
+        if (!exists) {
+            throw new IllegalStateException("Equipment with id " + equipmentId + " does not "
+                + "exist!");
+        }
+        Equipment equipment = equipmentRepository.findByEquipmentId(equipmentId).get();
         equipment.setInUse(false);
         equipmentRepository.save(equipment);
     }
@@ -45,29 +60,23 @@ public class EquipmentService {
      * @param equipmentId the equipment id
      */
     public void setEquipmentToInUse(Long equipmentId) {
-        Equipment equipment = equipmentRepository.findByEquipmentId(equipmentId);
+        boolean exists = equipmentRepository.existsById(equipmentId);
+        if (!exists) {
+            throw new IllegalStateException("Equipment with id " + equipmentId + " does not "
+                + "exist!");
+        }
+        Equipment equipment = equipmentRepository.findByEquipmentId(equipmentId).get();
         equipment.setInUse(true);
         equipmentRepository.save(equipment);
     }
 
 
     public Long getAvailableEquipmentIdsByName(String equipmentName) {
-        Optional<Long> potentialEquipmentId =
-            equipmentRepository.findAvailableEquipment(equipmentName);
-        if (potentialEquipmentId.isPresent()) {
-            return potentialEquipmentId.get();
-        } else {
-            return -1L;
-        }
+        return equipmentRepository.findAvailableEquipment(equipmentName)
+            .orElseThrow(() -> new IllegalStateException("Equipment with id "
+            + equipmentName + " does not exist!"));
     }
 
-
-
-    @Bean
-    @LoadBalanced
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 
     public void addEquipment(Equipment equipment) {
         equipmentRepository.save(equipment);

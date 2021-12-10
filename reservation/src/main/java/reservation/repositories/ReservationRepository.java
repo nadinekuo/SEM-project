@@ -13,7 +13,7 @@ import reservation.entities.Reservation;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    Reservation findById(long reservationId);
+    Optional<Reservation> findById(Long reservationId);
 
     @Query(value = "SELECT reservation_id " + "FROM reservations "
         + "WHERE sport_facility_reserved_id = ?1 AND starting_time = ?2", nativeQuery = true)

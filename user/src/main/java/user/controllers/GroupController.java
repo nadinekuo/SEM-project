@@ -12,7 +12,7 @@ import user.services.GroupService;
 import user.services.UserService;
 
 @RestController
-@RequestMapping("groups")
+@RequestMapping("group")
 public class GroupController {
 
     private final transient GroupService groupService;

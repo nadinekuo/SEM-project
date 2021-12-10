@@ -31,6 +31,51 @@ public class Reservation {
     private int timeSlotInMinutes;
 
     /**
+     * Instantiates a new Reservation with id.
+     *
+     * @param id                      reservation id
+     * @param typeOfReservation       the type of reservation
+     * @param customerId              the customer id
+     * @param sportFacilityReservedId the sport facility reserved id
+     * @param startingTime            the starting time
+     */
+    public Reservation(Long id, ReservationType typeOfReservation, Long customerId,
+                       Long sportFacilityReservedId, LocalDateTime startingTime) {
+
+        this.reservationId = id;
+        this.typeOfReservation = typeOfReservation;
+        this.customerId = customerId;
+        this.sportFacilityReservedId = sportFacilityReservedId;
+        this.startingTime = startingTime;
+        this.timeSlotInMinutes = 60;   // Default time slot for Equipment / Sport room reservations
+        this.groupId = -1L;    // If not a group reservation
+    }
+
+    /**
+     * Instantiates a new Reservation.
+     *
+     * @param id                      reservation id
+     * @param typeOfReservation       the type of reservation
+     * @param customerId              the customer id
+     * @param sportFacilityReservedId the sport facility reserved id
+     * @param startingTime            the starting time
+     * @param groupId                 id of group that is associated with this reservation, will
+     *                                be -1L if this is not a group reservation.
+     */
+    public Reservation(Long id, ReservationType typeOfReservation, Long customerId,
+                       Long sportFacilityReservedId, LocalDateTime startingTime,
+                       Long groupId) {
+
+       this.reservationId = id;
+        this.typeOfReservation = typeOfReservation;
+        this.customerId = customerId;
+        this.sportFacilityReservedId = sportFacilityReservedId;
+        this.startingTime = startingTime;
+        this.timeSlotInMinutes = 60;
+        this.groupId = groupId;
+    }
+
+    /**
      * Instantiates a new Reservation.
      *
      * @param typeOfReservation       the type of reservation
@@ -62,15 +107,38 @@ public class Reservation {
      */
     public Reservation(ReservationType typeOfReservation, Long customerId,
                        Long sportFacilityReservedId, LocalDateTime startingTime,
-                       int timeSlotInMinutes, Long groupId) {
+                       int timeSlotInMinutes) {
 
         this.typeOfReservation = typeOfReservation;
         this.customerId = customerId;
         this.sportFacilityReservedId = sportFacilityReservedId;
         this.startingTime = startingTime;
         this.timeSlotInMinutes = timeSlotInMinutes;
+        this.groupId = -1L;
+    }
+
+    /**
+     * Instantiates a new Reservation.
+     *
+     * @param typeOfReservation       the type of reservation
+     * @param customerId              the customer id
+     * @param sportFacilityReservedId the sport facility reserved id
+     * @param startingTime            the starting time
+     * @param groupId                 id of group that is associated with this reservation, will
+     *                                be -1L if this is not a group reservation.
+     */
+    public Reservation(ReservationType typeOfReservation, Long customerId,
+                       Long sportFacilityReservedId, LocalDateTime startingTime,
+                       Long groupId) {
+
+        this.typeOfReservation = typeOfReservation;
+        this.customerId = customerId;
+        this.sportFacilityReservedId = sportFacilityReservedId;
+        this.startingTime = startingTime;
+        this.timeSlotInMinutes = 60;
         this.groupId = groupId;
     }
+
 
     /**
      * Empty constructor needed for Spring JPA.
@@ -165,4 +233,10 @@ public class Reservation {
         return reservationId == that.reservationId;
     }
 
+    @Override
+    public String toString() {
+        return "Reservation{" + "reservationId=" + reservationId + ", typeOfReservation="
+            + typeOfReservation + ", customerId=" + customerId + ", groupId=" + groupId
+            + ", startingTime=" + startingTime + '}';
+    }
 }

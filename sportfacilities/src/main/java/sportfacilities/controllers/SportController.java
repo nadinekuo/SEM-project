@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import sportfacilities.services.SportService;
 
 @RestController
-@RequestMapping("sports")
+@RequestMapping("sport")
 public class SportController {
 
     private final transient SportService sportService;

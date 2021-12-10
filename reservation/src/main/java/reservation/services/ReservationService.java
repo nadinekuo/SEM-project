@@ -29,50 +29,27 @@ public class ReservationService {
 
     public Reservation getReservation(Long reservationId) {
         return reservationRepository.findById(reservationId)
-            .orElseThrow(() -> new IllegalStateException("Question with id "
+            .orElseThrow(() -> new IllegalStateException("Reservation with id "
                 + reservationId + " does not exist!"));
     }
 
     public void deleteReservation(Long reservationId) {
         boolean exists = reservationRepository.existsById(reservationId);
         if (!exists) {
-            throw new IllegalStateException("Question with id " + reservationId + " does not exist!");
+            throw new IllegalStateException("Reservation with id " + reservationId + " does not "
+                + "exist!");
         }
         reservationRepository.deleteById(reservationId);
     }
 
     // All Reservations start at full hours, so only start time has to be checked.
     public boolean sportsFacilityIsAvailable(Long sportFacilityId, LocalDateTime time) {
-        return reservationRepository.findBySportFacilityReservedIdAndTime(sportFacilityId, time).isEmpty();
+        return reservationRepository.findBySportFacilityReservedIdAndTime(sportFacilityId, time)
+            .isEmpty();
     }
 
     public Reservation makeSportFacilityReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
-    }
-
-
-    public boolean checkReservation(Reservation reservation, ReservationController reservationController) {
-
-        // Start chain of responsibility
-        ReservationValidator userBalanceHandler =
-            new UserReservationBalanceValidator(this, reservationController);
-        ReservationValidator sportFacilityHandler =
-            new SportFacilityAvailabilityValidator(this, reservationController);
-        userBalanceHandler.setNext(sportFacilityHandler);
-
-        // Only for sports room reservations, we check the room capacity/team size
-        if (reservation.getTypeOfReservation() == ReservationType.SPORTS_FACILITY) {
-            ReservationValidator capacityHandler = new TeamRoomCapacityValidator(this,
-                reservationController);
-            sportFacilityHandler.setNext(capacityHandler);
-        }
-
-        try {
-            return userBalanceHandler.handle(reservation);
-        } catch(InvalidReservationException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
 
@@ -102,6 +79,35 @@ public class ReservationService {
         return count;
     }
 
+    /**
+     * @param reservation - Reservation object to be passed through Chain of Responsibility.
+     * @param reservationController - API needed by Validator chain to communicate with other
+     *                              microservices.
+     * @return - true if reservation is valid, else false.
+     */
+    public boolean checkReservation(Reservation reservation, ReservationController reservationController) {
+
+        // Start chain of responsibility
+        ReservationValidator userBalanceHandler =
+            new UserReservationBalanceValidator(this, reservationController);
+        ReservationValidator sportFacilityHandler =
+            new SportFacilityAvailabilityValidator(this, reservationController);
+        userBalanceHandler.setNext(sportFacilityHandler);
+
+        // Only for sports room reservations, we check the room capacity/team size
+        if (reservation.getTypeOfReservation() == ReservationType.SPORTS_FACILITY) {
+            ReservationValidator capacityHandler = new TeamRoomCapacityValidator(this,
+                reservationController);
+            sportFacilityHandler.setNext(capacityHandler);
+        }
+
+        try {
+            return userBalanceHandler.handle(reservation);
+        } catch(InvalidReservationException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
 

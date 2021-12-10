@@ -55,6 +55,25 @@ public class SportRoom {
         this.sports = sports;
         this.minCapacity = minCapacity;
         this.maxCapacity = maxCapacity;
+        this.isSportsHall = sports.size() > 1;
+    }
+
+    /**
+     * Constructor SportRoom.
+     * @param sportRoomId   - Long
+     * @param sportRoomName - String
+     * @param sports        - the associated sports
+     * @param minCapacity   - int
+     * @param maxCapacity   - int
+     */
+    public SportRoom(long sportRoomId, String sportRoomName,
+                     List<Sport> sports, int minCapacity, int maxCapacity) {
+        this.isSportsHall = sports.size() > 1;
+        this.sportRoomId = sportRoomId;
+        this.sportRoomName = sportRoomName;
+        this.sports = sports;
+        this.minCapacity = minCapacity;
+        this.maxCapacity = maxCapacity;
     }
 
     public long getSportRoomId() {

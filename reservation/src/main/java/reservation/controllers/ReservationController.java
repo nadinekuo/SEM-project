@@ -145,7 +145,7 @@ public class ReservationController {
 
         String response =
             restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
-        Long equipmentId = Long.valueOf(response);   // will be -1 if non-existent or non-available
+        Long equipmentId = Long.valueOf(response);
 
         Reservation reservation =
             new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
@@ -295,7 +295,7 @@ public class ReservationController {
 
         // Call to SportRoomController in Sport Facilities microservice
         int maxTeamSize = restTemplate
-            .getForObject(sportFacilityUrl + "/sports/" + methodSpecificUrl, Integer.class);
+            .getForObject(sportFacilityUrl + "/sport/" + methodSpecificUrl, Integer.class);
 
         return maxTeamSize;
     }
@@ -314,7 +314,7 @@ public class ReservationController {
 
         // Call to SportRoomController in Sport Facilities microservice
         int minTeamSize = restTemplate
-            .getForObject(sportFacilityUrl + "/sports/" + methodSpecificUrl, Integer.class);
+            .getForObject(sportFacilityUrl + "/sports" + methodSpecificUrl, Integer.class);
 
         return minTeamSize;
     }
@@ -328,7 +328,7 @@ public class ReservationController {
 
         // Call to GroupController in User microservice
         int groupSize = restTemplate
-            .getForObject(userUrl + "/groups/" + methodSpecificUrl, Integer.class);
+            .getForObject(userUrl + "/group/" + methodSpecificUrl, Integer.class);
 
         return groupSize;
 
