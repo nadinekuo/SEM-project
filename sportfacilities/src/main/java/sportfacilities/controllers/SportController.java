@@ -26,8 +26,6 @@ public class SportController {
         this.sportService = sportService;
     }
 
-
-
     /**
      * @param sportName the sport id
      * @return the max team size for this sport
@@ -61,6 +59,5 @@ public class SportController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-
 
 }

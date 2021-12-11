@@ -1,6 +1,6 @@
 package reservation.chainofresponsibility;
 
-public class TeamRoomCapacityValidator {
+public class TeamRoomCapacityValidatorTest {
 
 
 

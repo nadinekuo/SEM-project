@@ -39,6 +39,7 @@ public class ReservationControllerTest {
 
     private final transient long reservationId = 1L;
     private final transient long userId = 1L;
+    private final transient long groupId = 1L;
     private final transient long sportFacilityId = 1L;
     private final transient String equipmentNameValid = "hockeyStick";
     private final transient String equipmentNameInvalid = "blopp";
@@ -47,7 +48,7 @@ public class ReservationControllerTest {
     transient String equipmentBookingUrl =
         "/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking";
     transient String sportRoomBookingUrl =
-        "/reservation/{userId}/{sportRoomId}/{date}/makeSportRoomBooking";
+        "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking";
 
     transient DateTimeFormatter dateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -101,7 +102,6 @@ public class ReservationControllerTest {
         verify(reservationService).getReservation(1L);
     }
 
-    // TODO: Test communications to other microservices via integration tests?
 
     @Test
     public void getUserIsPremium() throws Exception {
@@ -152,7 +152,6 @@ public class ReservationControllerTest {
             ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
                 + "/getAvailableEquipment", String.class)).thenReturn(String.valueOf(1L));
 
-        // TODO: Separate testing for all validators in the chain (mock Resttemplate, Controller)
         given(reservationService.checkReservation(any(), any())).willReturn(true);
 
         MvcResult result =
@@ -173,7 +172,8 @@ public class ReservationControllerTest {
     @MethodSource("invalidDateGenerator")
     public void testSportRoomReservationInvalidDates(String date) throws Exception {
 
-        MvcResult result = mockMvc.perform(post(sportRoomBookingUrl, userId, sportFacilityId, date))
+        MvcResult result = mockMvc.perform(post(sportRoomBookingUrl, userId, groupId,
+            sportFacilityId, date))
             .andExpect(status().is4xxClientError()).andReturn();
 
         assertThat(result.getResponse().getContentAsString())
@@ -195,7 +195,8 @@ public class ReservationControllerTest {
 
         given(reservationService.checkReservation(any(), any())).willReturn(true);
 
-        MvcResult result = mockMvc.perform(post(sportRoomBookingUrl, userId, sportFacilityId, date))
+        MvcResult result = mockMvc.perform(post(sportRoomBookingUrl, userId, groupId,
+            sportFacilityId, date))
             .andExpect(status().isOk()).andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Reservation successful!");

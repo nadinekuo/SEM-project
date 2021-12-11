@@ -123,9 +123,7 @@ public class EquipmentServiceTest {
         Mockito.when(equipmentRepository.findAvailableEquipment(anyString()))
             .thenReturn(java.util.Optional.empty());
 
-        assertThrows(IllegalStateException.class, () -> {
-            equipmentService.getAvailableEquipmentIdsByName("test");
-        });
+        assertEquals(-1L, equipmentService.getAvailableEquipmentIdsByName("test"));
     }
 
 

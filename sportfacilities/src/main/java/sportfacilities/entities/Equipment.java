@@ -39,6 +39,7 @@ public class Equipment {
 
     /**
      * Instantiates a new Equipment.
+     *
      * @param equipmentId   id
      * @param name         the name
      * @param relatedSport the related sport

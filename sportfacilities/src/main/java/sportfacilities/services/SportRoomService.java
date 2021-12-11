@@ -22,12 +22,20 @@ public class SportRoomService {
         this.sportRoomRepository = sportRoomRepository;
     }
 
+    /**
+     * @param sportRoomId - id
+     * @return - SportRoom
+     */
     public SportRoom getSportRoom(Long sportRoomId) {
         return sportRoomRepository.findBySportRoomId(sportRoomId)
             .orElseThrow(() -> new IllegalStateException("Sport room with id "
                     + sportRoomId + " does not exist!"));
     }
 
+    /**
+     * @param sportRoomId - id
+     * @return boolean, true if id is valid
+     */
     public Boolean sportRoomExists(Long sportRoomId) {
         return sportRoomRepository.findBySportRoomId(sportRoomId).isPresent();
     }

@@ -63,10 +63,9 @@ public class Reservation {
      *                                be -1L if this is not a group reservation.
      */
     public Reservation(Long id, ReservationType typeOfReservation, Long customerId,
-                       Long sportFacilityReservedId, LocalDateTime startingTime,
-                       Long groupId) {
+                       Long sportFacilityReservedId, LocalDateTime startingTime, Long groupId) {
 
-       this.reservationId = id;
+        this.reservationId = id;
         this.typeOfReservation = typeOfReservation;
         this.customerId = customerId;
         this.sportFacilityReservedId = sportFacilityReservedId;
@@ -103,7 +102,6 @@ public class Reservation {
      * @param startingTime            the starting time
      * @param timeSlotInMinutes       for how long the equipment/sport room can be used, or the
      *                                lesson duration
-     *
      */
     public Reservation(ReservationType typeOfReservation, Long customerId,
                        Long sportFacilityReservedId, LocalDateTime startingTime,
@@ -128,8 +126,7 @@ public class Reservation {
      *                                be -1L if this is not a group reservation.
      */
     public Reservation(ReservationType typeOfReservation, Long customerId,
-                       Long sportFacilityReservedId, LocalDateTime startingTime,
-                       Long groupId) {
+                       Long sportFacilityReservedId, LocalDateTime startingTime, Long groupId) {
 
         this.typeOfReservation = typeOfReservation;
         this.customerId = customerId;
@@ -139,18 +136,15 @@ public class Reservation {
         this.groupId = groupId;
     }
 
-
     /**
      * Empty constructor needed for Spring JPA.
      */
     public Reservation() {
     }
 
-
     public Long getId() {
         return reservationId;
     }
-
 
     public Long getSportFacilityReservedId() {
         return sportFacilityReservedId;

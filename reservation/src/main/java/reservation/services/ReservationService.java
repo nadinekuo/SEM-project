@@ -27,17 +27,28 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
+    /**
+     * Gets Reservation object corresponding to id, if existing.
+     *
+     * @param reservationId - Long
+     * @return Reservation
+     */
     public Reservation getReservation(Long reservationId) {
-        return reservationRepository.findById(reservationId)
-            .orElseThrow(() -> new IllegalStateException("Reservation with id "
-                + reservationId + " does not exist!"));
+        return reservationRepository.findById(reservationId).orElseThrow(
+            () -> new IllegalStateException(
+                "Reservation with id " + reservationId + " does not exist!"));
     }
 
+    /**
+     * Deletes reservation, if id is valid.
+     *
+     * @param reservationId - Long
+     */
     public void deleteReservation(Long reservationId) {
         boolean exists = reservationRepository.existsById(reservationId);
         if (!exists) {
-            throw new IllegalStateException("Reservation with id " + reservationId + " does not "
-                + "exist!");
+            throw new IllegalStateException(
+                "Reservation with id " + reservationId + " does not " + "exist!");
         }
         reservationRepository.deleteById(reservationId);
     }
@@ -52,21 +63,19 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-
     /**
      * Gets user reservation count on day.
      *
-     * @param start - start of day we want to count reservations for: yyyy-MM-ddT00:00:00
-     * @param end - end of day we want to count reservations for: yyyy-MM-ddT23:59:59
+     * @param start      - start of day we want to count reservations for: yyyy-MM-ddT00:00:00
+     * @param end        - end of day we want to count reservations for: yyyy-MM-ddT23:59:59
      * @param customerId the customer id
      * @return the user reservation count for a day
      */
-    public int getUserReservationCountOnDay(LocalDateTime start,
-                                            LocalDateTime end, long customerId) {
+    public int getUserReservationCountOnDay(LocalDateTime start, LocalDateTime end,
+                                            long customerId) {
 
-        List<Reservation> reservationsOnDay =
-            reservationRepository.findReservationByStartingTimeBetweenAndCustomerId(start,
-                end, customerId);
+        List<Reservation> reservationsOnDay = reservationRepository
+            .findReservationByStartingTimeBetweenAndCustomerId(start, end, customerId);
         int count = 0;
 
         // Customers have a limit on the number of sport rooms to be reserved
@@ -80,12 +89,16 @@ public class ReservationService {
     }
 
     /**
-     * @param reservation - Reservation object to be passed through Chain of Responsibility.
+     * Passes the Reservation object through the chain of responsibility.
+     *
+     * @param reservation           - Reservation object to be passed through Chain of
+     *                              Responsibility.
      * @param reservationController - API needed by Validator chain to communicate with other
      *                              microservices.
      * @return - true if reservation is valid, else false.
      */
-    public boolean checkReservation(Reservation reservation, ReservationController reservationController) {
+    public boolean checkReservation(Reservation reservation,
+                                    ReservationController reservationController) {
 
         // Start chain of responsibility
         ReservationValidator userBalanceHandler =
@@ -96,28 +109,24 @@ public class ReservationService {
 
         // Only for sports room reservations, we check the room capacity/team size
         if (reservation.getTypeOfReservation() == ReservationType.SPORTS_FACILITY) {
-            ReservationValidator capacityHandler = new TeamRoomCapacityValidator(this,
-                reservationController);
+            ReservationValidator capacityHandler =
+                new TeamRoomCapacityValidator(this, reservationController);
             sportFacilityHandler.setNext(capacityHandler);
         }
 
         try {
             return userBalanceHandler.handle(reservation);
-        } catch(InvalidReservationException e) {
+        } catch (InvalidReservationException e) {
             e.printStackTrace();
             return false;
         }
     }
-
-
-
 
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
 
 }
 
