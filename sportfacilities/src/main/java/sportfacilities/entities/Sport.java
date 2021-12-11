@@ -125,6 +125,6 @@ public class Sport {
 
     @Override
     public String toString() {
-        return "Sport{" + "sportName='" + sportName + '\'' + ", teamSport=" + teamSport + '}';
+        return "" + sportName + "";
     }
 }

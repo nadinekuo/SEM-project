@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
+import reservation.entities.chainofresponsibility.InvalidReservationException;
+import reservation.entities.chainofresponsibility.ReservationValidator;
+import reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
+import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
+import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import reservation.services.ReservationService;
 
 @RestController
@@ -69,21 +74,21 @@ public class ReservationController {
         reservationService.deleteReservation(reservationId);
     }
 
-    /**
-     * Checks if sport room is available.
-     *
-     * @param sportRoomId the sport room id
-     * @param date        the date
-     * @return if its available or not
-     */
-    @GetMapping("/{sportRoomId}/{date}/isAvailable")
-    @ResponseBody
-    public boolean isAvailable(@PathVariable Long sportRoomId, @PathVariable String date) {
-        return reservationService.isAvailable(sportRoomId, LocalDateTime.parse(date));
-    }
+//    /**
+//     * Checks if sport room is available.
+//     *
+//     * @param sportFacilityId the sport room id
+//     * @param date        the date
+//     * @return if its available or not
+//     */
+//    @GetMapping("/{sportRoomId}/{date}/isAvailable")
+//    @ResponseBody
+//    public boolean isAvailable(@PathVariable Long sportFacilityId, @PathVariable String date) {
+//        return reservationService.sportsFacilityIsAvailable(sportFacilityId,
+//            LocalDateTime.parse(date));
+//    }
 
-    // TODO: the 2 methods below have to be combined into 1 Reservation method, which allows
-    //  combining Equipment and SportRooms
+
 
     /**
      * Make sport room reservation.
@@ -91,73 +96,30 @@ public class ReservationController {
      * @param userId      the user id
      * @param sportRoomId the sport room id
      * @param date        the date
-     * @param isCombined  if its part of a combined reservation
      * @return A response based on what happened when trying to make the reservation
      */
-    @PostMapping("/{userId}/{sportRoomId}/{date}/{isCombined}/makeSportRoomBooking")
+    @PostMapping("/{userId}/{sportRoomId}/{date}/makeSportRoomBooking")
     @ResponseBody
     public ResponseEntity<String> makeSportRoomReservation(@PathVariable Long userId,
                                                            @PathVariable Long sportRoomId,
-                                                           @PathVariable String date,
-                                                           @PathVariable boolean isCombined) {
+                                                           @PathVariable String date) {
 
-        // TODO: check if userId exists
-
-        //can throw errors
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
-        if (dateTime.isBefore(LocalDateTime.now())) {
-            return new ResponseEntity<>("Date and time has to be after now",
-                HttpStatus.BAD_REQUEST);
-        }
-
-        // TODO: check if no other Sport room booked by that user for the same time
-
-        if ((dateTime.getHour() < 16) || (dateTime.getHour() == 23)) {
-            return new ResponseEntity<>("Time has to be between 16:00 and 23:00.",
-                HttpStatus.NOT_FOUND);
-        }
-
-        // TODO: To be moved to another method (Chain of Responsibility)
-
-        String yearMonthDay = date.substring(0, 9);
-        int reservationBalanceOnDate =
-            reservationService.getUserReservationCountOnDay(yearMonthDay, userId);
-
-        // Basic users can have 1 reservation per day (Equipment and SportRoom are separated!)
-        if (!getUserIsPremium(userId) && reservationBalanceOnDate == 1) {
-            return new ResponseEntity<>("No more than 1 reservation per day can be made. ",
-                HttpStatus.BAD_REQUEST);
-        }
-
-        // Premium users can have up to 3 reservations per day
-        if (getUserIsPremium(userId) && reservationBalanceOnDate == 3) {
-            return new ResponseEntity<>("No more than 3 reservations per day can be made.",
-                HttpStatus.BAD_REQUEST);
-        }
-
-        if (!reservationService.isAvailable(sportRoomId, dateTime)) {
-            return new ResponseEntity<>("Sport Room is already booked for this time slot.",
-                HttpStatus.NOT_FOUND);
-        }
-
-        String methodSpecificUrl = "/" + sportRoomId.toString() + "/exists";
-
-        // Call to SportRoomController in Sport Facilities microservice
-        Boolean sportHallExists =
-            restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
-                Boolean.class);
-
-        if (sportHallExists == null || !sportHallExists) {
-            return new ResponseEntity<>("The SportRoom requested doesn't exist",
-                HttpStatus.NOT_FOUND);
-        }
-
+        // Create reservation object, to be passed through chain of responsibility
         Reservation reservation =
-            new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime,
-                isCombined);
-        reservationService.makeSportFacilityReservation(reservation);
-        return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
+            new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime);
+
+        // Creates chain of responsibility
+        boolean isValid = reservationService.checkReservation(reservation, this);
+
+        if (isValid) {
+            reservationService.makeSportFacilityReservation(reservation);
+            return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Reservation could not be made.",
+                HttpStatus.FORBIDDEN);
+        }
     }
 
     /**
@@ -166,58 +128,37 @@ public class ReservationController {
      * @param userId        the user id
      * @param date          the date
      * @param equipmentName the equipment name
-     * @param isCombined    the is combined
      * @return A response based on what happened when trying to make the reservation
      */
-    @PostMapping("/{userId}/{equipmentName}/{date}/{isCombined}/makeEquipmentBooking")
+    @PostMapping("/{userId}/{equipmentName}/{date}/makeEquipmentBooking")
     @ResponseBody
     public ResponseEntity<String> makeEquipmentReservation(@PathVariable Long userId,
                                                            @PathVariable String date,
-                                                           @PathVariable String equipmentName,
-                                                           @PathVariable boolean isCombined) {
+                                                           @PathVariable String equipmentName) {
 
-        // TODO: some code duplication that should be removed when implementing chain of
-        //  responsibility
         LocalDateTime dateTime = LocalDateTime.parse(date);
-        if (dateTime.isBefore(LocalDateTime.now())) {
-            return new ResponseEntity<>("Date and time has to be after now",
-                HttpStatus.BAD_REQUEST);
-        }
-        if ((dateTime.getHour() < 16) || (dateTime.getHour() == 23)) {
-            return new ResponseEntity<>("Time has to be between 16:00 and 23:00",
-                HttpStatus.BAD_REQUEST);
-        }
 
-        // TODO: check if equipment available (enough stock)
-
-        // TODO: To be moved to another method (Chain of Responsibility)
-
-        String yearMonthDay = date.substring(0, 9);
-        int reservationBalanceOnDate =
-            reservationService.getUserReservationCountOnDay(yearMonthDay, userId);
-
-        // Basic users can have 1 reservation per day
-        if (!getUserIsPremium(userId) && reservationBalanceOnDate == 1) {
-            return new ResponseEntity<>("No more than 1 reservation per day can be made.",
-                HttpStatus.BAD_REQUEST);
-        }
-
-        // Premium users can have up to 3 reservations per day
-        if (getUserIsPremium(userId) && reservationBalanceOnDate == 3) {
-            return new ResponseEntity<>("No more than 3 reservations per day can be made. ",
-                HttpStatus.BAD_REQUEST);
-        }
-
+        // Gets first available instance of this equipment name specified
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
-        Long response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, Long.class);
+        String response = restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl,
+            String.class);
+        Long equipmentId = Long.valueOf(response);
 
         Reservation reservation =
-            new Reservation(ReservationType.EQUIPMENT, userId, response, dateTime, isCombined);
-        reservationService.makeSportFacilityReservation(reservation);
+            new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
 
-        return new ResponseEntity<>("Equipment reservation was successful!", HttpStatus.OK);
+        // Creates chain of responsibility
+        boolean isValid = reservationService.checkReservation(reservation, this);
+
+        if (isValid) {
+            reservationService.makeSportFacilityReservation(reservation);
+            return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Reservation could not be made.",
+                HttpStatus.FORBIDDEN);
+        }
+
     }
 
     /**
@@ -230,10 +171,164 @@ public class ReservationController {
     @ResponseBody
     public Boolean getUserIsPremium(@PathVariable Long userId) {
         String methodSpecificUrl = "/user/" + userId + "/isPremium";
-
-        Boolean isPremium = restTemplate.getForObject(userUrl + methodSpecificUrl, Boolean.class);
-
+        String response = restTemplate.getForObject(userUrl + methodSpecificUrl, String.class);
+        Boolean isPremium = Boolean.valueOf(response);
         return isPremium;
     }
+
+    /**
+     * Gets if sports room to be reserved exists.
+     *
+     * @param sportsRoomId the sports room id
+     * @return if the user is premium
+     */
+    @GetMapping("/{sportsRoomId}/exists")
+    @ResponseBody
+    public Boolean getSportsRoomExists(@PathVariable Long sportsRoomId) {
+
+        String methodSpecificUrl = "/" + sportsRoomId.toString() + "/exists";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        Boolean sportRoomExists = Boolean.valueOf(response);
+        return sportRoomExists;
+    }
+
+
+    /**
+     * @param sportRoomId the sports room id
+     * @return if the to be reserved sports room is a hall, meaning it holds multiple sports.
+     */
+    @GetMapping("/{sportRoomId}/isHall")
+    @ResponseBody
+    public Boolean getIsSportHall(@PathVariable Long sportRoomId) {
+
+        String methodSpecificUrl = "/" + sportRoomId.toString() + "/isHall";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        Boolean sportRoomIsHall = Boolean.valueOf(response);
+
+        return sportRoomIsHall;
+    }
+
+
+    /**
+     * Gets sport room maximum capacity.
+     *
+     * @param sportRoomId the sport room id
+     * @return the sport room maximum capacity
+     */
+    @GetMapping("/{sportRoomId}/getMaximumCapacity")
+    @ResponseBody
+    public int getSportRoomMaximumCapacity(@PathVariable Long sportRoomId) {
+
+        String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMaximumCapacity";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        int maxCapacity = Integer.valueOf(response);
+
+        return maxCapacity;
+    }
+
+
+    /**
+     * Gets sport room maximum capacity.
+     *
+     * @param sportRoomId the sport room id
+     * @return the sport room maximum capacity
+     */
+    @GetMapping("/{sportRoomId}/getMinimumCapacity")
+    @ResponseBody
+    public int getSportRoomMinimumCapacity(@PathVariable Long sportRoomId) {
+
+        String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMinimumCapacity";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        int minCapacity = Integer.valueOf(response);
+
+        return minCapacity;
+    }
+
+
+
+    /**
+     * @param sportFieldId - id of sport field to be reserved
+     * @return String - name of related Sport (id of Sport)
+     *    example: soccer, hockey, ...
+     */
+    @GetMapping("/{sportFieldId}/getSport")
+    @ResponseBody
+    public String getSportFieldSport(@PathVariable Long sportFieldId) {
+
+        String methodSpecificUrl = "/" + sportFieldId.toString() + "/getSport";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        String relatedSport = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+
+        return relatedSport;
+    }
+
+
+
+    /**
+     * @param sportName the sport id
+     * @return the max team size for this sport
+     */
+    @GetMapping("/{sportName}/getMaxTeamSize")
+    @ResponseBody
+    public int getSportMaxTeamSize(@PathVariable String sportName) {
+
+        String methodSpecificUrl = "/" + sportName.toString() + "/getMaxTeamSize";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sport/" + methodSpecificUrl, String.class);
+        int maxTeamSize = Integer.valueOf(response);
+
+        return maxTeamSize;
+    }
+
+
+
+    /**
+     * @param sportName the sport id
+     * @return the min team size for this sport
+     */
+    @GetMapping("/{sportName}/getMinTeamSize")
+    @ResponseBody
+    public int getSportMinTeamSize(@PathVariable String sportName) {
+
+        String methodSpecificUrl = "/" + sportName.toString() + "/getMinTeamSize";
+
+        // Call to SportRoomController in Sport Facilities microservice
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sport" + methodSpecificUrl, String.class);
+        int minTeamSize = Integer.valueOf(response);
+
+        return minTeamSize;
+    }
+
+
+    @GetMapping("/{groupId}/getGroupSize")
+    @ResponseBody
+    public int getGroupSize(@PathVariable Long groupId) {
+
+        String methodSpecificUrl = "/" + groupId.toString() + "/getGroupSize";
+
+        // Call to GroupController in User microservice
+        String response = restTemplate
+            .getForObject(userUrl + "/group/" + methodSpecificUrl, String.class);
+        int groupSize = Integer.valueOf(response);
+        return groupSize;
+    }
+
 
 }

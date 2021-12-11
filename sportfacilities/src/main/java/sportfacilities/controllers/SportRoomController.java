@@ -1,6 +1,8 @@
 package sportfacilities.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +35,6 @@ public class SportRoomController {
         this.restTemplate = sportRoomService.restTemplate();
     }
 
-    // Get sport room
 
     /**
      * Gets sport room.
@@ -44,13 +45,9 @@ public class SportRoomController {
     @GetMapping("/{sportRoomId}")
     @ResponseBody
     public SportRoom getSportRoom(@PathVariable Long sportRoomId) {
-        try {
-            return sportRoomService.getSportRoom(sportRoomId);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return sportRoomService.getSportRoom(sportRoomId);
     }
+
 
     /**
      * Indicates if a sportRoom with that id exists.
@@ -60,9 +57,35 @@ public class SportRoomController {
      */
     @GetMapping("/{sportRoomId}/exists")
     @ResponseBody
-    public Boolean sportRoomExists(@PathVariable Long sportRoomId) {
-        return sportRoomService.sportRoomExists(sportRoomId);
+    public ResponseEntity<String> sportRoomExists(@PathVariable Long sportRoomId) {
+        try {
+            Boolean exists = sportRoomService.sportRoomExists(sportRoomId);
+            return new ResponseEntity<String>(exists.toString(), HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            System.out.println("Sport room with id " + sportRoomId + " does not exist!!");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
+
+
+    /**
+     * @param sportRoomId the sports room id
+     * @return if the to be reserved sports room is a hall, meaning it holds multiple sports.,
+     */
+    @GetMapping("/{sportRoomId}/isHall")
+    @ResponseBody
+    public ResponseEntity<String> sportRoomIsHall(@PathVariable Long sportRoomId) {
+        try {
+            Boolean isHall = sportRoomService.getSportRoom(sportRoomId).getIsSportsHall();
+            return new ResponseEntity<String>(isHall.toString(), HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            System.out.println("Sport room with id " + sportRoomId + " does not exist!!");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     /**
      * Gets sport room maximum capacity.
@@ -70,14 +93,16 @@ public class SportRoomController {
      * @param sportRoomId the sport room id
      * @return the sport room maximum capacity
      */
-    @GetMapping("/{sportRoomName}/getMaximumCapacity")
+    @GetMapping("/{sportRoomId}/getMaximumCapacity")
     @ResponseBody
-    public int getSportRoomMaximumCapacity(@PathVariable Long sportRoomId) {
+    public ResponseEntity<String> getSportRoomMaximumCapacity(@PathVariable Long sportRoomId) {
         try {
-            return sportRoomService.getSportRoom(sportRoomId).getMaxCapacity();
-        } catch (NoSuchFieldException e) {
+            Integer maxCapacity = sportRoomService.getSportRoom(sportRoomId).getMaxCapacity();
+            return new ResponseEntity<String>(maxCapacity.toString(), HttpStatus.OK);
+        } catch (IllegalStateException e) {
             e.printStackTrace();
-            return -1;
+            System.out.println("Sport room with id " + sportRoomId + " does not exist!!");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -87,23 +112,37 @@ public class SportRoomController {
      * @param sportRoomId the sport room id
      * @return the sport room minimum capacity
      */
-    @GetMapping("/{sportRoomName}/getMinimumCapacity")
+    @GetMapping("/{sportRoomId}/getMinimumCapacity")
     @ResponseBody
-    public int getSportRoomMinimumCapacity(@PathVariable Long sportRoomId) {
+    public ResponseEntity<String> getSportRoomMinimumCapacity(@PathVariable Long sportRoomId) {
         try {
-            return sportRoomService.getSportRoom(sportRoomId).getMinCapacity();
-        } catch (NoSuchFieldException e) {
+            Integer minCapacity = sportRoomService.getSportRoom(sportRoomId).getMinCapacity();
+            return new ResponseEntity<String>(minCapacity.toString(), HttpStatus.OK);
+        } catch (IllegalStateException e) {
             e.printStackTrace();
-            return -1;
+            System.out.println("Sport room with id " + sportRoomId + " does not exist!!");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
-
-
-    /*    @GetMapping("/{sportRoomName}/getSports")
+    /**
+     * @param sportFieldId - id of sport field to be reserved
+     * @return String - name of related Sport (id of Sport)
+     *    example: soccer, hockey, ...
+     */
+    @GetMapping("/{sportFieldId}/getSport")
     @ResponseBody
-    public List<Sport> getSports(@PathVariable String sportRoomName) {
+    public ResponseEntity<String> getSportFieldSport(@PathVariable Long sportFieldId) {
+        try {
+            String relatedSport = sportRoomService.getSportRoom(sportFieldId)
+                .getRelatedSport();
+            return new ResponseEntity<String>(relatedSport, HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            System.out.println("Sport field with id " + sportFieldId + " does not exist!!");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
 
-    }*/
 
 }

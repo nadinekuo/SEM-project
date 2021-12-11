@@ -2,6 +2,8 @@ package reservation.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import reservation.entities.strategy.ChronologicalStrategy;
+import reservation.entities.strategy.ReservationSortingStrategy;
 
 public class BookingSystem {
 

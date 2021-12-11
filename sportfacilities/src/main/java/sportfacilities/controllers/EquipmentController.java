@@ -48,35 +48,35 @@ public class EquipmentController {
      */
     @GetMapping("/{equipmentId}")
     @ResponseBody
-    public Equipment getEquipment(@PathVariable Long equipmentId) {
+    public ResponseEntity<?> getEquipment(@PathVariable Long equipmentId) {
         try {
-            return equipmentService.getEquipment(equipmentId);
-        } catch (NoSuchFieldException | NoSuchElementException e) {
-            return null;
+            Equipment equipment = equipmentService.getEquipment(equipmentId);
+            return new ResponseEntity<>(equipment, HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     /**
      * Gets one instance of equipment that is available.
      *
-     * @param equipmentName the equipment name
+     * @param equipmentName the equipment name, example: "hockeyStick"
      * @return the first available equipment
      */
     @GetMapping("/{equipmentName}/getAvailableEquipment")
     @ResponseBody
-    public ResponseEntity<?> getAvailableEquipment(@PathVariable String equipmentName) {
+    public ResponseEntity<String> getAvailableEquipment(@PathVariable String equipmentName) {
         try {
             Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
-            equipmentService.setEquipmentToInUse(equipmentId);
-            ResponseEntity<String> response =
-                new ResponseEntity<String>(equipmentId.toString(), HttpStatus.OK);
-            return response;
-        } catch (NoSuchElementException | NoSuchFieldException e) {
-            return new ResponseEntity<>(
-                "The equipment requested is not in stock or the " + "equipment name was not found",
-                HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(equipmentId.toString(), HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            System.out.println("Equipment " + equipmentName + " does not exist!!");
+            return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
         }
     }
+
 
     /**
      * Add new equipment.
@@ -87,7 +87,7 @@ public class EquipmentController {
     @PutMapping("/{equipmentName}/{relatedSportName}/addNewEquipment/admin")
     @ResponseBody
     public void addNewEquipment(@PathVariable String equipmentName,
-                                @PathVariable String relatedSportName) throws NoSuchFieldException {
+                                @PathVariable String relatedSportName) {
 
         Sport sport = sportService.getSportById(relatedSportName);
         equipmentService.addEquipment(new Equipment(equipmentName, sport, false));

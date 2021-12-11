@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import user.services.UserService;
 @RestController
 @RequestMapping("user")
 public class UserController {
+
     private final transient UserService userService;
 
     @Autowired
@@ -34,11 +37,25 @@ public class UserController {
         this.restTemplate = userService.restTemplate();
     }
 
+//    @GetMapping("/{userId}/isPremium")
+//    @ResponseBody
+//    public Boolean isUserPremium(@PathVariable Long userId) {
+//        Customer customer = (Customer) userService.getUserById(userId);
+//        return customer.isPremiumUser();
+//    }
+
     @GetMapping("/{userId}/isPremium")
     @ResponseBody
-    public Boolean isUserPremium(@PathVariable Long userId) {
-        Customer customer = (Customer) userService.getUserById(userId);
-        return customer.isPremiumUser();
+    public ResponseEntity<String> isUserPremium(@PathVariable Long userId) {
+        try {
+            Customer customer = (Customer) userService.getUserById(userId);
+            Boolean isPremium = customer.isPremiumUser();
+            return new ResponseEntity<String>(isPremium.toString(), HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            System.out.println("User with id " + userId + " does not exist!!");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
