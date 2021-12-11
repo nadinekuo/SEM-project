@@ -23,6 +23,11 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
         this.restTemplate = restTemplate;
     }
 
+    /**
+     * Returns the next reservation in order.
+     *
+     * @param reservations list of reservations to be sorted
+     */
     public Reservation getNextReservation(List<Reservation> reservations) {
         if (reservations == null || reservations.isEmpty()) {
             return null;

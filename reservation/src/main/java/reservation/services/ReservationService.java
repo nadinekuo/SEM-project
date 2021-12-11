@@ -1,7 +1,6 @@
 package reservation.services;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +25,17 @@ public class ReservationService {
     @Autowired
     public ReservationService(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
+    }
+
+    /**
+     * Rest template rest template.
+     *
+     * @return the rest template
+     */
+    @Bean
+    @LoadBalanced
+    public static RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     /**
@@ -79,37 +89,28 @@ public class ReservationService {
     public int getUserReservationCountOnDay(String date, long customerId) {
 
         // All reservations on the same day (not time necessarily)
-//        List<Reservation> reservationsOnDay =
-//            reservationRepository.findReservationByStartingTimeContainsAndCustomerId(date,
-//                customerId);
+        //        List<Reservation> reservationsOnDay =
+        //            reservationRepository.findReservationByStartingTimeContainsAndCustomerId(date,
+        //                customerId);
         int count = 0;
 
-//        // Combined reservations of equipment(s) and sport room which will count as 1 reservation
-//        // No more than 1 combined reservation for this same time is possible, since a user cannot
-//        // reserve different sport rooms for the same time
-//        boolean combinedReservationFound = false;
-//        for (Reservation reservation : reservationsOnDay) {
-//            if (!reservation.getIsCombined()) {
-//                count++;
-//            } else {
-//                combinedReservationFound = true;
-//            }
-//        }
-//        if (combinedReservationFound) {
-//            count++;
-//        }
+        //        // Combined reservations of equipment(s) and sport room which will count as 1
+        //        reservation
+        //        // No more than 1 combined reservation for this same time is possible, since a
+        //        user cannot
+        //        // reserve different sport rooms for the same time
+        //        boolean combinedReservationFound = false;
+        //        for (Reservation reservation : reservationsOnDay) {
+        //            if (!reservation.getIsCombined()) {
+        //                count++;
+        //            } else {
+        //                combinedReservationFound = true;
+        //            }
+        //        }
+        //        if (combinedReservationFound) {
+        //            count++;
+        //        }
         return count;
-    }
-
-    /**
-     * Rest template rest template.
-     *
-     * @return the rest template
-     */
-    @Bean
-    @LoadBalanced
-    public static RestTemplate restTemplate() {
-        return new RestTemplate();
     }
 }
 

@@ -3,14 +3,11 @@ package reservation.entities;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * The type User id strategy.
  */
 public class UserIdStrategy implements ReservationSortingStrategy {
-
 
     /**
      * Instantiates a new User id strategy.
@@ -18,6 +15,11 @@ public class UserIdStrategy implements ReservationSortingStrategy {
     public UserIdStrategy() {
     }
 
+    /**
+     * Returns the next reservation in order.
+     *
+     * @param reservations list of reservations to be sorted
+     */
     public Reservation getNextReservation(List<Reservation> reservations) {
         if (reservations == null || reservations.isEmpty()) {
             return null;
