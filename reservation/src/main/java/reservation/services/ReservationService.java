@@ -1,6 +1,7 @@
 package reservation.services;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -109,6 +110,15 @@ public class ReservationService {
         }
     }
 
+    public Long getLastPersonThatUsedEquipment(Long equipmentId) {
+         List<Reservation> reservations = reservationRepository
+            .findReservationsBySportFacilityReservedId(equipmentId);
+
+         reservations.sort(Comparator.comparing(Reservation::getStartingTime).reversed());
+         return reservations.get(0).getCustomerId();
+    }
+
+
 
 
 
@@ -117,7 +127,6 @@ public class ReservationService {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
 
 }
 
