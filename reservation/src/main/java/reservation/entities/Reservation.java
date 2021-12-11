@@ -147,12 +147,12 @@ public class Reservation {
     }
 
 
-    public long getId() {
+    public Long getId() {
         return reservationId;
     }
 
 
-    public long getSportFacilityReservedId() {
+    public Long getSportFacilityReservedId() {
         return sportFacilityReservedId;
     }
 

@@ -48,8 +48,14 @@ public class EquipmentController {
      */
     @GetMapping("/{equipmentId}")
     @ResponseBody
-    public Equipment getEquipment(@PathVariable Long equipmentId) {
-        return equipmentService.getEquipment(equipmentId);
+    public ResponseEntity<?> getEquipment(@PathVariable Long equipmentId) {
+        try {
+            Equipment equipment = equipmentService.getEquipment(equipmentId);
+            return new ResponseEntity<>(equipment, HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -61,9 +67,13 @@ public class EquipmentController {
     @GetMapping("/{equipmentName}/getAvailableEquipment")
     @ResponseBody
     public ResponseEntity<?> getAvailableEquipment(@PathVariable String equipmentName) {
-
-        Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
-        return new ResponseEntity<String>(equipmentId.toString(), HttpStatus.OK);
+        try {
+            Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
+            return new ResponseEntity<String>(equipmentId.toString(), HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
+        }
     }
 
 
@@ -76,7 +86,7 @@ public class EquipmentController {
     @PutMapping("/{equipmentName}/{relatedSportName}/addNewEquipment/admin")
     @ResponseBody
     public void addNewEquipment(@PathVariable String equipmentName,
-                                @PathVariable String relatedSportName) throws NoSuchFieldException {
+                                @PathVariable String relatedSportName) {
 
         Sport sport = sportService.getSportById(relatedSportName);
         equipmentService.addEquipment(new Equipment(equipmentName, sport, false));

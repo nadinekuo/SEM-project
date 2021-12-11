@@ -1,6 +1,8 @@
 package reservation.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -40,20 +42,42 @@ public class ReservationControllerTest {
     private final transient long sportFacilityId = 1L;
     private final transient String equipmentNameValid = "hockeyStick";
     private final transient String equipmentNameInvalid = "blopp";
+
     private final transient String validDate = "2099-01-06T17:00:00";
     transient String equipmentBookingUrl =
         "/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking";
+    transient String sportRoomBookingUrl =
+        "/reservation/{userId}/{sportRoomId}/{date}/makeSportRoomBooking";
+
     transient DateTimeFormatter dateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     transient LocalDateTime bookableDate =
         LocalDateTime.parse("2099-01-06 17:00:00", dateTimeFormatter);
+
     private final transient Reservation reservation =
         new Reservation(ReservationType.EQUIPMENT, userId, sportFacilityId, bookableDate);
+
     @Mock
     transient ReservationService reservationService;
     transient RestTemplate restTemplate;
     @Autowired
     private transient MockMvc mockMvc;
+
+
+    /**
+     * Sets up the tests.
+     */
+    @BeforeEach
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    public void setup() {
+        restTemplate = Mockito.mock(RestTemplate.class);
+        Mockito.when(reservationService.restTemplate()).thenReturn(restTemplate);
+
+        this.mockMvc =
+            MockMvcBuilders.standaloneSetup(new ReservationController(reservationService)).build();
+    }
+
+
 
     private static Stream<Arguments> invalidDateGenerator() {
         return Stream.of(
@@ -73,18 +97,6 @@ public class ReservationControllerTest {
             Arguments.of("2099-01-06T16:00:00"));
     }
 
-    /**
-     * Sets up the tests.
-     */
-    @BeforeEach
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    public void setup() {
-        restTemplate = Mockito.mock(RestTemplate.class);
-        Mockito.when(reservationService.restTemplate()).thenReturn(restTemplate);
-
-        this.mockMvc =
-            MockMvcBuilders.standaloneSetup(new ReservationController(reservationService)).build();
-    }
 
     @Test
     public void getReservationId() throws Exception {
@@ -108,7 +120,7 @@ public class ReservationControllerTest {
                 .andExpect(status().is4xxClientError()).andReturn();
 
         assertThat(result.getResponse().getContentAsString())
-            .isEqualTo("Time has to be between " + "16:00 and 23:00");
+            .isEqualTo("Reservation could not be made.");
         verify(reservationService, never()).makeSportFacilityReservation(reservation);
 
     }
@@ -123,21 +135,72 @@ public class ReservationControllerTest {
     @MethodSource("validDateGenerator")
     @MockitoSettings(strictness = Strictness.LENIENT)
     public void testEquipmentReservationValidDates(String date) throws Exception {
+
         Mockito.when(restTemplate.getForObject(
             ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
                 + "/getAvailableEquipment", Long.class)).thenReturn(1L);
 
-        Mockito.when(restTemplate
-            .getForObject(ReservationController.userUrl + "/user/" + userId + "/isPremium",
-                Boolean.class)).thenReturn(true);
+//        Mockito.when(restTemplate
+//            .getForObject(ReservationController.userUrl + "/user/" + userId + "/isPremium",
+//                Boolean.class)).thenReturn(true);
+
+        given(reservationService.checkReservation(any(), any())).willReturn(true);
 
         MvcResult result =
             mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date))
                 .andExpect(status().isOk()).andReturn();
 
         assertThat(result.getResponse().getContentAsString())
-            .isEqualTo("Equipment reservation was successful!");
+            .isEqualTo("Reservation successful!");
         verify(reservationService).makeSportFacilityReservation(reservation);
     }
+
+    /**
+     * Test equipment reservation with invalid dates.
+     *
+     * @param date the date
+     * @throws Exception the mockito exception
+     */
+    @ParameterizedTest
+    @MethodSource("invalidDateGenerator")
+    public void testSportRoomReservationInvalidDates(String date) throws Exception {
+
+        MvcResult result =
+            mockMvc.perform(post(sportRoomBookingUrl, userId, sportFacilityId, date))
+                .andExpect(status().is4xxClientError()).andReturn();
+
+        assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Reservation could not be made.");
+        verify(reservationService, never()).makeSportFacilityReservation(reservation);
+
+    }
+
+    /**
+     * Test equipment reservation with valid dates.
+     *
+     * @param date the date
+     * @throws Exception that mockito throws
+     */
+    @ParameterizedTest
+    @MethodSource("validDateGenerator")
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    public void testSportRoomReservationValidDates(String date) throws Exception {
+
+        //        Mockito.when(restTemplate
+        //            .getForObject(ReservationController.userUrl + "/user/" + userId + "/isPremium",
+        //                Boolean.class)).thenReturn(true);
+
+        given(reservationService.checkReservation(any(), any())).willReturn(true);
+
+        MvcResult result =
+            mockMvc.perform(post(sportRoomBookingUrl, userId, sportFacilityId, date))
+                .andExpect(status().isOk()).andReturn();
+
+        assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Reservation successful!");
+        verify(reservationService).makeSportFacilityReservation(reservation);
+    }
+
+
 
 }

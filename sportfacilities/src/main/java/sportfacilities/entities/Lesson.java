@@ -47,7 +47,7 @@ public class Lesson {
         this.size = size;
     }
 
-    public long getLessonId() {
+    public Long getLessonId() {
         return lessonId;
     }
 

@@ -72,7 +72,7 @@ public class Equipment {
         this.inUse = inUse;
     }
 
-    public long getEquipmentId() {
+    public Long getEquipmentId() {
         return equipmentId;
     }
 

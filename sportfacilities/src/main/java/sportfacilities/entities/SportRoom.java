@@ -26,7 +26,7 @@ public class SportRoom {
     @SequenceGenerator(name = "sportroom_sequence", sequenceName = "sportroom_sequence",
         allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sportroom_sequence")
-    private long sportRoomId;
+    private Long sportRoomId;
     private String sportRoomName; // example: X1, X2, X3 ...
 
     @Transient
@@ -76,7 +76,7 @@ public class SportRoom {
         this.maxCapacity = maxCapacity;
     }
 
-    public long getSportRoomId() {
+    public Long getSportRoomId() {
         return sportRoomId;
     }
 

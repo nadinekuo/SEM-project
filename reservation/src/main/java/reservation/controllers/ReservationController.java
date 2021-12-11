@@ -117,7 +117,7 @@ public class ReservationController {
 
         if (isValid) {
             reservationService.makeSportFacilityReservation(reservation);
-            return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
+            return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Reservation could not be made.",
                 HttpStatus.FORBIDDEN);
@@ -143,6 +143,8 @@ public class ReservationController {
         // Gets first available instance of this equipment name specified
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
+//        Long equipmentId = restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl,
+//            Long.class);
         String response =
             restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
         Long equipmentId = Long.valueOf(response);
@@ -157,7 +159,7 @@ public class ReservationController {
 
         if (isValid) {
             reservationService.makeSportFacilityReservation(reservation);
-            return new ResponseEntity<>("Reservation Successful!", HttpStatus.OK);
+            return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Reservation could not be made.",
                 HttpStatus.FORBIDDEN);
