@@ -141,8 +141,6 @@ public class ReservationController {
      * @param userId the user id
      * @return if the user is premium
      */
-    @GetMapping("/{userId}/isPremium")
-    @ResponseBody
     public Boolean getUserIsPremium(@PathVariable Long userId) {
         String methodSpecificUrl = "/user/" + userId + "/isPremium";
         String response = restTemplate.getForObject(userUrl + methodSpecificUrl, String.class);
@@ -156,8 +154,6 @@ public class ReservationController {
      * @param sportsRoomId the sports room id
      * @return if the user is premium
      */
-    @GetMapping("/{sportsRoomId}/exists")
-    @ResponseBody
     public Boolean getSportsRoomExists(@PathVariable Long sportsRoomId) {
 
         String methodSpecificUrl = "/" + sportsRoomId.toString() + "/exists";
@@ -175,8 +171,6 @@ public class ReservationController {
      * @param sportRoomId the sports room id
      * @return if the to be reserved sports room is a hall, meaning it holds multiple sports.
      */
-    @GetMapping("/{sportRoomId}/isHall")
-    @ResponseBody
     public Boolean getIsSportHall(@PathVariable Long sportRoomId) {
 
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/isHall";
@@ -195,8 +189,6 @@ public class ReservationController {
      * @param sportRoomId the sport room id
      * @return the sport room maximum capacity
      */
-    @GetMapping("/{sportRoomId}/getMaximumCapacity")
-    @ResponseBody
     public int getSportRoomMaximumCapacity(@PathVariable Long sportRoomId) {
 
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMaximumCapacity";
@@ -215,8 +207,6 @@ public class ReservationController {
      * @param sportRoomId the sport room id
      * @return the sport room maximum capacity
      */
-    @GetMapping("/{sportRoomId}/getMinimumCapacity")
-    @ResponseBody
     public int getSportRoomMinimumCapacity(@PathVariable Long sportRoomId) {
 
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMinimumCapacity";
@@ -236,8 +226,6 @@ public class ReservationController {
      * @return String - name of related Sport (id of Sport)
      *       example: soccer, hockey, ...
      */
-    @GetMapping("/{sportFieldId}/getSport")
-    @ResponseBody
     public String getSportFieldSport(@PathVariable Long sportFieldId) {
 
         String methodSpecificUrl = "/" + sportFieldId.toString() + "/getSport";
@@ -255,8 +243,6 @@ public class ReservationController {
      * @param sportName the sport id
      * @return the max team size for this sport
      */
-    @GetMapping("/{sportName}/getMaxTeamSize")
-    @ResponseBody
     public int getSportMaxTeamSize(@PathVariable String sportName) {
 
         String methodSpecificUrl = "/" + sportName + "/getMaxTeamSize";
@@ -275,8 +261,6 @@ public class ReservationController {
      * @param sportName the sport id
      * @return the min team size for this sport
      */
-    @GetMapping("/{sportName}/getMinTeamSize")
-    @ResponseBody
     public int getSportMinTeamSize(@PathVariable String sportName) {
 
         String methodSpecificUrl = "/" + sportName + "/getMinTeamSize";
@@ -295,8 +279,6 @@ public class ReservationController {
      * @param groupId - Long
      * @return group size - int
      */
-    @GetMapping("/{groupId}/getGroupSize")
-    @ResponseBody
     public int getGroupSize(@PathVariable Long groupId) {
 
         String methodSpecificUrl = "/" + groupId.toString() + "/getGroupSize";
