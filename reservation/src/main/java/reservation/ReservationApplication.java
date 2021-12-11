@@ -37,7 +37,7 @@ public class ReservationApplication implements ReservationControllerEureka {
     public static void main(String[] args) {
 
         BookingSystem bookings =
-            new BookingSystem(new UserIdStrategy(ReservationService.restTemplate()));
+            new BookingSystem(new UserIdStrategy());
 
         Reservation reservation1 =
             new Reservation(ReservationType.EQUIPMENT, 1L, 1L, LocalDateTime.of(2020, 1, 1, 1, 1),

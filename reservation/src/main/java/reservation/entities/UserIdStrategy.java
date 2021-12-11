@@ -11,16 +11,11 @@ import org.springframework.web.client.RestTemplate;
  */
 public class UserIdStrategy implements ReservationSortingStrategy {
 
-    @Autowired
-    private final transient RestTemplate restTemplate;
 
     /**
      * Instantiates a new User id strategy.
-     *
-     * @param restTemplate the rest template
      */
-    public UserIdStrategy(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public UserIdStrategy() {
     }
 
     public Reservation getNextReservation(List<Reservation> reservations) {

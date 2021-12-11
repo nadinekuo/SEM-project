@@ -22,7 +22,7 @@ public class ChronologicalStrategy implements ReservationSortingStrategy {
     }
 
     private void sort(List<Reservation> list) {
-        Collections.sort(list, Comparator.comparing(Reservation::getStartingTime).reversed());
+        Collections.sort(list, new ReservationComparator());
     }
 
     /**
@@ -34,10 +34,10 @@ public class ChronologicalStrategy implements ReservationSortingStrategy {
             Reservation reservation1 = (Reservation) o1;
             Reservation reservation2 = (Reservation) o2;
             if (reservation1.getStartingTime().isBefore(reservation2.getStartingTime())) {
-                return -1;
+                return +1;
             }
             if (reservation1.getStartingTime().isAfter(reservation2.getStartingTime())) {
-                return +1;
+                return -1;
             }
             return 0;
         }
