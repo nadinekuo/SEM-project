@@ -66,7 +66,7 @@ public class TeamRoomCapacityValidator extends BaseValidator {
 
         if (groupSize < roomMinCapacity || groupSize > roomMaxCapacity) {
             throw new InvalidReservationException("This sports room has a minimal capacity of "
-                + roomMinCapacity + " and a maximal capacuity of " + roomMaxCapacity + "!");
+                + roomMinCapacity + " and a maximal capacity of " + roomMaxCapacity + "!");
         }
 
         return super.checkNext(reservation);

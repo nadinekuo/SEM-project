@@ -95,9 +95,6 @@ public class EquipmentControllerTest {
         MvcResult result = mockMvc.perform(get("/equipment/{name}/getAvailableEquipment",
             equipmentName))
             .andExpect(status().isBadRequest()).andReturn();
-
-        assertEquals(result.getResponse().getContentAsString(),
-            "");
     }
 
     @Test

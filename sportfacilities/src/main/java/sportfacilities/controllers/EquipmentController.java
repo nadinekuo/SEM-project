@@ -66,12 +66,13 @@ public class EquipmentController {
      */
     @GetMapping("/{equipmentName}/getAvailableEquipment")
     @ResponseBody
-    public ResponseEntity<?> getAvailableEquipment(@PathVariable String equipmentName) {
+    public ResponseEntity<String> getAvailableEquipment(@PathVariable String equipmentName) {
         try {
             Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
             return new ResponseEntity<String>(equipmentId.toString(), HttpStatus.OK);
         } catch (IllegalStateException e) {
             e.printStackTrace();
+            System.out.println("Equipment " + equipmentName + " does not exist!!");
             return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
         }
     }

@@ -113,8 +113,6 @@ public class ReservationController {
         // Creates chain of responsibility
         boolean isValid = reservationService.checkReservation(reservation, this);
 
-        // TODO: check if request gives 200
-
         if (isValid) {
             reservationService.makeSportFacilityReservation(reservation);
             return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
@@ -143,16 +141,12 @@ public class ReservationController {
         // Gets first available instance of this equipment name specified
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
-//        Long equipmentId = restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl,
-//            Long.class);
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
+        String response = restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl,
+            String.class);
         Long equipmentId = Long.valueOf(response);
 
         Reservation reservation =
             new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
-
-        // TODO: check if request gives 200
 
         // Creates chain of responsibility
         boolean isValid = reservationService.checkReservation(reservation, this);
@@ -164,6 +158,7 @@ public class ReservationController {
             return new ResponseEntity<>("Reservation could not be made.",
                 HttpStatus.FORBIDDEN);
         }
+
     }
 
     /**
@@ -176,7 +171,8 @@ public class ReservationController {
     @ResponseBody
     public Boolean getUserIsPremium(@PathVariable Long userId) {
         String methodSpecificUrl = "/user/" + userId + "/isPremium";
-        Boolean isPremium = restTemplate.getForObject(userUrl + methodSpecificUrl, Boolean.class);
+        String response = restTemplate.getForObject(userUrl + methodSpecificUrl, String.class);
+        Boolean isPremium = Boolean.valueOf(response);
         return isPremium;
     }
 
@@ -193,12 +189,9 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportsRoomId.toString() + "/exists";
 
         // Call to SportRoomController in Sport Facilities microservice
-        Boolean sportRoomExists = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, Boolean.class);
-
-        if (sportRoomExists == null) {
-            return false;
-        }
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        Boolean sportRoomExists = Boolean.valueOf(response);
         return sportRoomExists;
     }
 
@@ -214,12 +207,10 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/isHall";
 
         // Call to SportRoomController in Sport Facilities microservice
-        Boolean sportRoomIsHall = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, Boolean.class);
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        Boolean sportRoomIsHall = Boolean.valueOf(response);
 
-        if (sportRoomIsHall == null) {
-            return false;
-        }
         return sportRoomIsHall;
     }
 
@@ -237,10 +228,11 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMaximumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
-        int maxCapacity = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, Integer.class);
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        int maxCapacity = Integer.valueOf(response);
 
-        return maxCapacity;    // may be -1, but exception is caught in SportRoomController
+        return maxCapacity;
     }
 
 
@@ -257,10 +249,11 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMinimumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
-        int minCapacity = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, Integer.class);
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        int minCapacity = Integer.valueOf(response);
 
-        return minCapacity;    // may be -1
+        return minCapacity;
     }
 
 
@@ -296,8 +289,9 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportName.toString() + "/getMaxTeamSize";
 
         // Call to SportRoomController in Sport Facilities microservice
-        int maxTeamSize = restTemplate
-            .getForObject(sportFacilityUrl + "/sport/" + methodSpecificUrl, Integer.class);
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sport/" + methodSpecificUrl, String.class);
+        int maxTeamSize = Integer.valueOf(response);
 
         return maxTeamSize;
     }
@@ -315,8 +309,9 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportName.toString() + "/getMinTeamSize";
 
         // Call to SportRoomController in Sport Facilities microservice
-        int minTeamSize = restTemplate
-            .getForObject(sportFacilityUrl + "/sports" + methodSpecificUrl, Integer.class);
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sport" + methodSpecificUrl, String.class);
+        int minTeamSize = Integer.valueOf(response);
 
         return minTeamSize;
     }
@@ -329,11 +324,10 @@ public class ReservationController {
         String methodSpecificUrl = "/" + groupId.toString() + "/getGroupSize";
 
         // Call to GroupController in User microservice
-        int groupSize = restTemplate
-            .getForObject(userUrl + "/group/" + methodSpecificUrl, Integer.class);
-
+        String response = restTemplate
+            .getForObject(userUrl + "/group/" + methodSpecificUrl, String.class);
+        int groupSize = Integer.valueOf(response);
         return groupSize;
-
     }
 
 

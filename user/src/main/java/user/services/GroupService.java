@@ -59,7 +59,7 @@ public class GroupService {
             .orElseThrow(() ->
                 new IllegalStateException("Group with id "
                     + groupId + " does not exist!"));
-        return group.getGroupMembers().size();
+        return group.getGroupSize();
     }
 
 

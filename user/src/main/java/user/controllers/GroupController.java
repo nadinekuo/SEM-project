@@ -1,6 +1,8 @@
 package user.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +30,15 @@ public class GroupController {
 
     @GetMapping("/{groupId}/getGroupSize")
     @ResponseBody
-    public int getGroupSize(@PathVariable Long groupId) {
-        return groupService.getGroupSizeById(groupId);
+    public ResponseEntity<String> getGroupSize(@PathVariable Long groupId) {
+        try {
+            Integer groupSize = groupService.getGroupSizeById(groupId);
+            return new ResponseEntity<String>(groupSize.toString(), HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            System.out.println("Group with id " + groupId + " does not exist!!");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
 

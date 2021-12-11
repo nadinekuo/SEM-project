@@ -59,6 +59,7 @@ public class ReservationControllerTest {
 
     @Mock
     transient ReservationService reservationService;
+    @Mock
     transient RestTemplate restTemplate;
     @Autowired
     private transient MockMvc mockMvc;
@@ -70,7 +71,6 @@ public class ReservationControllerTest {
     @BeforeEach
     @MockitoSettings(strictness = Strictness.LENIENT)
     public void setup() {
-        restTemplate = Mockito.mock(RestTemplate.class);
         Mockito.when(reservationService.restTemplate()).thenReturn(restTemplate);
 
         this.mockMvc =
@@ -104,6 +104,21 @@ public class ReservationControllerTest {
             .andExpect(status().isOk());
         verify(reservationService).getReservation(1L);
     }
+
+
+    // TODO: Test communications to other microservices via integration tests?
+
+    @Test
+    public void getUserIsPremium() throws Exception {
+
+//        Mockito.when(restTemplate
+//            .getForObject(ReservationController.userUrl + "/user/" + userId + "/isPremium",
+//                Boolean.class)).thenReturn(true);
+
+    }
+
+
+
 
     /**
      * Test equipment reservation with invalid dates.
@@ -140,10 +155,7 @@ public class ReservationControllerTest {
             ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
                 + "/getAvailableEquipment", Long.class)).thenReturn(1L);
 
-//        Mockito.when(restTemplate
-//            .getForObject(ReservationController.userUrl + "/user/" + userId + "/isPremium",
-//                Boolean.class)).thenReturn(true);
-
+        // TODO: Separate testing for all validators in the chain (mock Resttemplate, Controller)
         given(reservationService.checkReservation(any(), any())).willReturn(true);
 
         MvcResult result =
@@ -185,10 +197,6 @@ public class ReservationControllerTest {
     @MethodSource("validDateGenerator")
     @MockitoSettings(strictness = Strictness.LENIENT)
     public void testSportRoomReservationValidDates(String date) throws Exception {
-
-        //        Mockito.when(restTemplate
-        //            .getForObject(ReservationController.userUrl + "/user/" + userId + "/isPremium",
-        //                Boolean.class)).thenReturn(true);
 
         given(reservationService.checkReservation(any(), any())).willReturn(true);
 

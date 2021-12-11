@@ -35,8 +35,7 @@ public class UserReservationBalanceValidator extends BaseValidator {
         // Basic users can have 1 sports room reservation per day
         if (!isPremium && reservationBalanceOnDate == 1) {
             throw new InvalidReservationException("Daily limit of 1 reservation per day has "
-                + "been "
-                + "reached!");
+                + "been reached!");
         }
 
         // Premium users can have up to 3 reservations per day
