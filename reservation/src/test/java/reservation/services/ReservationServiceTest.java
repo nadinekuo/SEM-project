@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -33,18 +32,13 @@ public class ReservationServiceTest {
 
     private transient ReservationService reservationService;
 
-    private transient Reservation reservation1;
-    private transient Reservation reservation2;
-    private transient Reservation groupReservation1;
+    private final transient Reservation reservation1;
+    private final transient Reservation reservation2;
+    private final transient Reservation groupReservation1;
 
     /**
-     * runs before each test.
+     * Constructor for test.
      */
-    @BeforeEach
-    void setup() {
-        reservationService = new ReservationService(reservationRepository);
-    }
-
     public ReservationServiceTest() {
         reservation1 = new Reservation(53L, ReservationType.EQUIPMENT, 1L, 42L,
             LocalDateTime.of(2022, 10, 05, 16, 00));
@@ -54,12 +48,18 @@ public class ReservationServiceTest {
             LocalDateTime.of(2022, 02, 3, 20, 30), 84L);
     }
 
+    /**
+     * runs before each test.
+     */
+    @BeforeEach
+    void setup() {
+        reservationService = new ReservationService(reservationRepository);
+    }
 
     @Test
     public void testConstructor() {
         assertNotNull(reservationService);
     }
-
 
     @Test
     void getReservationTest() {
@@ -73,7 +73,6 @@ public class ReservationServiceTest {
         assertThat(result.getTypeOfReservation() == ReservationType.EQUIPMENT);
         verify(reservationRepository, times(1)).findById(53L);
     }
-
 
     @Test
     void deleteReservationTest() {
@@ -97,8 +96,6 @@ public class ReservationServiceTest {
         });
         verify(reservationRepository, never()).deleteById(any());
     }
-
-
 
     @Test
     void countOneSportFacilityReservationTest() {
@@ -125,14 +122,12 @@ public class ReservationServiceTest {
         when(reservationRepository.findBySportFacilityReservedIdAndTime(anyLong(), any()))
             .thenReturn(Optional.empty());   // Facility is unoccupied
 
-        assertThat(reservationService.sportsFacilityIsAvailable(75L,
-            LocalDateTime.of(2022, 10, 05, 16, 00)))
-            .isTrue();
+        assertThat(reservationService
+            .sportsFacilityIsAvailable(75L, LocalDateTime.of(2022, 10, 05, 16, 00))).isTrue();
 
         verify(reservationRepository, times(1))
-            .findBySportFacilityReservedIdAndTime(75L,  LocalDateTime.of(2022, 10, 05, 16, 00));
+            .findBySportFacilityReservedIdAndTime(75L, LocalDateTime.of(2022, 10, 05, 16, 00));
     }
-
 
     @Test
     void unavailableSportFacility() {
@@ -140,16 +135,12 @@ public class ReservationServiceTest {
         when(reservationRepository.findBySportFacilityReservedIdAndTime(anyLong(), any()))
             .thenReturn(Optional.of(75L));   // Facility is reserved for this time already!
 
-        assertThat(reservationService.sportsFacilityIsAvailable(75L,
-            LocalDateTime.of(2022, 10, 05, 16, 00)))
-            .isFalse();
+        assertThat(reservationService
+            .sportsFacilityIsAvailable(75L, LocalDateTime.of(2022, 10, 05, 16, 00))).isFalse();
 
         verify(reservationRepository, times(1))
-            .findBySportFacilityReservedIdAndTime(75L,  LocalDateTime.of(2022, 10, 05, 16, 00));
+            .findBySportFacilityReservedIdAndTime(75L, LocalDateTime.of(2022, 10, 05, 16, 00));
     }
-
-
-
 
     @Test
     void makeSportFacilityReservationTest() {
@@ -158,12 +149,11 @@ public class ReservationServiceTest {
 
         Reservation result = reservationService.makeSportFacilityReservation(reservation1);
         assertThat(result.getId()).isEqualTo(53L);
-        assertThat(result.getStartingTime()).isEqualTo( LocalDateTime.of(2022, 10, 05, 16, 00));
+        assertThat(result.getStartingTime()).isEqualTo(LocalDateTime.of(2022, 10, 05, 16, 00));
 
         verify(reservationRepository, times(1)).save(reservation1);
 
     }
-
 
     @Test
     public void restTemplateTest() {
