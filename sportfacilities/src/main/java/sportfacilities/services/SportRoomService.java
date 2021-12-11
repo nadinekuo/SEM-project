@@ -8,34 +8,54 @@ import org.springframework.web.client.RestTemplate;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.repositories.SportRoomRepository;
 
+/**
+ * The type Sport room service.
+ */
 @Service
 public class SportRoomService {
     private final transient SportRoomRepository sportRoomRepository;
 
     /**
-     * Constructor for UserService.
+     * Instantiates a new Sport room service.
      *
-     * @param sportRoomRepository - retrieves Lessons from database.
+     * @param sportRoomRepository the sport room repository
      */
     @Autowired
     public SportRoomService(SportRoomRepository sportRoomRepository) {
         this.sportRoomRepository = sportRoomRepository;
     }
 
-    public SportRoom getSportRoom(Long sportRoomId) throws NoSuchFieldException {
-        return sportRoomRepository.findBySportRoomId(sportRoomId).orElseThrow();
+    /**
+     * Gets sport room.
+     *
+     * @param sportRoomId the sport room id
+     * @return the sport room
+     */
+    public SportRoom getSportRoom(Long sportRoomId) {
+        return sportRoomRepository.findBySportRoomId(sportRoomId).orElseThrow(
+            () -> new IllegalStateException(
+                "Sport room with id " + sportRoomId + " does not exist!"));
     }
 
+    /**
+     * Sport room exists boolean.
+     *
+     * @param sportRoomId the sport room id
+     * @return the boolean
+     */
     public Boolean sportRoomExists(Long sportRoomId) {
         return sportRoomRepository.findBySportRoomId(sportRoomId).isPresent();
     }
 
+    /**
+     * Rest template rest template.
+     *
+     * @return the rest template
+     */
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
-
 
 }

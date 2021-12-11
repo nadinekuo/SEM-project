@@ -25,20 +25,38 @@ public class ReservationConfig {
     CommandLineRunner reservationCommandLineRunner(ReservationRepository reservationRepository) {
 
         return args -> {
-            Reservation reservation1 = new Reservation(ReservationType.EQUIPMENT, 1L, 1L,
-                LocalDateTime.of(2020, 1, 1, 1, 1), false);
-            Reservation reservation2 = new Reservation(ReservationType.EQUIPMENT, 3L, 2L,
-                LocalDateTime.of(2020, 1, 1, 1, 1), false);
-            Reservation reservation3 = new Reservation(ReservationType.EQUIPMENT, 5L, 3L,
-                LocalDateTime.of(2020, 1, 1, 1, 1), false);
-            Reservation reservation4 = new Reservation(ReservationType.EQUIPMENT, 2L, 4L,
-                LocalDateTime.of(2020, 1, 1, 1, 1), false);
-            Reservation reservation5 = new Reservation(ReservationType.EQUIPMENT, 4L, 5L,
-                LocalDateTime.of(2020, 1, 1, 1, 1), false);
-            Reservation reservation6 = new Reservation(ReservationType.EQUIPMENT, 5L, 6L,
-                LocalDateTime.of(2020, 1, 1, 1, 1), false);
 
-            reservationRepository.saveAll(List.of(reservation1, reservation2));
+            Reservation reservation1 = new Reservation(ReservationType.EQUIPMENT, 1L, 2L,
+                LocalDateTime.of(2020, 1, 1, 16, 30));
+
+            Reservation reservation2 = new Reservation(ReservationType.EQUIPMENT, 2L, 2L,
+                LocalDateTime.of(2020, 1, 1, 19, 00));
+
+            Reservation reservation3 = new Reservation(ReservationType.SPORTS_FACILITY, 2L, 42L,
+                LocalDateTime.of(2022, 12, 05, 20, 30));
+
+            Reservation reservation4 = new Reservation(ReservationType.SPORTS_FACILITY, 2L, 42L,
+                LocalDateTime.of(2022, 12, 05, 22, 30));
+
+            Reservation groupReservation1 = new Reservation(ReservationType.SPORTS_FACILITY, 3L,
+                2L,
+                LocalDateTime.of(2022, 10, 25, 19, 00), 1L);
+
+            Reservation groupReservation2 = new Reservation(ReservationType.SPORTS_FACILITY, 4L,
+                2L,
+                LocalDateTime.of(2022, 10, 25, 19, 00), 1L);
+
+            Reservation groupReservation3 = new Reservation(ReservationType.SPORTS_FACILITY, 4L,
+                2L,
+                LocalDateTime.of(2022, 10, 25, 19, 00), 1L);
+
+            Reservation groupReservation4 = new Reservation(ReservationType.SPORTS_FACILITY, 5L,
+                2L,
+                LocalDateTime.of(2022, 10, 25, 19, 00), 1L);
+
+            reservationRepository.saveAll(List.of(reservation1, reservation2, reservation3,
+                reservation4, groupReservation1, groupReservation2,
+                groupReservation3, groupReservation4));
 
         };
     }

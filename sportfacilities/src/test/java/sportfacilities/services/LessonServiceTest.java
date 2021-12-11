@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import net.minidev.asm.ex.NoSuchFieldException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,7 +59,8 @@ public class LessonServiceTest {
 
     @Test
     public void getLessonByIdTest() throws NoSuchFieldException {
-        assertEquals(0L, lessonService.getLessonById(lessonId).getLessonId());
+        assertEquals(Optional.of(0L),
+            Optional.of(lessonService.getLessonById(lessonId).getLessonId()));
     }
 
     @Test

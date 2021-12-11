@@ -40,23 +40,17 @@ public class ReservationApplication implements ReservationControllerEureka {
             new BookingSystem(new UserIdStrategy());
 
         Reservation reservation1 =
-            new Reservation(ReservationType.EQUIPMENT, 1L, 1L, LocalDateTime.of(2020, 1, 1, 1, 1),
-                false);
+            new Reservation(ReservationType.EQUIPMENT, 1L, 1L, LocalDateTime.of(2020, 1, 1, 1, 1));
         Reservation reservation2 =
-            new Reservation(ReservationType.EQUIPMENT, 3L, 2L, LocalDateTime.of(2020, 1, 2, 1, 1),
-                false);
+            new Reservation(ReservationType.EQUIPMENT, 3L, 2L, LocalDateTime.of(2020, 1, 2, 1, 1));
         Reservation reservation3 =
-            new Reservation(ReservationType.EQUIPMENT, 5L, 3L, LocalDateTime.of(2020, 3, 3, 1, 1),
-                false);
+            new Reservation(ReservationType.EQUIPMENT, 5L, 3L, LocalDateTime.of(2020, 3, 3, 1, 1));
         Reservation reservation4 =
-            new Reservation(ReservationType.EQUIPMENT, 3L, 4L, LocalDateTime.of(2021, 1, 1, 1, 1),
-                false);
+            new Reservation(ReservationType.EQUIPMENT, 3L, 4L, LocalDateTime.of(2021, 1, 1, 1, 1));
         Reservation reservation5 =
-            new Reservation(ReservationType.EQUIPMENT, 4L, 5L, LocalDateTime.of(2020, 2, 2, 1, 1),
-                false);
+            new Reservation(ReservationType.EQUIPMENT, 4L, 5L, LocalDateTime.of(2020, 2, 2, 1, 1));
         Reservation reservation6 =
-            new Reservation(ReservationType.EQUIPMENT, 5L, 6L, LocalDateTime.of(2020, 1, 3, 1, 1),
-                false);
+            new Reservation(ReservationType.EQUIPMENT, 5L, 6L, LocalDateTime.of(2020, 1, 3, 1, 1));
 
         bookings.addReservation(reservation1);
         bookings.addReservation(reservation2);

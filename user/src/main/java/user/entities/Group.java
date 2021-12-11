@@ -27,6 +27,8 @@ public class Group {
     @JsonManagedReference
     private List<Customer> groupMembers;
 
+    private int groupSize;
+
     /**
      * Empty constructor needed for Spring JPA.
      */
@@ -44,11 +46,13 @@ public class Group {
         this.groupId = groupId;
         this.groupName = groupName;
         this.groupMembers = groupMembers;
+        this.groupSize = groupMembers.size();
     }
 
     public Group(String groupName, List<Customer> groupMembers) {
         this.groupName = groupName;
         this.groupMembers = groupMembers;
+        this.groupSize = groupMembers.size();
     }
 
     public long getGroupId() {
@@ -73,6 +77,14 @@ public class Group {
 
     public void setGroupMembers(List<Customer> groupMembers) {
         this.groupMembers = groupMembers;
+    }
+
+    public int getGroupSize() {
+        return groupSize;
+    }
+
+    public void setGroupSize(int groupSize) {
+        this.groupSize = groupSize;
     }
 
     /**

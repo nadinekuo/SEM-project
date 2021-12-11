@@ -13,15 +13,16 @@ import reservation.entities.Reservation;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    Reservation findById(long reservationId);
+    Optional<Reservation> findById(Long reservationId);
 
     @Query(value = "SELECT reservation_id " + "FROM reservations "
         + "WHERE sport_facility_reserved_id = ?1 AND starting_time = ?2", nativeQuery = true)
-    Optional<Long> findBySportRoomIdAndTime(Long sportRoomId, LocalDateTime time);
+    Optional<Long> findBySportFacilityReservedIdAndTime(Long sportsFacilityId, LocalDateTime time);
 
     LocalDate findStartingTimeByReservationId(long reservationId);
 
-    List<Reservation> findReservationByStartingTimeContainsAndCustomerId(String date,
+    List<Reservation> findReservationByStartingTimeBetweenAndCustomerId(LocalDateTime start,
+                                                                        LocalDateTime end,
                                                                          Long customerId);
 
     @Transactional

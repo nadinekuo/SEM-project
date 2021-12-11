@@ -1,6 +1,5 @@
 package sportfacilities.controllers;
 
-import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +33,7 @@ public class EquipmentController {
      * Autowired constructor for the class.
      *
      * @param equipmentService equipmentService
-     * @param sportService
+     * @param sportService     sportService
      */
     @Autowired
     public EquipmentController(EquipmentService equipmentService, SportService sportService) {
@@ -51,11 +50,13 @@ public class EquipmentController {
      */
     @GetMapping("/{equipmentId}")
     @ResponseBody
-    public Equipment getEquipment(@PathVariable Long equipmentId) {
+    public ResponseEntity<?> getEquipment(@PathVariable Long equipmentId) {
         try {
-            return equipmentService.getEquipment(equipmentId);
-        } catch (NoSuchFieldException | NoSuchElementException e) {
-            return null;
+            Equipment equipment = equipmentService.getEquipment(equipmentId);
+            return new ResponseEntity<>(equipment, HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -79,35 +80,26 @@ public class EquipmentController {
     /**
      * Gets one instance of equipment that is available.
      *
-     * @param equipmentName the equipment name
-     * @return the first available equipment
+     * @param equipmentName the equipment name, example: "hockeyStick"
+     * @return the first available equipment Id, will be -1 if non-existent or not available
      */
     @GetMapping("/{equipmentName}/getAvailableEquipment")
     @ResponseBody
-    public ResponseEntity<?> getAvailableEquipment(@PathVariable String equipmentName) {
-        try {
-            Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
-            equipmentService.setEquipmentToInUse(equipmentId);
-            ResponseEntity<String> response =
-                new ResponseEntity<String>(equipmentId.toString(), HttpStatus.OK);
-            return response;
-        } catch (NoSuchElementException | NoSuchFieldException e) {
-            return new ResponseEntity<>(
-                "The equipment requested is not in stock or the " + "equipment name was not found",
-                HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<String> getAvailableEquipment(@PathVariable String equipmentName) {
+        Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
+        return new ResponseEntity<String>(equipmentId.toString(), HttpStatus.OK);
     }
 
     /**
      * Add new equipment.
      *
-     * @param equipmentName the equipment name
-     * @param relatedSport  the related sport
+     * @param equipmentName    the equipment name
+     * @param relatedSportName the related sport
      */
-    @PutMapping("/{equipmentName}/{relatedSport}/addNewEquipment/admin")
+    @PutMapping("/{equipmentName}/{relatedSportName}/addNewEquipment/admin")
     @ResponseBody
     public void addNewEquipment(@PathVariable String equipmentName,
-                                @PathVariable String relatedSportName) throws NoSuchFieldException {
+                                @PathVariable String relatedSportName) {
 
         Sport sport = sportService.getSportById(relatedSportName);
         equipmentService.addEquipment(new Equipment(equipmentName, sport, false));

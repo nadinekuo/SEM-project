@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+/**
+ * The type Lesson.
+ */
 @Entity
 @Table(name = "lessons")
 public class Lesson {
@@ -25,17 +28,18 @@ public class Lesson {
     private LocalDateTime endingTime;
 
     /**
-     * Empty constructor needed for Spring JPA.
+     * Instantiates a new Lesson.
      */
     public Lesson() {
     }
 
     /**
-     * Constructor Lesson.
+     * Instantiates a new Lesson.
      *
-     * @param title        - String
-     * @param startingTime
-     * @param endingTime
+     * @param title        the title
+     * @param startingTime the starting time
+     * @param endingTime   the ending time
+     * @param size         the size
      */
     public Lesson(String title, LocalDateTime startingTime, LocalDateTime endingTime, int size) {
         this.title = title;
@@ -44,42 +48,92 @@ public class Lesson {
         this.size = size;
     }
 
+    /**
+     * Gets size.
+     *
+     * @return the size
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     * Sets size.
+     *
+     * @param size the size
+     */
     public void setSize(int size) {
         this.size = size;
     }
 
-    public long getLessonId() {
+    /**
+     * Gets lesson id.
+     *
+     * @return the lesson id
+     */
+    public Long getLessonId() {
         return lessonId;
     }
 
+    /**
+     * Sets lesson id.
+     *
+     * @param lessonId the lesson id
+     */
     public void setLessonId(long lessonId) {
         this.lessonId = lessonId;
     }
 
+    /**
+     * Gets title.
+     *
+     * @return the title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets title.
+     *
+     * @param title the title
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Gets starting time.
+     *
+     * @return the starting time
+     */
     public LocalDateTime getStartingTime() {
         return startingTime;
     }
 
+    /**
+     * Sets starting time.
+     *
+     * @param startingTime the starting time
+     */
     public void setStartingTime(LocalDateTime startingTime) {
         this.startingTime = startingTime;
     }
 
+    /**
+     * Gets ending time.
+     *
+     * @return the ending time
+     */
     public LocalDateTime getEndingTime() {
         return endingTime;
     }
 
+    /**
+     * Sets ending time.
+     *
+     * @param endingTime the ending time
+     */
     public void setEndingTime(LocalDateTime endingTime) {
         this.endingTime = endingTime;
     }

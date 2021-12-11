@@ -5,22 +5,32 @@ import org.springframework.stereotype.Service;
 import sportfacilities.entities.Sport;
 import sportfacilities.repositories.SportRepository;
 
+/**
+ * The type Sport service.
+ */
 @Service
 public class SportService {
     private final transient SportRepository sportRepository;
 
     /**
-     * Constructor for UserService.
+     * Instantiates a new Sport service.
      *
-     * @param sportRepository - retrieves Sports from database.
+     * @param sportRepository the sport repository
      */
     @Autowired
     public SportService(SportRepository sportRepository) {
         this.sportRepository = sportRepository;
     }
 
-    public Sport getSportById(String sportName) throws NoSuchFieldException {
-        return sportRepository.findById(sportName).orElseThrow();
+    /**
+     * Get sport by id sport.
+     *
+     * @param sportName the sport name
+     * @return the sport
+     */
+    public Sport getSportById(String sportName) {
+        return sportRepository.findById(sportName).orElseThrow(
+            () -> new IllegalStateException("Sport with id " + sportName + " does not exist!"));
     }
 
 }

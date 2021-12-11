@@ -26,7 +26,7 @@ public class SportRoom {
     @SequenceGenerator(name = "sportroom_sequence", sequenceName = "sportroom_sequence",
         allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sportroom_sequence")
-    private long sportRoomId;
+    private Long sportRoomId;
     private String sportRoomName; // example: X1, X2, X3 ...
 
     @Transient
@@ -35,6 +35,7 @@ public class SportRoom {
     private List<Sport> sports;   // Only sport halls will store multiple sports
     private int minCapacity;
     private int maxCapacity;
+    private String relatedSport;
 
     /**
      * Empty constructor needed for Spring JPA.
@@ -55,9 +56,39 @@ public class SportRoom {
         this.sports = sports;
         this.minCapacity = minCapacity;
         this.maxCapacity = maxCapacity;
+        this.isSportsHall = sports.size() > 1;
+        if (!isSportsHall) {
+            relatedSport = sports.get(0).getSportName();
+        } else {
+            relatedSport = null;
+        }
     }
 
-    public long getSportRoomId() {
+    /**
+     * Constructor SportRoom.
+     *
+     * @param sportRoomId   - Long
+     * @param sportRoomName - String
+     * @param sports        - the associated sports
+     * @param minCapacity   - int
+     * @param maxCapacity   - int
+     */
+    public SportRoom(long sportRoomId, String sportRoomName, List<Sport> sports, int minCapacity,
+                     int maxCapacity) {
+        this.isSportsHall = sports.size() > 1;
+        this.sportRoomId = sportRoomId;
+        this.sportRoomName = sportRoomName;
+        this.sports = sports;
+        this.minCapacity = minCapacity;
+        this.maxCapacity = maxCapacity;
+        if (!isSportsHall) {
+            relatedSport = sports.get(0).getSportName();
+        } else {
+            relatedSport = null;
+        }
+    }
+
+    public Long getSportRoomId() {
         return sportRoomId;
     }
 
@@ -103,6 +134,22 @@ public class SportRoom {
 
     public void setMaxCapacity(int maxCapacity) {
         this.maxCapacity = maxCapacity;
+    }
+
+    public boolean isSportsHall() {
+        return isSportsHall;
+    }
+
+    public void setSportsHall(boolean sportsHall) {
+        isSportsHall = sportsHall;
+    }
+
+    public String getRelatedSport() {
+        return relatedSport;
+    }
+
+    public void setRelatedSport(String relatedSport) {
+        this.relatedSport = relatedSport;
     }
 
     @Override

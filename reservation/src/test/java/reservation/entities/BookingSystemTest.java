@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.web.client.RestTemplate;
+import reservation.entities.strategy.ChronologicalStrategy;
+import reservation.entities.strategy.ReservationSortingStrategy;
 import reservation.services.ReservationService;
 
 public class BookingSystemTest {
@@ -41,8 +43,8 @@ public class BookingSystemTest {
 
         for (int i = 0; i < size; i++) {
             Reservation reservation = new Reservation(ReservationType.EQUIPMENT, (long) i, (long) i,
-                LocalDateTime.of(2020, i + 1, 1, 1, 1), false);
-            reservation.setReservationId(i + 1);
+                LocalDateTime.of(2020, i + 1, 1, 1, 1));
+            reservation.setReservationId((long) i + 1);
             userIdStrategy.add(reservation);
             reservations[i] = reservation;
         }

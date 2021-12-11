@@ -20,7 +20,7 @@ public class Equipment {
     @SequenceGenerator(name = "equipment_sequence", sequenceName = "equipment_sequence",
         allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "equipment_sequence")
-    private long equipmentId;
+    private Long equipmentId;
 
     private String name;
 
@@ -35,6 +35,21 @@ public class Equipment {
      * Empty constructor needed for Spring JPA.
      */
     public Equipment() {
+    }
+
+    /**
+     * Instantiates a new Equipment.
+     *
+     * @param equipmentId   id
+     * @param name         the name
+     * @param relatedSport the related sport
+     * @param inUse        if its in use
+     */
+    public Equipment(Long equipmentId, String name, Sport relatedSport, boolean inUse) {
+        this.equipmentId = equipmentId;
+        this.name = name;
+        this.relatedSport = relatedSport;
+        this.inUse = inUse;
     }
 
     /**
@@ -58,7 +73,7 @@ public class Equipment {
         this.inUse = inUse;
     }
 
-    public long getEquipmentId() {
+    public Long getEquipmentId() {
         return equipmentId;
     }
 

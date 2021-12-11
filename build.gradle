@@ -84,6 +84,8 @@ subprojects {
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
 
+        implementation 'com.sun.jersey.contribs:jersey-apache-client4:1.19.4'
+
 
         //tests
         implementation 'org.jetbrains:annotations:20.1.0'
@@ -143,7 +145,9 @@ subprojects {
     }
 
     pmd {
-        incrementalAnalysis = true
+        toolVersion = "6.23.0"
+        ruleSetFiles = files("${rootDir}/config/pmd/pmd.xml")
+        ruleSets = []
     }
 
     apply plugin: 'info.solidsoft.pitest'

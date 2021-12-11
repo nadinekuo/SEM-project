@@ -1,6 +1,7 @@
-package reservation.entities;
+package reservation.entities.strategy;
 
 import java.util.List;
+import reservation.entities.Reservation;
 
 public interface ReservationSortingStrategy {
 
