@@ -9,6 +9,7 @@ buildscript {
     }
 }
 
+
 plugins {
     id 'org.springframework.boot' version '2.4.1'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
@@ -27,102 +28,145 @@ plugins {
     id 'info.solidsoft.pitest' version '1.5.2'
 }
 
-group = 'nl.tudelft.cse.sem.template'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 14
-targetCompatibility = 14
+allprojects {
 
-repositories {
-    mavenCentral()
-    maven { url 'https://repo.spring.io/milestone' }
+    group = 'com.torenda'
+    sourceCompatibility = '11'
+
+    repositories {
+        mavenCentral()
+    }
 }
 
-ext {
-    set('springCloudVersion', "2020.0.0")
-}
+subprojects {
 
-dependencies {
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
+    apply plugin: 'application'
+    apply plugin: 'checkstyle'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'pmd'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    group = 'nl.tudelft.cse.sem.template'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = 11
+    targetCompatibility = 11
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://repo.spring.io/milestone' }
+    }
+
+    ext {
+        set('springCloudVersion', "2020.0.0")
+    }
+
+    dependencies {
+        implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
+
+        //Spring
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
 // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.3.5.RELEASE'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.3.5.RELEASE'
+        implementation 'org.springframework.boot:spring-boot-starter'
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.jetbrains:annotations:20.1.0'
-    implementation 'junit:junit:4.12'
-    implementation 'junit:junit:4.12'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+        testImplementation 'org.springframework.security:spring-security-test'
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        implementation 'com.sun.jersey.contribs:jersey-apache-client4:1.19.4'
+
+        //eureka
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+
+
+        //tests
+        implementation 'org.jetbrains:annotations:20.1.0'
+        implementation 'junit:junit:4.12'
+
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+
+        testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
+        testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.1.0'
+        testImplementation('org.assertj:assertj-core:3.14.0')
+
+        // Local test database (in-memory)
+        implementation 'com.h2database:h2'
+        developmentOnly 'org.hibernate:hibernate-entitymanager'
+        runtimeOnly 'org.postgresql:postgresql'
     }
 
-    // Local test database (in-memory)
-    implementation 'com.h2database:h2'
-    developmentOnly 'org.hibernate:hibernate-entitymanager'
-    runtimeOnly 'org.postgresql:postgresql'
-
-    testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.1.0'
-    testImplementation('org.assertj:assertj-core:3.14.0')
-
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testImplementation 'org.springframework.security:spring-security-test'
-}
-
-
-test {
-    useJUnitPlatform()
-    jacoco {
-        enabled = true
-        includes = ['nl.tudelft.sem.template.*']
-        excludes = []
-    }
-}
-
-repositories {
-    mavenCentral()
-    maven { url 'https://repo.spring.io/milestone' }
-}
-
-jacocoTestCoverageVerification() {
-    dependsOn test
-    violationRules {
-        rule {
+    test {
+        useJUnitPlatform()
+        jacoco {
             enabled = true
-            element = 'CLASS'
             includes = ['nl.tudelft.sem.template.*']
+            excludes = []
+        }
+    }
 
-            limit {
-                counter = 'BRANCH'
-                value = 'COVEREDRATIO'
-                minimum = 0.1
+    repositories {
+        mavenCentral()
+        maven { url 'https://repo.spring.io/milestone' }
+    }
+
+    jacocoTestCoverageVerification() {
+        dependsOn test
+        violationRules {
+            rule {
+                enabled = true
+                element = 'CLASS'
+                includes = ['nl.tudelft.sem.template.*']
+
+                limit {
+                    counter = 'BRANCH'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.1
+                }
             }
         }
     }
-}
 
-checkstyle {
-    toolVersion "8.37"
-    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
-}
+    checkstyle {
+        toolVersion "8.37"
+        configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    }
 
-pmd {
-    incrementalAnalysis = true
-}
+    pmd {
+        incrementalAnalysis = true
+    }
 
-apply plugin: 'info.solidsoft.pitest'
-pitest {
-    //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
-    junit5PluginVersion = '0.12'
+    apply plugin: 'info.solidsoft.pitest'
+    pitest {
+        //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
+        junit5PluginVersion = '0.12'
 
-    targetClasses = ['nl.tudelft.sem.template.*']  //by default "${project.group}.*"
-    pitestVersion = '1.5.1' //not needed when a default PIT version should be used
-    threads = 4
-    outputFormats = ['XML', 'HTML']
-    timestampedReports = false
+        targetClasses = ['nl.tudelft.sem.template.*']  //by default "${project.group}.*"
+        pitestVersion = '1.5.1' //not needed when a default PIT version should be used
+        threads = 4
+        outputFormats = ['XML', 'HTML']
+        timestampedReports = false
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+
+
+
 }
 
 bootJar {
