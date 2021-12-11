@@ -1,6 +1,5 @@
 package sportfacilities.controllers;
 
-import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ public class EquipmentController {
      * Autowired constructor for the class.
      *
      * @param equipmentService equipmentService
-     * @param sportService
+     * @param sportService     sportService
      */
     @Autowired
     public EquipmentController(EquipmentService equipmentService, SportService sportService) {
@@ -62,27 +61,20 @@ public class EquipmentController {
      * Gets one instance of equipment that is available.
      *
      * @param equipmentName the equipment name, example: "hockeyStick"
-     * @return the first available equipment
+     * @return the first available equipment Id, will be -1 if non-existent or not available
      */
     @GetMapping("/{equipmentName}/getAvailableEquipment")
     @ResponseBody
     public ResponseEntity<String> getAvailableEquipment(@PathVariable String equipmentName) {
-        try {
-            Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
-            return new ResponseEntity<String>(equipmentId.toString(), HttpStatus.OK);
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            System.out.println("Equipment " + equipmentName + " does not exist!!");
-            return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
-        }
+        Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
+        return new ResponseEntity<String>(equipmentId.toString(), HttpStatus.OK);
     }
-
 
     /**
      * Add new equipment.
      *
-     * @param equipmentName the equipment name
-     * @param relatedSportName  the related sport
+     * @param equipmentName    the equipment name
+     * @param relatedSportName the related sport
      */
     @PutMapping("/{equipmentName}/{relatedSportName}/addNewEquipment/admin")
     @ResponseBody

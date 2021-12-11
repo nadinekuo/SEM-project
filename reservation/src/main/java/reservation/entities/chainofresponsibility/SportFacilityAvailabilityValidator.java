@@ -4,14 +4,12 @@ import java.time.LocalDateTime;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
-import reservation.entities.chainofresponsibility.BaseValidator;
-import reservation.entities.chainofresponsibility.InvalidReservationException;
 import reservation.services.ReservationService;
 
 public class SportFacilityAvailabilityValidator extends BaseValidator {
 
-    private ReservationService reservationService;
-    private ReservationController reservationController;
+    private final ReservationService reservationService;
+    private final ReservationController reservationController;
 
     public SportFacilityAvailabilityValidator(ReservationService reservationService,
                                               ReservationController reservationController) {
@@ -27,9 +25,10 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
         }
 
         // Only between 16:00 and 23:00 reservations can be made
-        if ((reservation.getStartingTime().getHour() < 16) || (reservation.getStartingTime().getHour() == 23)) {
-            throw new InvalidReservationException("Reservation slot has to be between 16:00 and "
-                + "23:00.");
+        if ((reservation.getStartingTime().getHour() < 16) || (
+            reservation.getStartingTime().getHour() == 23)) {
+            throw new InvalidReservationException(
+                "Reservation slot has to be between 16:00 and " + "23:00.");
         }
 
         if (reservation.getTypeOfReservation() == ReservationType.SPORTS_FACILITY) {
@@ -38,11 +37,12 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
 
             // Check if sport room is not reserved already for this time slot (false)
             // If true, it may not necessarily exist.
-            boolean sportsRoomAvailable = reservationService.sportsFacilityIsAvailable(sportsRoomId,
-                reservation.getStartingTime());
+            boolean sportsRoomAvailable = reservationService
+                .sportsFacilityIsAvailable(sportsRoomId, reservation.getStartingTime());
             if (!sportsRoomAvailable) {
-                throw new InvalidReservationException("Sports room is already booked for this time "
-                    + "slot.");
+                throw new InvalidReservationException(
+                    "Sports room is already booked for this time " + "slot: " + reservation
+                        .getStartingTime());
             }
 
             // Call Sports Facilities service: check if sports room exists

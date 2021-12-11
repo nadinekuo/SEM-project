@@ -88,16 +88,6 @@ public class EquipmentControllerTest {
     }
 
     @Test
-    public void getAvailableEquipmentBadRequestTest() throws Exception {
-        when(equipmentService.getAvailableEquipmentIdsByName(equipmentName)).thenThrow(
-            new IllegalStateException());
-
-        MvcResult result = mockMvc.perform(get("/equipment/{name}/getAvailableEquipment",
-            equipmentName))
-            .andExpect(status().isBadRequest()).andReturn();
-    }
-
-    @Test
     public void addNewEquipmentTest() throws Exception {
         Equipment equipment1 = new Equipment(equipmentName, box, inUse);
         mockMvc.perform(put("/equipment/{equipmentName}/{relatedSport}/addNewEquipment/admin", equipmentName,

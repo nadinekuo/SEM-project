@@ -30,7 +30,10 @@ public class EquipmentService {
         return new RestTemplate();
     }
 
-
+    /**
+     * @param equipmentId - Long
+     * @return - Equipment corresponding to id
+     */
     public Equipment getEquipment(Long equipmentId) {
         return equipmentRepository.findByEquipmentId(equipmentId)
             .orElseThrow(() -> new IllegalStateException("Equipment with id "
@@ -70,11 +73,18 @@ public class EquipmentService {
         equipmentRepository.save(equipment);
     }
 
-
-    public Long getAvailableEquipmentIdsByName(String equipmentName) {
-        return equipmentRepository.findAvailableEquipment(equipmentName)
-            .orElseThrow(() -> new IllegalStateException("Equipment with id "
-            + equipmentName + " does not exist!"));
+    /**
+     * @param equipmentName - String
+     * @return id
+     */
+    public long getAvailableEquipmentIdsByName(String equipmentName) {
+        Optional<Long> res = equipmentRepository.findAvailableEquipment(equipmentName);
+        if (res.isPresent()) {
+            return res.get();
+        } else {
+            System.out.println("Equipment " + equipmentName + " does not exist / is unavailable!");
+            return -1L;
+        }
     }
 
 
