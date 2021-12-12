@@ -9,13 +9,23 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.repositories.ReservationRepository;
 
+/**
+ * The type Reservation config.
+ */
 @Configuration
 public class ReservationConfig {
 
+    /**
+     * Reservation command line runner command line runner.
+     *
+     * @param reservationRepository the reservation repository
+     * @return the command line runner
+     */
     @Bean
     CommandLineRunner reservationCommandLineRunner(ReservationRepository reservationRepository) {
 
         return args -> {
+
             Reservation reservation1 = new Reservation(ReservationType.EQUIPMENT, 1L, 2L,
                 LocalDateTime.of(2020, 1, 1, 16, 30));
 

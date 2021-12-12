@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,6 +35,9 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
 
+/**
+ * The type Reservation controller test.
+ */
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 public class ReservationControllerTest {
@@ -42,16 +47,25 @@ public class ReservationControllerTest {
     private final transient long groupId = 1L;
     private final transient long sportFacilityId = 1L;
     private final transient String equipmentNameValid = "hockeyStick";
+
     private final transient String equipmentNameInvalid = "blopp";
 
     private final transient String validDate = "2099-01-06T17:00:00";
+
     transient String equipmentBookingUrl =
         "/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking";
+
     transient String sportRoomBookingUrl =
+        "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking";
+
+    transient String lessonBookingUrl =
         "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking";
 
     transient DateTimeFormatter dateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    /**
+     * The Bookable date.
+     */
     transient LocalDateTime bookableDate =
         LocalDateTime.parse("2099-01-06 17:00:00", dateTimeFormatter);
 
@@ -91,10 +105,16 @@ public class ReservationControllerTest {
     public void setup() {
         Mockito.when(reservationService.restTemplate()).thenReturn(restTemplate);
 
+
         this.mockMvc =
             MockMvcBuilders.standaloneSetup(new ReservationController(reservationService)).build();
     }
 
+    /**
+     * Gets reservation id.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getReservationId() throws Exception {
         mockMvc.perform(get("/reservation/{reservationId}", reservationId))
@@ -201,6 +221,28 @@ public class ReservationControllerTest {
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Reservation successful!");
         verify(reservationService).makeSportFacilityReservation(reservation);
+
+    }
+
+    /**
+     * Test lesson reservation lesson id does not exist.
+     *
+     * @throws Exception the exception
+     */
+    @Disabled
+    public void testLessonReservationLessonIdDoesNotExist() throws Exception {
+
+        Mockito.when(restTemplate.getForObject(
+            ReservationController.sportFacilityUrl + "/lesson/" + -1 + "/getStartingTime",
+            String.class)).thenReturn(null);
+
+        MvcResult result =
+            mockMvc.perform(post(lessonBookingUrl, userId, -1)).andExpect(status().isBadRequest())
+                .andReturn();
+
+        assertThat(result.getResponse().getContentAsString()).isEqualTo("Lesson doesn't exist");
+        verify(reservationService, times(0)).makeSportFacilityReservation(reservation);
+
     }
 
 }

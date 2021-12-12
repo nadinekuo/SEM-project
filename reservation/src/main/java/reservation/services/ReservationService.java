@@ -17,11 +17,19 @@ import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
 import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import reservation.repositories.ReservationRepository;
 
+/**
+ * The type Reservation service.
+ */
 @Service
 public class ReservationService {
 
     private final transient ReservationRepository reservationRepository;
 
+    /**
+     * Instantiates a new Reservation service.
+     *
+     * @param reservationRepository the reservation repository
+     */
     @Autowired
     public ReservationService(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
@@ -53,12 +61,25 @@ public class ReservationService {
         reservationRepository.deleteById(reservationId);
     }
 
+    /**
+     * Is available boolean.
+     *
+     * @param sportRoomId the sport room id
+     * @param time        the time
+     * @return the boolean
+     */
     // All Reservations start at full hours, so only start time has to be checked.
     public boolean sportsFacilityIsAvailable(Long sportFacilityId, LocalDateTime time) {
         return reservationRepository.findBySportFacilityReservedIdAndTime(sportFacilityId, time)
             .isEmpty();
     }
 
+    /**
+     * Make sport facility reservation reservation.
+     *
+     * @param reservation the reservation
+     * @return the reservation
+     */
     public Reservation makeSportFacilityReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
