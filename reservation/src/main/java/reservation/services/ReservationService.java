@@ -104,7 +104,7 @@ public class ReservationService {
         ReservationValidator userBalanceHandler =
             new UserReservationBalanceValidator(this, reservationController);
         ReservationValidator sportFacilityHandler =
-            new SportFacilityAvailabilityValidator(this, reservationController);
+            new SportFacilityAvailabilityValidator(this, reservationController, reservationRepository);
         userBalanceHandler.setNext(sportFacilityHandler);
 
         // Only for sports room reservations, we check the room capacity/team size

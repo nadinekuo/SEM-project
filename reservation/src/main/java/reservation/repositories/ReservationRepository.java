@@ -28,4 +28,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Transactional
     void deleteById(Long reservationId);
 
+    @Query(value = "SELECT MIN(reservation_id) " + "FROM reservations "
+        + "WHERE group_id = ?1 AND starting_time = ?2", nativeQuery = true)
+    Optional<Long> findByGroupIdandTime(Long groupId, LocalDateTime time);
 }

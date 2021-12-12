@@ -1,24 +1,32 @@
 package reservation.entities.chainofresponsibility;
 
+import com.netflix.discovery.converters.Auto;
 import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
+import reservation.repositories.ReservationRepository;
 import reservation.services.ReservationService;
 
 public class SportFacilityAvailabilityValidator extends BaseValidator {
 
     private final ReservationService reservationService;
     private final ReservationController reservationController;
+    private final ReservationRepository reservationRepository;
 
     public SportFacilityAvailabilityValidator(ReservationService reservationService,
-                                              ReservationController reservationController) {
+                                              ReservationController reservationController,
+                                              ReservationRepository reservationRepository) {
         this.reservationService = reservationService;
         this.reservationController = reservationController;
+        this.reservationRepository = reservationRepository;
     }
 
     @Override
     public boolean handle(Reservation reservation) throws InvalidReservationException {
+
+        boolean isGroupReservation = reservation.getGroupId() != -1;
 
         if (reservation.getStartingTime().isBefore(LocalDateTime.now())) {
             throw new InvalidReservationException("Invalid starting time of reservation!");
@@ -39,6 +47,12 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
             // If true, it may not necessarily exist.
             boolean sportsRoomAvailable = reservationService
                 .sportsFacilityIsAvailable(sportsRoomId, reservation.getStartingTime());
+            if (isGroupReservation) {
+                if (reservationRepository.findByGroupIdandTime(reservation.getGroupId(),
+                    reservation.getStartingTime()).isPresent()) {
+                    sportsRoomAvailable = true;
+                }
+            }
             if (!sportsRoomAvailable) {
                 throw new InvalidReservationException(
                     "Sports room is already booked for this time " + "slot: " + reservation
