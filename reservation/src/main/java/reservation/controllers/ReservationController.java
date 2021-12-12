@@ -17,12 +17,24 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
 
+/**
+ * The type Reservation controller.
+ */
 @RestController
 @RequestMapping("reservation")
 public class ReservationController {
 
+    /**
+     * The constant sportFacilityUrl.
+     */
     public static final String sportFacilityUrl = "http://eureka-sport-facilities";
+    /**
+     * The constant userUrl.
+     */
     public static final String userUrl = "http://eureka-user";
+    /**
+     * The constant gson.
+     */
     protected static final Gson gson = new Gson();
     private final transient ReservationService reservationService;
 
@@ -108,8 +120,8 @@ public class ReservationController {
     @PostMapping("/{userId}/{equipmentName}/{date}/makeEquipmentBooking")
     @ResponseBody
     public ResponseEntity<String> makeEquipmentReservation(@PathVariable Long userId,
-                                                           @PathVariable String date,
-                                                           @PathVariable String equipmentName) {
+                                                           @PathVariable String equipmentName,
+                                                           @PathVariable String date) {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
@@ -208,7 +220,6 @@ public class ReservationController {
      * @return the sport room maximum capacity
      */
     public int getSportRoomMinimumCapacity(@PathVariable Long sportRoomId) {
-
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMinimumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice

@@ -22,6 +22,9 @@ import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.repositories.SportRoomRepository;
 
+/**
+ * The type Sport room service test.
+ */
 @ExtendWith(MockitoExtension.class)
 public class SportRoomServiceTest {
 
@@ -45,13 +48,16 @@ public class SportRoomServiceTest {
     private transient SportRoom hockeyField;
 
     /**
-     * runs before each test.
+     * Sets .
      */
     @BeforeEach
     void setup() {
         sportRoomService = new SportRoomService(sportRoomRepository);
     }
 
+    /**
+     * Instantiates a new Sport room service test.
+     */
     public SportRoomServiceTest() {
         soccer = new Sport("soccer", true, 6, 11);
         hockey = new Sport("hockey", true, 7, 14);
@@ -66,12 +72,17 @@ public class SportRoomServiceTest {
         hockeyField = new SportRoom(42L, "hockeyfieldA", List.of(hockey), 10, 200);
     }
 
-
+    /**
+     * Test constructor.
+     */
     @Test
     public void testConstructor() {
         assertNotNull(sportRoomService);
     }
 
+    /**
+     * Gets sports room.
+     */
     @Test
     public void getSportsRoom() {
 
@@ -86,6 +97,9 @@ public class SportRoomServiceTest {
         verify(sportRoomRepository, times(1)).findBySportRoomId(34L);
     }
 
+    /**
+     * Gets non existing sports room.
+     */
     @Test
     public void getNonExistingSportsRoom() {
 
@@ -96,7 +110,9 @@ public class SportRoomServiceTest {
         });
     }
 
-
+    /**
+     * Sports room exists.
+     */
     @Test
     public void sportsRoomExists() {
 
@@ -105,7 +121,9 @@ public class SportRoomServiceTest {
         assertThat(sportRoomService.sportRoomExists(84L)).isTrue();
     }
 
-
+    /**
+     * Sports room does not exist.
+     */
     @Test
     public void sportsRoomDoesNotExist() {
         when(sportRoomRepository.findBySportRoomId(84L)).thenReturn(Optional.empty());
@@ -113,6 +131,9 @@ public class SportRoomServiceTest {
         assertThat(sportRoomService.sportRoomExists(84L)).isFalse();
     }
 
+    /**
+     * Rest template test.
+     */
     @Test
     public void restTemplateTest() {
         RestTemplate restTemplate = sportRoomService.restTemplate();

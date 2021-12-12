@@ -150,13 +150,6 @@ public class Reservation {
         return sportFacilityReservedId;
     }
 
-    /*    private ReservationSorting reservationSorting;
-
-    public Reservation(ReservationSorting reservationSorting) {
-        this.reservationSorting = reservationSorting;
-    }*/
-
-    //public void executeStrategy(ArrayList<Reservation> reservations);
 
     public void setSportFacilityReservedId(Long sportFacilityReservedId) {
         this.sportFacilityReservedId = sportFacilityReservedId;
