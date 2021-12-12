@@ -17,14 +17,13 @@ public class Group {
     private long groupId;
 
     private String groupName;
+    private int groupSize;
 
     @ManyToMany(mappedBy = "groupsForTeamSports", fetch = FetchType.EAGER)
     @JsonManagedReference
     @JsonIgnoreProperties("groupForTeamSports")
     private List<Customer> groupMembers;
 
-
-    private int groupSize;
 
     /**
      * Empty constructor needed for Spring JPA.
@@ -93,6 +92,7 @@ public class Group {
     public void addUserToGroup(Customer memberToAdd) {
         if (!groupMembers.contains(memberToAdd)) {
             this.groupMembers.add(memberToAdd);
+            this.groupSize++;
         }
     }
 

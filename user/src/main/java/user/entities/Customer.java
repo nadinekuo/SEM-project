@@ -78,6 +78,7 @@ public class Customer extends User {
     public void addGroupToUsersGroupList(Group group) {
         if(!groupsForTeamSports.contains(group)){
             this.groupsForTeamSports.add(group);
+            group.setGroupSize(group.getGroupSize() + 1);
         }
     }
 

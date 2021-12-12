@@ -6,7 +6,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 import user.entities.Customer;
 import user.entities.Group;
@@ -22,38 +21,29 @@ public class GroupController {
    
 
     @Autowired
-    private final GroupService groupService;
-
-    private String reservationURL = "http://eureka-reservation";
+    private final transient GroupService groupService;
 
     @Autowired
     private final transient RestTemplate restTemplate;
-    //private final transient GroupService groupService;
-//    @Autowired
-//    private transient final RestTemplate restTemplate;
-//
-//    public GroupController(GroupService groupService) {
-//        this.groupService = groupService;
-//        this.restTemplate = groupService.restTemplate();
-//    }
-//
-//
-//    @GetMapping("/{groupId}/getGroupSize")
-//    @ResponseBody
-//    public ResponseEntity<String> getGroupSize(@PathVariable Long groupId) {
-//        try {
-//            Integer groupSize = groupService.getGroupSizeById(groupId);
-//            return new ResponseEntity<String>(groupSize.toString(), HttpStatus.OK);
-//        } catch (IllegalStateException e) {
-//            e.printStackTrace();
-//            System.out.println("Group with id " + groupId + " does not exist!!");
-//            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-//        }
-//    }
+
+    private String reservationURL = "http://eureka-reservation";
 
     public GroupController(GroupService groupService, RestTemplate restTemplate) {
         this.groupService = groupService;
         this.restTemplate = restTemplate;
+    }
+
+    @GetMapping("/{groupId}/getGroupSize")
+    @ResponseBody
+    public ResponseEntity<String> getGroupSize(@PathVariable Long groupId) {
+        try {
+            Integer groupSize = groupService.getGroupSizeById(groupId);
+            return new ResponseEntity<String>(groupSize.toString(), HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            System.out.println("Group with id " + groupId + " does not exist!!");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
@@ -82,34 +72,33 @@ public class GroupController {
 
     // return the list of customers in the group
 
-
     @PostMapping("/reservation/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking")
     public ResponseEntity<String> makeGroupReservation(@PathVariable long groupId,
                                      @PathVariable long sportRoomId,
                                      @PathVariable String date){
 
+        String methodSpecificUrl = "/reservation/";
+
         List<Customer> customers = new ArrayList<>();
         customers = groupService.getUsersInAGroup(groupId);
-        ResponseEntity<String> result = null;
-        String methodSpecificUrl = "/reservation/";
+
         for(Customer customer : customers){
 
+            //String url = "http://localhost:8086/reservation/" +
             String url = reservationURL + methodSpecificUrl +
                     customer.getId() + "/" +
                     groupId + "/" +
                     sportRoomId + "/" +
-                    date + "/" + "/makeSportRoomBooking";
+                    date + "/" + "makeSportRoomBooking";
 
-            System.out.println(customer.getUsername());
-            HttpEntity<String> request = new HttpEntity<>("bruh");
+            System.out.println("customer Id : " + customer.getId());
+            System.out.println(url);
+
             //call the makeSportRoomReservation API
-//            result = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
-//            result = restTemplate.exchange(reservationURL + methodSpecificUrl + ("/{userId"
-//                + "}/{groupId}/{sportRoomId+}/{date}/makeSportRoomBooking"), HttpMethod.POST,
-//                request, String.class, customer.getId(), groupId, sportRoomId, date);
-            result = restTemplate.postForEntity(url, request, String.class);
+            restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(customer), String.class);
+
         }
-        return result;
+        return new ResponseEntity<>("Group Reservation Successful", HttpStatus.OK);
     }
 
 
