@@ -1,8 +1,6 @@
 package reservation.entities.chainofresponsibility;
 
-import com.netflix.discovery.converters.Auto;
 import java.time.LocalDateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
@@ -26,8 +24,6 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
     @Override
     public boolean handle(Reservation reservation) throws InvalidReservationException {
 
-
-
         if (reservation.getStartingTime().isBefore(LocalDateTime.now())) {
             throw new InvalidReservationException("Invalid starting time of reservation!");
         }
@@ -48,14 +44,12 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
 
             boolean isGroupReservation = reservation.getGroupId() != -1;
 
-
             boolean sportsRoomAvailable;
 
-            if (isGroupReservation
-                && reservationRepository
-                    .findByGroupIdandTime(reservation.getGroupId(), reservation.getStartingTime())
-                    .isPresent()) {
-                        sportsRoomAvailable = true;
+            if (isGroupReservation && reservationRepository
+                .findByGroupIdandTime(reservation.getGroupId(), reservation.getStartingTime())
+                .isPresent()) {
+                sportsRoomAvailable = true;
             } else {
                 sportsRoomAvailable = reservationService
                     .sportsFacilityIsAvailable(sportsRoomId, reservation.getStartingTime());
