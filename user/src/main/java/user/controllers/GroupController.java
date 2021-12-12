@@ -79,7 +79,7 @@ public class GroupController {
 
         String methodSpecificUrl = "/reservation/";
 
-        List<Customer> customers = new ArrayList<>();
+        List<Customer> customers;
         customers = groupService.getUsersInAGroup(groupId);
 
         for(Customer customer : customers){

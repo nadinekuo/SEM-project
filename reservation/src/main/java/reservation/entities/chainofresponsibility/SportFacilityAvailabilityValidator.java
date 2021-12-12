@@ -26,7 +26,7 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
     @Override
     public boolean handle(Reservation reservation) throws InvalidReservationException {
 
-        boolean isGroupReservation = reservation.getGroupId() != -1;
+
 
         if (reservation.getStartingTime().isBefore(LocalDateTime.now())) {
             throw new InvalidReservationException("Invalid starting time of reservation!");
@@ -45,13 +45,20 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
 
             // Check if sport room is not reserved already for this time slot (false)
             // If true, it may not necessarily exist.
-            boolean sportsRoomAvailable = reservationService
-                .sportsFacilityIsAvailable(sportsRoomId, reservation.getStartingTime());
-            if (isGroupReservation) {
-                if (reservationRepository.findByGroupIdandTime(reservation.getGroupId(),
-                    reservation.getStartingTime()).isPresent()) {
-                    sportsRoomAvailable = true;
-                }
+
+            boolean isGroupReservation = reservation.getGroupId() != -1;
+
+
+            boolean sportsRoomAvailable;
+
+            if (isGroupReservation
+                && reservationRepository
+                    .findByGroupIdandTime(reservation.getGroupId(), reservation.getStartingTime())
+                    .isPresent()) {
+                        sportsRoomAvailable = true;
+            } else {
+                sportsRoomAvailable = reservationService
+                    .sportsFacilityIsAvailable(sportsRoomId, reservation.getStartingTime());
             }
             if (!sportsRoomAvailable) {
                 throw new InvalidReservationException(
