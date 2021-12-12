@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import securityPackage.users.AppUser;
 
 @RestController
 @RequestMapping("authentication")
@@ -25,11 +26,20 @@ public class AuthenticationController {
         this.restTemplate = restTemplate;
     }
 
-    public static User getUserInfo(@PathVariable String userName){
-        String methodSpecificUrl = "/user/" + userName + "/getInfo";
+    public static AppUser getCustomerInfo(@PathVariable String userName){
+        String methodSpecificUrl = "/user/" + userName + "/getCustomerInfo";
 
-        User user =
-                restTemplate.getForObject(userUrl + methodSpecificUrl, User.class);
+        AppUser user =
+                restTemplate.getForObject(userUrl + methodSpecificUrl, AppUser.class);
+
+        return user;
+    }
+
+    public static AppUser getAdminInfo(@PathVariable String userName){
+        String methodSpecificUrl = "/user/" + userName + "/getAdminInfo";
+
+        AppUser user =
+                restTemplate.getForObject(userUrl + methodSpecificUrl, AppUser.class);
 
         return user;
     }

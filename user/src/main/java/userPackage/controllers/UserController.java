@@ -39,19 +39,18 @@ public class UserController {
         return customer.isPremiumUser();
     }
 
-    @GetMapping("/{userName}/getInfo")
+    @GetMapping("/{userName}/getCustomerInfo")
     @ResponseBody
-    public User getUserInfo(@PathVariable String userName) {
-        Customer customer = (Customer) userService.getCustomerByUsername(userName);
-        Admin admin = (Admin) userService.getAdminByUsername(userName);
+    public User getCustomerInfo(@PathVariable String userName) {
+        Customer customer = userService.getCustomerByUsername(userName);
+        return customer;
+    }
 
-        if (customer == null && admin != null) {
-            return admin;
-        }
-        if (admin == null && customer != null) {
-            return customer;
-        }
-        return null;
+    @GetMapping("/{userName}/getAdminInfo")
+    @ResponseBody
+    public User getAdminInfo(@PathVariable String userName) {
+        Admin admin = userService.getAdminByUsername(userName);
+        return admin;
     }
 
 }

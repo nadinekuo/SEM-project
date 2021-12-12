@@ -35,7 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/eureka-sport-facilities/**" + "/admin/**").hasRole("ADMIN")
             .antMatchers("/eureka-user/**" + "/admin/**").hasRole("ADMIN")
             // Any other request must be authenticated
-            .anyRequest().authenticated();
+//            .anyRequest().authenticated()
+        ;
     }
 
     @Bean
