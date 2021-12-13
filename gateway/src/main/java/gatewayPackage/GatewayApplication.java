@@ -1,7 +1,7 @@
 package gatewayPackage;
 
 import com.netflix.discovery.EurekaClient;
-import gatewayPackage.client.GatewayControllerEureka;
+import gateway.client.GatewayControllerEureka;
 import gatewayPackage.filters.ErrorFilter;
 import gatewayPackage.filters.Postfilter;
 import gatewayPackage.filters.PreFilter;

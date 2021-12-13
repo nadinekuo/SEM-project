@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import userPackage.entities.Admin;
-import userPackage.entities.Customer;
-import userPackage.entities.User;
+import user.entities.Admin;
+import user.entities.Customer;
+import user.entities.User;
 import userPackage.services.UserService;
 
 @RestController

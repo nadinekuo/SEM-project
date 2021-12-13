@@ -6,10 +6,10 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import userPackage.entities.Admin;
-import userPackage.entities.Customer;
-import userPackage.entities.User;
-import userPackage.repositories.UserRepository;
+import user.entities.Admin;
+import user.entities.Customer;
+import user.entities.User;
+import user.repositories.UserRepository;
 
 @Service
 public class UserService {
