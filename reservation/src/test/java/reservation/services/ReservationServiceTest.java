@@ -43,12 +43,15 @@ public class ReservationServiceTest {
      * Instantiates a new Reservation service test.
      */
     public ReservationServiceTest() {
-        reservation1 = new Reservation(53L, ReservationType.EQUIPMENT, 1L, 42L,
+        reservation1 = new Reservation( ReservationType.EQUIPMENT, 1L, 42L,
             LocalDateTime.of(2022, 10, 05, 16, 00));
-        reservation2 = new Reservation(84L, ReservationType.SPORTS_FACILITY, 2L, 25L,
+        reservation1.setId(53L);
+        reservation2 = new Reservation( ReservationType.SPORTS_FACILITY, 2L, 25L,
             LocalDateTime.of(2022, 10, 05, 17, 45));
-        groupReservation1 = new Reservation(99L, ReservationType.SPORTS_FACILITY, 3L, 13L,
+        reservation2.setId(84L);
+        groupReservation1 = new Reservation( ReservationType.SPORTS_FACILITY, 3L, 13L,
             LocalDateTime.of(2022, 02, 3, 20, 30), 84L);
+        groupReservation1.setId(99L);
     }
 
     /**
@@ -188,8 +191,9 @@ public class ReservationServiceTest {
     void getLastPersonThatUsedEquipmentTest() {
         List<Reservation> reservations = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            Reservation r = new Reservation((long) i, ReservationType.EQUIPMENT, (long) i, 2L,
+            Reservation r = new Reservation(ReservationType.EQUIPMENT, (long) i, 2L,
                 LocalDateTime.of(2022, i + 1, 1, 0, 0), 1L);
+            r.setId((long) i);
             reservations.add(r);
         }
 

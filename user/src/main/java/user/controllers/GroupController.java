@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import user.entities.Customer;
 import user.services.GroupService;
-import user.services.UserService;
 
 @RestController
 @RequestMapping("group")
@@ -20,14 +18,17 @@ public class GroupController {
     private final transient GroupService groupService;
 
     @Autowired
-    private transient final RestTemplate restTemplate;
+    private final transient RestTemplate restTemplate;
 
     public GroupController(GroupService groupService) {
         this.groupService = groupService;
         this.restTemplate = groupService.restTemplate();
     }
 
-
+    /**
+     * @param groupId - Long
+     * @return size of group, i.e. how many members it contains
+     */
     @GetMapping("/{groupId}/getGroupSize")
     @ResponseBody
     public ResponseEntity<String> getGroupSize(@PathVariable Long groupId) {
@@ -40,6 +41,5 @@ public class GroupController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-
 
 }

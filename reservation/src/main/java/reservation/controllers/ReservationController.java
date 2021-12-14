@@ -32,10 +32,7 @@ public class ReservationController {
      * The constant userUrl.
      */
     public static final String userUrl = "http://eureka-user";
-    /**
-     * The constant gson.
-     */
-    protected static final Gson gson = new Gson();
+
     private final transient ReservationService reservationService;
 
     @Autowired
@@ -125,12 +122,9 @@ public class ReservationController {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
-        // Gets first available instance of this equipment name specified
-        String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
-
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
-        Long equipmentId = Long.valueOf(response);
+        // Finds the first available instance of equipment name selected,
+        // will be -1 if non-existent / not available
+        Long equipmentId = getFirstAvailableEquipmentId(equipmentName);
 
         Reservation reservation =
             new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
@@ -147,13 +141,25 @@ public class ReservationController {
 
     }
 
+    @GetMapping("/{equipmentId}/lastPersonThatUsedEquipment")
+    @ResponseBody
+    public Long getLastPersonThatUsedEquipment(@PathVariable Long equipmentId) {
+        return reservationService.getLastPersonThatUsedEquipment(equipmentId);
+    }
+
+
+
+
+
+    //  -------------------  The methods below communicate with other microservices.
+
     /**
      * Gets if user is premium.
      *
      * @param userId the user id
      * @return if the user is premium
      */
-    public Boolean getUserIsPremium(@PathVariable Long userId) {
+    public Boolean getUserIsPremium(Long userId) {
         String methodSpecificUrl = "/user/" + userId + "/isPremium";
         String response = restTemplate.getForObject(userUrl + methodSpecificUrl, String.class);
         Boolean isPremium = Boolean.valueOf(response);
@@ -166,7 +172,7 @@ public class ReservationController {
      * @param sportsRoomId the sports room id
      * @return if the user is premium
      */
-    public Boolean getSportsRoomExists(@PathVariable Long sportsRoomId) {
+    public Boolean getSportsRoomExists(Long sportsRoomId) {
 
         String methodSpecificUrl = "/" + sportsRoomId.toString() + "/exists";
 
@@ -183,7 +189,7 @@ public class ReservationController {
      * @param sportRoomId the sports room id
      * @return if the to be reserved sports room is a hall, meaning it holds multiple sports.
      */
-    public Boolean getIsSportHall(@PathVariable Long sportRoomId) {
+    public Boolean getIsSportHall(Long sportRoomId) {
 
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/isHall";
 
@@ -201,7 +207,7 @@ public class ReservationController {
      * @param sportRoomId the sport room id
      * @return the sport room maximum capacity
      */
-    public int getSportRoomMaximumCapacity(@PathVariable Long sportRoomId) {
+    public int getSportRoomMaximumCapacity(Long sportRoomId) {
 
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMaximumCapacity";
 
@@ -219,7 +225,7 @@ public class ReservationController {
      * @param sportRoomId the sport room id
      * @return the sport room maximum capacity
      */
-    public int getSportRoomMinimumCapacity(@PathVariable Long sportRoomId) {
+    public int getSportRoomMinimumCapacity(Long sportRoomId) {
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMinimumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
@@ -231,13 +237,30 @@ public class ReservationController {
     }
 
     /**
+     * Gets sport room maximum capacity.
+     *
+     * @param equipmentName the sport room id
+     * @return first available instance of this equipment name specified
+     */
+    public Long getFirstAvailableEquipmentId(String equipmentName) {
+
+        String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
+
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
+        Long equipmentId = Long.valueOf(response);
+        return equipmentId;
+    }
+
+
+    /**
      * Gets the related sport of the sport field.
      *
      * @param sportFieldId - id of sport field to be reserved
      * @return String - name of related Sport (id of Sport)
      *       example: soccer, hockey, ...
      */
-    public String getSportFieldSport(@PathVariable Long sportFieldId) {
+    public String getSportFieldSport(Long sportFieldId) {
 
         String methodSpecificUrl = "/" + sportFieldId.toString() + "/getSport";
 
@@ -254,7 +277,7 @@ public class ReservationController {
      * @param sportName the sport id
      * @return the max team size for this sport
      */
-    public int getSportMaxTeamSize(@PathVariable String sportName) {
+    public int getSportMaxTeamSize(String sportName) {
 
         String methodSpecificUrl = "/" + sportName + "/getMaxTeamSize";
 
@@ -272,7 +295,7 @@ public class ReservationController {
      * @param sportName the sport id
      * @return the min team size for this sport
      */
-    public int getSportMinTeamSize(@PathVariable String sportName) {
+    public int getSportMinTeamSize(String sportName) {
 
         String methodSpecificUrl = "/" + sportName + "/getMinTeamSize";
 
@@ -290,7 +313,7 @@ public class ReservationController {
      * @param groupId - Long
      * @return group size - int
      */
-    public int getGroupSize(@PathVariable Long groupId) {
+    public int getGroupSize(Long groupId) {
 
         String methodSpecificUrl = "/" + groupId.toString() + "/getGroupSize";
 
@@ -301,11 +324,6 @@ public class ReservationController {
         return groupSize;
     }
 
-    @GetMapping("/{equipmentId}/lastPersonThatUsedEquipment")
-    @ResponseBody
-    public Long getLastPersonThatUsedEquipment(@PathVariable Long equipmentId) {
-        return reservationService.getLastPersonThatUsedEquipment(equipmentId);
-    }
 
 
 }
