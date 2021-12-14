@@ -8,46 +8,44 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
 import user.services.GroupService;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 public class GroupControllerTest {
 
-    @Autowired
-    private transient MockMvc mockMvc;
+    private final transient long groupId = 15L;
     @Mock
     transient GroupService groupService;
 
-    private final transient long groupId = 15L;
-
+    @Mock
+    transient RestTemplate restTemplate;
+    @Autowired
+    private transient MockMvc mockMvc;
 
     /**
      * Sets up the tests.
      */
     @BeforeEach
     public void setup() {
-        this.mockMvc =
-            MockMvcBuilders.standaloneSetup(new GroupController(groupService))
-                .build();
+
+        Mockito.when(groupService.restTemplate()).thenReturn(restTemplate);
+        this.mockMvc = MockMvcBuilders.standaloneSetup(new GroupController(groupService)).build();
     }
 
     @Test
     public void getGroupSizeTest() throws Exception {
-        mockMvc.perform(get("/group/{groupId}/getGroupSize", groupId))
-            .andExpect(status().isOk())
+        mockMvc.perform(get("/group/{groupId}/getGroupSize", groupId)).andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print());
         verify(groupService).getGroupSizeById(groupId);
     }
-
-
-
-
 
 }

@@ -10,6 +10,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
@@ -51,16 +52,23 @@ public class ReservationControllerTest {
     private final transient String equipmentNameInvalid = "blopp";
 
     private final transient String validDate = "2099-01-06T17:00:00";
-
+    /**
+     * The Equipment booking url.
+     */
     transient String equipmentBookingUrl =
         "/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking";
-
+    /**
+     * The Sport room booking url.
+     */
     transient String sportRoomBookingUrl =
         "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking";
 
     transient String lessonBookingUrl =
         "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking";
 
+    /**
+     * The Date time formatter.
+     */
     transient DateTimeFormatter dateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     /**
@@ -72,8 +80,14 @@ public class ReservationControllerTest {
     private final transient Reservation reservation =
         new Reservation(ReservationType.EQUIPMENT, userId, sportFacilityId, bookableDate);
 
+    /**
+     * The Reservation service.
+     */
     @Mock
     transient ReservationService reservationService;
+    /**
+     * The Rest template.
+     */
     @Mock
     transient RestTemplate restTemplate;
     @Autowired
@@ -98,7 +112,7 @@ public class ReservationControllerTest {
     }
 
     /**
-     * Sets up the tests.
+     * Sets .
      */
     @BeforeEach
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -123,6 +137,11 @@ public class ReservationControllerTest {
     }
 
 
+    /**
+     * Gets user is premium.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getUserIsPremium() throws Exception {
 
@@ -134,10 +153,10 @@ public class ReservationControllerTest {
     }
 
     /**
-     * Test equipment reservation with invalid dates.
+     * Test equipment reservation invalid dates.
      *
      * @param date the date
-     * @throws Exception the mockito exception
+     * @throws Exception the exception
      */
     @ParameterizedTest
     @MethodSource("invalidDateGenerator")
@@ -151,17 +170,17 @@ public class ReservationControllerTest {
             mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date))
                 .andExpect(status().is4xxClientError()).andReturn();
 
-        assertThat(result.getResponse().getContentAsString())
-            .isEqualTo("Reservation could not be made.");
+        assertThat(result.getResponse().getContentAsString()).isEqualTo(
+            "Reservation could not be made.");
         verify(reservationService, never()).makeSportFacilityReservation(reservation);
 
     }
 
     /**
-     * Test equipment reservation with valid dates.
+     * Test equipment reservation valid dates.
      *
      * @param date the date
-     * @throws Exception that mockito throws
+     * @throws Exception the exception
      */
     @ParameterizedTest
     @MethodSource("validDateGenerator")
@@ -183,10 +202,10 @@ public class ReservationControllerTest {
     }
 
     /**
-     * Test equipment reservation with invalid dates.
+     * Test sport room reservation invalid dates.
      *
      * @param date the date
-     * @throws Exception the mockito exception
+     * @throws Exception the exception
      */
     @ParameterizedTest
     @MethodSource("invalidDateGenerator")
@@ -196,17 +215,17 @@ public class ReservationControllerTest {
             sportFacilityId, date))
             .andExpect(status().is4xxClientError()).andReturn();
 
-        assertThat(result.getResponse().getContentAsString())
-            .isEqualTo("Reservation could not be made.");
+        assertThat(result.getResponse().getContentAsString()).isEqualTo(
+            "Reservation could not be made.");
         verify(reservationService, never()).makeSportFacilityReservation(reservation);
 
     }
 
     /**
-     * Test equipment reservation with valid dates.
+     * Test sport room reservation valid dates.
      *
      * @param date the date
-     * @throws Exception that mockito throws
+     * @throws Exception the exception
      */
     @ParameterizedTest
     @MethodSource("validDateGenerator")
@@ -243,6 +262,26 @@ public class ReservationControllerTest {
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Lesson doesn't exist");
         verify(reservationService, times(0)).makeSportFacilityReservation(reservation);
 
+    }
+
+    /**
+     * Test last person that used equipment.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void testLastPersonThatUsedEquipment() throws Exception {
+        Mockito.when(reservationService.getLastPersonThatUsedEquipment(2L)).thenReturn(1L);
+
+        MvcResult result =
+            mockMvc.perform(get("/reservation/{equipmentId" + "}/lastPersonThatUsedEquipment", 2L))
+                .andExpect(status().isOk()).andReturn();
+
+        try {
+            assertThat(result.getResponse().getContentAsString()).isEqualTo("<Long>1</Long>");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
 }

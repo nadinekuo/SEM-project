@@ -1,16 +1,11 @@
 package user.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "groups")
@@ -22,12 +17,13 @@ public class Group {
     private long groupId;
 
     private String groupName;
+    private int groupSize;
 
     @ManyToMany(mappedBy = "groupsForTeamSports", fetch = FetchType.EAGER)
     @JsonManagedReference
+    @JsonIgnoreProperties("groupForTeamSports")
     private List<Customer> groupMembers;
 
-    private int groupSize;
 
     /**
      * Empty constructor needed for Spring JPA.
@@ -96,6 +92,7 @@ public class Group {
     public void addUserToGroup(Customer memberToAdd) {
         if (!groupMembers.contains(memberToAdd)) {
             this.groupMembers.add(memberToAdd);
+            this.groupSize++;
         }
     }
 
