@@ -11,9 +11,11 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 import user.config.UserDtoConfig;
 import user.entities.Admin;
@@ -71,24 +73,29 @@ class UserServiceTest {
 
     @Test
     void registerCustomer() {
-        //        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserDtoConfig data = new UserDtoConfig("erwin", "password", true);
         userService.registerCustomer(data);
-        //        ArgumentCaptor<Customer> customerArgumentCaptor =
-        //            ArgumentCaptor.forClass(Customer.class);
-        //        verify(customerRepository.save(customerArgumentCaptor.capture()));
+        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerRepository).save(customerArgumentCaptor.capture());
         verify(customerRepository, times(1)).save(customer);
-        //        Customer captured = customerArgumentCaptor.getValue();
-        //        assertEquals(captured.getUsername(), "erwin");
-        //        assertEquals(captured.getPassword(), passwordEncoder.encode(data.getPassword()));
-        //        assertEquals(captured.isPremiumUser(), true);
+        Customer captured = customerArgumentCaptor.getValue();
+        assertEquals(captured.getUsername(), "erwin");
+        assertTrue(passwordEncoder.matches(data.getPassword(), captured.getPassword()));
+        assertEquals(captured.isPremiumUser(), true);
     }
 
     @Test
     void registerAdmin() {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserDtoConfig data = new UserDtoConfig("erwin", "password", true);
         userService.registerAdmin(data);
+        ArgumentCaptor<Admin> customerArgumentCaptor = ArgumentCaptor.forClass(Admin.class);
+        verify(adminRepository).save(customerArgumentCaptor.capture());
         verify(adminRepository, times(1)).save(admin);
+        Admin captured = customerArgumentCaptor.getValue();
+        assertEquals(captured.getUsername(), "erwin");
+        assertTrue(passwordEncoder.matches(data.getPassword(), captured.getPassword()));
     }
 
     @Test

@@ -90,8 +90,6 @@ public class UserControllerTest {
         verify(userService, never()).upgradeCustomer(customer);
     }
 
-    //    This is a test for customer registration, not relevant to the users can upgrade issue, so
-    //    will fix later
     //    @Test
     //    void customerRegistrationValidTest() throws Exception {
     //        UserDtoConfig data = new UserDtoConfig("customer", "password", true);

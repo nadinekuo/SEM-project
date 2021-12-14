@@ -54,7 +54,7 @@ public class UserController {
         try {
             Customer customer = (Customer) userService.getUserById(userId);
             Boolean isPremium = customer.isPremiumUser();
-            return new ResponseEntity<String>(isPremium.toString(), HttpStatus.OK);
+            return new ResponseEntity<>(isPremium.toString(), HttpStatus.OK);
         } catch (IllegalStateException e) {
             e.printStackTrace();
             System.out.println("User with id " + userId + " does not exist!!");
@@ -91,8 +91,7 @@ public class UserController {
      */
     @PostMapping("/registerAdmin/admin")
     public ResponseEntity<String> adminRegistration(HttpServletRequest request) throws IOException {
-        UserDtoConfig data =
-            new ObjectMapper().readValue(request.getInputStream(), UserDtoConfig.class);
+        UserDtoConfig data = objectMapper.readValue(request.getInputStream(), UserDtoConfig.class);
         if (data.getUsername() == null || data.getPassword() == null || data.getUsername().isEmpty()
             || data.getPassword().isEmpty()) {
             return new ResponseEntity<>("Fill in all fields.", HttpStatus.BAD_REQUEST);
@@ -112,7 +111,7 @@ public class UserController {
                 return new ResponseEntity<>("User is already premium!", HttpStatus.BAD_REQUEST);
             }
             userService.upgradeCustomer(customer);
-            return new ResponseEntity<String>("User has been upgraded to premium.", HttpStatus.OK);
+            return new ResponseEntity<>("User has been upgraded to premium.", HttpStatus.OK);
         } catch (IllegalStateException e) {
             e.printStackTrace();
             System.out.println("User with id " + userId + " does not exist!!");
