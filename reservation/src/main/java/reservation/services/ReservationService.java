@@ -11,11 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
-import reservation.entities.chainofresponsibility.InvalidReservationException;
-import reservation.entities.chainofresponsibility.ReservationValidator;
-import reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
-import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
-import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
+import reservation.entities.chainofresponsibility.*;
 import reservation.repositories.ReservationRepository;
 
 /**
@@ -25,6 +21,7 @@ import reservation.repositories.ReservationRepository;
 public class ReservationService {
 
     private final transient ReservationRepository reservationRepository;
+
 
     /**
      * Instantiates a new Reservation service.
@@ -144,6 +141,17 @@ public class ReservationService {
         }
     }
 
+    /**
+     *
+     * @param groupId - groupId of the reservation
+     * @param time - time of the reservation
+     * @return the reservation Id corresponding to the groupId and time
+     */
+    public Long findByGroupIdAndTime(Long groupId, LocalDateTime time) {
+        return reservationRepository.findByGroupIdAndTime(groupId, time).orElse(null);
+    }
+
+
     public Long getLastPersonThatUsedEquipment(Long equipmentId) {
          List<Reservation> reservations = reservationRepository
             .findReservationsBySportFacilityReservedId(equipmentId);
@@ -151,9 +159,6 @@ public class ReservationService {
          reservations.sort(Comparator.comparing(Reservation::getStartingTime).reversed());
          return reservations.get(0).getCustomerId();
     }
-
-
-
 
 
     @Bean

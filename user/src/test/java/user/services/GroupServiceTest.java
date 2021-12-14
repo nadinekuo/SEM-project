@@ -1,14 +1,5 @@
 package user.services;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,11 +10,22 @@ import user.entities.Customer;
 import user.entities.Group;
 import user.repositories.GroupRepository;
 
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 public class GroupServiceTest {
 
     @Mock
     private transient GroupRepository groupRepository;
+
+    @Mock
+    private transient CustomerService customerService;
 
     private transient GroupService groupService;
 
@@ -57,7 +59,7 @@ public class GroupServiceTest {
      */
     @BeforeEach
     void setup() {
-        groupService = new GroupService(groupRepository);
+        groupService = new GroupService(groupRepository, customerService);
     }
 
     @Test

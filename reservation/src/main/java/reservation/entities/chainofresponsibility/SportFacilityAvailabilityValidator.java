@@ -1,10 +1,11 @@
 package reservation.entities.chainofresponsibility;
 
-import java.time.LocalDateTime;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
+
+import java.time.LocalDateTime;
 
 public class SportFacilityAvailabilityValidator extends BaseValidator {
 
@@ -37,8 +38,19 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
 
             // Check if sport room is not reserved already for this time slot (false)
             // If true, it may not necessarily exist.
-            boolean sportsRoomAvailable = reservationService
-                .sportsFacilityIsAvailable(sportsRoomId, reservation.getStartingTime());
+
+            boolean isGroupReservation = reservation.getGroupId() != -1;
+
+            boolean sportsRoomAvailable;
+
+            if (isGroupReservation && reservationService
+                .findByGroupIdAndTime(reservation.getGroupId(), reservation.getStartingTime()) != null) {
+                sportsRoomAvailable = true;
+            }
+            else {
+                sportsRoomAvailable = reservationService
+                    .sportsFacilityIsAvailable(sportsRoomId, reservation.getStartingTime());
+            }
             if (!sportsRoomAvailable) {
                 throw new InvalidReservationException(
                     "Sports room is already booked for this time " + "slot: " + reservation

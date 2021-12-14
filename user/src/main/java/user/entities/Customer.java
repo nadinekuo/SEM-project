@@ -1,13 +1,10 @@
 package user.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "customers")
@@ -23,7 +20,10 @@ public class Customer extends User {
         @JoinColumn(name = "group_id", referencedColumnName = "groupId", nullable = false,
             updatable = false)
     })
+    @JsonBackReference
+    @JsonIgnoreProperties("groupMembers")
     private List<Group> groupsForTeamSports;
+
 
     public Customer() {
 
@@ -75,10 +75,31 @@ public class Customer extends User {
         this.premiumSubscription = premiumSubscription;
     }
 
+    public void addGroupToUsersGroupList(Group group) {
+        if(!groupsForTeamSports.contains(group)){
+            this.groupsForTeamSports.add(group);
+            group.setGroupSize(group.getGroupSize() + 1);
+        }
+    }
+
+
     @Override
     public String toString() {
-        return "Customer{" + "id=" + super.getId() + ", username='" + super.getUsername() + '\''
-            + ", password" + "='" + super.getPassword();
+        String res = "Customer{" +
+                "id=" + super.getId() +
+                ", username='" + super.getUsername() + '\''
+                + ", password" + "='" + super.getPassword() + "', ";
+
+        if(!groupsForTeamSports.isEmpty()) {
+            res = res + " groups = {";
+            for(Group g : groupsForTeamSports) {
+                res = res + "'" + g.getGroupName() + "'" + ",";
+            }
+            res = res + "}";
+            return res;
+        }
+        return res + "}";
     }
+
 
 }
