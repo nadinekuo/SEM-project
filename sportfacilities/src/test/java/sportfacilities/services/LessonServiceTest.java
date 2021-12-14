@@ -3,11 +3,8 @@ package sportfacilities.services;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import net.minidev.asm.ex.NoSuchFieldException;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,10 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.web.client.RestTemplate;
-import sportfacilities.entities.Equipment;
 import sportfacilities.entities.Lesson;
-import sportfacilities.entities.Sport;
-import sportfacilities.repositories.EquipmentRepository;
 import sportfacilities.repositories.LessonRepository;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -85,8 +79,7 @@ public class LessonServiceTest {
     public void addNewLessonTest() throws NoSuchFieldException {
         Lesson lesson2 = new Lesson("NewLesson", startingTime, endingTime, 5);
         lessonService.addNewLesson("NewLesson", startingTime, endingTime, 5);
-        Mockito.when(lessonRepository.findById(1L))
-            .thenReturn(java.util.Optional.of(lesson2));
+        Mockito.when(lessonRepository.findById(1L)).thenReturn(java.util.Optional.of(lesson2));
         assertEquals("NewLesson", lessonService.getLessonById(1L).getTitle());
     }
 
