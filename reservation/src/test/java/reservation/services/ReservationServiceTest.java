@@ -43,13 +43,13 @@ public class ReservationServiceTest {
      * Instantiates a new Reservation service test.
      */
     public ReservationServiceTest() {
-        reservation1 = new Reservation( ReservationType.EQUIPMENT, 1L, 42L,
+        reservation1 = new Reservation(ReservationType.EQUIPMENT, 1L, 42L,
             LocalDateTime.of(2022, 10, 05, 16, 00));
         reservation1.setId(53L);
-        reservation2 = new Reservation( ReservationType.SPORTS_FACILITY, 2L, 25L,
+        reservation2 = new Reservation(ReservationType.SPORTS_FACILITY, 2L, 25L,
             LocalDateTime.of(2022, 10, 05, 17, 45));
         reservation2.setId(84L);
-        groupReservation1 = new Reservation( ReservationType.SPORTS_FACILITY, 3L, 13L,
+        groupReservation1 = new Reservation(ReservationType.SPORTS_FACILITY, 3L, 13L,
             LocalDateTime.of(2022, 02, 3, 20, 30), 84L);
         groupReservation1.setId(99L);
     }

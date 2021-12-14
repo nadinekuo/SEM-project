@@ -15,6 +15,8 @@ public class BasicPremiumUserStrategy implements ReservationSortingStrategy {
     @Autowired
     private final transient RestTemplate restTemplate;
 
+    private final transient String userUrl = "http://eureka-user";
+
     /**
      * Instantiates a new Basic premium user strategy.
      *
@@ -52,12 +54,10 @@ public class BasicPremiumUserStrategy implements ReservationSortingStrategy {
             Long userId1 = reservation1.getCustomerId();
             Long userId2 = reservation2.getCustomerId();
 
-            boolean b1 =
-                restTemplate.getForObject("http://localhost:8084/user/" + userId1 + "/isPremium",
-                    Boolean.class);
-            boolean b2 =
-                restTemplate.getForObject("http://localhost:8084/user/" + userId2 + "/isPremium",
-                    Boolean.class);
+            boolean b1 = restTemplate.getForObject(userUrl + "/user/" + userId1 + "/isPremium",
+                Boolean.class);
+            boolean b2 = restTemplate.getForObject(userUrl + "/user/" + userId2 + "/isPremium",
+                Boolean.class);
 
             if (b1 && !b2) {
                 return -1;
