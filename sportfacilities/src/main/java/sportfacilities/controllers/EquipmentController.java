@@ -16,6 +16,9 @@ import sportfacilities.entities.Sport;
 import sportfacilities.services.EquipmentService;
 import sportfacilities.services.SportService;
 
+/**
+ * The type Equipment controller.
+ */
 @RestController
 @RequestMapping("equipment")
 public class EquipmentController {
@@ -54,6 +57,23 @@ public class EquipmentController {
         } catch (IllegalStateException e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Gets equipment name.
+     *
+     * @param equipmentId the equipment id
+     * @return the equipment name
+     */
+    @GetMapping("/{equipmentId}/getEquipmentName")
+    @ResponseBody
+    public String getEquipmentName(@PathVariable Long equipmentId) {
+        try {
+            return equipmentService.getEquipmentName(equipmentId);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

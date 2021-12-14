@@ -25,16 +25,15 @@ public class SportRoomController {
     private final transient SportRoomService sportRoomService;
 
     /**
-     * Autowired constructor for the class.
+     * Instantiates a new Sport room controller.
      *
-     * @param sportRoomService sportRoomService
+     * @param sportRoomService the sport room service
      */
     @Autowired
     public SportRoomController(SportRoomService sportRoomService) {
         this.sportRoomService = sportRoomService;
         this.restTemplate = sportRoomService.restTemplate();
     }
-
 
     /**
      * Gets sport room.
@@ -48,12 +47,11 @@ public class SportRoomController {
         return sportRoomService.getSportRoom(sportRoomId);
     }
 
-
     /**
-     * Indicates if a sportRoom with that id exists.
+     * Sport room exists response entity.
      *
      * @param sportRoomId the sport room id
-     * @return true if it exists
+     * @return the response entity
      */
     @GetMapping("/{sportRoomId}/exists")
     @ResponseBody
@@ -68,10 +66,11 @@ public class SportRoomController {
         }
     }
 
-
     /**
-     * @param sportRoomId the sports room id
-     * @return if the to be reserved sports room is a hall, meaning it holds multiple sports.,
+     * Sport room is hall response entity.
+     *
+     * @param sportRoomId the sport room id
+     * @return the response entity
      */
     @GetMapping("/{sportRoomId}/isHall")
     @ResponseBody
@@ -85,7 +84,6 @@ public class SportRoomController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-
 
     /**
      * Gets sport room maximum capacity.
@@ -126,9 +124,10 @@ public class SportRoomController {
     }
 
     /**
-     * @param sportFieldId - id of sport field to be reserved
-     * @return String - name of related Sport (id of Sport)
-     *    example: soccer, hockey, ...
+     * Gets sport field sport.
+     *
+     * @param sportFieldId the sport field id
+     * @return the sport field sport
      */
     @GetMapping("/{sportFieldId}/getSport")
     @ResponseBody

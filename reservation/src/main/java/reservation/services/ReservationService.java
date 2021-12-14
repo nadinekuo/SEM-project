@@ -1,5 +1,8 @@
 package reservation.services;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -11,15 +14,20 @@ import reservation.entities.ReservationType;
 import reservation.entities.chainofresponsibility.*;
 import reservation.repositories.ReservationRepository;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+/**
+ * The type Reservation service.
+ */
 @Service
 public class ReservationService {
 
     private final transient ReservationRepository reservationRepository;
 
 
+    /**
+     * Instantiates a new Reservation service.
+     *
+     * @param reservationRepository the reservation repository
+     */
     @Autowired
     public ReservationService(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
@@ -51,12 +59,25 @@ public class ReservationService {
         reservationRepository.deleteById(reservationId);
     }
 
+    /**
+     * Is available boolean.
+     *
+     * @param sportRoomId the sport room id
+     * @param time        the time
+     * @return the boolean
+     */
     // All Reservations start at full hours, so only start time has to be checked.
     public boolean sportsFacilityIsAvailable(Long sportFacilityId, LocalDateTime time) {
         return reservationRepository.findBySportFacilityReservedIdAndTime(sportFacilityId, time)
             .isEmpty();
     }
 
+    /**
+     * Make sport facility reservation reservation.
+     *
+     * @param reservation the reservation
+     * @return the reservation
+     */
     public Reservation makeSportFacilityReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
@@ -129,6 +150,16 @@ public class ReservationService {
     public Long findByGroupIdAndTime(Long groupId, LocalDateTime time) {
         return reservationRepository.findByGroupIdAndTime(groupId, time).orElse(null);
     }
+
+
+    public Long getLastPersonThatUsedEquipment(Long equipmentId) {
+         List<Reservation> reservations = reservationRepository
+            .findReservationsBySportFacilityReservedId(equipmentId);
+
+         reservations.sort(Comparator.comparing(Reservation::getStartingTime).reversed());
+         return reservations.get(0).getCustomerId();
+    }
+
 
     @Bean
     @LoadBalanced

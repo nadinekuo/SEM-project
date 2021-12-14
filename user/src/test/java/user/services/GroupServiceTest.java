@@ -40,6 +40,9 @@ public class GroupServiceTest {
     private final transient Group group2;
     private transient Group group3;
 
+    /**
+     * Constructor for test.
+     */
     public GroupServiceTest() {
         arslan = new Customer("arslan123", "password1", true);
         emil = new Customer("emil123", "password2", false);
@@ -57,7 +60,7 @@ public class GroupServiceTest {
      */
     @BeforeEach
     void setup() {
-        groupService = new GroupService(groupRepository, customerService);
+        groupService = new GroupService(groupRepository);
     }
 
     @Test

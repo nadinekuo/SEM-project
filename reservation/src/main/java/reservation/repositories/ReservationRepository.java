@@ -26,6 +26,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
                                                                         LocalDateTime end,
                                                                          Long customerId);
 
+    List<Reservation> findReservationsBySportFacilityReservedId(Long sportFacilityReservedId);
+
     @Transactional
     void deleteById(Long reservationId);
 

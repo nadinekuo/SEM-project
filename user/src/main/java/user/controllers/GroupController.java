@@ -30,6 +30,10 @@ public class GroupController {
         this.restTemplate = groupService.restTemplate();
     }
 
+    /**
+     * @param groupId - Long
+     * @return size of group, i.e. how many members it contains
+     */
     @GetMapping("/{groupId}/getGroupSize")
     @ResponseBody
     public ResponseEntity<String> getGroupSize(@PathVariable Long groupId) {

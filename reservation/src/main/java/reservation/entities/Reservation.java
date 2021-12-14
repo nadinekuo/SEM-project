@@ -30,49 +30,6 @@ public class Reservation {
 
     private int timeSlotInMinutes;
 
-    /**
-     * Instantiates a new Reservation with id.
-     *
-     * @param id                      reservation id
-     * @param typeOfReservation       the type of reservation
-     * @param customerId              the customer id
-     * @param sportFacilityReservedId the sport facility reserved id
-     * @param startingTime            the starting time
-     */
-    public Reservation(Long id, ReservationType typeOfReservation, Long customerId,
-                       Long sportFacilityReservedId, LocalDateTime startingTime) {
-
-        this.reservationId = id;
-        this.typeOfReservation = typeOfReservation;
-        this.customerId = customerId;
-        this.sportFacilityReservedId = sportFacilityReservedId;
-        this.startingTime = startingTime;
-        this.timeSlotInMinutes = 60;   // Default time slot for Equipment / Sport room reservations
-        this.groupId = -1L;    // If not a group reservation
-    }
-
-    /**
-     * Instantiates a new Reservation.
-     *
-     * @param id                      reservation id
-     * @param typeOfReservation       the type of reservation
-     * @param customerId              the customer id
-     * @param sportFacilityReservedId the sport facility reserved id
-     * @param startingTime            the starting time
-     * @param groupId                 id of group that is associated with this reservation, will
-     *                                be -1L if this is not a group reservation.
-     */
-    public Reservation(Long id, ReservationType typeOfReservation, Long customerId,
-                       Long sportFacilityReservedId, LocalDateTime startingTime, Long groupId) {
-
-        this.reservationId = id;
-        this.typeOfReservation = typeOfReservation;
-        this.customerId = customerId;
-        this.sportFacilityReservedId = sportFacilityReservedId;
-        this.startingTime = startingTime;
-        this.timeSlotInMinutes = 60;
-        this.groupId = groupId;
-    }
 
     /**
      * Instantiates a new Reservation.
@@ -93,27 +50,6 @@ public class Reservation {
         this.groupId = -1L;    // If not a group reservation
     }
 
-    /**
-     * Instantiates a new Reservation.
-     *
-     * @param typeOfReservation       the type of reservation
-     * @param customerId              the customer id
-     * @param sportFacilityReservedId the sport facility reserved id
-     * @param startingTime            the starting time
-     * @param timeSlotInMinutes       for how long the equipment/sport room can be used, or the
-     *                                lesson duration
-     */
-    public Reservation(ReservationType typeOfReservation, Long customerId,
-                       Long sportFacilityReservedId, LocalDateTime startingTime,
-                       int timeSlotInMinutes) {
-
-        this.typeOfReservation = typeOfReservation;
-        this.customerId = customerId;
-        this.sportFacilityReservedId = sportFacilityReservedId;
-        this.startingTime = startingTime;
-        this.timeSlotInMinutes = timeSlotInMinutes;
-        this.groupId = -1L;
-    }
 
     /**
      * Instantiates a new Reservation.
@@ -146,17 +82,14 @@ public class Reservation {
         return reservationId;
     }
 
+    public void setId(Long id) {
+        this.reservationId = id;
+    }
+
     public Long getSportFacilityReservedId() {
         return sportFacilityReservedId;
     }
 
-    /*    private ReservationSorting reservationSorting;
-
-    public Reservation(ReservationSorting reservationSorting) {
-        this.reservationSorting = reservationSorting;
-    }*/
-
-    //public void executeStrategy(ArrayList<Reservation> reservations);
 
     public void setSportFacilityReservedId(Long sportFacilityReservedId) {
         this.sportFacilityReservedId = sportFacilityReservedId;
