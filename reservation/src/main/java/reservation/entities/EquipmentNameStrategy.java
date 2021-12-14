@@ -15,6 +15,8 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
     @Autowired
     private final transient RestTemplate restTemplate;
 
+    transient String equipmentUrl = "http://eureka-equipment";
+
     /**
      * Instantiates a new Equipment name strategy.
      *
@@ -50,11 +52,14 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
             Reservation reservation1 = (Reservation) o1;
             Reservation reservation2 = (Reservation) o2;
 
-            if (reservation1.getTypeOfReservation().equals(ReservationType.EQUIPMENT) && !reservation2.getTypeOfReservation().equals(ReservationType.EQUIPMENT)) {
+            if (reservation1.getTypeOfReservation().equals(ReservationType.EQUIPMENT)
+                && !reservation2.getTypeOfReservation().equals(ReservationType.EQUIPMENT)) {
                 return -1;
-            } else if (!reservation1.getTypeOfReservation().equals(ReservationType.EQUIPMENT) && reservation2.getTypeOfReservation().equals(ReservationType.EQUIPMENT)) {
+            } else if (!reservation1.getTypeOfReservation().equals(ReservationType.EQUIPMENT)
+                && reservation2.getTypeOfReservation().equals(ReservationType.EQUIPMENT)) {
                 return 1;
-            } else if (!reservation1.getTypeOfReservation().equals(ReservationType.EQUIPMENT) && !reservation2.getTypeOfReservation().equals(ReservationType.EQUIPMENT)) {
+            } else if (!reservation1.getTypeOfReservation().equals(ReservationType.EQUIPMENT)
+                && !reservation2.getTypeOfReservation().equals(ReservationType.EQUIPMENT)) {
                 return 0;
             } else {
 
@@ -62,9 +67,11 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
                 Long equipmentId2 = reservation2.getSportFacilityReservedId();
 
                 String equipmentName1 = restTemplate.getForObject(
-                    "http://localhost:8085/equipment/" + equipmentId1 + "/getEquipmentName", String.class);
+                    equipmentUrl + "/equipment/" + equipmentId1 + "/getEquipmentName",
+                    String.class);
                 String equipmentName2 = restTemplate.getForObject(
-                    "http://localhost:8085/equipment/" + equipmentId2 + "/getEquipmentName", String.class);
+                    equipmentUrl + "/equipment/" + equipmentId2 + "/getEquipmentName",
+                    String.class);
 
                 int compareName = equipmentName1.compareTo(equipmentName2);
                 if (compareName != 0) {
