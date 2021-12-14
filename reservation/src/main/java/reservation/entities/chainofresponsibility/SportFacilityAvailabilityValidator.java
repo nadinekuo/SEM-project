@@ -1,17 +1,25 @@
 package reservation.entities.chainofresponsibility;
 
+import java.time.LocalDateTime;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
 
-import java.time.LocalDateTime;
-
+/**
+ * The type Sport facility availability validator.
+ */
 public class SportFacilityAvailabilityValidator extends BaseValidator {
 
     private final ReservationService reservationService;
     private final ReservationController reservationController;
 
+    /**
+     * Instantiates a new Sport facility availability validator.
+     *
+     * @param reservationService    the reservation service
+     * @param reservationController the reservation controller
+     */
     public SportFacilityAvailabilityValidator(ReservationService reservationService,
                                               ReservationController reservationController) {
         this.reservationService = reservationService;
@@ -43,18 +51,18 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
 
             boolean sportsRoomAvailable;
 
-            if (isGroupReservation && reservationService
-                .findByGroupIdAndTime(reservation.getGroupId(), reservation.getStartingTime()) != null) {
+            if (isGroupReservation
+                && reservationService.findByGroupIdAndTime(reservation.getGroupId(),
+                    reservation.getStartingTime()) != null) {
                 sportsRoomAvailable = true;
-            }
-            else {
-                sportsRoomAvailable = reservationService
-                    .sportsFacilityIsAvailable(sportsRoomId, reservation.getStartingTime());
+            } else {
+                sportsRoomAvailable = reservationService.sportsFacilityIsAvailable(sportsRoomId,
+                    reservation.getStartingTime());
             }
             if (!sportsRoomAvailable) {
                 throw new InvalidReservationException(
-                    "Sports room is already booked for this time " + "slot: " + reservation
-                        .getStartingTime());
+                    "Sports room is already booked for this time " + "slot: "
+                        + reservation.getStartingTime());
             }
 
             // Call Sports Facilities service: check if sports room exists

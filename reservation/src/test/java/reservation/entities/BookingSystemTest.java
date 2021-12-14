@@ -128,6 +128,49 @@ public class BookingSystemTest {
     }
 
     @Test
+    void getNextReservationEquipmentNameCheckIfEquipmentSequentialOrder() {
+        BookingSystem equipmentNameStrategy =
+            new BookingSystem(new EquipmentNameStrategy(restTemplate));
+
+        for (int i = 0; i < 4; i++) {
+            if(i == 0 || i == 1) reservations[i].setTypeOfReservation(ReservationType.LESSON);
+            equipmentNameStrategy.addReservation(reservations[i]);
+        }
+
+        String[] titles = {"Ziou Zitsou", "Krav Maga"};
+
+        for (int i = 2; i < 4; i++) {
+            Mockito.when(restTemplate.getForObject(
+                "http://localhost:8085/equipment/" + reservations[i].getSportFacilityReservedId()
+                    + "/getEquipmentName", String.class)).thenReturn(titles[i-2]);
+        }
+
+        assertEquals(reservations[3], equipmentNameStrategy.getNextReservation());
+    }
+
+    @Test
+    void getNextReservationEquipmentNameCheckIfEquipmentNonSequentialOrder() {
+        BookingSystem equipmentNameStrategy =
+            new BookingSystem(new EquipmentNameStrategy(restTemplate));
+
+        reservations[1].setTypeOfReservation(ReservationType.LESSON);
+        for (int i = 0; i < 4; i++) {
+            equipmentNameStrategy.addReservation(reservations[i]);
+        }
+
+        String[] titles = {"Tango", "Tango", "Krav Maga", "Krav Maga"};
+
+        for (int i = 0; i < 4; i++) {
+            if(i != 1) {
+                Mockito.when(restTemplate.getForObject("http://localhost:8085/equipment/" + reservations[i].getSportFacilityReservedId()
+                    + "/getEquipmentName", String.class)).thenReturn(titles[i]);
+            }
+        }
+
+        assertEquals(reservations[2], equipmentNameStrategy.getNextReservation());
+    }
+
+    @Test
     void getNextReservationEquipmentNameEmpty() {
         BookingSystem equipmentNameStrategy =
             new BookingSystem(new EquipmentNameStrategy(restTemplate));
