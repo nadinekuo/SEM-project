@@ -301,4 +301,11 @@ public class ReservationController {
         return groupSize;
     }
 
+    @GetMapping("/{equipmentId}/lastPersonThatUsedEquipment")
+    @ResponseBody
+    public Long getLastPersonThatUsedEquipment(@PathVariable Long equipmentId) {
+        return reservationService.getLastPersonThatUsedEquipment(equipmentId);
+    }
+
+
 }
