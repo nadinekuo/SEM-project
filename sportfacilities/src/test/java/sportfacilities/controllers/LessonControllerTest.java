@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -91,6 +92,12 @@ public class LessonControllerTest {
                 startingTime, endingTime, size))
             .andExpect(status().isOk());
         verify(lessonService).addNewLesson(name, startingTime, endingTime, size);
+    }
+
+    @Test
+    public void deleteLessonTest() throws Exception {
+        mockMvc.perform(delete("/lesson/{lessonId}/admin", lessonId)).andExpect(status().isOk());
+        verify(lessonService).deleteLesson(lessonId);
     }
 
 }

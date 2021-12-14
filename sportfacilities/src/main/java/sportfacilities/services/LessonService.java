@@ -79,4 +79,13 @@ public class LessonService {
     public String getLessonStartingTime(long lessonId) {
         return lessonRepository.findById(lessonId).get().getStartingTime().toString();
     }
+
+    /**
+     * Delete lesson.
+     *
+     * @param lessonId the lesson id
+     */
+    public void deleteLesson(long lessonId) {
+        lessonRepository.deleteById(lessonId);
+    }
 }

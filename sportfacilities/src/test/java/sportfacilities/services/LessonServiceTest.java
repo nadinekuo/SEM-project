@@ -3,6 +3,7 @@ package sportfacilities.services;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
@@ -87,5 +88,12 @@ public class LessonServiceTest {
         Mockito.when(lessonRepository.findById(1L))
             .thenReturn(java.util.Optional.of(lesson2));
         assertEquals("NewLesson", lessonService.getLessonById(1L).getTitle());
+    }
+
+    @Test
+    public void deleteLessonTest() throws NoSuchFieldException {
+        lessonService.deleteLesson(lessonId);
+        //Mockito.when(lessonRepository.deleteById(lessonId))
+        assertFalse(lessonRepository.existsById(lessonId));
     }
 }
