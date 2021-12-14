@@ -29,6 +29,9 @@ import sportfacilities.entities.Equipment;
 import sportfacilities.entities.Sport;
 import sportfacilities.repositories.EquipmentRepository;
 
+/**
+ * The type Equipment service test.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class EquipmentServiceTest {
 
@@ -46,12 +49,18 @@ public class EquipmentServiceTest {
 //    @InjectMocks
     private transient EquipmentService equipmentService;
 
+    /**
+     * Sets .
+     */
     @BeforeEach
     void setup() {
         equipmentRepository = Mockito.mock(EquipmentRepository.class);
         equipmentService = new EquipmentService(equipmentRepository);
     }
 
+    /**
+     * Instantiates a new Equipment service test.
+     */
     public EquipmentServiceTest() {
 
         kickboxing = new Sport("kickbox", false, 1, -1);
@@ -60,13 +69,17 @@ public class EquipmentServiceTest {
         equipment2 = new Equipment(12L, "tennisBall", tennis, false);
     }
 
-
-
+    /**
+     * Test constructor.
+     */
     @Test
     public void testConstructor() {
         assertNotNull(equipmentService);
     }
 
+    /**
+     * Gets equipment test.
+     */
     @Test
     public void getEquipmentTest() {
 
@@ -80,7 +93,9 @@ public class EquipmentServiceTest {
         assertThat(result.getName() == "boxingGloves");
     }
 
-
+    /**
+     * Sets equipment to not in use test.
+     */
     @Test
     public void setEquipmentToNotInUseTest() {
 
@@ -94,6 +109,9 @@ public class EquipmentServiceTest {
         assertFalse(equipmentService.getEquipment(66L).isInUse());
     }
 
+    /**
+     * Sets equipment to in use test.
+     */
     @Test
     public void setEquipmentToInUseTest() {
 
@@ -107,6 +125,9 @@ public class EquipmentServiceTest {
         assertTrue(equipmentService.getEquipment(12L).isInUse());
     }
 
+    /**
+     * Gets available equipment ids by name test.
+     */
     @Test
     public void getAvailableEquipmentIdsByNameTest() {
 
@@ -117,18 +138,21 @@ public class EquipmentServiceTest {
             java.util.Optional.of(equipmentService.getAvailableEquipmentIdsByName("boxingGloves")));
     }
 
+    /**
+     * Gets non existing equipment ids by name test.
+     */
     @Test
     public void getNonExistingEquipmentIdsByNameTest() {
 
         Mockito.when(equipmentRepository.findAvailableEquipment(anyString()))
             .thenReturn(java.util.Optional.empty());
 
-        assertThrows(IllegalStateException.class, () -> {
-            equipmentService.getAvailableEquipmentIdsByName("test");
-        });
+        assertEquals(-1L, equipmentService.getAvailableEquipmentIdsByName("test"));
     }
 
-
+    /**
+     * Add equipment test.
+     */
     @Test
     public void addEquipmentTest() {
         equipmentService.addEquipment(equipment2);
@@ -142,7 +166,9 @@ public class EquipmentServiceTest {
         Assertions.assertEquals(capturedEquipment.getName(), "tennisBall");
     }
 
-
+    /**
+     * Rest template test.
+     */
     @Test
     public void restTemplateTest() {
         restTemplate = equipmentService.restTemplate();

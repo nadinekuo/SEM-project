@@ -19,7 +19,7 @@ public class UserGroupsConfig {
                                             GroupRepository groupRepository) {
 
         return args -> {
-            Customer arslan = new Customer("arslan123", "password1", true);
+            Customer arslan = new Customer("arslan123", "password1", false);
             Customer emil = new Customer("emil123", "password2", false);
             Customer emma = new Customer("emma123", "password3", true);
             Customer erwin = new Customer("erwin123", "password4", false);

@@ -1,7 +1,5 @@
 package sportfacilities.controllers;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -37,11 +34,10 @@ public class EquipmentControllerTest {
     private final transient boolean inUse = true;
     private final transient Sport box = new Sport("boxing", false, 2, 4);
     private final transient Equipment equipment1 = new Equipment(equipmentName, box, inUse);
-
-    @Autowired
-    private transient MockMvc mockMvc;
     @Mock
     transient SportService sportService;
+    @Autowired
+    private transient MockMvc mockMvc;
     @Mock
     private transient EquipmentService equipmentService;
 
@@ -57,8 +53,7 @@ public class EquipmentControllerTest {
 
     @Test
     public void getEquipmentTest() throws Exception {
-        mockMvc.perform(get("/equipment/{equipmentId}", equipmentId))
-            .andExpect(status().isOk())
+        mockMvc.perform(get("/equipment/{equipmentId}", equipmentId)).andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print());
         verify(equipmentService).getEquipment(equipmentId);
     }
@@ -67,11 +62,8 @@ public class EquipmentControllerTest {
     public void getEquipmentWithNotValidIdTest() throws Exception {
         when(equipmentService.getEquipment(10L)).thenThrow(new IllegalStateException());
 
-        MvcResult result =
-            mockMvc.perform(get("/equipment/10"))
-                .andExpect(status().isBadRequest())
-                .andDo(MockMvcResultHandlers.print())
-                .andReturn();
+        MvcResult result = mockMvc.perform(get("/equipment/10")).andExpect(status().isBadRequest())
+            .andDo(MockMvcResultHandlers.print()).andReturn();
 
         verify(equipmentService).getEquipment(10L);
 
@@ -82,35 +74,23 @@ public class EquipmentControllerTest {
     @Test
     public void getAvailableEquipmentTest() throws Exception {
         mockMvc.perform(get("/equipment/{name}/getAvailableEquipment", equipmentName))
-            .andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
         verify(equipmentService).getAvailableEquipmentIdsByName(equipmentName);
-    }
-
-    @Test
-    public void getAvailableEquipmentBadRequestTest() throws Exception {
-        when(equipmentService.getAvailableEquipmentIdsByName(equipmentName)).thenThrow(
-            new IllegalStateException());
-
-        MvcResult result = mockMvc.perform(get("/equipment/{name}/getAvailableEquipment",
-            equipmentName))
-            .andExpect(status().isBadRequest()).andReturn();
     }
 
     @Test
     public void addNewEquipmentTest() throws Exception {
         Equipment equipment1 = new Equipment(equipmentName, box, inUse);
-        mockMvc.perform(put("/equipment/{equipmentName}/{relatedSport}/addNewEquipment/admin", equipmentName,
-            box)).andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(
+            put("/equipment/{equipmentName}/{relatedSport}/addNewEquipment/admin", equipmentName,
+                box)).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
         verify(equipmentService).addEquipment(equipment1);
     }
 
     @Test
     public void equipmentBroughtBackTest() throws Exception {
         mockMvc.perform(post("/equipment/{equipmentId}/broughtBack/admin", equipmentId))
-            .andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
 
         verify(equipmentService).setEquipmentToNotInUse(equipmentId);
         verify(equipmentService, never()).setEquipmentToInUse(equipmentId);
@@ -119,8 +99,7 @@ public class EquipmentControllerTest {
     @Test
     public void equipmentReservedTest() throws Exception {
         mockMvc.perform(post("/equipment/{equipmentId}/reserved", equipmentId))
-            .andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
 
         verify(equipmentService).setEquipmentToInUse(equipmentId);
         verify(equipmentService, never()).setEquipmentToNotInUse(equipmentId);

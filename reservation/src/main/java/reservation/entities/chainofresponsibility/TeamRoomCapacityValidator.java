@@ -50,7 +50,8 @@ public class TeamRoomCapacityValidator extends BaseValidator {
 
             if (groupSize < minTeamSize || groupSize > maxTeamSize) {
                 throw new InvalidReservationException("Group size for a " + sportName + " team "
-                    + "should be between " + minTeamSize + " and " + maxTeamSize + "!");
+                    + "should be between " + minTeamSize + " and " + maxTeamSize + "!"
+                + "\n\n Your group (ID " + reservation.getGroupId() + " has size: " + groupSize);
             }
 
         }
@@ -66,7 +67,8 @@ public class TeamRoomCapacityValidator extends BaseValidator {
 
         if (groupSize < roomMinCapacity || groupSize > roomMaxCapacity) {
             throw new InvalidReservationException("This sports room has a minimal capacity of "
-                + roomMinCapacity + " and a maximal capacity of " + roomMaxCapacity + "!");
+                + roomMinCapacity + " and a maximal capacity of " + roomMaxCapacity + "!"
+                + "\n\n Your group size: " + groupSize);
         }
 
         return super.checkNext(reservation);

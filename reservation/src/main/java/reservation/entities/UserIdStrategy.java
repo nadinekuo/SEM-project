@@ -1,18 +1,25 @@
-package reservation.entities.strategy;
+package reservation.entities;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import reservation.entities.Reservation;
+import reservation.entities.strategy.ReservationSortingStrategy;
 
-public class ChronologicalStrategy implements ReservationSortingStrategy {
+/**
+ * The type User id strategy.
+ */
+public class UserIdStrategy implements ReservationSortingStrategy {
 
     /**
-     * Get the next reservation.
-     *
-     * @param reservations a list of reservations
+     * Instantiates a new User id strategy.
+     */
+    public UserIdStrategy() {
+    }
 
-     * @return the next reservation
+    /**
+     * Returns the next reservation in order.
+     *
+     * @param reservations list of reservations to be sorted
      */
     public Reservation getNextReservation(List<Reservation> reservations) {
         if (reservations == null || reservations.isEmpty()) {
@@ -34,14 +41,10 @@ public class ChronologicalStrategy implements ReservationSortingStrategy {
         public int compare(Object o1, Object o2) {
             Reservation reservation1 = (Reservation) o1;
             Reservation reservation2 = (Reservation) o2;
-            if (reservation1.getStartingTime().isBefore(reservation2.getStartingTime())) {
-                return +1;
-            }
-            if (reservation1.getStartingTime().isAfter(reservation2.getStartingTime())) {
-                return -1;
-            }
-            return 0;
+            Long userId1 = reservation1.getCustomerId();
+            Long userId2 = reservation2.getCustomerId();
+
+            return userId1.compareTo(userId2);
         }
     }
-
 }

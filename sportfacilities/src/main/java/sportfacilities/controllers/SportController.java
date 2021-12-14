@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import sportfacilities.services.SportService;
 
+/**
+ * The type Sport controller.
+ */
 @RestController
 @RequestMapping("sport")
 public class SportController {
@@ -17,20 +20,20 @@ public class SportController {
     private final transient SportService sportService;
 
     /**
-     * Autowired constructor for the class.
+     * Instantiates a new Sport controller.
      *
-     * @param sportService sportService
+     * @param sportService the sport service
      */
     @Autowired
     public SportController(SportService sportService) {
         this.sportService = sportService;
     }
 
-
-
     /**
-     * @param sportName the sport id
-     * @return the max team size for this sport
+     * Gets sport max team size.
+     *
+     * @param sportName the sport name
+     * @return the sport max team size
      */
     @GetMapping("/{sportName}/getMaxTeamSize")
     @ResponseBody
@@ -46,8 +49,10 @@ public class SportController {
     }
 
     /**
-     * @param sportName the sport id
-     * @return the min team size for this sport
+     * Gets sport min team size.
+     *
+     * @param sportName the sport name
+     * @return the sport min team size
      */
     @GetMapping("/{sportName}/getMinTeamSize")
     @ResponseBody
@@ -61,6 +66,5 @@ public class SportController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-
 
 }
