@@ -32,6 +32,8 @@ public class BookingSystemTest {
     ReservationSortingStrategy sortingStrategy = new ChronologicalStrategy();
     transient List<Reservation> userIdStrategy = new ArrayList<>();
     transient BookingSystem bookingSystem = new BookingSystem(new ChronologicalStrategy());
+    transient String equipmentUrl = "http://eureka-equipment";
+    transient String userUrl = "http://eureka-user";
 
     transient Reservation[] reservations;
 
@@ -92,7 +94,7 @@ public class BookingSystemTest {
             boolean premium = i == 1 || i == 2;
 
             Mockito.when(restTemplate.getForObject(
-                "http://localhost:8084/user/" + reservations[i].getCustomerId() + "/isPremium",
+                userUrl+ "/user/" + reservations[i].getCustomerId() + "/isPremium",
                 Boolean.class)).thenReturn(premium);
         }
 
@@ -120,7 +122,7 @@ public class BookingSystemTest {
 
         for (int i = 0; i < 4; i++) {
             Mockito.when(restTemplate.getForObject(
-                "http://localhost:8085/equipment/" + reservations[i].getSportFacilityReservedId()
+                equipmentUrl + "/equipment/" + reservations[i].getSportFacilityReservedId()
                     + "/getEquipmentName", String.class)).thenReturn(titles[i]);
         }
 
