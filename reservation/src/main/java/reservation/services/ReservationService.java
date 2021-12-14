@@ -1,7 +1,5 @@
 package reservation.services;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -10,17 +8,17 @@ import org.springframework.web.client.RestTemplate;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
-import reservation.entities.chainofresponsibility.InvalidReservationException;
-import reservation.entities.chainofresponsibility.ReservationValidator;
-import reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
-import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
-import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
+import reservation.entities.chainofresponsibility.*;
 import reservation.repositories.ReservationRepository;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ReservationService {
 
     private final transient ReservationRepository reservationRepository;
+
 
     @Autowired
     public ReservationService(ReservationRepository reservationRepository) {
@@ -104,7 +102,7 @@ public class ReservationService {
         ReservationValidator userBalanceHandler =
             new UserReservationBalanceValidator(this, reservationController);
         ReservationValidator sportFacilityHandler =
-            new SportFacilityAvailabilityValidator(this, reservationController, reservationRepository);
+            new SportFacilityAvailabilityValidator(this, reservationController);
         userBalanceHandler.setNext(sportFacilityHandler);
 
         // Only for sports room reservations, we check the room capacity/team size
@@ -120,6 +118,16 @@ public class ReservationService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     *
+     * @param groupId - groupId of the reservation
+     * @param time - time of the reservation
+     * @return the reservation Id corresponding to the groupId and time
+     */
+    public Long findByGroupIdAndTime(Long groupId, LocalDateTime time) {
+        return reservationRepository.findByGroupIdAndTime(groupId, time).orElse(null);
     }
 
     @Bean

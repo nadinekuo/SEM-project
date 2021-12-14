@@ -1,24 +1,21 @@
 package reservation.entities.chainofresponsibility;
 
-import java.time.LocalDateTime;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
-import reservation.repositories.ReservationRepository;
 import reservation.services.ReservationService;
+
+import java.time.LocalDateTime;
 
 public class SportFacilityAvailabilityValidator extends BaseValidator {
 
     private final ReservationService reservationService;
     private final ReservationController reservationController;
-    private final ReservationRepository reservationRepository;
 
     public SportFacilityAvailabilityValidator(ReservationService reservationService,
-                                              ReservationController reservationController,
-                                              ReservationRepository reservationRepository) {
+                                              ReservationController reservationController) {
         this.reservationService = reservationService;
         this.reservationController = reservationController;
-        this.reservationRepository = reservationRepository;
     }
 
     @Override
@@ -46,11 +43,11 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
 
             boolean sportsRoomAvailable;
 
-            if (isGroupReservation && reservationRepository
-                .findByGroupIdandTime(reservation.getGroupId(), reservation.getStartingTime())
-                .isPresent()) {
+            if (isGroupReservation && reservationService
+                .findByGroupIdAndTime(reservation.getGroupId(), reservation.getStartingTime()) != null) {
                 sportsRoomAvailable = true;
-            } else {
+            }
+            else {
                 sportsRoomAvailable = reservationService
                     .sportsFacilityIsAvailable(sportsRoomId, reservation.getStartingTime());
             }
