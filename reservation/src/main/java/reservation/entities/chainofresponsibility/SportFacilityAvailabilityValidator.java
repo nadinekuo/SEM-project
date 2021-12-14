@@ -6,11 +6,20 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
 
+/**
+ * The type Sport facility availability validator.
+ */
 public class SportFacilityAvailabilityValidator extends BaseValidator {
 
     private final ReservationService reservationService;
     private final ReservationController reservationController;
 
+    /**
+     * Instantiates a new Sport facility availability validator.
+     *
+     * @param reservationService    the reservation service
+     * @param reservationController the reservation controller
+     */
     public SportFacilityAvailabilityValidator(ReservationService reservationService,
                                               ReservationController reservationController) {
         this.reservationService = reservationService;
@@ -37,12 +46,23 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
 
             // Check if sport room is not reserved already for this time slot (false)
             // If true, it may not necessarily exist.
-            boolean sportsRoomAvailable = reservationService
-                .sportsFacilityIsAvailable(sportsRoomId, reservation.getStartingTime());
+
+            boolean isGroupReservation = reservation.getGroupId() != -1;
+
+            boolean sportsRoomAvailable;
+
+            if (isGroupReservation
+                && reservationService.findByGroupIdAndTime(reservation.getGroupId(),
+                    reservation.getStartingTime()) != null) {
+                sportsRoomAvailable = true;
+            } else {
+                sportsRoomAvailable = reservationService.sportsFacilityIsAvailable(sportsRoomId,
+                    reservation.getStartingTime());
+            }
             if (!sportsRoomAvailable) {
                 throw new InvalidReservationException(
-                    "Sports room is already booked for this time " + "slot: " + reservation
-                        .getStartingTime());
+                    "Sports room is already booked for this time " + "slot: "
+                        + reservation.getStartingTime());
             }
 
             // Call Sports Facilities service: check if sports room exists
