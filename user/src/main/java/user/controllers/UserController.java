@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import user.config.UserDtoConfig;
+import user.entities.Admin;
 import user.entities.Customer;
+import user.entities.User;
 import user.services.UserService;
 
 @RestController
@@ -53,6 +55,20 @@ public class UserController {
             System.out.println("User with id " + userId + " does not exist!!");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/{userName}/getCustomerInfo")
+    @ResponseBody
+    public User getCustomerInfo(@PathVariable String userName) {
+        Customer customer = userService.getCustomerByUsername(userName);
+        return customer;
+    }
+
+    @GetMapping("/{userName}/getAdminInfo")
+    @ResponseBody
+    public User getAdminInfo(@PathVariable String userName) {
+        Admin admin = userService.getAdminByUsername(userName);
+        return admin;
     }
 
     /**

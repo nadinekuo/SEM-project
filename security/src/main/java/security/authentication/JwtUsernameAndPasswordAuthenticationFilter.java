@@ -1,4 +1,4 @@
-package securityPackage.authentication;
+package security.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;

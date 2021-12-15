@@ -1,4 +1,4 @@
-package securityPackage.authentication;
+package security.authentication;
 
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

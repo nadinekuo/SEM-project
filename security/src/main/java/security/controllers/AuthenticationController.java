@@ -1,12 +1,11 @@
-package securityPackage.controllers;
+package security.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import securityPackage.users.AppUser;
+import security.users.AppUser;
 
 @RestController
 @RequestMapping("authentication")

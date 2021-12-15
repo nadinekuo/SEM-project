@@ -1,4 +1,4 @@
-package securityPackage.services;
+package security.services;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

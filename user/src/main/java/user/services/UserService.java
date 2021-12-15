@@ -40,6 +40,26 @@ public class UserService {
         return customerRepository.findById(userId);
     }
 
+    /**
+     * Finds Customer by userName
+     *
+     * @param userName - String
+     * @return Optional of Customer having this name
+     */
+    public Customer getCustomerByUsername(String userName) {
+        return customerRepository.findByUsername(userName);
+    }
+
+    /**
+     * Finds Admin by userName
+     *
+     * @param userName - String
+     * @return Optional of Admin having this name
+     */
+    public Admin getAdminByUsername(String userName) {
+        return adminRepository.findByUsername(userName);
+    }
+
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {

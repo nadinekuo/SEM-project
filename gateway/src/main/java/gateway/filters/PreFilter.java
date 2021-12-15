@@ -1,19 +1,20 @@
 
-package gatewayPackage.filters;
+package gateway.filters;
 
-import com.netflix.zuul.ZuulFilter;
-import com.netflix.zuul.context.RequestContext;
 import javax.servlet.http.HttpServletRequest;
+import com.netflix.zuul.context.RequestContext;
+import com.netflix.zuul.ZuulFilter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RouteFilter extends ZuulFilter {
+public class PreFilter extends ZuulFilter {
 
-    private static Logger log = LoggerFactory.getLogger(RouteFilter.class);
+    private static Logger log = LoggerFactory.getLogger(PreFilter.class);
 
     @Override
     public String filterType() {
-        return "route";
+        return "pre";
     }
 
     @Override
@@ -31,8 +32,7 @@ public class RouteFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
 
-        log.info("Routefilter:" + String.format("%s request to %s", request.getMethod(),
-            request.getRequestURL().toString()));
+        log.info("Prefilter:" + String.format("%s request to %s", request.getMethod(), request.getRequestURL().toString()));
 
         return null;
     }

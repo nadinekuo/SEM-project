@@ -1,6 +1,4 @@
-package securityPackage.users;
-
-import java.util.Objects;
+package security.users;
 
 public class AppUser {
 

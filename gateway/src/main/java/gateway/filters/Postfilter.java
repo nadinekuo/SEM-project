@@ -1,4 +1,4 @@
-package gatewayPackage.filters;
+package gateway.filters;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -6,13 +6,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ErrorFilter extends ZuulFilter {
+public class Postfilter extends ZuulFilter {
 
-    private static Logger log = LoggerFactory.getLogger(ErrorFilter.class);
+    private static Logger log = LoggerFactory.getLogger(Postfilter.class);
 
     @Override
     public String filterType() {
-        return "error";
+        return "post";
     }
 
     @Override
@@ -30,7 +30,7 @@ public class ErrorFilter extends ZuulFilter {
         HttpServletResponse response = RequestContext.getCurrentContext().getResponse();
 
         log.info(
-            "Errorfilter:" + String.format("response's content type is %s", response.getStatus()));
+            "Postfilter:" + String.format("response's content type is %s", response.getStatus()));
 
         return null;
     }

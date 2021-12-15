@@ -1,6 +1,6 @@
-package gatewayPackage.filters;
+package gateway.filters;
 
-import gatewayPackage.config.JwtConfig;
+import gateway.config.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import java.io.IOException;

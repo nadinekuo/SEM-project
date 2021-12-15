@@ -12,7 +12,7 @@
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.stereotype.Service;
 //import securityPackage.controllers.AuthenticationController;
-//import securityPackage.users.AppUser;
+//import security.users.AppUser;
 //
 //@Service   // This is for testing purposes. Will be changed later to get users from database
 //public class UserDetailsServiceImpl implements UserDetailsService {
