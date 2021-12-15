@@ -24,7 +24,7 @@ public class UserController {
     private final transient UserService userService;
 
     @Autowired
-    private transient final RestTemplate restTemplate;
+    private final transient RestTemplate restTemplate;
 
     /**
      * Autowired constructor for the class.
@@ -37,13 +37,10 @@ public class UserController {
         this.restTemplate = userService.restTemplate();
     }
 
-//    @GetMapping("/{userId}/isPremium")
-//    @ResponseBody
-//    public Boolean isUserPremium(@PathVariable Long userId) {
-//        Customer customer = (Customer) userService.getUserById(userId);
-//        return customer.isPremiumUser();
-//    }
-
+    /**
+     * @param userId
+     * @return
+     */
     @GetMapping("/{userId}/isPremium")
     @ResponseBody
     public ResponseEntity<String> isUserPremium(@PathVariable Long userId) {

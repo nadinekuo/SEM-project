@@ -1,14 +1,5 @@
 package user.services;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,34 +10,38 @@ import user.entities.Customer;
 import user.entities.Group;
 import user.repositories.GroupRepository;
 
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 public class GroupServiceTest {
-
 
     @Mock
     private transient GroupRepository groupRepository;
 
+    @Mock
+    private transient CustomerService customerService;
+
     private transient GroupService groupService;
 
-    private transient Customer arslan;
-    private transient Customer emil;
-    private transient Customer emma;
-    private transient Customer erwin;
-    private transient Customer nadine;
-    private transient Customer panagiotis;
-    private transient Group group1;
-    private transient Group group2;
+    private final transient Customer arslan;
+    private final transient Customer emil;
+    private final transient Customer emma;
+    private final transient Customer erwin;
+    private final transient Customer nadine;
+    private final transient Customer panagiotis;
+    private final transient Group group1;
+    private final transient Group group2;
     private transient Group group3;
 
-
     /**
-     * runs before each test.
+     * Constructor for test.
      */
-    @BeforeEach
-    void setup() {
-        groupService = new GroupService(groupRepository);
-    }
-
     public GroupServiceTest() {
         arslan = new Customer("arslan123", "password1", true);
         emil = new Customer("emil123", "password2", false);
@@ -54,24 +49,29 @@ public class GroupServiceTest {
         erwin = new Customer("erwin123", "password4", false);
         nadine = new Customer("nadine123", "password5", true);
         panagiotis = new Customer("panas123", "password6", false);
-        group1 = new Group(33L, "soccerTeam1", List.of(arslan, emil, nadine, erwin, emma,
-            panagiotis));
+        group1 =
+            new Group(33L, "soccerTeam1", List.of(arslan, emil, nadine, erwin, emma, panagiotis));
         group2 = new Group(42L, "volleyballTeam3", List.of(emma, panagiotis, erwin));
     }
 
+    /**
+     * runs before each test.
+     */
+    @BeforeEach
+    void setup() {
+        groupService = new GroupService(groupRepository, customerService);
+    }
 
     @Test
     public void testConstructor() {
         assertNotNull(groupService);
     }
 
-
     @Test
     public void restTemplateTest() {
         RestTemplate restTemplate = groupService.restTemplate();
         assertNotNull(restTemplate);
     }
-
 
     @Test
     public void getGroupById() {
@@ -84,7 +84,6 @@ public class GroupServiceTest {
         verify(groupRepository, times(1)).findByGroupId(33L);
     }
 
-
     @Test
     public void getNonExistingGroupById() {
         when(groupRepository.findByGroupId(33L)).thenReturn(Optional.empty());
@@ -94,7 +93,6 @@ public class GroupServiceTest {
         });
     }
 
-
     @Test
     public void getGroupSize() {
         when(groupRepository.findByGroupId(33L)).thenReturn(Optional.of(group1));
@@ -102,8 +100,5 @@ public class GroupServiceTest {
         assertThat(groupService.getGroupSizeById(33L)).isEqualTo(6);
         verify(groupRepository, times(1)).findByGroupId(33L);
     }
-
-
-
 
 }

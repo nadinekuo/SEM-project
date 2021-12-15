@@ -1,6 +1,7 @@
 package reservation.services;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -36,10 +37,10 @@ public class ReservationService {
     }
 
     /**
-     * Gets Reservation object corresponding to id, if existing.
+     * Gets reservation.
      *
-     * @param reservationId - Long
-     * @return Reservation
+     * @param reservationId the reservation id
+     * @return the reservation
      */
     public Reservation getReservation(Long reservationId) {
         return reservationRepository.findById(reservationId).orElseThrow(
@@ -48,9 +49,9 @@ public class ReservationService {
     }
 
     /**
-     * Deletes reservation, if id is valid.
+     * Delete reservation.
      *
-     * @param reservationId - Long
+     * @param reservationId the reservation id
      */
     public void deleteReservation(Long reservationId) {
         boolean exists = reservationRepository.existsById(reservationId);
@@ -62,10 +63,10 @@ public class ReservationService {
     }
 
     /**
-     * Is available boolean.
+     * Sports facility is available boolean.
      *
-     * @param sportRoomId the sport room id
-     * @param time        the time
+     * @param sportFacilityId the sport facility id
+     * @param time            the time
      * @return the boolean
      */
     // All Reservations start at full hours, so only start time has to be checked.
@@ -87,16 +88,17 @@ public class ReservationService {
     /**
      * Gets user reservation count on day.
      *
-     * @param start      - start of day we want to count reservations for: yyyy-MM-ddT00:00:00
-     * @param end        - end of day we want to count reservations for: yyyy-MM-ddT23:59:59
+     * @param start      the start
+     * @param end        the end
      * @param customerId the customer id
-     * @return the user reservation count for a day
+     * @return the user reservation count on day
      */
     public int getUserReservationCountOnDay(LocalDateTime start, LocalDateTime end,
                                             long customerId) {
 
-        List<Reservation> reservationsOnDay = reservationRepository
-            .findReservationByStartingTimeBetweenAndCustomerId(start, end, customerId);
+        List<Reservation> reservationsOnDay =
+            reservationRepository.findReservationByStartingTimeBetweenAndCustomerId(start, end,
+                customerId);
         int count = 0;
 
         // Customers have a limit on the number of sport rooms to be reserved
@@ -110,13 +112,11 @@ public class ReservationService {
     }
 
     /**
-     * Passes the Reservation object through the chain of responsibility.
+     * Check reservation boolean.
      *
-     * @param reservation           - Reservation object to be passed through Chain of
-     *                              Responsibility.
-     * @param reservationController - API needed by Validator chain to communicate with other
-     *                              microservices.
-     * @return - true if reservation is valid, else false.
+     * @param reservation           the reservation
+     * @param reservationController the reservation controller
+     * @return the boolean
      */
     public boolean checkReservation(Reservation reservation,
                                     ReservationController reservationController) {
@@ -143,6 +143,36 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Find by group id and time long.
+     *
+     * @param groupId the group id
+     * @param time    the time
+     * @return the long
+     */
+    public Long findByGroupIdAndTime(Long groupId, LocalDateTime time) {
+        return reservationRepository.findByGroupIdAndTime(groupId, time).orElse(null);
+    }
+
+    /**
+     * Gets last person that used equipment.
+     *
+     * @param equipmentId the equipment id
+     * @return the last person that used equipment
+     */
+    public Long getLastPersonThatUsedEquipment(Long equipmentId) {
+        List<Reservation> reservations =
+            reservationRepository.findReservationsBySportFacilityReservedId(equipmentId);
+
+        reservations.sort(Comparator.comparing(Reservation::getStartingTime).reversed());
+        return reservations.get(0).getCustomerId();
+    }
+
+    /**
+     * Rest template rest template.
+     *
+     * @return the rest template
+     */
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
