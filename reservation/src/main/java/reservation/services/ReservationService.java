@@ -37,10 +37,10 @@ public class ReservationService {
     }
 
     /**
-     * Gets reservation.
+     * Gets reservation from repository.
      *
-     * @param reservationId the reservation id
-     * @return the reservation
+     * @param reservationId the reservation id to search for
+     * @return the found reservation, or throw exception if non-existent id
      */
     public Reservation getReservation(Long reservationId) {
         return reservationRepository.findById(reservationId).orElseThrow(
@@ -49,7 +49,7 @@ public class ReservationService {
     }
 
     /**
-     * Delete reservation.
+     * Delete reservation if id exists.
      *
      * @param reservationId the reservation id
      */
@@ -62,23 +62,69 @@ public class ReservationService {
         reservationRepository.deleteById(reservationId);
     }
 
+
     /**
-     * Sports facility is available boolean.
+     * Check reservation by passing the object through Chain of Responsibility.
+     * Various checks to be done by different validators.
      *
-     * @param sportFacilityId the sport facility id
-     * @param time            the time
-     * @return the boolean
+     * @param reservation           the reservation
+     * @param reservationController the reservation controller through which API calls to other
+     *                              microservices are made
+     * @return boolean - true if Reservation can be made, else false.
+     *  If the reservation was not valid, that means one or more checks (in some validator)
+     *  were violated -> exception thrown.
      */
-    // All Reservations start at full hours, so only start time has to be checked.
+    public boolean checkReservation(Reservation reservation,
+                                    ReservationController reservationController) {
+
+        // Checks whether or not customers have exceeded their daily reservation limit for sport rooms
+        ReservationValidator userBalanceHandler =
+            new UserReservationBalanceValidator(this, reservationController);
+
+        // Checks whether the reserved sports room or equipment is available for reservation
+        ReservationValidator sportFacilityHandler =
+            new SportFacilityAvailabilityValidator(this, reservationController);
+        userBalanceHandler.setNext(sportFacilityHandler);
+
+        // Only for sports room reservations, we check the room capacity/team size
+        if (reservation.getTypeOfReservation() == ReservationType.SPORTS_ROOM) {
+
+            //  Checks the compatibility of the reserved sports room (hall/field) capacity
+            //  with the group size of the customers who want to reserve that sports room
+            // For sport fields (hold 1 sport),
+            // the team size requirements of that sport is also checked
+            ReservationValidator capacityHandler =
+                new TeamRoomCapacityValidator(this, reservationController);
+            sportFacilityHandler.setNext(capacityHandler);
+        }
+
+        try {
+            return userBalanceHandler.handle(reservation);   // Start of chain
+        } catch (InvalidReservationException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+
+    /**
+     * Checks if sports facility is available at given time.
+     * All Reservations start at full hours, so only start time has to be checked.
+     *
+     * @param sportFacilityId the sport facility id to check
+     * @param time            the time to check
+     * @return boolean - true if sport facility is not associated with any reservation yet.
+     */
     public boolean sportsFacilityIsAvailable(Long sportFacilityId, LocalDateTime time) {
         return reservationRepository.findBySportFacilityReservedIdAndTime(sportFacilityId, time)
             .isEmpty();
     }
 
     /**
-     * Make sport facility reservation reservation.
+     * Make sport facility (Equipment, Sport Room, Lesson) reservation.
      *
-     * @param reservation the reservation
+     * @param reservation - reservation object to be saved in database
      * @return the reservation
      */
     public Reservation makeSportFacilityReservation(Reservation reservation) {
@@ -86,7 +132,7 @@ public class ReservationService {
     }
 
     /**
-     * Gets user reservation count on day.
+     * Gets user reservation count (for sport rooms, not equipment) on given day.
      *
      * @param start      the start
      * @param end        the end
@@ -104,51 +150,20 @@ public class ReservationService {
         // Customers have a limit on the number of sport rooms to be reserved
         // Basic: 1 per day, premium: 3 per day
         for (Reservation reservation : reservationsOnDay) {
-            if (reservation.getTypeOfReservation() == ReservationType.SPORTS_FACILITY) {
+            if (reservation.getTypeOfReservation() == ReservationType.SPORTS_ROOM) {
                 count++;
             }
         }
         return count;
     }
 
-    /**
-     * Check reservation boolean.
-     *
-     * @param reservation           the reservation
-     * @param reservationController the reservation controller
-     * @return the boolean
-     */
-    public boolean checkReservation(Reservation reservation,
-                                    ReservationController reservationController) {
-
-        // Start chain of responsibility
-        ReservationValidator userBalanceHandler =
-            new UserReservationBalanceValidator(this, reservationController);
-        ReservationValidator sportFacilityHandler =
-            new SportFacilityAvailabilityValidator(this, reservationController);
-        userBalanceHandler.setNext(sportFacilityHandler);
-
-        // Only for sports room reservations, we check the room capacity/team size
-        if (reservation.getTypeOfReservation() == ReservationType.SPORTS_FACILITY) {
-            ReservationValidator capacityHandler =
-                new TeamRoomCapacityValidator(this, reservationController);
-            sportFacilityHandler.setNext(capacityHandler);
-        }
-
-        try {
-            return userBalanceHandler.handle(reservation);
-        } catch (InvalidReservationException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
     /**
-     * Find by group id and time long.
+     * Find reservation by group id and time given.
      *
      * @param groupId the group id
      * @param time    the time
-     * @return the long
+     * @return the Long corresponding to reservation found, null if not found.
      */
     public Long findByGroupIdAndTime(Long groupId, LocalDateTime time) {
         return reservationRepository.findByGroupIdAndTime(groupId, time).orElse(null);

@@ -19,6 +19,7 @@ public class UserReservationBalanceValidator extends BaseValidator {
     @Override
     public boolean handle(Reservation reservation) throws InvalidReservationException {
 
+        // We want to count all reservations from 00:00 to 23:59 on the day specified.
         LocalDateTime startDay = LocalDateTime
             .parse(reservation.getStartingTime().toString().substring(0, 10) + "T00:00:00");
         LocalDateTime endDay = LocalDateTime
@@ -27,6 +28,7 @@ public class UserReservationBalanceValidator extends BaseValidator {
         int reservationBalanceOnDate = reservationService
             .getUserReservationCountOnDay(startDay, endDay, reservation.getCustomerId());
 
+        // Communicates with user microservice
         boolean isPremium = reservationController.getUserIsPremium(reservation.getCustomerId());
 
         System.out.println(
