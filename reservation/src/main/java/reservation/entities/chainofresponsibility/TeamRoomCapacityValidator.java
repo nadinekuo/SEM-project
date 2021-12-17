@@ -12,6 +12,20 @@ public class TeamRoomCapacityValidator extends BaseValidator {
     private ReservationService reservationService;
     private ReservationController reservationController;
 
+    /**
+     * Instantiates a new Team / Room capacity validator.
+     * Checks:
+     *  - whether the min/max capacity of the sport room is adhered to
+     *  for group reservations only:
+     *  - whether group size adheres to min/max constraints on team sport teams
+     *
+     *  Note: this validator is only part of the chain for sport room reservations
+     *           (not equipment reservations)
+     *
+     * @param reservationService  -  the reservation service containing logic
+     * @param reservationController the reservation controller to communicate with other
+     *                              microservices
+     */
     public TeamRoomCapacityValidator(ReservationService reservationService,
                                      ReservationController reservationController) {
         this.reservationService = reservationService;

@@ -6,9 +6,8 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
 
-/**
- * The type Sport facility availability validator.
- */
+
+
 public class SportFacilityAvailabilityValidator extends BaseValidator {
 
     private final ReservationService reservationService;
@@ -17,8 +16,13 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
     /**
      * Instantiates a new Sport facility availability validator.
      *
-     * @param reservationService    the reservation service
-     * @param reservationController the reservation controller
+     *  Checks:
+     *  - whether starting time of reservation is between 16:00 and 23:00
+     *  - whether sport room or equipment is physically available
+     *
+     * @param reservationService  -  the reservation service containing logic
+     * @param reservationController the reservation controller to communicate with other
+     *                              microservices
      */
     public SportFacilityAvailabilityValidator(ReservationService reservationService,
                                               ReservationController reservationController) {
