@@ -26,7 +26,6 @@ public class Customer extends User {
 
 
     public Customer() {
-
     }
 
     /**
@@ -67,18 +66,21 @@ public class Customer extends User {
         this.groupsForTeamSports = groupsForTeamSports;
     }
 
-    public boolean isPremiumSubscription() {
-        return premiumSubscription;
-    }
+//    public boolean isPremiumSubscription() {
+//        return premiumSubscription;
+//    }
 
-    public void setPremiumSubscription(boolean premiumSubscription) {
-        this.premiumSubscription = premiumSubscription;
-    }
+//    public void setPremiumSubscription(boolean premiumSubscription) {
+//        this.premiumSubscription = premiumSubscription;
+//    }
 
     public void addGroupToUsersGroupList(Group group) {
         if(!groupsForTeamSports.contains(group)){
             this.groupsForTeamSports.add(group);
             group.setGroupSize(group.getGroupSize() + 1);
+        }
+        else{
+            throw new IllegalStateException("customer with id " + this.getId() + " already exists in the group!");
         }
     }
 

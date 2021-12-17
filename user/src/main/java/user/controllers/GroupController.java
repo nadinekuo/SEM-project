@@ -57,11 +57,25 @@ public class GroupController {
         return groupService.getUsersInAGroup(id);
     }
 
-    @PostMapping("/create/{groupName}")
-    public ResponseEntity<Group> createGroup(@PathVariable String groupName) {
-        return new ResponseEntity<>(groupService.createGroup(groupName), HttpStatus.CREATED);
+
+    @GetMapping("/groupName/{groupName}")
+    public Group getGroupByGroupName(@PathVariable String groupName) {
+        return groupService.getGroupByGroupName(groupName);
     }
 
+
+    @PostMapping("/create/{groupName}")
+    public ResponseEntity<String> createGroup(@PathVariable String groupName) {
+        if(groupService.createGroup(groupName)){
+            return new ResponseEntity<>("Group created successfully", HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>("Group creation unsuccessful", HttpStatus.FORBIDDEN);
+        }
+    }
+
+
+    //handle case if the customer already exists in the group
     @PutMapping("/addCustomer/{groupId}/{customerId}")
     public ResponseEntity<Group> addCustomerToGroup(@PathVariable long customerId,
                                                     @PathVariable long groupId) {
@@ -69,7 +83,6 @@ public class GroupController {
         return ResponseEntity.ok(g);
     }
 
-    // return the list of customers in the group
 
     @PostMapping("/reservation/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking")
     public ResponseEntity<String> makeGroupReservation(@PathVariable long groupId,
