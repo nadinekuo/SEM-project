@@ -1,11 +1,13 @@
 package security.controllers;
 
+import org.bouncycastle.openssl.PasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +23,9 @@ public class AuthenticationController {
     private static final String userUrl = "http://eureka-user";
 
     @Autowired
+    private static BCryptPasswordEncoder encoder;
+
+    @Autowired
     private static RestTemplate restTemplate;
 
     /**
@@ -32,7 +37,7 @@ public class AuthenticationController {
         this.restTemplate = restTemplate;
     }
 
-    public static UserDetails loadByUsername(String username) throws UsernameNotFoundException {
+    public static UserDetails loadByUsername(String username, String password) throws UsernameNotFoundException, PasswordException {
 
         AppUser customer = (AppUser) getCustomerInfo(username);
         AppUser admin = (AppUser) getAdminInfo(username);
@@ -42,12 +47,22 @@ public class AuthenticationController {
             throw new UsernameNotFoundException("Username: " + username + " not found");
         }
 
+        // if admin is not null, it has to be an admin
         if (admin != null) {
+            // check whether the password matches
+            if (encoder.matches(password, admin.getPassword())) {
+                throw new PasswordException("Password does not match");
+            }
             List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                     .commaSeparatedStringToAuthorityList("ROLE_ADMIN");
             return new User(admin.getUsername(), admin.getPassword(), grantedAuthorities);
         }
 
+        // if admin was null then it has to be a customer
+        // check whether password matches
+        if (encoder.matches(password, customer.getPassword())) {
+            throw new PasswordException("Password does not match");
+        }
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
         return new User(customer.getUsername(), customer.getPassword(), grantedAuthorities);

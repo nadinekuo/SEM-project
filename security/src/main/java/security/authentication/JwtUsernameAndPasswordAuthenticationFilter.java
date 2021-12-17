@@ -55,7 +55,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter
 
             // 3. Authentication manager authenticate the user, and use
             // AuthenticationController::loadByUsername() method to load the user.
-            AuthenticationController.loadByUsername(creds.getUsername());
+            AuthenticationController.loadByUsername(creds.getUsername(), creds.getPassword());
             return authManager.authenticate(authToken);
 
         } catch (IOException e) {
