@@ -18,6 +18,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import security.controllers.AuthenticationController;
 
 public class JwtUsernameAndPasswordAuthenticationFilter
     extends UsernamePasswordAuthenticationFilter {
@@ -53,7 +54,8 @@ public class JwtUsernameAndPasswordAuthenticationFilter
                     Collections.emptyList());
 
             // 3. Authentication manager authenticate the user, and use
-            // UserDetialsServiceImpl::loadUserByUsername() method to load the user.
+            // AuthenticationController::loadByUsername() method to load the user.
+            AuthenticationController.loadByUsername(creds.getUsername());
             return authManager.authenticate(authToken);
 
         } catch (IOException e) {
