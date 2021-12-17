@@ -50,9 +50,9 @@ public class AuthenticationController {
         // if admin is not null, it has to be an admin
         if (admin != null) {
             // check whether the password matches
-            if (encoder.matches(password, admin.getPassword())) {
-                throw new PasswordException("Password does not match");
-            }
+//            if (encoder.matches(password, admin.getPassword())) {
+//                throw new PasswordException("Password does not match");
+//            }
             List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                     .commaSeparatedStringToAuthorityList("ROLE_ADMIN");
             return new User(admin.getUsername(), admin.getPassword(), grantedAuthorities);
@@ -60,9 +60,9 @@ public class AuthenticationController {
 
         // if admin was null then it has to be a customer
         // check whether password matches
-        if (encoder.matches(password, customer.getPassword())) {
-            throw new PasswordException("Password does not match");
-        }
+//        if (encoder.matches(password, customer.getPassword())) {
+//            throw new PasswordException("Password does not match");
+//        }
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
         return new User(customer.getUsername(), customer.getPassword(), grantedAuthorities);
