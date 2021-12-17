@@ -90,9 +90,11 @@ public class Group {
      * @param memberToAdd - User to be added to this group.
      */
     public void addUserToGroup(Customer memberToAdd) {
-        if (!groupMembers.contains(memberToAdd)) {
+        if (!this.groupMembers.contains(memberToAdd)) {
             this.groupMembers.add(memberToAdd);
             this.groupSize++;
+        }else{
+            throw new IllegalStateException("Customer with id : " + memberToAdd.getId() + " already exists in the group!");
         }
     }
 
