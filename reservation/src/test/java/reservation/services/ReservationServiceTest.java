@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
@@ -22,8 +23,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
+import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
+import reservation.entities.UserIdStrategy;
+import reservation.entities.chainofresponsibility.InvalidReservationException;
+import reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
+import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
+import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import reservation.repositories.ReservationRepository;
 
 /**
@@ -37,19 +44,25 @@ public class ReservationServiceTest {
     private final transient Reservation groupReservation1;
     @Mock
     private transient ReservationRepository reservationRepository;
+    @Mock
+    private transient UserReservationBalanceValidator userReservationBalanceValidator;
+    @Mock
+    private transient TeamRoomCapacityValidator teamRoomCapacityValidator;
+    @Mock
+    private transient SportFacilityAvailabilityValidator sportFacilityAvailabilityValidator;
     private transient ReservationService reservationService;
 
     /**
      * Instantiates a new Reservation service test.
      */
     public ReservationServiceTest() {
-        reservation1 = new Reservation( ReservationType.EQUIPMENT, 1L, 42L,
+        reservation1 = new Reservation(ReservationType.EQUIPMENT, 1L, 42L,
             LocalDateTime.of(2022, 10, 05, 16, 00));
         reservation1.setId(53L);
-        reservation2 = new Reservation( ReservationType.SPORTS_FACILITY, 2L, 25L,
+        reservation2 = new Reservation(ReservationType.SPORTS_ROOM, 2L, 25L,
             LocalDateTime.of(2022, 10, 05, 17, 45));
         reservation2.setId(84L);
-        groupReservation1 = new Reservation( ReservationType.SPORTS_FACILITY, 3L, 13L,
+        groupReservation1 = new Reservation(ReservationType.SPORTS_ROOM, 3L, 13L,
             LocalDateTime.of(2022, 02, 3, 20, 30), 84L);
         groupReservation1.setId(99L);
     }
@@ -114,6 +127,22 @@ public class ReservationServiceTest {
         });
         verify(reservationRepository, never()).deleteById(any());
     }
+
+
+//    /**
+//     * Valid reservation passed through chain of responsibility.
+//     * Validators are mocked, since their logic is tested in the Validator tests.
+//     */
+//    @Test
+//    void checkValidReservationTest() throws InvalidReservationException {
+//
+//        when(userReservationBalanceValidator.handle(reservation1)).thenReturn(true);
+//
+//        assertTrue(reservationService.checkReservation(reservation1,
+//            new ReservationController(reservationService)));
+//    }
+
+
 
     /**
      * Count one sport facility reservation test.

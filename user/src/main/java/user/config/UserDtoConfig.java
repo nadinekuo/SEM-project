@@ -12,6 +12,15 @@ public class UserDtoConfig implements Serializable {
 
     private boolean premiumSubscription;
 
+    public UserDtoConfig() {
+    }
+
+    public UserDtoConfig(String username, String password, boolean premiumSubscription) {
+        this.username = username;
+        this.password = password;
+        this.premiumSubscription = premiumSubscription;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -36,5 +45,10 @@ public class UserDtoConfig implements Serializable {
         this.premiumSubscription = premiumSubscription;
     }
 
+    @Override
+    public String toString() {
+        return "UserDtoConfig{" + "username='" + username + '\'' + ", password='" + password + '\''
+            + ", premiumSubscription=" + premiumSubscription + '}';
+    }
 }
 

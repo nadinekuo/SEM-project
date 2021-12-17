@@ -1,5 +1,6 @@
 package user.services;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -52,12 +53,10 @@ public class UserService {
      * @param data the data
      */
     public void registerCustomer(UserDtoConfig data) {
-        Customer customer = new Customer();
-        customer.setUsername(data.getUsername());
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        customer.setPassword(passwordEncoder.encode(data.getPassword()));
-        customer.setPremiumUser(data.isPremiumSubscription());
-        customerRepository.save(customer);
+        customerRepository.save(
+            new Customer(data.getUsername(), passwordEncoder.encode(data.getPassword()),
+                data.isPremiumSubscription()));
     }
 
     /**
@@ -66,11 +65,21 @@ public class UserService {
      * @param data the data
      */
     public void registerAdmin(UserDtoConfig data) {
-        Admin admin = new Admin();
-        admin.setUsername(data.getUsername());
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        admin.setPassword(passwordEncoder.encode(data.getPassword()));
-        adminRepository.save(admin);
+        adminRepository
+            .save(new Admin(data.getUsername(), passwordEncoder.encode(data.getPassword())));
     }
 
+    public void upgradeCustomer(Customer customer) {
+        customer.setPremiumUser(true);
+        customerRepository.save(customer);
+    }
+
+    public Optional<Customer> checkCustomerExists(String username) {
+        return customerRepository.findByUsername(username);
+    }
+
+    public Optional<Admin> checkAdminExists(String username) {
+        return adminRepository.findByUsername(username);
+    }
 }

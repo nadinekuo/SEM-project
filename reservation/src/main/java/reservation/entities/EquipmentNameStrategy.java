@@ -15,6 +15,8 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
     @Autowired
     private final transient RestTemplate restTemplate;
 
+    transient String equipmentUrl = "http://eureka-equipment";
+
     /**
      * Instantiates a new Equipment name strategy.
      *
@@ -49,22 +51,35 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
         public int compare(Object o1, Object o2) {
             Reservation reservation1 = (Reservation) o1;
             Reservation reservation2 = (Reservation) o2;
-            Long equipmentId1 = reservation1.getSportFacilityReservedId();
-            Long equipmentId2 = reservation2.getSportFacilityReservedId();
 
-            String equipmentName1 = restTemplate.getForObject(
-                "http://localhost:8085/equipment/" + equipmentId1 + "/getEquipmentName",
-                String.class);
-            String equipmentName2 = restTemplate.getForObject(
-                "http://localhost:8085/equipment/" + equipmentId2 + "/getEquipmentName",
-                String.class);
+            if (reservation1.getTypeOfReservation().equals(ReservationType.EQUIPMENT)
+                && !reservation2.getTypeOfReservation().equals(ReservationType.EQUIPMENT)) {
+                return -1;
+            } else if (!reservation1.getTypeOfReservation().equals(ReservationType.EQUIPMENT)
+                && reservation2.getTypeOfReservation().equals(ReservationType.EQUIPMENT)) {
+                return 1;
+            } else if (!reservation1.getTypeOfReservation().equals(ReservationType.EQUIPMENT)
+                && !reservation2.getTypeOfReservation().equals(ReservationType.EQUIPMENT)) {
+                return 0;
+            } else {
 
-            int compareName = equipmentName1.compareTo(equipmentName2);
-            if (compareName != 0) {
-                return compareName;
+                Long equipmentId1 = reservation1.getSportFacilityReservedId();
+                Long equipmentId2 = reservation2.getSportFacilityReservedId();
+
+                String equipmentName1 = restTemplate.getForObject(
+                    equipmentUrl + "/equipment/" + equipmentId1 + "/getEquipmentName",
+                    String.class);
+                String equipmentName2 = restTemplate.getForObject(
+                    equipmentUrl + "/equipment/" + equipmentId2 + "/getEquipmentName",
+                    String.class);
+
+                int compareName = equipmentName1.compareTo(equipmentName2);
+                if (compareName != 0) {
+                    return compareName;
+                }
+
+                return reservation1.getStartingTime().compareTo(reservation2.getStartingTime());
             }
-
-            return reservation1.getStartingTime().compareTo(reservation2.getStartingTime());
         }
     }
 }

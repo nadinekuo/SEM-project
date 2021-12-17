@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,9 @@ public class UserController {
 
     @Autowired
     private final transient RestTemplate restTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /**
      * Autowired constructor for the class.
@@ -47,7 +51,7 @@ public class UserController {
         try {
             Customer customer = (Customer) userService.getUserById(userId);
             Boolean isPremium = customer.isPremiumUser();
-            return new ResponseEntity<String>(isPremium.toString(), HttpStatus.OK);
+            return new ResponseEntity<>(isPremium.toString(), HttpStatus.OK);
         } catch (IllegalStateException e) {
             e.printStackTrace();
             System.out.println("User with id " + userId + " does not exist!!");
@@ -62,10 +66,18 @@ public class UserController {
      * @throws IOException If customer can't be registered
      */
     @PostMapping("/registerCustomer")
-    public void customerRegistration(HttpServletRequest request) throws IOException {
-        UserDtoConfig data =
-            new ObjectMapper().readValue(request.getInputStream(), UserDtoConfig.class);
+    public ResponseEntity<String> customerRegistration(HttpServletRequest request)
+        throws IOException {
+        UserDtoConfig data = objectMapper.readValue(request.getInputStream(), UserDtoConfig.class);
+        if (data.getUsername() == null || data.getPassword() == null || data.getUsername().isEmpty()
+            || data.getPassword().isEmpty()) {
+            return new ResponseEntity<>("Fill in all fields.", HttpStatus.BAD_REQUEST);
+        }
+        if (userService.checkCustomerExists(data.getUsername()).isPresent()) {
+            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+        }
         userService.registerCustomer(data);
+        return new ResponseEntity<>("User has been registered.", HttpStatus.OK);
     }
 
     /**
@@ -75,10 +87,32 @@ public class UserController {
      * @throws IOException if admin can't be registered
      */
     @PostMapping("/registerAdmin/admin")
-    public void adminRegistration(HttpServletRequest request) throws IOException {
-        UserDtoConfig data =
-            new ObjectMapper().readValue(request.getInputStream(), UserDtoConfig.class);
+    public ResponseEntity<String> adminRegistration(HttpServletRequest request) throws IOException {
+        UserDtoConfig data = objectMapper.readValue(request.getInputStream(), UserDtoConfig.class);
+        if (data.getUsername() == null || data.getPassword() == null || data.getUsername().isEmpty()
+            || data.getPassword().isEmpty()) {
+            return new ResponseEntity<>("Fill in all fields.", HttpStatus.BAD_REQUEST);
+        }
+        if (userService.checkAdminExists(data.getUsername()).isPresent()) {
+            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+        }
         userService.registerAdmin(data);
+        return new ResponseEntity<>("User has been registered.", HttpStatus.OK);
     }
 
+    @PutMapping("/{userId}/upgrade")
+    public ResponseEntity<String> upgradeUser(@PathVariable Long userId) {
+        try {
+            Customer customer = (Customer) userService.getUserById(userId);
+            if (customer.isPremiumUser()) {
+                return new ResponseEntity<>("User is already premium!", HttpStatus.BAD_REQUEST);
+            }
+            userService.upgradeCustomer(customer);
+            return new ResponseEntity<>("User has been upgraded to premium.", HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            System.out.println("User with id " + userId + " does not exist!!");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
