@@ -72,18 +72,31 @@ public class GroupControllerTest {
     }
 
     @Test
+    void getGroupByGroupName() throws Exception {
+        mockMvc.perform(get("/group/groupName/{groupName}/", "basketball")).andExpect(status().isOk())
+            .andDo(MockMvcResultHandlers.print());
+        verify(groupService).getGroupByGroupName("basketball");
+    }
+    @Test
     void getUsersInAGroup() throws Exception {
         mockMvc.perform(get("/group/getCustomers/{id}/", groupId)).andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print());
         verify(groupService).getUsersInAGroup(groupId);
     }
 
-//    @Test
-//    void createGroup() throws Exception {
-//        mockMvc.perform(post("/group/create/{groupName}/", "basketball"))
-//            .andExpect(status().isCreated()).andDo(MockMvcResultHandlers.print());
-//        verify(groupService).createGroup("basketball");
-//    }
+    @Test
+    void createGroupValid() throws Exception {
+        when(groupService.createGroup("basketball")).thenReturn(true);
+        mockMvc.perform(post("/group/create/{groupName}/", "basketball"))
+            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    void createGroupInvalid() throws Exception {
+        when(groupService.createGroup("basketball")).thenReturn(false);
+        mockMvc.perform(post("/group/create/{groupName}/", "basketball"))
+            .andExpect(status().isForbidden()).andDo(MockMvcResultHandlers.print());
+    }
 
     @Test
     void addCustomerToGroup() throws Exception {
