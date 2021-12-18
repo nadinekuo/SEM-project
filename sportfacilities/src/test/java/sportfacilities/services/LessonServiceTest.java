@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -90,8 +92,8 @@ public class LessonServiceTest {
 
     @Test
     public void deleteLessonTest() throws NoSuchElementException {
-        lessonService.deleteLesson(lessonId);
-        assertFalse(lessonRepository.existsById(lessonId));
+        doNothing().when(lessonRepository).deleteById(1L);
+        assertDoesNotThrow(() -> lessonService.deleteLesson(1000L));
     }
 
     @Test
