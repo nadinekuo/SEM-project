@@ -47,7 +47,7 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
             // Check if sport room is not reserved already for this time slot (false)
 
             // For group reservations, all members have an individual reservation for the same room,
-            // but that should not make that room unavailable!
+            // but that should not make that room unavailable, so we add a flag.
             boolean isGroupReservation = (reservation.getGroupId() != -1);
             boolean sportsRoomAvailable;
             if (isGroupReservation
