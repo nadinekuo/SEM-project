@@ -1,5 +1,15 @@
 package user.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,25 +21,8 @@ import user.entities.Customer;
 import user.entities.Group;
 import user.repositories.GroupRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 public class GroupServiceTest {
-
-    @Mock
-    private transient GroupRepository groupRepository;
-
-    @Mock
-    private transient CustomerService customerService;
-
-    private transient GroupService groupService;
 
     private final transient Customer arslan;
     private final transient Customer emil;
@@ -39,6 +32,11 @@ public class GroupServiceTest {
     private final transient Customer panagiotis;
     private final transient Group group1;
     private final transient Group group2;
+    @Mock
+    private transient GroupRepository groupRepository;
+    @Mock
+    private transient CustomerService customerService;
+    private transient GroupService groupService;
     private transient Group group3;
 
     /**
@@ -52,7 +50,8 @@ public class GroupServiceTest {
         nadine = new Customer("nadine123", "password5", true);
         panagiotis = new Customer("panas123", "password6", false);
 
-        group1 = new Group(33L, "soccerTeam1", List.of(arslan, emil, nadine, erwin, emma, panagiotis));
+        group1 =
+            new Group(33L, "soccerTeam1", List.of(arslan, emil, nadine, erwin, emma, panagiotis));
         group2 = new Group(42L, "volleyballTeam3", List.of(emma, panagiotis, erwin));
     }
 
@@ -122,11 +121,10 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void createAlreadyExistingGroupTest () {
+    public void createAlreadyExistingGroupTest() {
         when(groupRepository.findByGroupName("soccerTeam1")).thenReturn(Optional.of(group1));
 
-        assertThrows(IllegalStateException.class, () ->
-                groupService.createGroup("soccerTeam1"));
+        assertThrows(IllegalStateException.class, () -> groupService.createGroup("soccerTeam1"));
         verify(groupRepository, times(1)).findByGroupName("soccerTeam1");
     }
 
@@ -156,15 +154,14 @@ public class GroupServiceTest {
         when(customerService.saveCustomer(arslan)).thenReturn(arslan);
 
         assertThat(groupService.addCustomerToGroup(1L, 42L).getGroupSize()).isEqualTo(4L);
-        assertThrows(IllegalStateException.class, () ->
-                groupService.addCustomerToGroup(1L, 42L));
+        assertThrows(IllegalStateException.class, () -> groupService.addCustomerToGroup(1L, 42L));
 
         verify(groupRepository, times(2)).findByGroupId(42L);
     }
 
     @Test
     @Ignore
-    public void getUsersInAGroupTest() {
+    public void getUsersInGroupTest() {
         when(groupRepository.findByGroupId(42L)).thenReturn(Optional.of(group2));
         assertThat(groupService.getUsersInAGroup(42L).size()).isEqualTo(3L);
     }

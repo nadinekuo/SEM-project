@@ -1,11 +1,10 @@
 package user.entities;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class GroupTest {
 
@@ -29,10 +28,10 @@ class GroupTest {
         nadine = new Customer("nadine123", "password5", true);
         panagiotis = new Customer("panas123", "password6", false);
 
-        group1 = new Group(33L, "soccerTeam1", List.of(arslan, emil, nadine, erwin, emma, panagiotis));
+        group1 =
+            new Group(33L, "soccerTeam1", List.of(arslan, emil, nadine, erwin, emma, panagiotis));
         group2 = new Group(42L, "volleyballTeam3", List.of(emma, panagiotis, erwin));
     }
-
 
     @Test
     void getGroupId() {
@@ -61,14 +60,12 @@ class GroupTest {
     @Test
     void getGroupMembers() {
         List<Customer> customers = group2.getGroupMembers();
-        for(int i = 0; i < customers.size(); i++) {
-            if(i == 0){
+        for (int i = 0; i < customers.size(); i++) {
+            if (i == 0) {
                 assertThat(customers.get(i).getUsername()).isEqualTo("emma123");
-            }
-            else if(i == 1){
+            } else if (i == 1) {
                 assertThat(customers.get(i).getUsername()).isEqualTo("panas123");
-            }
-            else{
+            } else {
                 assertThat(customers.get(i).getUsername()).isEqualTo("erwin123");
             }
         }
@@ -81,14 +78,12 @@ class GroupTest {
 
         group2.setGroupMembers(newCustomerList);
 
-        for(int i = 0; i < group2.getGroupMembers().size(); i++) {
-            if(i == 0){
+        for (int i = 0; i < group2.getGroupMembers().size(); i++) {
+            if (i == 0) {
                 assertThat(group2.getGroupMembers().get(i).getUsername()).isEqualTo("arslan123");
-            }
-            else if(i == 1){
+            } else if (i == 1) {
                 assertThat(group2.getGroupMembers().get(i).getUsername()).isEqualTo("emil123");
-            }
-            else{
+            } else {
                 assertThat(group2.getGroupMembers().get(i).getUsername()).isEqualTo("nadine123");
             }
         }
@@ -106,11 +101,11 @@ class GroupTest {
         assertThat(group2.getGroupSize()).isEqualTo(6);
     }
 
-//    @Test
-//    void addUserToGroup() {
-//        //arslan.setGroupsForTeamSports(new ArrayList<>());
-//        //arslan.addGroupToUsersGroupList(group2);
-//        group2.addUserToGroup(arslan);
-//        assertThat(group2.getGroupSize()).isEqualTo(4L);
-//    }
+    //    @Test
+    //    void addUserToGroup() {
+    //        //arslan.setGroupsForTeamSports(new ArrayList<>());
+    //        //arslan.addGroupToUsersGroupList(group2);
+    //        group2.addUserToGroup(arslan);
+    //        assertThat(group2.getGroupSize()).isEqualTo(4L);
+    //    }
 }

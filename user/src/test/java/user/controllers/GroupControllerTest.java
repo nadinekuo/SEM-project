@@ -1,5 +1,16 @@
 package user.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,14 +27,6 @@ import org.springframework.web.client.RestTemplate;
 import user.entities.Customer;
 import user.entities.Group;
 import user.services.GroupService;
-
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -73,12 +76,13 @@ public class GroupControllerTest {
 
     @Test
     void getGroupByGroupName() throws Exception {
-        mockMvc.perform(get("/group/groupName/{groupName}/", "basketball")).andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(get("/group/groupName/{groupName}/", "basketball"))
+            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
         verify(groupService).getGroupByGroupName("basketball");
     }
+
     @Test
-    void getUsersInAGroup() throws Exception {
+    void getUsersInGroup() throws Exception {
         mockMvc.perform(get("/group/getCustomers/{id}/", groupId)).andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print());
         verify(groupService).getUsersInAGroup(groupId);
@@ -87,8 +91,8 @@ public class GroupControllerTest {
     @Test
     void createGroupValid() throws Exception {
         when(groupService.createGroup("basketball")).thenReturn(true);
-        mockMvc.perform(post("/group/create/{groupName}/", "basketball"))
-            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(post("/group/create/{groupName}/", "basketball")).andExpect(status().isOk())
+            .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
@@ -107,8 +111,9 @@ public class GroupControllerTest {
 
     @Test
     void makeValidGroupReservation() throws Exception {
-        String url = "http://eureka-reservation/reservation/" + 0L + "/" + groupId + "/" + 2L + "/"
-            + "2099-01-06T21:00:00" + "/" + "makeSportRoomBooking";
+        final String url =
+            "http://eureka-reservation/reservation/" + 0L + "/" + groupId + "/" + 2L + "/"
+                + "2099-01-06T21:00:00" + "/" + "makeSportRoomBooking";
         List<Customer> customers = List.of(new Customer("arslan123", "password1", false),
             new Customer("emil123", "password2", false),
             new Customer("emma123", "password3", true));
