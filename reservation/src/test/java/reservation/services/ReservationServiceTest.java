@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
@@ -23,14 +22,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
-import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
-import reservation.entities.UserIdStrategy;
-import reservation.entities.chainofresponsibility.InvalidReservationException;
-import reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
-import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
-import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import reservation.repositories.ReservationRepository;
 
 /**
@@ -44,12 +37,9 @@ public class ReservationServiceTest {
     private final transient Reservation groupReservation1;
     @Mock
     private transient ReservationRepository reservationRepository;
-    @Mock
-    private transient UserReservationBalanceValidator userReservationBalanceValidator;
-    @Mock
-    private transient TeamRoomCapacityValidator teamRoomCapacityValidator;
-    @Mock
-    private transient SportFacilityAvailabilityValidator sportFacilityAvailabilityValidator;
+    //    @Mock
+    //    private transient UserReservationBalanceValidator userReservationBalanceValidator;
+
     private transient ReservationService reservationService;
 
     /**
@@ -68,7 +58,7 @@ public class ReservationServiceTest {
     }
 
     /**
-     * Sets .
+     * Sets test attributes.
      */
     @BeforeEach
     void setup() {
@@ -128,21 +118,18 @@ public class ReservationServiceTest {
         verify(reservationRepository, never()).deleteById(any());
     }
 
-
-//    /**
-//     * Valid reservation passed through chain of responsibility.
-//     * Validators are mocked, since their logic is tested in the Validator tests.
-//     */
-//    @Test
-//    void checkValidReservationTest() throws InvalidReservationException {
-//
-//        when(userReservationBalanceValidator.handle(reservation1)).thenReturn(true);
-//
-//        assertTrue(reservationService.checkReservation(reservation1,
-//            new ReservationController(reservationService)));
-//    }
-
-
+    //    /**
+    //     * Valid reservation passed through chain of responsibility.
+    //     * Validators are mocked, since their logic is tested in the Validator unit tests.
+    //     */
+    //    @Test
+    //    void checkValidReservationTest() throws InvalidReservationException {
+    //
+    //        when(userReservationBalanceValidator.handle(reservation1)).thenReturn(true);
+    //
+    //        assertTrue(reservationService.checkReservation(reservation1,
+    //            new ReservationController(reservationService)));
+    //    }
 
     /**
      * Count one sport facility reservation test.
@@ -157,12 +144,13 @@ public class ReservationServiceTest {
         //        LocalDateTime start = LocalDateTime.of(2022, 10, 05, 00, 00, 00);
         //        LocalDateTime end = LocalDateTime.of(2022, 10, 05, 23, 59, 59);
 
-        when(reservationRepository.findReservationByStartingTimeBetweenAndCustomerId(start, end,
-            1L)).thenReturn(List.of(reservation1, reservation2));
+        when(
+            reservationRepository.findReservationByStartingTimeBetweenAndCustomerId(start, end, 1L))
+            .thenReturn(List.of(reservation1, reservation2));
 
         assertThat(reservationService.getUserReservationCountOnDay(start, end, 1L)).isEqualTo(1);
-        verify(reservationRepository, times(1)).findReservationByStartingTimeBetweenAndCustomerId(
-            start, end, 1L);
+        verify(reservationRepository, times(1))
+            .findReservationByStartingTimeBetweenAndCustomerId(start, end, 1L);
     }
 
     /**
@@ -171,14 +159,14 @@ public class ReservationServiceTest {
     @Test
     void availableSportFacility() {
 
-        when(reservationRepository.findBySportFacilityReservedIdAndTime(anyLong(),
-            any())).thenReturn(Optional.empty());   // Facility is unoccupied
+        when(reservationRepository.findBySportFacilityReservedIdAndTime(anyLong(), any()))
+            .thenReturn(Optional.empty());   // Facility is unoccupied
 
-        assertThat(reservationService.sportsFacilityIsAvailable(75L,
-            LocalDateTime.of(2022, 10, 05, 16, 00))).isTrue();
+        assertThat(reservationService
+            .sportsFacilityIsAvailable(75L, LocalDateTime.of(2022, 10, 05, 16, 00))).isTrue();
 
-        verify(reservationRepository, times(1)).findBySportFacilityReservedIdAndTime(75L,
-            LocalDateTime.of(2022, 10, 05, 16, 00));
+        verify(reservationRepository, times(1))
+            .findBySportFacilityReservedIdAndTime(75L, LocalDateTime.of(2022, 10, 05, 16, 00));
     }
 
     /**
@@ -187,14 +175,14 @@ public class ReservationServiceTest {
     @Test
     void unavailableSportFacility() {
 
-        when(reservationRepository.findBySportFacilityReservedIdAndTime(anyLong(),
-            any())).thenReturn(Optional.of(75L));   // Facility is reserved for this time already!
+        when(reservationRepository.findBySportFacilityReservedIdAndTime(anyLong(), any()))
+            .thenReturn(Optional.of(75L));   // Facility is reserved for this time already!
 
-        assertThat(reservationService.sportsFacilityIsAvailable(75L,
-            LocalDateTime.of(2022, 10, 05, 16, 00))).isFalse();
+        assertThat(reservationService
+            .sportsFacilityIsAvailable(75L, LocalDateTime.of(2022, 10, 05, 16, 00))).isFalse();
 
-        verify(reservationRepository, times(1)).findBySportFacilityReservedIdAndTime(75L,
-            LocalDateTime.of(2022, 10, 05, 16, 00));
+        verify(reservationRepository, times(1))
+            .findBySportFacilityReservedIdAndTime(75L, LocalDateTime.of(2022, 10, 05, 16, 00));
     }
 
     /**
@@ -226,8 +214,8 @@ public class ReservationServiceTest {
             reservations.add(r);
         }
 
-        when(reservationRepository.findReservationsBySportFacilityReservedId(2L)).thenReturn(
-            reservations);
+        when(reservationRepository.findReservationsBySportFacilityReservedId(2L))
+            .thenReturn(reservations);
         assertEquals(Optional.of(4L),
             Optional.of(reservationService.getLastPersonThatUsedEquipment(2L)));
 

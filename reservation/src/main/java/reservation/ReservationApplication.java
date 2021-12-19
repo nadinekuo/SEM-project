@@ -9,11 +9,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RestController;
 import reservation.client.ReservationControllerEureka;
-import reservation.entities.BookingSystem;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
-import reservation.entities.UserIdStrategy;
-import reservation.services.ReservationService;
+import reservation.entities.strategy.BookingSystem;
+import reservation.entities.strategy.UserIdStrategy;
 
 /**
  * The type Reservation application.
@@ -36,8 +35,7 @@ public class ReservationApplication implements ReservationControllerEureka {
      */
     public static void main(String[] args) {
 
-        BookingSystem bookings =
-            new BookingSystem(new UserIdStrategy());
+        BookingSystem bookings = new BookingSystem(new UserIdStrategy());
 
         Reservation reservation1 =
             new Reservation(ReservationType.EQUIPMENT, 1L, 1L, LocalDateTime.of(2020, 1, 1, 1, 1));
