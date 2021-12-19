@@ -30,6 +30,8 @@ import reservation.services.ReservationService;
 public class UserReservationBalanceValidatorTest {
 
     private transient Reservation reservation1;
+    LocalDateTime startDay;
+    LocalDateTime endDay;
 
     private transient ReservationController reservationController;
     private transient ReservationService reservationService;
@@ -37,6 +39,9 @@ public class UserReservationBalanceValidatorTest {
     private transient UserReservationBalanceValidator userReservationBalanceValidator;
 
 
+    /**
+     * Constructor for this test suite.
+     */
     public UserReservationBalanceValidatorTest() {
         reservationService = mock(ReservationService.class);
         reservationController = mock(ReservationController.class);
@@ -46,6 +51,11 @@ public class UserReservationBalanceValidatorTest {
         reservation1 = new Reservation(ReservationType.EQUIPMENT, 1L, 42L,
             LocalDateTime.of(2022, 10, 05, 16, 00));
         reservation1.setId(53L);
+
+        startDay = LocalDateTime
+            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T00:00:00");
+        endDay = LocalDateTime
+            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T23:59:59");
     }
 
 
@@ -63,11 +73,6 @@ public class UserReservationBalanceValidatorTest {
     @Test
     public void testBasicUserLimitNotReachedYet() throws InvalidReservationException {
 
-        LocalDateTime startDay = LocalDateTime
-            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T00:00:00");
-        LocalDateTime endDay = LocalDateTime
-            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T23:59:59");
-
         when(reservationService.getUserReservationCountOnDay(startDay, endDay,
             1L)).thenReturn(0);
         when(reservationController.getUserIsPremium(anyLong())).thenReturn(false);
@@ -82,11 +87,6 @@ public class UserReservationBalanceValidatorTest {
 
     @Test
     public void testBasicUserLimitReached() throws InvalidReservationException {
-
-        LocalDateTime startDay = LocalDateTime
-            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T00:00:00");
-        LocalDateTime endDay = LocalDateTime
-            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T23:59:59");
 
         when(reservationService.getUserReservationCountOnDay(startDay, endDay,
             1L)).thenReturn(1);
@@ -104,11 +104,6 @@ public class UserReservationBalanceValidatorTest {
     @Test
     public void testPremiumUserLimitNotReachedYet() throws InvalidReservationException {
 
-        LocalDateTime startDay = LocalDateTime
-            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T00:00:00");
-        LocalDateTime endDay = LocalDateTime
-            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T23:59:59");
-
         when(reservationService.getUserReservationCountOnDay(startDay, endDay,
             1L)).thenReturn(2);
         when(reservationController.getUserIsPremium(anyLong())).thenReturn(true);
@@ -122,11 +117,6 @@ public class UserReservationBalanceValidatorTest {
 
     @Test
     public void testPremiumUserLimitReached() throws InvalidReservationException {
-
-        LocalDateTime startDay = LocalDateTime
-            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T00:00:00");
-        LocalDateTime endDay = LocalDateTime
-            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T23:59:59");
 
         when(reservationService.getUserReservationCountOnDay(startDay, endDay,
             1L)).thenReturn(3);

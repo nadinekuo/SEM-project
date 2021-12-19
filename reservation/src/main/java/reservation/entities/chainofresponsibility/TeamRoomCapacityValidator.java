@@ -1,17 +1,27 @@
 package reservation.entities.chainofresponsibility;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.chainofresponsibility.BaseValidator;
 import reservation.entities.chainofresponsibility.InvalidReservationException;
 import reservation.services.ReservationService;
 
+@Component
 public class TeamRoomCapacityValidator extends BaseValidator {
 
 
     private ReservationService reservationService;
     private ReservationController reservationController;
 
+    /**
+     *  Instantiates a new Team / room capacity validator.
+     *
+     * @param reservationService  - contains reservation logic
+     * @param reservationController - makes API requests to other microservices
+     */
+    @Autowired
     public TeamRoomCapacityValidator(ReservationService reservationService,
                                      ReservationController reservationController) {
         this.reservationService = reservationService;

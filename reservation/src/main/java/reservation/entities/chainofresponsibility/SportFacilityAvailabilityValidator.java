@@ -1,14 +1,16 @@
 package reservation.entities.chainofresponsibility;
 
 import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
 
-/**
- * The type Sport facility availability validator.
- */
+
+
+@Component
 public class SportFacilityAvailabilityValidator extends BaseValidator {
 
     private final ReservationService reservationService;
@@ -17,9 +19,10 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
     /**
      * Instantiates a new Sport facility availability validator.
      *
-     * @param reservationService    the reservation service
-     * @param reservationController the reservation controller
+     * @param reservationService  - contains reservation logic
+     * @param reservationController - makes API requests to other microservices
      */
+    @Autowired
     public SportFacilityAvailabilityValidator(ReservationService reservationService,
                                               ReservationController reservationController) {
         this.reservationService = reservationService;

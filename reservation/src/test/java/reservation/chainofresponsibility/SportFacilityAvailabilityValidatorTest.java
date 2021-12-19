@@ -38,6 +38,9 @@ public class SportFacilityAvailabilityValidatorTest {
     private transient SportFacilityAvailabilityValidator sportFacilityAvailabilityValidator;
 
 
+    /**
+     * Constructor for this test suite.
+     */
     public SportFacilityAvailabilityValidatorTest() {
         reservationService = mock(ReservationService.class);
         reservationController = mock(ReservationController.class);
