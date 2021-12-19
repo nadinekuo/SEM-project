@@ -1,7 +1,7 @@
 package sportfacilities.controllers;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,6 @@ import sportfacilities.services.SportService;
 /**
  * The type Sport room controller.
  */
-
 //TODO make every test use assertJ
 @RestController
 @RequestMapping("sportRoom")
@@ -39,10 +38,10 @@ public class SportRoomController {
      * Instantiates a new Sport room controller.
      *
      * @param sportRoomService the sport room service
+     * @param sportService     the sport service
      */
     @Autowired
-    public SportRoomController(SportRoomService sportRoomService,
-                               SportService sportService) {
+    public SportRoomController(SportRoomService sportRoomService, SportService sportService) {
         this.sportRoomService = sportRoomService;
         this.sportService = sportService;
         this.restTemplate = sportRoomService.restTemplate();
@@ -146,8 +145,7 @@ public class SportRoomController {
     @ResponseBody
     public ResponseEntity<String> getSportFieldSport(@PathVariable Long sportFieldId) {
         try {
-            Sport relatedSport = sportRoomService.getSportRoom(sportFieldId)
-                .getSports().get(0);
+            Sport relatedSport = sportRoomService.getSportRoom(sportFieldId).getSports().get(0);
             return new ResponseEntity<String>(relatedSport.getSportName(), HttpStatus.OK);
         } catch (IllegalStateException e) {
             e.printStackTrace();
@@ -156,35 +154,49 @@ public class SportRoomController {
         }
     }
 
-
+    /**
+     * Add sport room response entity.
+     *
+     * @param name         the name
+     * @param minCapacity  the min capacity
+     * @param maxCapacity  the max capacity
+     * @param isSportHall  the is sport hall
+     * @param relatedSport the related sport
+     * @return the response entity
+     */
     @PutMapping("/{name}/{minCapacity}/{maxCapacity}/{sport}/{isSportHall}/{relatedSport}"
         + "/addSportRoom/admin")
     @ResponseBody
-    public ResponseEntity<String> addSportRoom(
-        @PathVariable String name,
-        @PathVariable int minCapacity, @PathVariable int maxCapacity,
-        @PathVariable boolean isSportHall, @PathVariable String relatedSport
-    ) {
+    public ResponseEntity<String> addSportRoom(@PathVariable String name,
+                                               @PathVariable int minCapacity,
+                                               @PathVariable int maxCapacity,
+                                               @PathVariable boolean isSportHall,
+                                               @PathVariable String relatedSport) {
         Sport sport = sportService.getSportById(relatedSport);
         List<Sport> sports = new ArrayList<>();
         sports.add(sport);
 
         SportRoom sportRoom = new SportRoom(name, sports, minCapacity, maxCapacity);
         sportRoomService.saveSportRoom(sportRoom);
-        return new ResponseEntity<>("SportRoom creation successful",HttpStatus.OK);
+        return new ResponseEntity<>("SportRoom creation successful", HttpStatus.OK);
 
     }
 
+    /**
+     * Delete sport room response entity.
+     *
+     * @param sportRoomId the sport room id
+     * @return the response entity
+     */
     @DeleteMapping("/{sportRoomId}/deleteSportRoom/admin")
     public ResponseEntity<String> deleteSportRoom(@PathVariable Long sportRoomId) {
-        try{
+        try {
             sportRoomService.deleteSportRoom(sportRoomId);
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>("No such element", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
-
 
 }

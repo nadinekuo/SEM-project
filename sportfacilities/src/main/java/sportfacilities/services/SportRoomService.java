@@ -47,8 +47,8 @@ public class SportRoomService {
     public Boolean sportRoomExists(Long sportRoomId) {
         return sportRoomRepository.findBySportRoomId(sportRoomId).isPresent();
     }
-    
-    public void saveSportRoom(SportRoom sportRoom){
+
+    public void saveSportRoom(SportRoom sportRoom) {
         sportRoomRepository.save(sportRoom);
     }
 

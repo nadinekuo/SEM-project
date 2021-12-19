@@ -4,6 +4,7 @@ package sportfacilities.entities;
 // Sport hall: different sports can be exercised here
 // Sport field: specific to a certain sport (soccer, hockey e.g.)
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 import java.util.Objects;
@@ -29,8 +30,11 @@ public class SportRoom {
     private Long sportRoomId;
     private String sportRoomName; // example: X1, X2, X3 ...
 
+
     @ManyToMany(mappedBy = "sportLocations", fetch = FetchType.LAZY)
+
     @JsonManagedReference
+    @JsonIgnoreProperties("sportLocations")
     private List<Sport> sports;   // Only sport halls will store multiple sports
     private int minCapacity;
     private int maxCapacity;
@@ -79,6 +83,10 @@ public class SportRoom {
 
     public Long getSportRoomId() {
         return sportRoomId;
+    }
+
+    public void setSportRoomId(Long sportRoomId) {
+        this.sportRoomId = sportRoomId;
     }
 
     public void setSportRoomId(long sportRoomId) {
