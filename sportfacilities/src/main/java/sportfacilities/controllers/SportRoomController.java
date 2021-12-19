@@ -160,25 +160,21 @@ public class SportRoomController {
      * @param name         the name
      * @param minCapacity  the min capacity
      * @param maxCapacity  the max capacity
+     * @param sport        the related sport
      * @param isSportHall  the is sport hall
-     * @param relatedSport the related sport
      * @return the response entity
      */
-    @PutMapping("/{name}/{minCapacity}/{maxCapacity}/{sport}/{isSportHall}/{relatedSport}"
-        + "/addSportRoom/admin")
+    @PutMapping("/{name}/{sport}/{minCapacity}/{maxCapacity}/{isSportHall}/addSportRoom/admin")
     @ResponseBody
-    public ResponseEntity<String> addSportRoom(@PathVariable String name,
-                                               @PathVariable int minCapacity,
-                                               @PathVariable int maxCapacity,
-                                               @PathVariable boolean isSportHall,
-                                               @PathVariable String relatedSport) {
-        Sport sport = sportService.getSportById(relatedSport);
-        List<Sport> sports = new ArrayList<>();
-        sports.add(sport);
+    public ResponseEntity<?> addSportRoom(@PathVariable String name,
+                                          @PathVariable String sport,
+                                          @PathVariable int minCapacity,
+                                          @PathVariable int maxCapacity,
+                                          @PathVariable boolean isSportHall
+                                          ) {
 
-        SportRoom sportRoom = new SportRoom(name, sports, minCapacity, maxCapacity);
-        sportRoomService.saveSportRoom(sportRoom);
-        return new ResponseEntity<>("SportRoom creation successful", HttpStatus.OK);
+        sportRoomService.addSportRoom(name, sport, minCapacity, maxCapacity, isSportHall);
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 

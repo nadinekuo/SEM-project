@@ -48,11 +48,11 @@ public class SportFacilitiesConfig {
             sportRepository.saveAll(
                 List.of(soccer, hockey, volleyball, tennis, yoga, zumba, kickboxing));
 
-            SportRoom hallX1 = new SportRoom("X1", List.of(soccer, hockey), 10, 50);
+            SportRoom hallX1 = new SportRoom("X1", List.of(soccer, hockey), 10, 50, true);
             SportRoom hallX2 =
-                new SportRoom("X2", List.of(hockey, volleyball, tennis, zumba), 15, 60);
-            SportRoom hallX3 = new SportRoom("X3", List.of(yoga, zumba, kickboxing), 1, 55);
-            SportRoom hockeyField = new SportRoom("hockeyfieldA", List.of(hockey), 10, 200);
+                new SportRoom("X2", List.of(hockey, volleyball, tennis, zumba), 15, 60, true);
+            SportRoom hallX3 = new SportRoom("X3", List.of(yoga, zumba, kickboxing), 1, 55, true);
+            SportRoom hockeyField = new SportRoom("hockeyfieldA", List.of(hockey), 10, 200, false);
 
             sportRoomRepository.saveAll(List.of(hallX1, hallX2, hallX3, hockeyField));
 
