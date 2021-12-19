@@ -2,9 +2,11 @@ package sportfacilities.controllers;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -104,6 +106,33 @@ public class SportRoomControllerTest {
     }
 
     @Test
+    public void setMinimumCapacity() throws Exception {
+        mockMvc.perform(
+                post("/sportRoom/{sportRoomId}/{minCapacity}/setMinimumCapacity/admin", sportRoomId,
+                    minCapacity)).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
+            .andReturn();
+        verify(sportRoomService).setSportRoomMinCapacity(sportRoomId, minCapacity);
+    }
+
+    @Test
+    public void setMaximumCapacity() throws Exception {
+        mockMvc.perform(
+                post("/sportRoom/{sportRoomId}/{maxCapacity}/setMaximumCapacity/admin", sportRoomId,
+                    maxCapacity)).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
+            .andReturn();
+        verify(sportRoomService).setSportRoomMaxCapacity(sportRoomId, maxCapacity);
+    }
+
+    @Test
+    public void setSportNameTest() throws Exception {
+        mockMvc.perform(
+                post("/sportRoom/{sportRoomId}/{sportRoomName}/setSportRoomName/admin", sportRoomId,
+                    hallX1.getSportRoomName())).andExpect(status().isOk())
+            .andDo(MockMvcResultHandlers.print()).andReturn();
+        verify(sportRoomService).setSportRoomName(sportRoomId, hallX1.getSportRoomName());
+    }
+
+    @Test
     public void getFieldSport() throws Exception {
         given(sportRoomService.getSportRoom(sportFieldId)).willReturn(hockeyField);
 
@@ -139,6 +168,46 @@ public class SportRoomControllerTest {
 
         mockMvc.perform(delete("/sportRoom/{sportRoomId}/deleteSportRoom/admin", 1000L))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void addSportToSportRoomTest() throws Exception {
+
+        mockMvc.perform(
+                post("/sportRoom/{sportRoomId}/{sportName}/addSportToSportHall/admin", sportRoomId,
+                    sportName)).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
+            .andReturn();
+
+        verify(sportRoomService).addSportToSportsHall(sportRoomId, sportName);
+    }
+
+    @Test
+    public void addSportToSportRoomTestException() throws Exception {
+        doThrow(new IllegalStateException("test")).when(sportRoomService)
+            .addSportToSportsHall(sportRoomId, sportName);
+
+        mockMvc.perform(
+                post("/sportRoom/{sportRoomId}/{sportName}/addSportToSportHall/admin",
+                    sportRoomId, sportName)).andExpect(status().isBadRequest())
+            .andDo(MockMvcResultHandlers.print())
+            .andReturn();
+
+        verify(sportRoomService, times(1)).addSportToSportsHall(sportRoomId, sportName);
+    }
+
+    @Test
+    public void addSportToSportRoomTestException2() throws Exception {
+        doThrow(new IllegalArgumentException("test")).when(sportRoomService)
+            .addSportToSportsHall(sportRoomId, sportName);
+
+        mockMvc.perform(
+                post("/sportRoom/{sportRoomId}/{sportName}/addSportToSportHall/admin",
+                    sportRoomId, sportName))
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print())
+            .andReturn();
+
+        verify(sportRoomService, times(1))
+            .addSportToSportsHall(sportRoomId, sportName);
     }
 
 }

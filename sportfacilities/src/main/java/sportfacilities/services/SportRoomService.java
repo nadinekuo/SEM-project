@@ -44,6 +44,30 @@ public class SportRoomService {
     }
 
     /**
+     * Sets sport room min capacity.
+     *
+     * @param sportRoomId the sport room id
+     * @param minCapacity the min capacity
+     */
+    public void setSportRoomMinCapacity(Long sportRoomId, int minCapacity) {
+        SportRoom sportRoom = getSportRoom(sportRoomId);
+        sportRoom.setMinCapacity(minCapacity);
+        sportRoomRepository.save(sportRoom);
+    }
+
+    /**
+     * Sets sport room max capacity.
+     *
+     * @param sportRoomId the sport room id
+     * @param maxCapacity the max capacity
+     */
+    public void setSportRoomMaxCapacity(Long sportRoomId, int maxCapacity) {
+        SportRoom sportRoom = getSportRoom(sportRoomId);
+        sportRoom.setMaxCapacity(maxCapacity);
+        sportRoomRepository.save(sportRoom);
+    }
+
+    /**
      * Sport room exists boolean.
      *
      * @param sportRoomId the sport room id
@@ -73,8 +97,26 @@ public class SportRoomService {
         sportRoomRepository.save(sportRoom);
     }
 
+    /**
+     * Deletes a sport room.
+     *
+     * @param sportRoomId the sport room id
+     * @throws NoSuchElementException if the sport room does not exist
+     */
     public void deleteSportRoom(Long sportRoomId) throws NoSuchElementException {
         sportRoomRepository.deleteBySportRoomId(sportRoomId);
+    }
+
+    /**
+     * Sets the sport room name.
+     *
+     * @param sportRoomId   the sport room id
+     * @param sportRoomName the sport room name
+     */
+    public void setSportRoomName(Long sportRoomId, String sportRoomName) {
+        SportRoom sportRoom = getSportRoom(sportRoomId);
+        sportRoom.setSportRoomName(sportRoomName);
+        sportRoomRepository.save(sportRoom);
     }
 
     /**
@@ -86,6 +128,23 @@ public class SportRoomService {
     @LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    /**
+     * Add sport to sports hall.
+     *
+     * @param sportRoomId the sport room id
+     * @param sportName   the sport name
+     */
+    public void addSportToSportsHall(Long sportRoomId, String sportName) {
+        Sport sport = sportService.getSportById(sportName);
+        SportRoom sportHall = getSportRoom(sportRoomId);
+        if (!sportHall.isSportsHall()) {
+            throw new IllegalArgumentException("Only a sportHall can have multiple sports");
+        }
+        sportHall.addSport(sport);
+
+        sportRoomRepository.save(sportHall);
     }
 }
 

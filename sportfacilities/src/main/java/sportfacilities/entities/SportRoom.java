@@ -29,7 +29,7 @@ public class SportRoom {
     private Long sportRoomId;
     private String sportRoomName; // example: X1, X2, X3 ...
 
-    @ManyToMany(mappedBy = "sportLocations", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "sportLocations", fetch = FetchType.EAGER)
 
     @JsonManagedReference
     @JsonIgnoreProperties("sportLocations")
@@ -58,6 +58,10 @@ public class SportRoom {
         this.minCapacity = minCapacity;
         this.maxCapacity = maxCapacity;
         this.isSportsHall = isSportsHall;
+    }
+
+    public void addSport(Sport sport) {
+        sports.add(sport);
     }
 
     public Long getSportRoomId() {
