@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import user.entities.Admin;
+import user.entities.Customer;
 import user.entities.User;
 
 @Repository
@@ -19,9 +21,9 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
 
     @Query(value = "SELECT * " + "FROM customers "
             + "WHERE username = ?1", nativeQuery = true)
-    Optional<T> findCustomerByUsername(String username);
+    Optional<Customer> findCustomerByUsername(String username);
 
     @Query(value = "SELECT * " + "FROM admins "
             + "WHERE username = ?1", nativeQuery = true)
-    Optional<T> findAdminByUsername(String usernameToFind);
+    Optional<Admin> findAdminByUsername(String username);
 }
