@@ -2,6 +2,8 @@ package user.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -68,16 +70,22 @@ public class UserController {
 
     @GetMapping("/{userName}/getCustomerInfo")
     @ResponseBody
-    public User getCustomerInfo(@PathVariable String userName) {
+    public List<String> getCustomerInfo(@PathVariable String userName) {
         Customer customer = userService.getCustomerByUsername(userName);
-        return customer;
+        List<String> customerInfo = new ArrayList<>();
+        customerInfo.add(customer.getUsername());
+        customerInfo.add(customer.getPassword());
+        return customerInfo;
     }
 
     @GetMapping("/{userName}/getAdminInfo")
     @ResponseBody
-    public User getAdminInfo(@PathVariable String userName) {
+    public List<String> getAdminInfo(@PathVariable String userName) {
         Admin admin = userService.getAdminByUsername(userName);
-        return admin;
+        List<String> adminInfo = new ArrayList<>();
+        adminInfo.add(admin.getUsername());
+        adminInfo.add(admin.getPassword());
+        return adminInfo;
     }
 
     /**
