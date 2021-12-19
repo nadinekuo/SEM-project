@@ -1,19 +1,30 @@
-package reservation.entities;
+package reservation.entities.strategy;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
+import reservation.entities.Reservation;
 import reservation.entities.strategy.ReservationSortingStrategy;
 
 /**
- * The type User id strategy.
+ * The type Basic premium user strategy.
  */
-public class UserIdStrategy implements ReservationSortingStrategy {
+public class BasicPremiumUserStrategy implements ReservationSortingStrategy {
+
+    @Autowired
+    private final transient RestTemplate restTemplate;
+
+    private final transient String userUrl = "http://eureka-user";
 
     /**
-     * Instantiates a new User id strategy.
+     * Instantiates a new Basic premium user strategy.
+     *
+     * @param restTemplate the rest template
      */
-    public UserIdStrategy() {
+    public BasicPremiumUserStrategy(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     /**
@@ -44,7 +55,18 @@ public class UserIdStrategy implements ReservationSortingStrategy {
             Long userId1 = reservation1.getCustomerId();
             Long userId2 = reservation2.getCustomerId();
 
-            return userId1.compareTo(userId2);
+            boolean b1 = restTemplate.getForObject(userUrl + "/user/" + userId1 + "/isPremium",
+                Boolean.class);
+            boolean b2 = restTemplate.getForObject(userUrl + "/user/" + userId2 + "/isPremium",
+                Boolean.class);
+
+            if (b1 && !b2) {
+                return -1;
+            }
+            if (!b1 && b2) {
+                return +1;
+            }
+            return 0;
         }
     }
 }
