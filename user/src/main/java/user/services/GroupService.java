@@ -90,17 +90,6 @@ public class GroupService {
     }
 
 
-
-    /**
-     * Create group group.
-     *
-     * @param groupName the group name
-     * @return the group
-     */
-    public Group createGroup(String groupName) {
-        return groupRepository.save(new Group(groupName, new ArrayList<>()));
-    }
-
     /**
      * Add customer to group group.
      *

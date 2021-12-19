@@ -1,15 +1,5 @@
 package user.services;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +10,15 @@ import org.springframework.web.client.RestTemplate;
 import user.entities.Customer;
 import user.entities.Group;
 import user.repositories.GroupRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class GroupServiceTest {
@@ -163,7 +162,7 @@ public class GroupServiceTest {
     @Ignore
     public void getUsersInGroupTest() {
         when(groupRepository.findByGroupId(42L)).thenReturn(Optional.of(group2));
-        assertThat(groupService.getUsersInAGroup(42L).size()).isEqualTo(3L);
+        assertThat(groupService.getUsersInaGroup(42L).size()).isEqualTo(3L);
     }
 
     //testing build pass
