@@ -6,9 +6,8 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
 
-/**
- * The type Sport facility availability validator.
- */
+
+
 public class SportFacilityAvailabilityValidator extends BaseValidator {
 
     private final ReservationService reservationService;
@@ -17,8 +16,13 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
     /**
      * Instantiates a new Sport facility availability validator.
      *
-     * @param reservationService    the reservation service
-     * @param reservationController the reservation controller
+     *  Checks:
+     *  - whether starting time of reservation is between 16:00 and 23:00
+     *  - whether sport room or equipment is physically available
+     *
+     * @param reservationService  -  the reservation service containing logic
+     * @param reservationController the reservation controller to communicate with other
+     *                              microservices
      */
     public SportFacilityAvailabilityValidator(ReservationService reservationService,
                                               ReservationController reservationController) {
@@ -40,17 +44,16 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
                 "Reservation slot has to be between 16:00 and " + "23:00.");
         }
 
-        if (reservation.getTypeOfReservation() == ReservationType.SPORTS_FACILITY) {
+        if (reservation.getTypeOfReservation() == ReservationType.SPORTS_ROOM) {
 
             long sportsRoomId = reservation.getSportFacilityReservedId();
 
             // Check if sport room is not reserved already for this time slot (false)
-            // If true, it may not necessarily exist.
 
-            boolean isGroupReservation = reservation.getGroupId() != -1;
-
+            // For group reservations, all members have an individual reservation for the same room,
+            // but that should not make that room unavailable!
+            boolean isGroupReservation = (reservation.getGroupId() != -1);
             boolean sportsRoomAvailable;
-
             if (isGroupReservation
                 && reservationService.findByGroupIdAndTime(reservation.getGroupId(),
                     reservation.getStartingTime()) != null) {
@@ -66,6 +69,7 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
             }
 
             // Call Sports Facilities service: check if sports room exists
+            // Even if the room was "available", it may not necessarily exist!
             boolean sportsRoomExists = reservationController.getSportsRoomExists(sportsRoomId);
             if (!sportsRoomExists) {
                 throw new InvalidReservationException("Sports room does not exist.");
