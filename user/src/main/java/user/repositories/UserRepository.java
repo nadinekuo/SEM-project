@@ -12,14 +12,12 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
 
     T findById(long userId);
 
-//    T findUserByUsername(String username);
-
     @Transactional
     void deleteById(Long userId);
 
     Optional<T> findByUsername(String username);
 
-    @Query(value = "SELECT * " + "FROM admins "
+    @Query(value = "SELECT * " + "FROM customers "
             + "WHERE username = ?1", nativeQuery = true)
     Optional<T> findCustomerByUsername(String username);
 
