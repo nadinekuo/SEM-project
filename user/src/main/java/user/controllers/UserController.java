@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,20 +72,28 @@ public class UserController {
     @GetMapping("/{userName}/getCustomerInfo")
     @ResponseBody
     public List<String> getCustomerInfo(@PathVariable String userName) {
-        Customer customer = userService.getCustomerByUsername(userName);
+        Optional<Customer> customer = userService.getCustomerByUsername(userName);
+        if (customer.isEmpty()) {
+            return null;
+        }
+        Customer customerPresent = customer.get();
         List<String> customerInfo = new ArrayList<>();
-        customerInfo.add(customer.getUsername());
-        customerInfo.add(customer.getPassword());
+        customerInfo.add(customerPresent.getUsername());
+        customerInfo.add(customerPresent.getPassword());
         return customerInfo;
     }
 
     @GetMapping("/{userName}/getAdminInfo")
     @ResponseBody
     public List<String> getAdminInfo(@PathVariable String userName) {
-        Admin admin = userService.getAdminByUsername(userName);
+        Optional<Admin> admin = userService.getAdminByUsername(userName);
+        if (admin.isEmpty()) {
+            return null;
+        }
+        Admin adminPresent = admin.get();
         List<String> adminInfo = new ArrayList<>();
-        adminInfo.add(admin.getUsername());
-        adminInfo.add(admin.getPassword());
+        adminInfo.add(adminPresent.getUsername());
+        adminInfo.add(adminPresent.getPassword());
         return adminInfo;
     }
 

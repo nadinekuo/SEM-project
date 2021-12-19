@@ -11,7 +11,7 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
 
     T findById(long userId);
 
-    T findUserByUsername(String username);
+//    T findUserByUsername(String username);
 
     @Transactional
     void deleteById(Long userId);

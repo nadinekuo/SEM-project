@@ -43,7 +43,10 @@ public class AuthenticationController {
         List<String> userInfo=
                 restTemplate.getForObject(userUrl + methodSpecificUrl, List.class);
 
-        AppUser user = new AppUser(userInfo.get(0), userInfo.get(1), "admin");
+        if (userInfo == null) {
+            return null;
+        }
+        AppUser user = new AppUser(userInfo.get(0), userInfo.get(1), "user");
         return user;
     }
 
@@ -53,7 +56,10 @@ public class AuthenticationController {
         List<String> userInfo=
                 restTemplate.getForObject(userUrl + methodSpecificUrl, List.class);
 
-        AppUser user = new AppUser(userInfo.get(0), userInfo.get(1), "user");
+        if (userInfo == null) {
+            return null;
+        }
+        AppUser user = new AppUser(userInfo.get(0), userInfo.get(1), "admin");
         return user;
     }
 }
