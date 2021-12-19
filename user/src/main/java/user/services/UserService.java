@@ -48,7 +48,7 @@ public class UserService {
      * @return Optional of Customer having this name
      */
     public Optional<Customer> getCustomerByUsername(String userName) {
-        return customerRepository.findByUsername(userName);
+        return customerRepository.findCustomerByUsername(userName);
     }
 
     /**
@@ -58,7 +58,7 @@ public class UserService {
      * @return Optional of Admin having this name
      */
     public Optional<Admin> getAdminByUsername(String userName) {
-        return adminRepository.findByUsername(userName);
+        return adminRepository.findAdminByUsername(userName);
     }
 
     @Bean
