@@ -1,13 +1,8 @@
 package sportfacilities.entities;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 /**
  * The type Lesson.
@@ -157,6 +152,6 @@ public class Lesson {
 
     @Override
     public String toString() {
-        return "Lesson{" + "lessonId=" + lessonId + ", title='" + title;
+        return "Lesson{" + "lessonId=" + lessonId + ", title='" + title + "'}";
     }
 }
