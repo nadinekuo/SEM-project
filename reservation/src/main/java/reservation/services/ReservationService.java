@@ -62,7 +62,6 @@ public class ReservationService {
         reservationRepository.deleteById(reservationId);
     }
 
-
     /**
      * Check reservation by passing the object through Chain of Responsibility.
      * Various checks to be done by different validators.
@@ -71,13 +70,14 @@ public class ReservationService {
      * @param reservationController the reservation controller through which API calls to other
      *                              microservices are made
      * @return boolean - true if Reservation can be made, else false.
-     *  If the reservation was not valid, that means one or more checks (in some validator)
-     *  were violated -> exception thrown.
+     * If the reservation was not valid, that means one or more checks (in some validator)
+     * were violated -> exception thrown.
      */
     public boolean checkReservation(Reservation reservation,
                                     ReservationController reservationController) {
 
-        // Checks whether or not customers have exceeded their daily reservation limit for sport rooms
+        // Checks whether or not customers have exceeded their daily reservation limit for sport
+        // rooms
         ReservationValidator userBalanceHandler =
             new UserReservationBalanceValidator(this, reservationController);
 
@@ -105,8 +105,6 @@ public class ReservationService {
             return false;
         }
     }
-
-
 
     /**
      * Checks if sports facility is available at given time.
@@ -156,7 +154,6 @@ public class ReservationService {
         }
         return count;
     }
-
 
     /**
      * Find reservation by group id and time given.
