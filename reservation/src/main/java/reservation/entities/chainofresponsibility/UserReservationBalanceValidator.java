@@ -1,6 +1,5 @@
 package reservation.entities.chainofresponsibility;
 
-import com.netflix.discovery.converters.Auto;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
