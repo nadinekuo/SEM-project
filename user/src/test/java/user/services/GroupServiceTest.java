@@ -169,5 +169,6 @@ public class GroupServiceTest {
         assertThat(groupService.getUsersInAGroup(42L).size()).isEqualTo(3L);
     }
 
+    //testing build pass
 
 }
