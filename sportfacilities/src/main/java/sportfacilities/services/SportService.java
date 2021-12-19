@@ -38,9 +38,14 @@ public class SportService {
      * Delete sport.
      *
      * @param sportName the sport name
-     * @throws NoSuchElementException the no such element exception
+     * @throws IllegalStateException the no such element exception
      */
-    public void deleteSport(String sportName) throws NoSuchElementException {
+    public void deleteSport(String sportName) throws IllegalStateException {
+        boolean exists = sportRepository.existsById(sportName);
+        if (!exists) {
+            throw new IllegalStateException(
+                "Sport with id " + sportName + " does not " + "exist!");
+        }
         sportRepository.deleteById(sportName);
     }
 

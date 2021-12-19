@@ -1,5 +1,6 @@
 package sportfacilities.controllers;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -56,7 +57,7 @@ public class SportControllerTest {
     transient String sportName = "Box";
 
     /**
-     * Sets .
+     * Sets each test.
      */
     @BeforeEach
     public void setup() {
@@ -64,9 +65,56 @@ public class SportControllerTest {
             MockMvcBuilders.standaloneSetup(new SportController(sportService))
                 .build();
 
-        soloSport = new Sport("hockey", 5, 10);
-        teamSport = new Sport("bowling");
+        teamSport = new Sport("hockey", 5, 10);
+        soloSport = new Sport("bowling");
     }
+
+
+    @Test
+    public void getSportMaxTeamSize() throws Exception {
+
+        given(sportService.getSportById(anyString())).willReturn(teamSport);
+
+        mockMvc.perform(get("/sport/{sportName}/getMaxTeamSize", "bowling"))
+            .andExpect(status().isOk())
+            .andDo(MockMvcResultHandlers.print()).andReturn();
+
+        verify(sportService).getSportById("bowling");
+    }
+
+    @Test
+    public void invalidSportNameGetMaxTeamSize() throws Exception {
+        doThrow(IllegalStateException.class)
+            .when(sportService)
+            .getSportById(anyString());
+
+        mockMvc.perform(get("/sport/{sportName}/getMaxTeamSize", "bowling"))
+            .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    public void getSportMinTeamSize() throws Exception {
+
+        given(sportService.getSportById(anyString())).willReturn(teamSport);
+
+        mockMvc.perform(get("/sport/{sportName}/getMinTeamSize", "bowling"))
+            .andExpect(status().isOk())
+            .andDo(MockMvcResultHandlers.print()).andReturn();
+
+        verify(sportService).getSportById("bowling");
+    }
+
+    @Test
+    public void invalidSportNameGetMinTeamSize() throws Exception {
+        doThrow(IllegalStateException.class)
+            .when(sportService)
+            .getSportById(anyString());
+
+        mockMvc.perform(get("/sport/{sportName}/getMinTeamSize", "bowling"))
+            .andExpect(status().isBadRequest());
+    }
+
 
     /**
      * Add non team sport test.
