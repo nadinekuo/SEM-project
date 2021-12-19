@@ -32,7 +32,7 @@ public class EquipmentControllerTest {
     private final transient long equipmentId = 20L;
     private final transient String equipmentName = "boxingGloves";
     private final transient boolean inUse = true;
-    private final transient Sport box = new Sport("boxing", false, 2, 4);
+    private final transient Sport box = new Sport("boxing", 2, 4);
     private final transient Equipment equipment1 = new Equipment(equipmentName, box, inUse);
     @Mock
     transient SportService sportService;

@@ -63,8 +63,8 @@ public class EquipmentServiceTest {
      */
     public EquipmentServiceTest() {
 
-        kickboxing = new Sport("kickbox", false, 1, -1);
-        tennis = new Sport("tennis", true, 4, 15);
+        kickboxing = new Sport("kickbox" );
+        tennis = new Sport("tennis", 4, 15);
         equipment1 = new Equipment(66L, "boxingGloves", kickboxing, true);
         equipment2 = new Equipment(12L, "tennisBall", tennis, false);
     }
