@@ -18,6 +18,9 @@ import user.config.UserDtoConfig;
 import user.entities.Customer;
 import user.services.UserService;
 
+/**
+ * The type User controller.
+ */
 @RestController
 @RequestMapping("user")
 public class UserController {
@@ -31,9 +34,9 @@ public class UserController {
     private ObjectMapper objectMapper;
 
     /**
-     * Autowired constructor for the class.
+     * Instantiates a new User controller.
      *
-     * @param userService userService
+     * @param userService the user service
      */
     @Autowired
     public UserController(UserService userService) {
@@ -42,8 +45,10 @@ public class UserController {
     }
 
     /**
-     * @param userId
-     * @return
+     * Is user premium response entity.
+     *
+     * @param userId the user id
+     * @return the response entity
      */
     @GetMapping("/{userId}/isPremium")
     @ResponseBody
@@ -62,8 +67,8 @@ public class UserController {
     /**
      * Customer registration.
      *
-     * @param request the request to register a user.
-     * @throws IOException If customer can't be registered
+     * @param request the request
+     * @throws IOException the io exception
      */
     @PostMapping("/registerCustomer")
     public ResponseEntity<String> customerRegistration(HttpServletRequest request)
@@ -83,8 +88,8 @@ public class UserController {
     /**
      * Admin registration.
      *
-     * @param request the request to register an admin
-     * @throws IOException if admin can't be registered
+     * @param request the request
+     * @throws IOException the io exception
      */
     @PostMapping("/registerAdmin/admin")
     public ResponseEntity<String> adminRegistration(HttpServletRequest request) throws IOException {

@@ -66,8 +66,11 @@ public class ReservationService {
      * Check reservation boolean.
      *
      * @param reservation           the reservation
-     * @param reservationController the reservation controller
-     * @return the boolean
+     * @param reservationController the reservation controller through which API calls to other
+     *                              microservices are made
+     * @return boolean - true if Reservation can be made, else false.
+     *    If the reservation was not valid, that means one or more checks (in some validator)
+     *    were violated -> exception thrown.
      */
     public boolean checkReservation(Reservation reservation,
                                     ReservationController reservationController) {
@@ -135,9 +138,8 @@ public class ReservationService {
     public int getUserReservationCountOnDay(LocalDateTime start, LocalDateTime end,
                                             long customerId) {
 
-        List<Reservation> reservationsOnDay =
-            reservationRepository.findReservationByStartingTimeBetweenAndCustomerId(start, end,
-                customerId);
+        List<Reservation> reservationsOnDay = reservationRepository
+            .findReservationByStartingTimeBetweenAndCustomerId(start, end, customerId);
         int count = 0;
 
         // Customers have a limit on the number of sport rooms to be reserved

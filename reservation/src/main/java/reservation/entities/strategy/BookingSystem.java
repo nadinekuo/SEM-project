@@ -1,7 +1,8 @@
-package reservation.entities;
+package reservation.entities.strategy;
 
 import java.util.ArrayList;
 import java.util.List;
+import reservation.entities.Reservation;
 import reservation.entities.strategy.ReservationSortingStrategy;
 
 public class BookingSystem {
