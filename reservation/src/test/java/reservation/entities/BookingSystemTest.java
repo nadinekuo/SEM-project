@@ -12,8 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.web.client.RestTemplate;
+import reservation.entities.strategy.BasicPremiumUserStrategy;
+import reservation.entities.strategy.BookingSystem;
 import reservation.entities.strategy.ChronologicalStrategy;
+import reservation.entities.strategy.EquipmentNameStrategy;
 import reservation.entities.strategy.ReservationSortingStrategy;
+import reservation.entities.strategy.UserIdStrategy;
 import reservation.services.ReservationService;
 
 public class BookingSystemTest {
@@ -32,6 +36,8 @@ public class BookingSystemTest {
     ReservationSortingStrategy sortingStrategy = new ChronologicalStrategy();
     transient List<Reservation> userIdStrategy = new ArrayList<>();
     transient BookingSystem bookingSystem = new BookingSystem(new ChronologicalStrategy());
+    transient String equipmentUrl = "http://eureka-equipment";
+    transient String userUrl = "http://eureka-user";
 
     transient Reservation[] reservations;
 
@@ -92,7 +98,7 @@ public class BookingSystemTest {
             boolean premium = i == 1 || i == 2;
 
             Mockito.when(restTemplate.getForObject(
-                "http://localhost:8084/user/" + reservations[i].getCustomerId() + "/isPremium",
+                userUrl+ "/user/" + reservations[i].getCustomerId() + "/isPremium",
                 Boolean.class)).thenReturn(premium);
         }
 
@@ -120,7 +126,7 @@ public class BookingSystemTest {
 
         for (int i = 0; i < 4; i++) {
             Mockito.when(restTemplate.getForObject(
-                "http://localhost:8085/equipment/" + reservations[i].getSportFacilityReservedId()
+                equipmentUrl + "/equipment/" + reservations[i].getSportFacilityReservedId()
                     + "/getEquipmentName", String.class)).thenReturn(titles[i]);
         }
 
@@ -157,8 +163,8 @@ public class BookingSystemTest {
             bookingSystem.addReservation(reservations[i]);
 
         }
-        assertEquals("BookingSystem{bookings=[" + reservations[0].toString() + ", "
-                + reservations[1].toString() + ", " + reservations[2].toString() + "]}",
-            bookingSystem.toString());
+        assertEquals(
+            "BookingSystem{bookings=[" + reservations[0].toString() + ", " + reservations[1]
+                .toString() + ", " + reservations[2].toString() + "]}", bookingSystem.toString());
     }
 }

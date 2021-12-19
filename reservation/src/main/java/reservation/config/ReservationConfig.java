@@ -32,25 +32,25 @@ public class ReservationConfig {
             Reservation reservation2 = new Reservation(ReservationType.EQUIPMENT, 2L, 2L,
                 LocalDateTime.of(2020, 1, 1, 19, 00));
 
-            Reservation reservation3 = new Reservation(ReservationType.SPORTS_FACILITY, 2L, 42L,
+            Reservation reservation3 = new Reservation(ReservationType.SPORTS_ROOM, 2L, 42L,
                 LocalDateTime.of(2022, 12, 05, 20, 30));
 
-            Reservation reservation4 = new Reservation(ReservationType.SPORTS_FACILITY, 2L, 42L,
+            Reservation reservation4 = new Reservation(ReservationType.SPORTS_ROOM, 2L, 42L,
                 LocalDateTime.of(2022, 12, 05, 22, 30));
 
-            Reservation groupReservation1 = new Reservation(ReservationType.SPORTS_FACILITY, 3L,
+            Reservation groupReservation1 = new Reservation(ReservationType.SPORTS_ROOM, 3L,
                 2L,
                 LocalDateTime.of(2022, 10, 25, 19, 00), 1L);
 
-            Reservation groupReservation2 = new Reservation(ReservationType.SPORTS_FACILITY, 4L,
+            Reservation groupReservation2 = new Reservation(ReservationType.SPORTS_ROOM, 4L,
                 2L,
                 LocalDateTime.of(2022, 10, 25, 19, 00), 1L);
 
-            Reservation groupReservation3 = new Reservation(ReservationType.SPORTS_FACILITY, 4L,
+            Reservation groupReservation3 = new Reservation(ReservationType.SPORTS_ROOM, 4L,
                 2L,
                 LocalDateTime.of(2022, 10, 25, 19, 00), 1L);
 
-            Reservation groupReservation4 = new Reservation(ReservationType.SPORTS_FACILITY, 5L,
+            Reservation groupReservation4 = new Reservation(ReservationType.SPORTS_ROOM, 5L,
                 2L,
                 LocalDateTime.of(2022, 10, 25, 19, 00), 1L);
 

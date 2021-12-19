@@ -92,7 +92,7 @@ public class ReservationController {
 
         // Create reservation object, to be passed through chain of responsibility
         Reservation reservation =
-            new Reservation(ReservationType.SPORTS_FACILITY, userId, sportRoomId, dateTime,
+            new Reservation(ReservationType.SPORTS_ROOM, userId, sportRoomId, dateTime,
                 groupId);
 
         // Creates chain of responsibility

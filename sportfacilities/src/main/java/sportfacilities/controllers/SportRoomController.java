@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.services.SportRoomService;
 
@@ -133,9 +134,9 @@ public class SportRoomController {
     @ResponseBody
     public ResponseEntity<String> getSportFieldSport(@PathVariable Long sportFieldId) {
         try {
-            String relatedSport = sportRoomService.getSportRoom(sportFieldId)
-                .getRelatedSport();
-            return new ResponseEntity<String>(relatedSport, HttpStatus.OK);
+            Sport relatedSport = sportRoomService.getSportRoom(sportFieldId)
+                .getSports().get(0);
+            return new ResponseEntity<String>(relatedSport.getSportName(), HttpStatus.OK);
         } catch (IllegalStateException e) {
             e.printStackTrace();
             System.out.println("Sport field with id " + sportFieldId + " does not exist!!");

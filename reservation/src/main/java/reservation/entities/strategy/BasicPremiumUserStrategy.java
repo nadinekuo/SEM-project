@@ -1,26 +1,29 @@
-package reservation.entities;
+package reservation.entities.strategy;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
+import reservation.entities.Reservation;
 import reservation.entities.strategy.ReservationSortingStrategy;
 
 /**
- * The type Equipment name strategy.
+ * The type Basic premium user strategy.
  */
-public class EquipmentNameStrategy implements ReservationSortingStrategy {
+public class BasicPremiumUserStrategy implements ReservationSortingStrategy {
 
     @Autowired
     private final transient RestTemplate restTemplate;
 
+    private final transient String userUrl = "http://eureka-user";
+
     /**
-     * Instantiates a new Equipment name strategy.
+     * Instantiates a new Basic premium user strategy.
      *
      * @param restTemplate the rest template
      */
-    public EquipmentNameStrategy(RestTemplate restTemplate) {
+    public BasicPremiumUserStrategy(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
@@ -49,23 +52,21 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
         public int compare(Object o1, Object o2) {
             Reservation reservation1 = (Reservation) o1;
             Reservation reservation2 = (Reservation) o2;
-            Long equipmentId1 = reservation1.getSportFacilityReservedId();
-            Long equipmentId2 = reservation2.getSportFacilityReservedId();
+            Long userId1 = reservation1.getCustomerId();
+            Long userId2 = reservation2.getCustomerId();
 
-            String equipmentName1 = restTemplate.getForObject(
-                "http://localhost:8085/equipment/" + equipmentId1 + "/getEquipmentName",
-                String.class);
-            String equipmentName2 = restTemplate.getForObject(
-                "http://localhost:8085/equipment/" + equipmentId2 + "/getEquipmentName",
-                String.class);
+            boolean b1 = restTemplate.getForObject(userUrl + "/user/" + userId1 + "/isPremium",
+                Boolean.class);
+            boolean b2 = restTemplate.getForObject(userUrl + "/user/" + userId2 + "/isPremium",
+                Boolean.class);
 
-            int compareName = equipmentName1.compareTo(equipmentName2);
-            if (compareName != 0) {
-                return compareName;
+            if (b1 && !b2) {
+                return -1;
             }
-
-            return reservation1.getStartingTime().compareTo(reservation2.getStartingTime());
+            if (!b1 && b2) {
+                return +1;
+            }
+            return 0;
         }
     }
 }
-
