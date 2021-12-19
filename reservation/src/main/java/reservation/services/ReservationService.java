@@ -66,18 +66,39 @@ public class ReservationService {
      * Check reservation by passing the object through Chain of Responsibility.
      * Various checks to be done by different validators.
      *
-     * @param reservation           the reservation
-     * @param reservationController the reservation controller through which API calls to other
-     *                              microservices are made
+     * @param reservation - Reservation to be checked
+     * @param reservationController - API to communicate with other microservices
      * @return boolean - true if Reservation can be made, else false.
-     *    If the reservation was not valid, that means one or more checks (in some validator)
-     *    were violated -> exception thrown.
+     *     If the reservation was not valid, that means one or more checks (in some validator)
+     *     were violated -> exception thrown.
      */
     public boolean checkReservation(Reservation reservation,
                                     ReservationController reservationController) {
 
-        // Checks whether or not customers have exceeded their daily reservation limit for sport
-        // rooms
+        // Returns first validator in chain created for this reservation
+        ReservationValidator reservationValidator =
+            createChainOfResponsibility(reservation, reservationController);
+
+        try {
+            return reservationValidator.handle(reservation);   // Start of chain
+        } catch (InvalidReservationException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /** Creates Chain of Responsibility object.
+     *  Having a separate method for this creation, facilitates testability.
+     *
+     * @param reservation - Reservation to be checked
+     * @param reservationController - API to communicate with other microservices
+     * @return - The first validator in the chain of responsibility created
+     */
+    public ReservationValidator createChainOfResponsibility(Reservation reservation,
+                                          ReservationController reservationController) {
+
+        // Checks whether or not customers have exceeded their daily
+        // reservation limit for sport rooms
         ReservationValidator userBalanceHandler =
             new UserReservationBalanceValidator(this, reservationController);
 
@@ -97,36 +118,7 @@ public class ReservationService {
                 new TeamRoomCapacityValidator(this, reservationController);
             sportFacilityHandler.setNext(capacityHandler);
         }
-
-        try {
-            return userBalanceHandler.handle(reservation);   // Start of chain
-        } catch (InvalidReservationException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * Checks if sports facility is available at given time.
-     * All Reservations start at full hours, so only start time has to be checked.
-     *
-     * @param sportFacilityId the sport facility id to check
-     * @param time            the time to check
-     * @return boolean - true if sport facility is not associated with any reservation yet.
-     */
-    public boolean sportsFacilityIsAvailable(Long sportFacilityId, LocalDateTime time) {
-        return reservationRepository.findBySportFacilityReservedIdAndTime(sportFacilityId, time)
-            .isEmpty();
-    }
-
-    /**
-     * Make sport facility (Equipment, Sport Room, Lesson) reservation.
-     *
-     * @param reservation - reservation object to be saved in database
-     * @return the reservation
-     */
-    public Reservation makeSportFacilityReservation(Reservation reservation) {
-        return reservationRepository.save(reservation);
+        return userBalanceHandler;
     }
 
     /**
@@ -153,6 +145,31 @@ public class ReservationService {
         }
         return count;
     }
+
+
+    /**
+     * Checks if sports facility is available at given time.
+     * All Reservations start at full hours, so only start time has to be checked.
+     *
+     * @param sportFacilityId the sport facility id to check
+     * @param time            the time to check
+     * @return boolean - true if sport facility is not associated with any reservation yet.
+     */
+    public boolean sportsFacilityIsAvailable(Long sportFacilityId, LocalDateTime time) {
+        return reservationRepository.findBySportFacilityReservedIdAndTime(sportFacilityId, time)
+            .isEmpty();
+    }
+
+    /**
+     * Make sport facility (Equipment, Sport Room, Lesson) reservation.
+     *
+     * @param reservation - reservation object to be saved in database
+     * @return the reservation
+     */
+    public Reservation makeSportFacilityReservation(Reservation reservation) {
+        return reservationRepository.save(reservation);
+    }
+
 
     /**
      * Find reservation by group id and time given.
