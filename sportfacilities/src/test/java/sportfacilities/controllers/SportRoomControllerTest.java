@@ -1,17 +1,25 @@
 package sportfacilities.controllers;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,7 +29,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
+import sportfacilities.repositories.SportRepository;
+import sportfacilities.repositories.SportRoomRepository;
 import sportfacilities.services.SportRoomService;
+import sportfacilities.services.SportService;
+
+
+//TODO put test in every method name
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -41,6 +55,8 @@ public class SportRoomControllerTest {
     private transient MockMvc mockMvc;
     @Mock
     transient SportRoomService sportRoomService;
+    @Mock
+    transient SportService sportService;
 
 
     /**
@@ -49,7 +65,7 @@ public class SportRoomControllerTest {
     @BeforeEach
     public void setup() {
         this.mockMvc =
-            MockMvcBuilders.standaloneSetup(new SportRoomController(sportRoomService))
+            MockMvcBuilders.standaloneSetup(new SportRoomController(sportRoomService, sportService))
                 .build();
     }
 
@@ -114,6 +130,28 @@ public class SportRoomControllerTest {
 
         verify(sportRoomService).getSportRoom(sportFieldId);
     }
+
+    @Test
+    public void deleteSportRoomTest() throws Exception {
+
+        mockMvc.perform(delete("/sportRoom/{sportRoomId}/deleteSportRoom/admin", sportFieldId))
+            .andExpect(status().isOk())
+            .andDo(MockMvcResultHandlers.print()).andReturn();
+
+        verify(sportRoomService).deleteSportRoom(sportFieldId);
+    }
+
+    @Test
+    public void deleteSportRoomWithInvalidIdTest() throws Exception {
+        doThrow(NoSuchElementException.class)
+            .when(sportRoomService)
+            .deleteSportRoom(1000L);
+
+        mockMvc.perform(delete("/sportRoom/{sportRoomId}/deleteSportRoom/admin", 1000L))
+            .andExpect(status().isBadRequest());
+    }
+
+
 
 
 

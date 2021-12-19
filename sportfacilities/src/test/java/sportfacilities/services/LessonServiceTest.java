@@ -4,9 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import net.minidev.asm.ex.NoSuchFieldException;
 import org.junit.jupiter.api.BeforeEach;
@@ -88,4 +93,5 @@ public class LessonServiceTest {
             .thenReturn(java.util.Optional.of(lesson2));
         assertEquals("NewLesson", lessonService.getLessonById(1L).getTitle());
     }
+
 }

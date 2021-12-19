@@ -1,20 +1,29 @@
 package sportfacilities.controllers;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.services.SportRoomService;
+import sportfacilities.services.SportService;
 
 /**
  * The type Sport room controller.
  */
+
+//TODO make every test use assertJ
 @RestController
 @RequestMapping("sportRoom")
 public class SportRoomController {
@@ -24,14 +33,18 @@ public class SportRoomController {
 
     private final transient SportRoomService sportRoomService;
 
+    private final transient SportService sportService;
+
     /**
      * Instantiates a new Sport room controller.
      *
      * @param sportRoomService the sport room service
      */
     @Autowired
-    public SportRoomController(SportRoomService sportRoomService) {
+    public SportRoomController(SportRoomService sportRoomService,
+                               SportService sportService) {
         this.sportRoomService = sportRoomService;
+        this.sportService = sportService;
         this.restTemplate = sportRoomService.restTemplate();
     }
 
@@ -141,6 +154,36 @@ public class SportRoomController {
             System.out.println("Sport field with id " + sportFieldId + " does not exist!!");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+    }
+
+
+    @PutMapping("/{name}/{minCapacity}/{maxCapacity}/{sport}/{isSportHall}/{relatedSport}"
+        + "/addSportRoom/admin")
+    @ResponseBody
+    public ResponseEntity<String> addSportRoom(
+        @PathVariable String name,
+        @PathVariable int minCapacity, @PathVariable int maxCapacity,
+        @PathVariable boolean isSportHall, @PathVariable String relatedSport
+    ) {
+        Sport sport = sportService.getSportById(relatedSport);
+        List<Sport> sports = new ArrayList<>();
+        sports.add(sport);
+
+        SportRoom sportRoom = new SportRoom(name, sports, minCapacity, maxCapacity);
+        sportRoomService.saveSportRoom(sportRoom);
+        return new ResponseEntity<>("SportRoom creation successful",HttpStatus.OK);
+
+    }
+
+    @DeleteMapping("/{sportRoomId}/deleteSportRoom/admin")
+    public ResponseEntity<String> deleteSportRoom(@PathVariable Long sportRoomId) {
+        try{
+            sportRoomService.deleteSportRoom(sportRoomId);
+        } catch (NoSuchElementException e){
+            return new ResponseEntity<>("No such element", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
 

@@ -1,5 +1,6 @@
 package sportfacilities.services;
 
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +47,10 @@ public class SportRoomService {
     public Boolean sportRoomExists(Long sportRoomId) {
         return sportRoomRepository.findBySportRoomId(sportRoomId).isPresent();
     }
+    
+    public void saveSportRoom(SportRoom sportRoom){
+        sportRoomRepository.save(sportRoom);
+    }
 
     /**
      * Rest template rest template.
@@ -58,4 +63,7 @@ public class SportRoomService {
         return new RestTemplate();
     }
 
+    public void deleteSportRoom(Long sportRoomId) throws NoSuchElementException {
+        sportRoomRepository.deleteBySportRoomId(sportRoomId);
+    }
 }

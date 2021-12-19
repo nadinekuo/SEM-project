@@ -2,13 +2,17 @@ package sportfacilities.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -129,6 +133,18 @@ public class SportRoomServiceTest {
         when(sportRoomRepository.findBySportRoomId(84L)).thenReturn(Optional.empty());
 
         assertThat(sportRoomService.sportRoomExists(84L)).isFalse();
+    }
+
+    @Test
+    public void deleteSportRoomTest() throws Exception {
+        doNothing().when(sportRoomRepository).deleteBySportRoomId(1L);
+        assertDoesNotThrow(() -> sportRoomService.deleteSportRoom(1L));
+    }
+
+    @Test
+    public void deleteSportRoomWithNonExistentId() throws Exception {
+        doThrow(new NoSuchElementException()).when(sportRoomRepository).deleteBySportRoomId(1000L);
+        assertThrows(NoSuchElementException.class, () -> sportRoomService.deleteSportRoom(1000L));
     }
 
     /**
