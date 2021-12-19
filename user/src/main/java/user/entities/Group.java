@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+
+//TODO remove a constructor
 @Entity
 @Table(name = "groups")
 public class Group {

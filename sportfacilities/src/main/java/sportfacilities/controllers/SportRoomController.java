@@ -147,8 +147,8 @@ public class SportRoomController {
     public ResponseEntity<String> getSportFieldSport(@PathVariable Long sportFieldId) {
         try {
             String relatedSport = sportRoomService.getSportRoom(sportFieldId)
-                .getRelatedSport();
-            return new ResponseEntity<String>(relatedSport, HttpStatus.OK);
+                .getSports().get(0).getSportName();
+            return new ResponseEntity<>(relatedSport, HttpStatus.OK);
         } catch (IllegalStateException e) {
             e.printStackTrace();
             System.out.println("Sport field with id " + sportFieldId + " does not exist!!");
