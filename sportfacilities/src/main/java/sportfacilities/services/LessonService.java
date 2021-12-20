@@ -1,7 +1,6 @@
 package sportfacilities.services;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sportfacilities.entities.Lesson;
@@ -79,14 +78,5 @@ public class LessonService {
      */
     public String getLessonStartingTime(long lessonId) {
         return lessonRepository.findById(lessonId).get().getStartingTime().toString();
-    }
-
-    /**
-     * Delete lesson.
-     *
-     * @param lessonId the lesson id
-     */
-    public void deleteLesson(long lessonId) throws NoSuchElementException {
-        lessonRepository.deleteById(lessonId);
     }
 }

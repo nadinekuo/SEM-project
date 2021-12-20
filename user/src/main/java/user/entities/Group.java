@@ -2,20 +2,11 @@ package user.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
-/**
- * The type Group.
- */
 @Entity
 @Table(name = "groups")
 public class Group {
@@ -33,18 +24,19 @@ public class Group {
     @JsonIgnoreProperties("groupForTeamSports")
     private List<Customer> groupMembers;
 
+
     /**
-     * Instantiates a new Group.
+     * Empty constructor needed for Spring JPA.
      */
     public Group() {
     }
 
     /**
-     * Instantiates a new Group.
+     * Constructor Group.
      *
-     * @param groupId      the group id
-     * @param groupName    the group name
-     * @param groupMembers the group members
+     * @param groupId      - long
+     * @param groupName    - String
+     * @param groupMembers - List<User></User>
      */
     public Group(long groupId, String groupName, List<Customer> groupMembers) {
         this.groupId = groupId;
@@ -53,102 +45,54 @@ public class Group {
         this.groupSize = groupMembers.size();
     }
 
-    /**
-     * Instantiates a new Group.
-     *
-     * @param groupName    the group name
-     * @param groupMembers the group members
-     */
     public Group(String groupName, List<Customer> groupMembers) {
         this.groupName = groupName;
         this.groupMembers = groupMembers;
         this.groupSize = groupMembers.size();
     }
 
-    /**
-     * Gets group id.
-     *
-     * @return the group id
-     */
     public long getGroupId() {
         return groupId;
     }
 
-    /**
-     * Sets group id.
-     *
-     * @param groupId the group id
-     */
     public void setGroupId(long groupId) {
         this.groupId = groupId;
     }
 
-    /**
-     * Gets group name.
-     *
-     * @return the group name
-     */
     public String getGroupName() {
         return groupName;
     }
 
-    /**
-     * Sets group name.
-     *
-     * @param groupName the group name
-     */
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
 
-    /**
-     * Gets group members.
-     *
-     * @return the group members
-     */
     public List<Customer> getGroupMembers() {
         return groupMembers;
     }
 
-    /**
-     * Sets group members.
-     *
-     * @param groupMembers the group members
-     */
     public void setGroupMembers(List<Customer> groupMembers) {
         this.groupMembers = groupMembers;
     }
 
-    /**
-     * Gets group size.
-     *
-     * @return the group size
-     */
     public int getGroupSize() {
         return groupSize;
     }
 
-    /**
-     * Sets group size.
-     *
-     * @param groupSize the group size
-     */
     public void setGroupSize(int groupSize) {
         this.groupSize = groupSize;
     }
 
     /**
-     * Add user to group.
+     * A new member is added to this group, to be referenced to later when reserving team sport
+     * fields/halls.
      *
-     * @param memberToAdd the member to add
+     * @param memberToAdd - User to be added to this group.
      */
     public void addUserToGroup(Customer memberToAdd) {
-        if (!this.groupMembers.contains(memberToAdd)) {
+        if (!groupMembers.contains(memberToAdd)) {
             this.groupMembers.add(memberToAdd);
             this.groupSize++;
-        } else {
-            throw new IllegalStateException(
-                "Customer with id : " + memberToAdd.getId() + " already exists in the group!");
         }
     }
 
