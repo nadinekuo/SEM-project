@@ -146,8 +146,9 @@ public class Group {
         if (!this.groupMembers.contains(memberToAdd)) {
             this.groupMembers.add(memberToAdd);
             this.groupSize++;
-        }else{
-            throw new IllegalStateException("Customer with id : " + memberToAdd.getId() + " already exists in the group!");
+        } else {
+            throw new IllegalStateException(
+                "Customer with id : " + memberToAdd.getId() + " already exists in the group!");
         }
     }
 

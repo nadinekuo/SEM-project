@@ -2,27 +2,23 @@ package reservation.entities.chainofresponsibility;
 
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
-import reservation.entities.chainofresponsibility.BaseValidator;
-import reservation.entities.chainofresponsibility.InvalidReservationException;
 import reservation.services.ReservationService;
 
 public class TeamRoomCapacityValidator extends BaseValidator {
 
-
-    private ReservationService reservationService;
-    private ReservationController reservationController;
+    private final ReservationService reservationService;
+    private final ReservationController reservationController;
 
     /**
      * Instantiates a new Team / Room capacity validator.
      * Checks:
-     *  - whether the min/max capacity of the sport room is adhered to
-     *  for group reservations only:
-     *  - whether group size adheres to min/max constraints on team sport teams
+     * - whether the min/max capacity of the sport room is adhered to
+     * for group reservations only:
+     * - whether group size adheres to min/max constraints on team sport teams
+     * Note: this validator is only part of the chain for sport room reservations
+     * (not equipment reservations)
      *
-     *  Note: this validator is only part of the chain for sport room reservations
-     *           (not equipment reservations)
-     *
-     * @param reservationService  -  the reservation service containing logic
+     * @param reservationService    -  the reservation service containing logic
      * @param reservationController the reservation controller to communicate with other
      *                              microservices
      */
@@ -31,7 +27,6 @@ public class TeamRoomCapacityValidator extends BaseValidator {
         this.reservationService = reservationService;
         this.reservationController = reservationController;
     }
-
 
     @Override
     public boolean handle(Reservation reservation) throws InvalidReservationException {
@@ -42,8 +37,7 @@ public class TeamRoomCapacityValidator extends BaseValidator {
         // since that was checked by the SportFacilityAvailabilityValidator
 
         // Halls can hold multiple (team) sports, whereas fields are tied to 1 team sport.
-        boolean isSportHall =
-            reservationController.getIsSportHall(roomId);
+        boolean isSportHall = reservationController.getIsSportHall(roomId);
 
         boolean isGroupReservation = (reservation.getGroupId() != -1);
         int groupSize;
@@ -64,9 +58,10 @@ public class TeamRoomCapacityValidator extends BaseValidator {
             int maxTeamSize = reservationController.getSportMaxTeamSize(sportName);
 
             if (groupSize < minTeamSize || groupSize > maxTeamSize) {
-                throw new InvalidReservationException("Group size for a " + sportName + " team "
-                    + "should be between " + minTeamSize + " and " + maxTeamSize + "!"
-                + "\n\n Your group (ID " + reservation.getGroupId() + " has size: " + groupSize);
+                throw new InvalidReservationException(
+                    "Group size for a " + sportName + " team " + "should be between " + minTeamSize
+                        + " and " + maxTeamSize + "!" + "\n\n Your group (ID "
+                        + reservation.getGroupId() + " has size: " + groupSize);
             }
 
         }
@@ -79,9 +74,10 @@ public class TeamRoomCapacityValidator extends BaseValidator {
         // Thus, we can just check the group size against room capacity.
 
         if (groupSize < roomMinCapacity || groupSize > roomMaxCapacity) {
-            throw new InvalidReservationException("This sports room has a minimal capacity of "
-                + roomMinCapacity + " and a maximal capacity of " + roomMaxCapacity + "!"
-                + "\n\n Your group size: " + groupSize);
+            throw new InvalidReservationException(
+                "This sports room has a minimal capacity of " + roomMinCapacity
+                    + " and a maximal capacity of " + roomMaxCapacity + "!"
+                    + "\n\n Your group size: " + groupSize);
         }
 
         return super.checkNext(reservation);
