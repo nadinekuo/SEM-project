@@ -1,12 +1,10 @@
-package reservation.entities.strategy;
+package reservation.entities;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
-import reservation.entities.Reservation;
-import reservation.entities.ReservationType;
 import reservation.entities.strategy.ReservationSortingStrategy;
 
 /**
