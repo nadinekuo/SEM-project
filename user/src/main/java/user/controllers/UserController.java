@@ -69,6 +69,12 @@ public class UserController {
         }
     }
 
+    /**
+     * Get the info of the customer.
+     *
+     * @param userName the userName
+     * @return the info of the customer
+     */
     @GetMapping("/{userName}/getCustomerInfo")
     @ResponseBody
     public List<String> getCustomerInfo(@PathVariable String userName) {
@@ -83,6 +89,12 @@ public class UserController {
         return customerInfo;
     }
 
+    /**
+     * Get the info of the admin.
+     *
+     * @param userName the userName
+     * @return the info of the admin
+     */
     @GetMapping("/{userName}/getAdminInfo")
     @ResponseBody
     public List<String> getAdminInfo(@PathVariable String userName) {
@@ -101,6 +113,7 @@ public class UserController {
      * Customer registration.
      *
      * @param request the request
+     * @return the response entity
      * @throws IOException the io exception
      */
     @PostMapping("/registerCustomer")
@@ -122,6 +135,7 @@ public class UserController {
      * Admin registration.
      *
      * @param request the request
+     * @return the response entity
      * @throws IOException the io exception
      */
     @PostMapping("/registerAdmin/admin")

@@ -19,6 +19,12 @@ public class UserService {
     private final transient UserRepository<Customer> customerRepository;
     private final transient UserRepository<Admin> adminRepository;
 
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
     /**
      * Constructor for UserService.
      *
@@ -61,12 +67,6 @@ public class UserService {
         return adminRepository.findAdminByUsername(userName);
     }
 
-    @Bean
-    @LoadBalanced
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
     /**
      * Register customer.
      *
@@ -90,15 +90,32 @@ public class UserService {
             .save(new Admin(data.getUsername(), passwordEncoder.encode(data.getPassword())));
     }
 
+    /**
+     * Upgrade a customer to premium.
+     *
+     * @param customer the customer
+     */
     public void upgradeCustomer(Customer customer) {
         customer.setPremiumUser(true);
         customerRepository.save(customer);
     }
 
+    /**
+     * Finds customer by username
+     *
+     * @param username - String
+     * @return Optional of Admin having this name
+     */
     public Optional<Customer> checkCustomerExists(String username) {
         return customerRepository.findByUsername(username);
     }
 
+    /**
+     * Finds Admin by username
+     *
+     * @param username - String
+     * @return Optional of Admin having this name
+     */
     public Optional<Admin> checkAdminExists(String username) {
         return adminRepository.findByUsername(username);
     }
