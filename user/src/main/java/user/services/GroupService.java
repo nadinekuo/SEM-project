@@ -45,6 +45,25 @@ public class GroupService {
     }
 
     /**
+     * Creats a new Group.
+     *
+     * @param groupName the group name
+     * @return the boolean
+     */
+    //TODO make this with try and catch and not a boolean
+    public boolean createGroup(String groupName) {
+        boolean res = false;
+        if (groupRepository.findByGroupName(groupName).isPresent()) {
+            throw new IllegalStateException(
+                "group with name " + groupName + " already exists! Try a new name");
+        } else {
+            groupRepository.save(new Group(groupName, new ArrayList<>()));
+            res = true;
+        }
+        return res;
+    }
+
+    /**
      * Gets group size by id.
      *
      * @param groupId the group id
@@ -68,14 +87,9 @@ public class GroupService {
 
     }
 
-    /**
-     * Create group group.
-     *
-     * @param groupName the group name
-     * @return the group
-     */
-    public Group createGroup(String groupName) {
-        return groupRepository.save(new Group(groupName, new ArrayList<>()));
+    public Group getGroupByGroupName(String groupName) {
+        return groupRepository.findByGroupName(groupName).orElseThrow(
+            () -> new IllegalStateException("Group with name " + groupName + " does not exist!"));
     }
 
     /**
@@ -91,7 +105,8 @@ public class GroupService {
         Group groupToAdd = groupRepository.findByGroupId(groupId).orElseThrow(
             () -> new IllegalStateException("Group with id " + groupId + " does not exist!"));
         oldCustomer.addGroupToUsersGroupList(groupToAdd);
-        //customer service only called for persistence
+        //customer service only called for the persistence of the updated group attribute of the
+        // customer
         customerService.saveCustomer(oldCustomer);
         return groupToAdd;
 

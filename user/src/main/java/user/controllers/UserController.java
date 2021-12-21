@@ -108,7 +108,7 @@ public class UserController {
     }
 
     /**
-     * Upgrade user response entity.
+     * Upgrades user to premium.
      *
      * @param userId the user id
      * @return the response entity
