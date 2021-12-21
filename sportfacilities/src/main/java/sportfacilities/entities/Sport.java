@@ -49,7 +49,7 @@ public class Sport {
     }
 
     /**
-     * Constructor for team Sport
+     * Instantiates a new Sport.
      *
      * @param sportName   the sport name
      * @param minTeamSize the min team size
@@ -63,7 +63,7 @@ public class Sport {
     }
 
     /**
-     * Constructor for non-team sports
+     * Instantiates a new Sport.
      *
      * @param sportName the sport name
      */

@@ -1,7 +1,6 @@
 package sportfacilities.controllers;
 
 import java.util.NoSuchElementException;
-import javax.ws.rs.PUT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -80,11 +79,10 @@ public class SportController {
      * @param maxCapacity the max capacity
      * @return the response entity
      */
-    @PutMapping("/{sportName}/{minCapacity}/{maxCapacity}/addTeamSport")
+    @PutMapping("/{sportName}/{minCapacity}/{maxCapacity}/addTeamSport/admin")
     @ResponseBody
-    public ResponseEntity<?> addSport(
-        @PathVariable String sportName,
-        @PathVariable int minCapacity, @PathVariable int maxCapacity){
+    public ResponseEntity<?> addSport(@PathVariable String sportName, @PathVariable int minCapacity,
+                                      @PathVariable int maxCapacity) {
 
         sportService.addSport(new Sport(sportName, minCapacity, maxCapacity));
         return new ResponseEntity<>(HttpStatus.OK);
@@ -96,9 +94,9 @@ public class SportController {
      * @param sportName the sport name
      * @return the response entity
      */
-    @PutMapping("/{sportName}/addNonTeamSport")
+    @PutMapping("/{sportName}/addNonTeamSport/admin")
     @ResponseBody
-    public ResponseEntity<?> addSport(@PathVariable String sportName){
+    public ResponseEntity<?> addSport(@PathVariable String sportName) {
 
         sportService.addSport(new Sport(sportName));
         return new ResponseEntity<>(HttpStatus.OK);
@@ -113,9 +111,9 @@ public class SportController {
     @DeleteMapping("/{sportName}/deleteSport/admin")
     @ResponseBody
     public ResponseEntity<String> deleteSport(@PathVariable String sportName) {
-        try{
+        try {
             sportService.deleteSport(sportName);
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>("No such element", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);
