@@ -1,6 +1,8 @@
 package security.authentication;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -25,24 +27,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         AppUser customer = getCustomerInfo(username);
+        if (customer != null) {
+            List<GrantedAuthority> grantedAuthoritiesCustomer = AuthorityUtils
+                    .commaSeparatedStringToAuthorityList("ROLE_USER");
+            return new User(customer.getUsername(), customer.getPassword(), grantedAuthoritiesCustomer);
+        }
+
         AppUser admin = getAdminInfo(username);
-
-        // If user not found. Throw this exception.
-        if (customer == null && admin == null) {
-            throw new UsernameNotFoundException("Username: " + username + " not found");
-        }
-
-        // if admin is not null, it has to be an admin
         if (admin != null) {
-            List<GrantedAuthority> grantedAuthorities = AuthorityUtils
+            List<GrantedAuthority> grantedAuthoritiesAdmin = AuthorityUtils
                     .commaSeparatedStringToAuthorityList("ROLE_ADMIN");
-            return new User(admin.getUsername(), admin.getPassword(), grantedAuthorities);
+            return new User(admin.getUsername(), admin.getPassword(), grantedAuthoritiesAdmin);
         }
-
-        // if admin was null then it has to be a customer
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-                .commaSeparatedStringToAuthorityList("ROLE_USER");
-        return new User(customer.getUsername(), customer.getPassword(), grantedAuthorities);
-
+        throw new UsernameNotFoundException("Username: " + username + " not found");
     }
 }
+

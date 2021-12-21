@@ -1,7 +1,9 @@
 package security.controllers;
 
+import com.sun.jersey.core.impl.provider.entity.XMLRootObjectProvider;
 import org.bouncycastle.openssl.PasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -15,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import security.users.AppUser;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("authentication")
@@ -38,27 +41,27 @@ public class AuthenticationController {
     }
 
     public static AppUser getCustomerInfo(@PathVariable String userName){
-        String methodSpecificUrl = "/user/" + userName + "/getCustomerInfo";
 
-        List<String> userInfo=
+        String methodSpecificUrl = "/user/" + userName + "/getCustomerInfo";
+        List<String> userInfo =
                 restTemplate.getForObject(userUrl + methodSpecificUrl, List.class);
 
         if (userInfo == null) {
             return null;
         }
-        AppUser user = new AppUser(userInfo.get(0), userInfo.get(1), "user");
-        return user;
+
+        return new AppUser(userInfo.get(0), userInfo.get(1), "user");
     }
 
     public static AppUser getAdminInfo(@PathVariable String userName){
         String methodSpecificUrl = "/user/" + userName + "/getAdminInfo";
-
-        List<String> userInfo=
+        List<String> userInfo =
                 restTemplate.getForObject(userUrl + methodSpecificUrl, List.class);
 
         if (userInfo == null) {
             return null;
         }
+
         AppUser user = new AppUser(userInfo.get(0), userInfo.get(1), "admin");
         return user;
     }

@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.Option;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,40 +76,40 @@ public class UserController {
      * Get the info of the customer.
      *
      * @param userName the userName
-     * @return the info of the customer
+     * @return the response entity
      */
     @GetMapping("/{userName}/getCustomerInfo")
     @ResponseBody
-    public List<String> getCustomerInfo(@PathVariable String userName) {
+    public ResponseEntity<?> getCustomerInfo(@PathVariable String userName) {
+        List<String> customerInfo = new ArrayList<>();
         Optional<Customer> customer = userService.getCustomerByUsername(userName);
         if (customer.isEmpty()) {
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
         Customer customerPresent = customer.get();
-        List<String> customerInfo = new ArrayList<>();
         customerInfo.add(customerPresent.getUsername());
         customerInfo.add(customerPresent.getPassword());
-        return customerInfo;
+        return new ResponseEntity<>(customerInfo, HttpStatus.OK);
     }
 
     /**
      * Get the info of the admin.
      *
      * @param userName the userName
-     * @return the info of the admin
+     * @return the response entity
      */
     @GetMapping("/{userName}/getAdminInfo")
     @ResponseBody
-    public List<String> getAdminInfo(@PathVariable String userName) {
+    public ResponseEntity<?> getAdminInfo(@PathVariable String userName) {
+        List<String> adminInfo = new ArrayList<>();
         Optional<Admin> admin = userService.getAdminByUsername(userName);
         if (admin.isEmpty()) {
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
         Admin adminPresent = admin.get();
-        List<String> adminInfo = new ArrayList<>();
         adminInfo.add(adminPresent.getUsername());
         adminInfo.add(adminPresent.getPassword());
-        return adminInfo;
+        return new ResponseEntity<>(adminInfo, HttpStatus.OK);
     }
 
     /**

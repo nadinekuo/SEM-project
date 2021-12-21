@@ -58,7 +58,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter
             return authManager.authenticate(authToken);
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
