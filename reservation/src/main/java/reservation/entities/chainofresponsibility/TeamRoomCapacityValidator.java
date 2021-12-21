@@ -1,11 +1,10 @@
 package reservation.entities.chainofresponsibility;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
-import reservation.entities.chainofresponsibility.BaseValidator;
-import reservation.entities.chainofresponsibility.InvalidReservationException;
 import reservation.services.ReservationService;
 
 @Component
@@ -15,11 +14,20 @@ public class TeamRoomCapacityValidator extends BaseValidator {
     private ReservationService reservationService;
     private ReservationController reservationController;
 
+
     /**
-     *  Instantiates a new Team / room capacity validator.
+     * Instantiates a new Team / Room capacity validator.
+     * Checks:
+     *  - whether the min/max capacity of the sport room is adhered to
+     *  for group reservations only:
+     *  - whether group size adheres to min/max constraints on team sport teams
      *
-     * @param reservationService  - contains reservation logic
-     * @param reservationController - makes API requests to other microservices
+     *  Note: this validator is only part of the chain for sport room reservations
+     *           (not equipment reservations)
+     *
+     * @param reservationService  -  the reservation service containing logic
+     * @param reservationController the reservation controller to communicate with other
+     *                              microservices
      */
     @Autowired
     public TeamRoomCapacityValidator(ReservationService reservationService,

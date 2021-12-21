@@ -54,7 +54,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void ConstructorTest() {
+    public void constructorTest() {
         assertNotNull(userService);
     }
 
@@ -73,9 +73,11 @@ class UserServiceTest {
 
     @Test
     void registerCustomer() {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserDtoConfig data = new UserDtoConfig("erwin", "password", true);
+
         userService.registerCustomer(data);
+
         ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
         verify(customerRepository).save(customerArgumentCaptor.capture());
         verify(customerRepository, times(1)).save(customer);
@@ -87,9 +89,11 @@ class UserServiceTest {
 
     @Test
     void registerAdmin() {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserDtoConfig data = new UserDtoConfig("erwin", "password", true);
+
         userService.registerAdmin(data);
+
         ArgumentCaptor<Admin> customerArgumentCaptor = ArgumentCaptor.forClass(Admin.class);
         verify(adminRepository).save(customerArgumentCaptor.capture());
         verify(adminRepository, times(1)).save(admin);

@@ -14,10 +14,13 @@ public class UserReservationBalanceValidator extends BaseValidator {
     private final ReservationController reservationController;
 
     /**
-     * Instantiates a new User reservation balance validator.
+     * Instantiates a new User Reservation Balance validator.
+     *  Checks:
+     *  - whether daily limit on sports room reservations is not reached yet
      *
-     * @param reservationService  - contains reservation logic
-     * @param reservationController - makes API requests to other microservices
+     * @param reservationService  -  the reservation service containing logic
+     * @param reservationController the reservation controller to communicate with other
+     *                              microservices
      */
     @Autowired
     public UserReservationBalanceValidator(ReservationService reservationService,

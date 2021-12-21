@@ -36,6 +36,7 @@ public class SportFacilityAvailabilityValidatorTest {
     private transient ReservationService reservationService;
     // Class under test:
     private transient SportFacilityAvailabilityValidator sportFacilityAvailabilityValidator;
+    private transient Long groupId;
 
 
     /**
@@ -105,8 +106,9 @@ public class SportFacilityAvailabilityValidatorTest {
         assertThrows(InvalidReservationException.class, () -> {
             sportFacilityAvailabilityValidator.handle(sportRoomReservation);
         });
-        verify(reservationService).sportsFacilityIsAvailable(25L,
-            LocalDateTime.of(2022, 10, 05, 17, 45));
+        verify(reservationService).sportsFacilityIsAvailable(
+            sportRoomReservation.getSportFacilityReservedId(),
+            sportRoomReservation.getStartingTime());
     }
 
 
@@ -122,9 +124,9 @@ public class SportFacilityAvailabilityValidatorTest {
         assertThrows(InvalidReservationException.class, () -> {
             sportFacilityAvailabilityValidator.handle(sportRoomReservation);
         });
-        verify(reservationService).sportsFacilityIsAvailable(25L,
-            LocalDateTime.of(2022, 10, 05, 17, 45));
-        verify(reservationController).getSportsRoomExists(25L);
+        verify(reservationService).sportsFacilityIsAvailable(sportRoomReservation.getId(),
+            sportRoomReservation.getStartingTime());
+        verify(reservationController).getSportsRoomExists(sportRoomReservation.getId());
     }
 
 
@@ -142,9 +144,9 @@ public class SportFacilityAvailabilityValidatorTest {
             sportFacilityAvailabilityValidator.handle(groupReservation);
         });
 
-        verify(reservationService).findByGroupIdAndTime(84L,
-            LocalDateTime.of(2022, 02, 3, 20, 30));
-        verify(reservationController).getSportsRoomExists(13L);
+        verify(reservationService).findByGroupIdAndTime(groupReservation.getGroupId(),
+            groupReservation.getStartingTime());
+        verify(reservationController).getSportsRoomExists(groupReservation.getSportFacilityReservedId());
     }
 
 

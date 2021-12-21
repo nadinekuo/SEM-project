@@ -33,6 +33,7 @@ public class TeamRoomCapacityValidatorTest {
     private transient ReservationService reservationService;
     // Class under test:
     private transient TeamRoomCapacityValidator teamRoomCapacityValidator;
+    private transient String sportName;
 
     /**
      * Constructor for this test suite.
@@ -49,6 +50,8 @@ public class TeamRoomCapacityValidatorTest {
         reservation1 = new Reservation(ReservationType.EQUIPMENT, 1L, 42L,
             LocalDateTime.of(2022, 10, 05, 16, 00));
         reservation1.setId(53L);
+
+        sportName = "soccer";
     }
 
 
@@ -134,7 +137,7 @@ public class TeamRoomCapacityValidatorTest {
             .thenReturn(false);
         when(reservationController.getGroupSize(anyLong()))
             .thenReturn(5);
-        when(reservationController.getSportFieldSport(anyLong())).thenReturn("soccer");
+        when(reservationController.getSportFieldSport(anyLong())).thenReturn(sportName);
         // Group size < min team size, so invalid
         when(reservationController.getSportMinTeamSize(anyString())).thenReturn(8);
         when(reservationController.getSportMaxTeamSize(anyString())).thenReturn(15);
@@ -146,8 +149,8 @@ public class TeamRoomCapacityValidatorTest {
         verify(reservationController).getIsSportHall(13L);
         verify(reservationController).getGroupSize(84L);
         verify(reservationController).getSportFieldSport(13L);
-        verify(reservationController).getSportMinTeamSize("soccer");
-        verify(reservationController).getSportMaxTeamSize("soccer");
+        verify(reservationController).getSportMinTeamSize(sportName);
+        verify(reservationController).getSportMaxTeamSize(sportName);
     }
 
 

@@ -21,6 +21,9 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
      *
      * @param reservationService  - contains reservation logic
      * @param reservationController - makes API requests to other microservices
+     *  Checks:
+     *  - whether starting time of reservation is between 16:00 and 23:00
+     *  - whether sport room or equipment is physically available
      */
     @Autowired
     public SportFacilityAvailabilityValidator(ReservationService reservationService,
