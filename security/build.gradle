@@ -1,7 +1,16 @@
+plugins {
+    id 'jacoco'
+}
+
 group = 'sem.security'
 
+test {
+    finalizedBy jacocoTestReport
+}
+jacocoTestReport {
+    dependsOn test
+}
 
-dependencies {
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testImplementation 'org.springframework.security:spring-security-test'
+jacoco {
+    toolVersion = "0.8.7"
 }

@@ -84,6 +84,11 @@ public class GroupController {
         return groupService.getUsersInaGroup(id);
     }
 
+    @GetMapping("/groupName/{groupName}")
+    public Group getGroupByGroupName(@PathVariable String groupName) {
+        return groupService.getGroupByGroupName(groupName);
+    }
+
     /**
      * Create group response entity.
      *
@@ -91,8 +96,12 @@ public class GroupController {
      * @return the response entity
      */
     @PostMapping("/create/{groupName}")
-    public ResponseEntity<Group> createGroup(@PathVariable String groupName) {
-        return new ResponseEntity<>(groupService.createGroup(groupName), HttpStatus.CREATED);
+    public ResponseEntity<String> createGroup(@PathVariable String groupName) {
+        if (groupService.createGroup(groupName)) {
+            return new ResponseEntity<>("Group created successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Group creation unsuccessful", HttpStatus.FORBIDDEN);
+        }
     }
 
     /**
@@ -108,8 +117,6 @@ public class GroupController {
         Group g = groupService.addCustomerToGroup(customerId, groupId);
         return ResponseEntity.ok(g);
     }
-
-    // return the list of customers in the group
 
     /**
      * Make group reservation response entity.

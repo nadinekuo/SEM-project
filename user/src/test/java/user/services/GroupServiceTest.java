@@ -7,8 +7,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,6 +49,7 @@ public class GroupServiceTest {
         erwin = new Customer("erwin123", "password4", false);
         nadine = new Customer("nadine123", "password5", true);
         panagiotis = new Customer("panas123", "password6", false);
+
         group1 =
             new Group(33L, "soccerTeam1", List.of(arslan, emil, nadine, erwin, emma, panagiotis));
         group2 = new Group(42L, "volleyballTeam3", List.of(emma, panagiotis, erwin));
@@ -72,7 +75,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void getGroupById() {
+    public void getGroupByIdTest() {
         when(groupRepository.findByGroupId(33L)).thenReturn(Optional.of(group1));
 
         Group result = groupService.getGroupById(33L);
@@ -83,7 +86,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void getNonExistingGroupById() {
+    public void getNonExistingGroupByIdTest() {
         when(groupRepository.findByGroupId(33L)).thenReturn(Optional.empty());
 
         assertThrows(IllegalStateException.class, () -> {
@@ -92,11 +95,77 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void getGroupSize() {
+    public void getGroupSizeTest() {
         when(groupRepository.findByGroupId(33L)).thenReturn(Optional.of(group1));
 
         assertThat(groupService.getGroupSizeById(33L)).isEqualTo(6);
         verify(groupRepository, times(1)).findByGroupId(33L);
     }
+
+    @Test
+    public void getGroupByGroupName() {
+        when(groupRepository.findByGroupName("soccerTeam1")).thenReturn(Optional.of(group1));
+
+        assertThat(groupService.getGroupByGroupName("soccerTeam1").getGroupId()).isEqualTo(33L);
+        assertThat(groupService.getGroupByGroupName("soccerTeam1").getGroupSize()).isEqualTo(6L);
+        verify(groupRepository, times(2)).findByGroupName("soccerTeam1");
+    }
+
+    @Test
+    public void createGroupTest() {
+        group3 = new Group("basketballTeam1", List.of(arslan, emma, nadine, panagiotis));
+        when(groupRepository.save(group3)).thenReturn(group3);
+
+        assertThat(groupService.createGroup("basketballTeam1")).isTrue();
+        verify(groupRepository, times(1)).save(group3);
+    }
+
+    @Test
+    public void createAlreadyExistingGroupTest() {
+        when(groupRepository.findByGroupName("soccerTeam1")).thenReturn(Optional.of(group1));
+
+        assertThrows(IllegalStateException.class, () -> groupService.createGroup("soccerTeam1"));
+        verify(groupRepository, times(1)).findByGroupName("soccerTeam1");
+    }
+
+    @Test
+    @Ignore
+    public void addCustomerToGroupTest() {
+
+        arslan.setId(1L);
+        arslan.setGroupsForTeamSports(new ArrayList<>());
+
+        when(customerService.getCustomerById(1L)).thenReturn(arslan);
+        when(groupRepository.findByGroupId(42L)).thenReturn(Optional.of(group2));
+        when(customerService.saveCustomer(arslan)).thenReturn(arslan);
+
+        assertThat(groupService.addCustomerToGroup(1L, 42L).getGroupSize()).isEqualTo(4L);
+        verify(groupRepository, times(1)).findByGroupId(42L);
+
+    }
+
+    @Test
+    public void addAlreadyExistingCustomerToGroupTest() {
+        arslan.setId(1L);
+        arslan.setGroupsForTeamSports(new ArrayList<>());
+
+        when(customerService.getCustomerById(1L)).thenReturn(arslan);
+        when(groupRepository.findByGroupId(42L)).thenReturn(Optional.of(group2));
+        when(customerService.saveCustomer(arslan)).thenReturn(arslan);
+
+        assertThat(groupService.addCustomerToGroup(1L, 42L).getGroupSize()).isEqualTo(4L);
+        assertThrows(IllegalStateException.class, () -> groupService.addCustomerToGroup(1L, 42L));
+
+        verify(groupRepository, times(2)).findByGroupId(42L);
+    }
+
+    @Test
+    @Ignore
+    public void getUsersInGroupTest() {
+        when(groupRepository.findByGroupId(42L)).thenReturn(Optional.of(group2));
+        assertThat(groupService.getUsersInaGroup(42L).size()).isEqualTo(3L);
+    }
+
+    //testing build pass
 
 }
