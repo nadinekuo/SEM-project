@@ -124,9 +124,9 @@ public class SportFacilityAvailabilityValidatorTest {
         assertThrows(InvalidReservationException.class, () -> {
             sportFacilityAvailabilityValidator.handle(sportRoomReservation);
         });
-        verify(reservationService).sportsFacilityIsAvailable(sportRoomReservation.getId(),
+        verify(reservationService).sportsFacilityIsAvailable(sportRoomReservation.getSportFacilityReservedId(),
             sportRoomReservation.getStartingTime());
-        verify(reservationController).getSportsRoomExists(sportRoomReservation.getId());
+        verify(reservationController).getSportsRoomExists(sportRoomReservation.getSportFacilityReservedId());
     }
 
 
