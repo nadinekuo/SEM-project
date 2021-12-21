@@ -25,18 +25,16 @@ public class Sport {
     private int minTeamSize;   //  1 if not team sport
     private int maxTeamSize;   //  -1 if not team sport
 
-    @Transient
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "sport_locations", joinColumns = {
         @JoinColumn(name = "sport_name", referencedColumnName = "sportName", nullable = false,
             updatable = false)
         }, inverseJoinColumns = {
-        @JoinColumn(name = "sportroom_name", referencedColumnName = "sportRoomName", nullable =
+        @JoinColumn(name = "sportroom_id", referencedColumnName = "sportRoomId", nullable =
             false, updatable = false)
     })
     private List<SportRoom> sportLocations;
 
-    @Transient
     @OneToMany(mappedBy = "relatedSport", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<Equipment> equipmentList;

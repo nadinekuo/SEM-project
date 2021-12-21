@@ -65,6 +65,8 @@ public class ReservationService {
     /**
      * Check reservation by passing the object through Chain of Responsibility.
      * Various checks to be done by different validators.
+     * If the reservation was not valid, that means one or more checks (in some validator)
+     * were violated -> exception thrown.
      *
      * @param reservation           the reservation
      * @param reservationController the reservation controller through which API calls to other

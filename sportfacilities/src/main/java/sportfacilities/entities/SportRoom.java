@@ -29,13 +29,12 @@ public class SportRoom {
     private Long sportRoomId;
     private String sportRoomName; // example: X1, X2, X3 ...
 
-    @Transient
     @ManyToMany(mappedBy = "sportLocations", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Sport> sports;   // Only sport halls will store multiple sports
     private int minCapacity;
     private int maxCapacity;
-    private String relatedSport;
+
 
     /**
      * Empty constructor needed for Spring JPA.
@@ -57,11 +56,6 @@ public class SportRoom {
         this.minCapacity = minCapacity;
         this.maxCapacity = maxCapacity;
         this.isSportsHall = sports.size() > 1;
-        if (!isSportsHall) {
-            relatedSport = sports.get(0).getSportName();
-        } else {
-            relatedSport = null;
-        }
     }
 
     /**
@@ -81,11 +75,6 @@ public class SportRoom {
         this.sports = sports;
         this.minCapacity = minCapacity;
         this.maxCapacity = maxCapacity;
-        if (!isSportsHall) {
-            relatedSport = sports.get(0).getSportName();
-        } else {
-            relatedSport = null;
-        }
     }
 
     public Long getSportRoomId() {
@@ -142,14 +131,6 @@ public class SportRoom {
 
     public void setSportsHall(boolean sportsHall) {
         isSportsHall = sportsHall;
-    }
-
-    public String getRelatedSport() {
-        return relatedSport;
-    }
-
-    public void setRelatedSport(String relatedSport) {
-        this.relatedSport = relatedSport;
     }
 
     @Override
