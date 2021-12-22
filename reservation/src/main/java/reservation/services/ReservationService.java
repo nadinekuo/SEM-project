@@ -37,10 +37,10 @@ public class ReservationService {
     }
 
     /**
-     * Gets reservation from repository.
+     * Gets reservation.
      *
-     * @param reservationId the reservation id to search for
-     * @return the found reservation, or throw exception if non-existent id
+     * @param reservationId the reservation id
+     * @return the reservation
      */
     public Reservation getReservation(Long reservationId) {
         return reservationRepository.findById(reservationId).orElseThrow(
@@ -49,7 +49,7 @@ public class ReservationService {
     }
 
     /**
-     * Delete reservation if id exists.
+     * Delete reservation.
      *
      * @param reservationId the reservation id
      */
@@ -109,12 +109,11 @@ public class ReservationService {
     }
 
     /**
-     * Checks if sports facility is available at given time.
-     * All Reservations start at full hours, so only start time has to be checked.
+     * Sports facility is available boolean.
      *
-     * @param sportFacilityId the sport facility id to check
-     * @param time            the time to check
-     * @return boolean - true if sport facility is not associated with any reservation yet.
+     * @param sportFacilityId the sport facility id
+     * @param time            the time
+     * @return the boolean
      */
     public boolean sportsFacilityIsAvailable(Long sportFacilityId, LocalDateTime time) {
         return reservationRepository.findBySportFacilityReservedIdAndTime(sportFacilityId, time)
@@ -122,9 +121,9 @@ public class ReservationService {
     }
 
     /**
-     * Make sport facility (Equipment, Sport Room, Lesson) reservation.
+     * Make sport facility reservation reservation.
      *
-     * @param reservation - reservation object to be saved in database
+     * @param reservation the reservation
      * @return the reservation
      */
     public Reservation makeSportFacilityReservation(Reservation reservation) {
@@ -132,7 +131,7 @@ public class ReservationService {
     }
 
     /**
-     * Gets user reservation count (for sport rooms, not equipment) on given day.
+     * Gets user reservation count on day.
      *
      * @param start      the start
      * @param end        the end
@@ -158,11 +157,11 @@ public class ReservationService {
     }
 
     /**
-     * Find reservation by group id and time given.
+     * Find by group id and time long.
      *
      * @param groupId the group id
      * @param time    the time
-     * @return the Long corresponding to reservation found, null if not found.
+     * @return the long
      */
     public Long findByGroupIdAndTime(Long groupId, LocalDateTime time) {
         return reservationRepository.findByGroupIdAndTime(groupId, time).orElse(null);

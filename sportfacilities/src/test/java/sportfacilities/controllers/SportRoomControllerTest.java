@@ -23,6 +23,9 @@ import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.services.SportRoomService;
 
+/**
+ * The type Sport room controller test.
+ */
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 public class SportRoomControllerTest {
@@ -30,8 +33,8 @@ public class SportRoomControllerTest {
 
     private final transient long sportRoomId = 42L;
     private final transient long sportFieldId = 13L;
-    private final transient Sport soccer = new Sport("soccer", true, 6, 11);
-    private final transient Sport hockey = new Sport("hockey", true, 7, 14);
+    private final transient Sport soccer = new Sport("soccer", 6, 11);
+    private final transient Sport hockey = new Sport("hockey", 7, 14);
     private final transient SportRoom hallX1 =
         new SportRoom(sportRoomId, "X1", List.of(soccer, hockey), 10, 50);
     private final transient SportRoom hockeyField = new SportRoom(42L, "hockeyfieldA",
@@ -39,12 +42,14 @@ public class SportRoomControllerTest {
 
     @Autowired
     private transient MockMvc mockMvc;
+    /**
+     * The Sport room service.
+     */
     @Mock
     transient SportRoomService sportRoomService;
 
-
     /**
-     * Sets up the tests.
+     * Sets .
      */
     @BeforeEach
     public void setup() {
@@ -53,6 +58,11 @@ public class SportRoomControllerTest {
                 .build();
     }
 
+    /**
+     * Gets sport room test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getSportRoomTest() throws Exception {
         mockMvc.perform(get("/sportRoom/{sportRoomId}", sportRoomId))
@@ -61,7 +71,11 @@ public class SportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 
-
+    /**
+     * Gets sport room exists.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getSportRoomExists() throws Exception {
         mockMvc.perform(get("/sportRoom/{sportRoomId}/exists", sportRoomId))
@@ -70,6 +84,11 @@ public class SportRoomControllerTest {
         verify(sportRoomService).sportRoomExists(sportRoomId);
     }
 
+    /**
+     * Gets sport room is hall.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getSportRoomIsHall() throws Exception {
         given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
@@ -81,6 +100,11 @@ public class SportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 
+    /**
+     * Gets maximum capacity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getMaximumCapacity() throws Exception {
         given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
@@ -92,7 +116,11 @@ public class SportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 
-
+    /**
+     * Gets minimum capacity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getMinimumCapacity() throws Exception {
         given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
@@ -104,6 +132,11 @@ public class SportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 
+    /**
+     * Gets field sport.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getFieldSport() throws Exception {
         given(sportRoomService.getSportRoom(sportFieldId)).willReturn(hockeyField);
