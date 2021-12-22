@@ -72,6 +72,8 @@ public class ReservationService {
      * @param reservationController the reservation controller through which API calls to other
      *                              microservices are made
      * @return boolean - true if Reservation can be made, else false.
+     * If the reservation was not valid, that means one or more checks (in some validator)
+     * were violated -> exception thrown.
      */
     public boolean checkReservation(Reservation reservation,
                                     ReservationController reservationController) {
