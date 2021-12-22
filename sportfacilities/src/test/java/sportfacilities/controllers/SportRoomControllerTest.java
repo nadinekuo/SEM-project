@@ -40,8 +40,8 @@ public class SportRoomControllerTest {
     private final transient long sportFieldId = 13L;
     private final transient int minCapacity = 2;
     private final transient int maxCapacity = 12;
-    private final transient Sport soccer = new Sport("soccer", true, 6, 11);
-    private final transient Sport hockey = new Sport("hockey", true, 7, 14);
+    private final transient Sport soccer = new Sport("soccer", 6, 11);
+    private final transient Sport hockey = new Sport("hockey",  7, 14);
     private final transient SportRoom hallX1 =
         new SportRoom("X1", List.of(soccer, hockey), 10, 50, true);
     private final transient SportRoom hockeyField =

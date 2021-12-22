@@ -39,9 +39,9 @@ public class SportRoomServiceTest {
     List<Sport> sports = new ArrayList<>();
 
     private final transient Sport yoga =
-        new Sport("yoga", false, 1, -1);
+        new Sport("yoga");
     private final transient Sport soccer =
-        new Sport("soccer", true, 6, 11);
+        new Sport("soccer",  6, 11);
     private final transient Long id1 = 34L;
     private final transient Long id2 = 84L;
     private final transient long id3 = 1L;
