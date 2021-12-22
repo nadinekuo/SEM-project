@@ -1,10 +1,13 @@
 package reservation.entities.chainofresponsibility;
 
 import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.services.ReservationService;
 
+@Component
 public class UserReservationBalanceValidator extends BaseValidator {
 
     private final ReservationService reservationService;
@@ -19,6 +22,7 @@ public class UserReservationBalanceValidator extends BaseValidator {
      * @param reservationController the reservation controller to communicate with other
      *                              microservices
      */
+    @Autowired
     public UserReservationBalanceValidator(ReservationService reservationService,
                                            ReservationController reservationController) {
         this.reservationService = reservationService;

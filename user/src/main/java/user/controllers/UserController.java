@@ -108,10 +108,10 @@ public class UserController {
     }
 
     /**
-     * Upgrades user to premium.
+     * Turns basic subscription of customers into premium.
      *
-     * @param userId the user id
-     * @return the response entity
+     * @param userId - long
+     * @return ResponseEntity containing error message, if applicable.
      */
     @PutMapping("/{userId}/upgrade")
     public ResponseEntity<String> upgradeUser(@PathVariable Long userId) {
