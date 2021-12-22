@@ -37,13 +37,13 @@ public class SportFacilitiesConfig {
 
             String boxString = "boxingGloves";
 
-            Sport soccer = new Sport("soccer", true, 6, 11);
-            Sport hockey = new Sport("hockey", true, 7, 14);
-            Sport volleyball = new Sport("volleyball", true, 4, 12);
-            Sport tennis = new Sport("tennis", true, 4, 13);
-            Sport yoga = new Sport("yoga", false, 1, -1);
-            Sport zumba = new Sport("zumba", false, 1, -1);
-            Sport kickboxing = new Sport("kickbox", false, 1, -1);
+            Sport soccer = new Sport("soccer",  6, 11);
+            Sport hockey = new Sport("hockey",  7, 14);
+            Sport volleyball = new Sport("volleyball",  4, 12);
+            Sport tennis = new Sport("tennis", 4, 13);
+            Sport yoga = new Sport("yoga");
+            Sport zumba = new Sport("zumba");
+            Sport kickboxing = new Sport("kickbox");
 
             sportRepository.saveAll(
                 List.of(soccer, hockey, volleyball, tennis, yoga, zumba, kickboxing));
