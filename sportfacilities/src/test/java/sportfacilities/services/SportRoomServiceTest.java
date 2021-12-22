@@ -59,12 +59,12 @@ public class SportRoomServiceTest {
      * Instantiates a new Sport room service test.
      */
     public SportRoomServiceTest() {
-        soccer = new Sport("soccer", true, 6, 11);
-        hockey = new Sport("hockey", true, 7, 14);
-        volleyball = new Sport("volleyball", true, 4, 12);
-        yoga = new Sport("yoga", false, 1, -1);
-        zumba = new Sport("zumba", false, 1, -1);
-        kickboxing = new Sport("kickbox", false, 1, -1);
+        soccer = new Sport("soccer", 6, 11);
+        hockey = new Sport("hockey", 7, 14);
+        volleyball = new Sport("volleyball", 4, 12);
+        yoga = new Sport("yoga");
+        zumba = new Sport("zumba");
+        kickboxing = new Sport("kickbox");
 
         hallX1 = new SportRoom(34L, "X1", List.of(soccer, hockey), 10, 50);
         hallX2 = new SportRoom(84L, "X2", List.of(hockey, volleyball, zumba), 15, 60);
