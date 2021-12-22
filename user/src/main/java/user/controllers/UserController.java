@@ -105,6 +105,12 @@ public class UserController {
         return new ResponseEntity<>("User has been registered.", HttpStatus.OK);
     }
 
+    /**
+     * Turns basic subscription of customers into premium.
+     *
+     * @param userId - long
+     * @return ResponseEntity containing error message, if applicable.
+     */
     @PutMapping("/{userId}/upgrade")
     public ResponseEntity<String> upgradeUser(@PathVariable Long userId) {
         try {

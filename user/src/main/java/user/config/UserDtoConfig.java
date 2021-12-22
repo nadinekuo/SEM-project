@@ -15,7 +15,8 @@ public class UserDtoConfig implements Serializable {
     public UserDtoConfig() {
     }
 
-    /**
+    /** Instantiates a new User dto config.
+     *
      * @param username - user id
      * @param password - password of user
      * @param premiumSubscription - basic or premium

@@ -23,8 +23,8 @@ public class Customer extends User {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_groups", joinColumns = {
         @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable =
-            false)
-    }, inverseJoinColumns = {
+            false)},
+        inverseJoinColumns = {
         @JoinColumn(name = "group_id", referencedColumnName = "groupId", nullable = false,
             updatable = false)
     })

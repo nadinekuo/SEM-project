@@ -81,10 +81,10 @@ public class TeamRoomCapacityValidatorTest {
             teamRoomCapacityValidator.handle(groupReservation);
         });
 
-        verify(reservationController).getIsSportHall(13L);
-        verify(reservationController).getGroupSize(84L);
-        verify(reservationController).getSportRoomMinimumCapacity(13L);
-        verify(reservationController).getSportRoomMaximumCapacity(13L);
+        verify(reservationController).getIsSportHall(groupReservation.getSportFacilityReservedId());
+        verify(reservationController).getGroupSize(groupReservation.getGroupId());
+        verify(reservationController).getSportRoomMinimumCapacity(groupReservation.getSportFacilityReservedId());
+        verify(reservationController).getSportRoomMaximumCapacity(groupReservation.getSportFacilityReservedId());
     }
 
 
@@ -105,10 +105,10 @@ public class TeamRoomCapacityValidatorTest {
             teamRoomCapacityValidator.handle(groupReservation);
         });
 
-        verify(reservationController).getIsSportHall(13L);
-        verify(reservationController).getGroupSize(84L);
-        verify(reservationController).getSportRoomMinimumCapacity(13L);
-        verify(reservationController).getSportRoomMaximumCapacity(13L);
+        verify(reservationController).getIsSportHall(groupReservation.getSportFacilityReservedId());
+        verify(reservationController).getGroupSize(groupReservation.getGroupId());
+        verify(reservationController).getSportRoomMinimumCapacity(groupReservation.getSportFacilityReservedId());
+        verify(reservationController).getSportRoomMaximumCapacity(groupReservation.getSportFacilityReservedId());
     }
 
 
@@ -146,9 +146,10 @@ public class TeamRoomCapacityValidatorTest {
             teamRoomCapacityValidator.handle(groupReservation);
         });
 
-        verify(reservationController).getIsSportHall(13L);
-        verify(reservationController).getGroupSize(84L);
-        verify(reservationController).getSportFieldSport(13L);
+        verify(reservationController).getIsSportHall(groupReservation.getSportFacilityReservedId());
+        verify(reservationController).getGroupSize(groupReservation.getGroupId());
+        verify(reservationController).getSportFieldSport(
+            groupReservation.getSportFacilityReservedId());
         verify(reservationController).getSportMinTeamSize(sportName);
         verify(reservationController).getSportMaxTeamSize(sportName);
     }
