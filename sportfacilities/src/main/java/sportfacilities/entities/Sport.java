@@ -14,6 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+/**
+ * The type Sport.
+ */
 @Entity
 @Table(name = "sports")
 public class Sport {
@@ -39,67 +42,144 @@ public class Sport {
     @JsonManagedReference
     private List<Equipment> equipmentList;
 
+    /**
+     * Instantiates a new Sport.
+     */
     public Sport() {
     }
 
+
+
     /**
-     * Constructor.
+     * Instantiates a new Sport.
      *
-     * @param sportName   - String, ID
-     * @param teamSport   - boolean
-     * @param minTeamSize - int, constraint for group reservations: > 1 if teamSport = true, else 1
+     * @param sportName   the sport name
+     * @param minTeamSize the min team size
+     * @param maxTeamSize the max team size
      */
-    public Sport(String sportName, boolean teamSport, int minTeamSize, int maxTeamSize) {
+    public Sport(String sportName,  int minTeamSize, int maxTeamSize) {
         this.sportName = sportName;
-        this.teamSport = teamSport;
+        this.teamSport = true;
         this.minTeamSize = minTeamSize;
         this.maxTeamSize = maxTeamSize;
     }
 
+    /**
+     * Instantiates a new Sport.
+     *
+     * @param sportName the sport name
+     */
+    public Sport(String sportName) {
+        this.sportName = sportName;
+        this.teamSport = false;
+        this.minTeamSize = 1;
+        this.maxTeamSize = -1;
+    }
+
+    /**
+     * Gets sport name.
+     *
+     * @return the sport name
+     */
     public String getSportName() {
         return sportName;
     }
 
+    /**
+     * Sets sport name.
+     *
+     * @param sportName the sport name
+     */
     public void setSportName(String sportName) {
         this.sportName = sportName;
     }
 
+    /**
+     * Is team sport boolean.
+     *
+     * @return the boolean
+     */
     public boolean isTeamSport() {
         return teamSport;
     }
 
+    /**
+     * Sets team sport.
+     *
+     * @param teamSport the team sport
+     */
     public void setTeamSport(boolean teamSport) {
         this.teamSport = teamSport;
     }
 
+    /**
+     * Gets sport locations.
+     *
+     * @return the sport locations
+     */
     public List<SportRoom> getSportLocations() {
         return sportLocations;
     }
 
+    /**
+     * Sets sport locations.
+     *
+     * @param sportLocations the sport locations
+     */
     public void setSportLocations(List<SportRoom> sportLocations) {
         this.sportLocations = sportLocations;
     }
 
+    /**
+     * Gets equipment list.
+     *
+     * @return the equipment list
+     */
     public List<Equipment> getEquipmentList() {
         return equipmentList;
     }
 
+    /**
+     * Sets equipment list.
+     *
+     * @param equipmentList the equipment list
+     */
     public void setEquipmentList(List<Equipment> equipmentList) {
         this.equipmentList = equipmentList;
     }
 
+    /**
+     * Gets min team size.
+     *
+     * @return the min team size
+     */
     public int getMinTeamSize() {
         return minTeamSize;
     }
 
+    /**
+     * Sets min team size.
+     *
+     * @param minTeamSize the min team size
+     */
     public void setMinTeamSize(int minTeamSize) {
         this.minTeamSize = minTeamSize;
     }
 
+    /**
+     * Gets max team size.
+     *
+     * @return the max team size
+     */
     public int getMaxTeamSize() {
         return maxTeamSize;
     }
 
+    /**
+     * Sets max team size.
+     *
+     * @param maxTeamSize the max team size
+     */
     public void setMaxTeamSize(int maxTeamSize) {
         this.maxTeamSize = maxTeamSize;
     }

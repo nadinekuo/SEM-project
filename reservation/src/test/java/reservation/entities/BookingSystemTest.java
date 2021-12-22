@@ -98,8 +98,9 @@ public class BookingSystemTest {
             boolean premium = i == 1 || i == 2;
 
             Mockito.when(restTemplate.getForObject(
-                userUrl+ "/user/" + reservations[i].getCustomerId() + "/isPremium",
-                Boolean.class)).thenReturn(premium);
+                    userUrl + "/user/" + reservations[i].getCustomerId() + "/isPremium",
+                    Boolean.class))
+                .thenReturn(premium);
         }
 
         assertEquals(reservations[1], userPremiumStrategy.getNextReservation());

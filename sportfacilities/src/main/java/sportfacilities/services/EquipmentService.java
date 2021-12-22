@@ -118,4 +118,8 @@ public class EquipmentService {
     public void addEquipment(Equipment equipment) {
         equipmentRepository.save(equipment);
     }
+
+    public void deleteEquipment(long equipmentId) {
+        equipmentRepository.deleteByEquipmentId(equipmentId);
+    }
 }

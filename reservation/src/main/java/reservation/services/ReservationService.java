@@ -70,8 +70,8 @@ public class ReservationService {
      * @param reservationController the reservation controller through which API calls to other
      *                              microservices are made
      * @return boolean - true if Reservation can be made, else false.
-     *     If the reservation was not valid, that means one or more checks (in some validator)
-     *     were violated -> exception thrown.
+     * If the reservation was not valid, that means one or more checks (in some validator)
+     * were violated -> exception thrown.
      */
     public boolean checkReservation(Reservation reservation,
                                     ReservationController reservationController) {
@@ -88,15 +88,16 @@ public class ReservationService {
         }
     }
 
-    /** Creates Chain of Responsibility object.
-     *  Having a separate method for this creation, facilitates testability.
+    /**
+     * Creates Chain of Responsibility object.
+     * Having a separate method for this creation, facilitates testability.
      *
-     * @param reservation - Reservation to be checked
+     * @param reservation           - Reservation to be checked
      * @param reservationController - API to communicate with other microservices
      * @return - The first validator in the chain of responsibility created
      */
     public ReservationValidator createChainOfResponsibility(Reservation reservation,
-                                          ReservationController reservationController) {
+                                                            ReservationController reservationController) {
 
         // Checks whether or not customers have exceeded their daily
         // reservation limit for sport rooms
@@ -133,9 +134,8 @@ public class ReservationService {
     public int getUserReservationCountOnDay(LocalDateTime start, LocalDateTime end,
                                             long customerId) {
 
-        List<Reservation> reservationsOnDay =
-            reservationRepository.findReservationByStartingTimeBetweenAndCustomerId(start, end,
-                customerId);
+        List<Reservation> reservationsOnDay = reservationRepository
+            .findReservationByStartingTimeBetweenAndCustomerId(start, end, customerId);
         int count = 0;
 
         // Customers have a limit on the number of sport rooms to be reserved
@@ -147,7 +147,6 @@ public class ReservationService {
         }
         return count;
     }
-
 
     /**
      * Checks if sports facility is available at given time.
@@ -171,7 +170,6 @@ public class ReservationService {
     public Reservation makeSportFacilityReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
-
 
     /**
      * Find reservation by group id and time given.

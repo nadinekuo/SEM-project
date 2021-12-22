@@ -65,9 +65,10 @@ public class UserController {
     }
 
     /**
-     * Customer registration.
+     * Customer registration response entity.
      *
      * @param request the request
+     * @return the response entity
      * @throws IOException the io exception
      */
     @PostMapping("/registerCustomer")
@@ -86,9 +87,10 @@ public class UserController {
     }
 
     /**
-     * Admin registration.
+     * Admin registration response entity.
      *
      * @param request the request
+     * @return the response entity
      * @throws IOException the io exception
      */
     @PostMapping("/registerAdmin/admin")
