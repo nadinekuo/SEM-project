@@ -1,11 +1,16 @@
 package reservation.entities.chainofresponsibility;
 
 import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
 
+
+
+@Component
 public class SportFacilityAvailabilityValidator extends BaseValidator {
 
     private final ReservationService reservationService;
@@ -13,6 +18,7 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
 
     /**
      * Instantiates a new Sport facility availability validator.
+     *
      * Checks:
      * - whether starting time of reservation is between 16:00 and 23:00
      * - whether sport room or equipment is physically available
@@ -21,6 +27,7 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
      * @param reservationController the reservation controller to communicate with other
      *                              microservices
      */
+    @Autowired
     public SportFacilityAvailabilityValidator(ReservationService reservationService,
                                               ReservationController reservationController) {
         this.reservationService = reservationService;
@@ -48,7 +55,7 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
             // Check if sport room is not reserved already for this time slot (false)
 
             // For group reservations, all members have an individual reservation for the same room,
-            // but that should not make that room unavailable!
+            // but that should not make that room unavailable, so we add a flag.
             boolean isGroupReservation = (reservation.getGroupId() != -1);
             boolean sportsRoomAvailable;
             if (isGroupReservation

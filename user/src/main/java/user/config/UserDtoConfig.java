@@ -18,9 +18,9 @@ public class UserDtoConfig implements Serializable {
     /**
      * Instantiates a new User dto config.
      *
-     * @param username            the username
-     * @param password            the password
-     * @param premiumSubscription if it's a premium subscription
+     * @param username - user id
+     * @param password - password of user
+     * @param premiumSubscription - basic or premium
      */
     public UserDtoConfig(String username, String password, boolean premiumSubscription) {
         this.username = username;
