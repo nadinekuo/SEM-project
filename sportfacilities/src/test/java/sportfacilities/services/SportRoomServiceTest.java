@@ -76,11 +76,24 @@ public class SportRoomServiceTest {
      */
     @BeforeEach
     void setup() {
-        sportRoomRepository = Mockito.mock(SportRoomRepository.class);
-        sportRoomService = new SportRoomService(sportRoomRepository, sportService);
-        hallX1.setId(id1);
-        hallX2.setId(id2);
-        hallX3.setId(id3);
+        sportRoomService = new SportRoomService(sportRoomRepository);
+    }
+
+    /**
+     * Instantiates a new Sport room service test.
+     */
+    public SportRoomServiceTest() {
+        soccer = new Sport("soccer", 6, 11);
+        hockey = new Sport("hockey", 7, 14);
+        volleyball = new Sport("volleyball", 4, 12);
+        yoga = new Sport("yoga");
+        zumba = new Sport("zumba");
+        kickboxing = new Sport("kickbox");
+
+        hallX1 = new SportRoom(34L, "X1", List.of(soccer, hockey), 10, 50);
+        hallX2 = new SportRoom(84L, "X2", List.of(hockey, volleyball, zumba), 15, 60);
+        hallX3 = new SportRoom(38L, "X3", List.of(yoga, zumba, kickboxing), 12, 55);
+        hockeyField = new SportRoom(42L, "hockeyfieldA", List.of(hockey), 10, 200);
     }
 
     /**

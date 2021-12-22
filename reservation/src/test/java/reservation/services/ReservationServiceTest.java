@@ -24,6 +24,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
+import reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
+import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
+import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import reservation.repositories.ReservationRepository;
 
 /**
@@ -120,7 +123,7 @@ public class ReservationServiceTest {
 
     //    /**
     //     * Valid reservation passed through chain of responsibility.
-    //     * Validators are mocked, since their logic is tested in the Validator unit tests.
+    //     * Validators are mocked, since their logic is tested in the Validator tests.
     //     */
     //    @Test
     //    void checkValidReservationTest() throws InvalidReservationException {

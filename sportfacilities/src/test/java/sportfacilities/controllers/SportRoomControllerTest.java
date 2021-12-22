@@ -27,6 +27,9 @@ import sportfacilities.services.SportService;
 
 //TODO put test in every method name
 
+/**
+ * The type Sport room controller test.
+ */
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 public class SportRoomControllerTest {
@@ -50,7 +53,7 @@ public class SportRoomControllerTest {
     private transient MockMvc mockMvc;
 
     /**
-     * Sets up the tests.
+     * Sets .
      */
     @BeforeEach
     public void setup() {
@@ -59,6 +62,11 @@ public class SportRoomControllerTest {
                 .build();
     }
 
+    /**
+     * Gets sport room test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getSportRoomTest() throws Exception {
         mockMvc.perform(get("/sportRoom/{sportRoomId}", sportRoomId)).andExpect(status().isOk())
@@ -66,6 +74,11 @@ public class SportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 
+    /**
+     * Gets sport room exists.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getSportRoomExists() throws Exception {
         mockMvc.perform(get("/sportRoom/{sportRoomId}/exists", sportRoomId))
@@ -73,6 +86,11 @@ public class SportRoomControllerTest {
         verify(sportRoomService).sportRoomExists(sportRoomId);
     }
 
+    /**
+     * Gets sport room is hall.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getSportRoomIsHall() throws Exception {
         given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
@@ -83,6 +101,11 @@ public class SportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 
+    /**
+     * Gets maximum capacity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getMaximumCapacity() throws Exception {
         given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
@@ -93,6 +116,11 @@ public class SportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 
+    /**
+     * Gets minimum capacity.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getMinimumCapacity() throws Exception {
         given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
@@ -103,6 +131,11 @@ public class SportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 
+    /**
+     * Gets field sport.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getFieldSport() throws Exception {
         given(sportRoomService.getSportRoom(sportFieldId)).willReturn(hockeyField);
