@@ -51,8 +51,8 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
             // but that should not make that room unavailable!
             boolean isGroupReservation = (reservation.getGroupId() != -1);
             boolean sportsRoomAvailable;
-            if (isGroupReservation
-                && reservationService.findByGroupIdAndTime(reservation.getGroupId(),
+            if (isGroupReservation &&
+                reservationService.findByGroupIdAndTime(reservation.getGroupId(),
                     reservation.getStartingTime()) != null) {
                 sportsRoomAvailable = true;
             } else {

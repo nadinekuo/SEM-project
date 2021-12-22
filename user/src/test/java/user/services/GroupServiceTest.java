@@ -78,6 +78,7 @@ public class GroupServiceTest {
     public void getGroupByIdTest() {
         when(groupRepository.findByGroupId(33L)).thenReturn(Optional.of(group1));
 
+
         Group result = groupService.getGroupById(33L);
 
         assertThat(result).isNotNull();
