@@ -3,7 +3,9 @@ package reservation.services;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -20,12 +22,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
+import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
-import reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
-import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
+import reservation.entities.chainofresponsibility.InvalidReservationException;
 import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import reservation.repositories.ReservationRepository;
 
@@ -38,10 +41,12 @@ public class ReservationServiceTest {
     private final transient Reservation reservation1;
     private final transient Reservation reservation2;
     private final transient Reservation groupReservation1;
+
     @Mock
     private transient ReservationRepository reservationRepository;
-    //    @Mock
-    //    private transient UserReservationBalanceValidator userReservationBalanceValidator;
+
+    @Mock
+    private transient UserReservationBalanceValidator userReservationBalanceValidator;
 
     private transient ReservationService reservationService;
 
@@ -121,18 +126,41 @@ public class ReservationServiceTest {
         verify(reservationRepository, never()).deleteById(any());
     }
 
-    //    /**
-    //     * Valid reservation passed through chain of responsibility.
-    //     * Validators are mocked, since their logic is tested in the Validator tests.
-    //     */
-    //    @Test
-    //    void checkValidReservationTest() throws InvalidReservationException {
-    //
-    //        when(userReservationBalanceValidator.handle(reservation1)).thenReturn(true);
-    //
-    //        assertTrue(reservationService.checkReservation(reservation1,
-    //            new ReservationController(reservationService)));
-    //    }
+    /**
+     * Valid reservation passed through chain of responsibility.
+     * Validator is mocked, since their logic is tested in the Validator unit tests.
+     */
+    @Test
+    void checkValidReservationTest() throws InvalidReservationException {
+
+        ReservationService reservationServiceSpy =
+            Mockito.spy(new ReservationService(reservationRepository));
+        Mockito.doReturn(userReservationBalanceValidator)
+            .when(reservationServiceSpy).createChainOfResponsibility(any(), any());
+
+        when(userReservationBalanceValidator.handle(reservation1)).thenReturn(true);
+
+        assertTrue(reservationServiceSpy.checkReservation(reservation1,
+            new ReservationController(reservationServiceSpy)));
+    }
+
+    /**
+     * Invalid reservation passed through chain of responsibility.
+     * Validator is mocked, since their logic is tested in the Validator unit tests.
+     */
+    @Test
+    void checkInvalidReservationTest() throws InvalidReservationException {
+
+        ReservationService reservationServiceSpy =
+            Mockito.spy(new ReservationService(reservationRepository));
+        Mockito.doReturn(userReservationBalanceValidator)
+            .when(reservationServiceSpy).createChainOfResponsibility(any(), any());
+
+        when(userReservationBalanceValidator.handle(reservation1)).thenReturn(false);
+
+        assertFalse(reservationServiceSpy.checkReservation(reservation1,
+            new ReservationController(reservationServiceSpy)));
+    }
 
     /**
      * Count one sport facility reservation test.
