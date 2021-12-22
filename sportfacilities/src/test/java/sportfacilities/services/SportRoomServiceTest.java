@@ -31,33 +31,23 @@ import sportfacilities.repositories.SportRoomRepository;
 @ExtendWith(MockitoExtension.class)
 public class SportRoomServiceTest {
 
-    private final transient Sport hockey =
-        new Sport("hockey", true, 7, 14);
-    private final transient Sport volleyball =
-        new Sport("volleyball", true, 4, 12);
-    private final transient Sport yoga =
-        new Sport("yoga", false, 1, -1);
-    private final transient Sport zumba =
-        new Sport("zumba", false, 1, -1);
-    private final transient Sport kickboxing =
-        new Sport("kickbox", false, 1, -1);
-    private final transient Sport soccer =
-        new Sport("soccer", true, 6, 11);
+    private final transient Sport hockey;
+    private final transient Sport volleyball;
+    private final transient Sport yoga;
+    private final transient Sport zumba;
+    private final transient Sport kickboxing;
+    private final transient Sport soccer;
     private final transient Long id1 = 34L;
-    private final transient SportRoom hallX2 =
-        new SportRoom("X2", List.of(hockey, volleyball, zumba),
-            15, 60, true);
+    private final transient SportRoom hallX2;
+
     private final transient Long id2 = 84L;
-    private final transient SportRoom hallX3 =
-        new SportRoom("X3", List.of(yoga, zumba, kickboxing), 12,
-            55, true);
-    private final transient long id3 = 1L;
-    private final transient SportRoom hockeyField =
-        new SportRoom("hockeyfieldA", List.of(hockey), 10, 200,
-            true);
-    private final transient SportRoom hallX1 =
-        new SportRoom("X1", List.of(soccer, hockey), 10, 50,
-            true);
+    private final transient SportRoom hallX3;
+    private final transient long id3 = 38L;
+    private final transient long idHockey = 42L;
+
+    private final transient SportRoom hockeyField;
+    private final transient SportRoom hallX1;
+
     @Mock
     private transient SportRoomRepository sportRoomRepository;
     @Mock
@@ -65,18 +55,13 @@ public class SportRoomServiceTest {
     private transient SportRoomService sportRoomService;
 
     /**
-     * Instantiates a new Sport room service test.
-     */
-    public SportRoomServiceTest() {
-
-    }
-
-    /**
      * Sets .
      */
     @BeforeEach
     void setup() {
-        sportRoomService = new SportRoomService(sportRoomRepository);
+        sportRoomRepository = Mockito.mock(SportRoomRepository.class);
+        sportService = Mockito.mock(SportService.class);
+        sportRoomService = new SportRoomService(sportRoomRepository, sportService);
     }
 
     /**
@@ -90,10 +75,14 @@ public class SportRoomServiceTest {
         zumba = new Sport("zumba");
         kickboxing = new Sport("kickbox");
 
-        hallX1 = new SportRoom(34L, "X1", List.of(soccer, hockey), 10, 50);
-        hallX2 = new SportRoom(84L, "X2", List.of(hockey, volleyball, zumba), 15, 60);
-        hallX3 = new SportRoom(38L, "X3", List.of(yoga, zumba, kickboxing), 12, 55);
-        hockeyField = new SportRoom(42L, "hockeyfieldA", List.of(hockey), 10, 200);
+        hallX1 = new SportRoom( "X1", List.of(soccer, hockey), 10, 50, true);
+        hallX1.setId(id1);
+        hallX2 = new SportRoom( "X2", List.of(hockey, volleyball, zumba), 15, 60, true);
+        hallX2.setId(id2);
+        hallX3 = new SportRoom( "X3", List.of(yoga, zumba, kickboxing), 12, 55, true);
+        hallX3.setId(id3);
+        hockeyField = new SportRoom("hockeyfieldA", List.of(hockey), 10, 200, false);
+        hockeyField.setId(idHockey);
     }
 
     /**
