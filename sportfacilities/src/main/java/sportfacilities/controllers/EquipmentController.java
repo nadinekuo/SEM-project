@@ -107,6 +107,12 @@ public class EquipmentController {
         equipmentService.addEquipment(new Equipment(equipmentName, sport, false));
     }
 
+    /**
+     * Delete an instance of equipment.
+     *
+     * @param equipmentId the equipment id
+     * @return the response
+     */
     @DeleteMapping("/{equipmentId}/deleteEquipment/admin")
     public ResponseEntity<?> deleteEquipment(@PathVariable long equipmentId) {
         try {

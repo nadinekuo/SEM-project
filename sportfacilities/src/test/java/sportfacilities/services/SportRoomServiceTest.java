@@ -1,6 +1,5 @@
 package sportfacilities.services;
 
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,7 +10,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,22 +34,19 @@ import sportfacilities.repositories.SportRoomRepository;
 @ExtendWith(MockitoExtension.class)
 public class SportRoomServiceTest {
 
-    private final transient Sport hockey;
-    private final transient Sport volleyball;
-    private final transient Sport yoga;
-    private final transient Sport zumba;
-    private final transient Sport kickboxing;
-    private final transient Sport soccer;
+    private transient Sport hockey;
+    private transient Sport yoga;
+    private transient Sport soccer;
     private final transient Long id1 = 34L;
-    private final transient SportRoom hallX2;
+    private transient SportRoom hallX2;
 
     private final transient Long id2 = 84L;
-    private final transient SportRoom hallX3;
+    private transient SportRoom hallX3;
     private final transient long id3 = 38L;
     private final transient long idHockey = 42L;
 
-    private final transient SportRoom hockeyField;
-    private final transient SportRoom hallX1;
+    private transient SportRoom hockeyField;
+    private transient SportRoom hallX1;
 
     @Mock
     private transient SportRoomRepository sportRoomRepository;
@@ -68,7 +63,25 @@ public class SportRoomServiceTest {
         sportRoomRepository = Mockito.mock(SportRoomRepository.class);
         sportService = Mockito.mock(SportService.class);
         sportRoomService = new SportRoomService(sportRoomRepository, sportService);
+
+        soccer = new Sport("soccer", 11, 22);
+        hockey = new Sport("hockey", 5, 10);
+        yoga = new Sport("yoga");
+
+        hallX1 = new SportRoom("X1", new ArrayList<>(), 10, 50, true);
+        hallX1.addSport(hockey);
+        hallX1.addSport(soccer);
         hallX1.setId(id1);
+
+        hallX2 = new SportRoom("X2", List.of(hockey, soccer), 15, 60, true);
+        hallX2.setId(id2);
+
+        hallX3 = new SportRoom("X3", List.of(yoga, soccer, hockey), 12, 55, true);
+        hallX3.setId(id3);
+
+        hockeyField = new SportRoom("hockeyfieldA", new ArrayList<>(), 10, 200, false);
+        hockeyField.addSport(hockey);
+        hockeyField.setId(idHockey);
     }
 
     @Test
@@ -78,29 +91,21 @@ public class SportRoomServiceTest {
 
         sportRoomService.addSportToSportsHall(id1, yoga.getSportName());
         verify(sportRoomRepository).save(hallX1);
-        assertThat(hallX1.getSports().get(0)).isEqualTo(yoga);
+        assertThat(hallX1.getSports().get(2)).isEqualTo(yoga);
 
     }
 
     @Test
     public void addSportToSportHallTestException() {
         when(sportService.getSportById(yoga.getSportName())).thenReturn(yoga);
-        when(sportRoomRepository.findBySportRoomId(id2)).thenReturn(Optional.ofNullable(field));
+        when(sportRoomRepository.findBySportRoomId(id2)).thenReturn(
+            Optional.ofNullable(hockeyField));
 
-        assertThrows(IllegalArgumentException.class, () -> sportRoomService
-            .addSportToSportsHall(id2, yoga.getSportName()));
+        assertThrows(IllegalArgumentException.class,
+            () -> sportRoomService.addSportToSportsHall(id2, yoga.getSportName()));
 
-        verify(sportRoomRepository, times(0)).save(field);
-        assertThat(field.getSports().size()).isEqualTo(0);
+        verify(sportRoomRepository, times(0)).save(hockeyField);
 
-        hallX1 = new SportRoom( "X1", List.of(soccer, hockey), 10, 50, true);
-        hallX1.setId(id1);
-        hallX2 = new SportRoom( "X2", List.of(hockey, volleyball, zumba), 15, 60, true);
-        hallX2.setId(id2);
-        hallX3 = new SportRoom( "X3", List.of(yoga, zumba, kickboxing), 12, 55, true);
-        hallX3.setId(id3);
-        hockeyField = new SportRoom("hockeyfieldA", List.of(hockey), 10, 200, false);
-        hockeyField.setId(idHockey);
     }
 
     /**
@@ -184,7 +189,6 @@ public class SportRoomServiceTest {
         assertEquals("Hall 6", hallX1.getSportRoomName());
     }
 
-
     @Test
     public void addSportRoomTest() throws Exception {
         when(sportService.getSportById("soccer")).thenReturn(soccer);
@@ -219,8 +223,6 @@ public class SportRoomServiceTest {
         doThrow(new NoSuchElementException()).when(sportRoomRepository).deleteBySportRoomId(1000L);
         assertThrows(NoSuchElementException.class, () -> sportRoomService.deleteSportRoom(1000L));
     }
-
-
 
     /**
      * Rest template test.
