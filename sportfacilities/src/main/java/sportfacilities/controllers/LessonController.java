@@ -2,6 +2,7 @@ package sportfacilities.controllers;
 
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,7 +62,7 @@ public class LessonController {
      * @param lessonId the lesson id
      * @param size     the size
      */
-    @PostMapping("/{lessonId}/{size}/setSize")
+    @PostMapping("/{lessonId}/{size}/setSize/admin")
     @ResponseBody
     public void setLessonSize(@PathVariable long lessonId, @PathVariable int size) {
         lessonService.setLessonSize(lessonId, size);
@@ -96,5 +97,16 @@ public class LessonController {
         LocalDateTime endTime = LocalDateTime.parse(endingTime);
 
         lessonService.addNewLesson(title, startTime, endTime, size);
+    }
+
+    /**
+     * Delete lesson.
+     *
+     * @param lessonId the lesson id
+     */
+    @DeleteMapping("/{lessonId}/admin")
+    @ResponseBody
+    public void deleteLesson(@PathVariable long lessonId) {
+        lessonService.deleteLesson(lessonId);
     }
 }

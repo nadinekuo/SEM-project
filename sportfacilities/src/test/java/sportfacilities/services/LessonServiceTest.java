@@ -1,12 +1,15 @@
 package sportfacilities.services;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import net.minidev.asm.ex.NoSuchFieldException;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,12 +20,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.web.client.RestTemplate;
-import sportfacilities.entities.Equipment;
 import sportfacilities.entities.Lesson;
-import sportfacilities.entities.Sport;
-import sportfacilities.repositories.EquipmentRepository;
 import sportfacilities.repositories.LessonRepository;
 
+/**
+ * The type Lesson service test.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class LessonServiceTest {
 
@@ -42,27 +45,43 @@ public class LessonServiceTest {
     @InjectMocks
     private transient LessonService lessonService;
 
+    /**
+     * Sets .
+     */
     @BeforeEach
     void setup() {
         lessonRepository = Mockito.mock(LessonRepository.class);
         lessonService = new LessonService(lessonRepository);
-        Mockito.when(lessonRepository.findById(lessonId))
-            .thenReturn(java.util.Optional.of(new Lesson(name, startingTime, endingTime, size)));
+        when(lessonRepository.findById(lessonId)).thenReturn(
+            java.util.Optional.of(new Lesson(name, startingTime, endingTime, size)));
         lesson1 = new Lesson(name, startingTime, endingTime, size);
         lessonRepository.save(lesson1);
     }
 
+    /**
+     * Test constructor.
+     */
     @Test
     public void testConstructor() {
         assertNotNull(lessonService);
     }
 
+    /**
+     * Gets lesson by id test.
+     *
+     * @throws NoSuchFieldException the no such field exception
+     */
     @Test
     public void getLessonByIdTest() throws NoSuchFieldException {
         assertEquals(Optional.of(0L),
             Optional.of(lessonService.getLessonById(lessonId).getLessonId()));
     }
 
+    /**
+     * Sets lesson size test.
+     *
+     * @throws NoSuchFieldException the no such field exception
+     */
     @Test
     public void setLessonSizeTest() throws NoSuchFieldException {
         int newSize = 5;
@@ -70,22 +89,56 @@ public class LessonServiceTest {
         assertEquals(newSize, lessonService.getLessonSize(lessonId));
     }
 
+    /**
+     * Gets lesson size test.
+     *
+     * @throws NoSuchFieldException the no such field exception
+     */
     @Test
     public void getLessonSizeTest() throws NoSuchFieldException {
         assertEquals(size, lessonService.getLessonSize(lessonId));
     }
 
+    /**
+     * Gets lesson starting time test.
+     *
+     * @throws NoSuchFieldException the no such field exception
+     */
     @Test
     public void getLessonStartingTimeTest() throws NoSuchFieldException {
         assertEquals(startingTime.toString(), lessonService.getLessonStartingTime(lessonId));
     }
 
+    /**
+     * Add new lesson test.
+     *
+     * @throws NoSuchFieldException the no such field exception
+     */
     @Test
     public void addNewLessonTest() throws NoSuchFieldException {
         Lesson lesson2 = new Lesson("NewLesson", startingTime, endingTime, 5);
         lessonService.addNewLesson("NewLesson", startingTime, endingTime, 5);
-        Mockito.when(lessonRepository.findById(1L))
-            .thenReturn(java.util.Optional.of(lesson2));
+        when(lessonRepository.findById(1L)).thenReturn(java.util.Optional.of(lesson2));
         assertEquals("NewLesson", lessonService.getLessonById(1L).getTitle());
+    }
+
+    /**
+     * Delete lesson test.
+     *
+     * @throws NoSuchElementException the no such element exception
+     */
+    @Test
+    public void deleteLessonTest() throws NoSuchElementException {
+        doNothing().when(lessonRepository).deleteById(1L);
+        assertDoesNotThrow(() -> lessonService.deleteLesson(1000L));
+    }
+
+    /**
+     * Delete lesson that not exists test.
+     */
+    @Test
+    public void deleteLessonThatNotExistsTest() {
+        doThrow(new NoSuchElementException()).when(lessonRepository).deleteById(1000L);
+        assertThrows(NoSuchElementException.class, () -> lessonService.deleteLesson(1000L));
     }
 }

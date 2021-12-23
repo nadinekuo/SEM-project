@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Assertions;
@@ -32,7 +33,7 @@ public class EquipmentControllerTest {
     private final transient long equipmentId = 20L;
     private final transient String equipmentName = "boxingGloves";
     private final transient boolean inUse = true;
-    private final transient Sport box = new Sport("boxing", false, 2, 4);
+    private final transient Sport box = new Sport("boxing", 2, 4);
     private final transient Equipment equipment1 = new Equipment(equipmentName, box, inUse);
     @Mock
     transient SportService sportService;
@@ -85,6 +86,15 @@ public class EquipmentControllerTest {
             put("/equipment/{equipmentName}/{relatedSport}/addNewEquipment/admin", equipmentName,
                 box)).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
         verify(equipmentService).addEquipment(equipment1);
+    }
+
+    @Test
+    public void deleteEquipmentTest() throws Exception {
+
+        mockMvc.perform(delete("/equipment/{equipmentId}/deleteEquipment/admin", equipmentId))
+            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
+
+        verify(equipmentService).deleteEquipment(equipmentId);
     }
 
     @Test

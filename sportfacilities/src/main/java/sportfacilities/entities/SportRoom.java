@@ -4,6 +4,7 @@ package sportfacilities.entities;
 // Sport hall: different sports can be exercised here
 // Sport field: specific to a certain sport (soccer, hockey e.g.)
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "sportroom")
@@ -29,13 +29,13 @@ public class SportRoom {
     private Long sportRoomId;
     private String sportRoomName; // example: X1, X2, X3 ...
 
-    @Transient
-    @ManyToMany(mappedBy = "sportLocations", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "sportLocations", fetch = FetchType.EAGER)
+
     @JsonManagedReference
+    @JsonIgnoreProperties("sportLocations")
     private List<Sport> sports;   // Only sport halls will store multiple sports
     private int minCapacity;
     private int maxCapacity;
-    private String relatedSport;
 
     /**
      * Empty constructor needed for Spring JPA.
@@ -51,45 +51,25 @@ public class SportRoom {
      * @param minCapacity   - int
      * @param maxCapacity   - int
      */
-    public SportRoom(String sportRoomName, List<Sport> sports, int minCapacity, int maxCapacity) {
+    public SportRoom(String sportRoomName, List<Sport> sports, int minCapacity, int maxCapacity,
+                     boolean isSportsHall) {
         this.sportRoomName = sportRoomName;
         this.sports = sports;
         this.minCapacity = minCapacity;
         this.maxCapacity = maxCapacity;
-        this.isSportsHall = sports.size() > 1;
-        if (!isSportsHall) {
-            relatedSport = sports.get(0).getSportName();
-        } else {
-            relatedSport = null;
-        }
+        this.isSportsHall = isSportsHall;
     }
 
-    /**
-     * Constructor SportRoom.
-     *
-     * @param sportRoomId   - Long
-     * @param sportRoomName - String
-     * @param sports        - the associated sports
-     * @param minCapacity   - int
-     * @param maxCapacity   - int
-     */
-    public SportRoom(long sportRoomId, String sportRoomName, List<Sport> sports, int minCapacity,
-                     int maxCapacity) {
-        this.isSportsHall = sports.size() > 1;
-        this.sportRoomId = sportRoomId;
-        this.sportRoomName = sportRoomName;
-        this.sports = sports;
-        this.minCapacity = minCapacity;
-        this.maxCapacity = maxCapacity;
-        if (!isSportsHall) {
-            relatedSport = sports.get(0).getSportName();
-        } else {
-            relatedSport = null;
-        }
+    public void addSport(Sport sport) {
+        sports.add(sport);
     }
 
     public Long getSportRoomId() {
         return sportRoomId;
+    }
+
+    public void setSportRoomId(Long sportRoomId) {
+        this.sportRoomId = sportRoomId;
     }
 
     public void setSportRoomId(long sportRoomId) {
@@ -110,6 +90,10 @@ public class SportRoom {
 
     public void setSportRoomName(String sportRoomName) {
         this.sportRoomName = sportRoomName;
+    }
+
+    public void setId(Long sportRoomId) {
+        this.sportRoomId = sportRoomId;
     }
 
     public List<Sport> getSports() {
@@ -142,14 +126,6 @@ public class SportRoom {
 
     public void setSportsHall(boolean sportsHall) {
         isSportsHall = sportsHall;
-    }
-
-    public String getRelatedSport() {
-        return relatedSport;
-    }
-
-    public void setRelatedSport(String relatedSport) {
-        this.relatedSport = relatedSport;
     }
 
     @Override

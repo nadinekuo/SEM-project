@@ -12,8 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.web.client.RestTemplate;
+import reservation.entities.strategy.BasicPremiumUserStrategy;
+import reservation.entities.strategy.BookingSystem;
 import reservation.entities.strategy.ChronologicalStrategy;
+import reservation.entities.strategy.EquipmentNameStrategy;
 import reservation.entities.strategy.ReservationSortingStrategy;
+import reservation.entities.strategy.UserIdStrategy;
 import reservation.services.ReservationService;
 
 public class BookingSystemTest {
@@ -94,8 +98,9 @@ public class BookingSystemTest {
             boolean premium = i == 1 || i == 2;
 
             Mockito.when(restTemplate.getForObject(
-                userUrl+ "/user/" + reservations[i].getCustomerId() + "/isPremium",
-                Boolean.class)).thenReturn(premium);
+                    userUrl + "/user/" + reservations[i].getCustomerId() + "/isPremium",
+                    Boolean.class))
+                .thenReturn(premium);
         }
 
         assertEquals(reservations[1], userPremiumStrategy.getNextReservation());
@@ -159,8 +164,8 @@ public class BookingSystemTest {
             bookingSystem.addReservation(reservations[i]);
 
         }
-        assertEquals("BookingSystem{bookings=[" + reservations[0].toString() + ", "
-                + reservations[1].toString() + ", " + reservations[2].toString() + "]}",
-            bookingSystem.toString());
+        assertEquals(
+            "BookingSystem{bookings=[" + reservations[0].toString() + ", " + reservations[1]
+                .toString() + ", " + reservations[2].toString() + "]}", bookingSystem.toString());
     }
 }
