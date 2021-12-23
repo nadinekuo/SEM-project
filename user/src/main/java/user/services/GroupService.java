@@ -22,22 +22,11 @@ public class GroupService {
     @Autowired
     private final CustomerService customerService;
 
-    /**
-     * Instantiates a new Group service.
-     *
-     * @param groupRepository the group repository
-     * @param customerService the customer service
-     */
     public GroupService(GroupRepository groupRepository, CustomerService customerService) {
         this.groupRepository = groupRepository;
         this.customerService = customerService;
     }
 
-    /**
-     * Rest template rest template.
-     *
-     * @return the rest template
-     */
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
@@ -63,10 +52,10 @@ public class GroupService {
     }
 
     /**
-     * Gets group size by id.
+     * Finds Group by id and returns size.
      *
-     * @param groupId the group id
-     * @return the group size by id
+     * @param groupId - long
+     * @return group size
      */
     public int getGroupSizeById(Long groupId) {
         Group group = groupRepository.findByGroupId(groupId).orElseThrow(
@@ -75,10 +64,10 @@ public class GroupService {
     }
 
     /**
-     * Gets group by id.
+     * Finds Group by id.
      *
-     * @param groupId the group id
-     * @return the group by id
+     * @param groupId - long
+     * @return Optional of Group having this id
      */
     public Group getGroupById(Long groupId) {
         return groupRepository.findByGroupId(groupId).orElseThrow(
@@ -111,13 +100,7 @@ public class GroupService {
 
     }
 
-    /**
-     * Gets users in a group.
-     *
-     * @param groupId the group id
-     * @return the users in a group
-     */
-    public List<Customer> getUsersInaGroup(long groupId) {
+    public List<Customer> getUsersInAGroup(long groupId) {
         Group group = groupRepository.findByGroupId(groupId).orElseThrow(
             () -> new IllegalStateException("Group with id " + groupId + " does not exist!"));
         return group.getGroupMembers();

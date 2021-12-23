@@ -18,9 +18,6 @@ import user.config.UserDtoConfig;
 import user.entities.Customer;
 import user.services.UserService;
 
-/**
- * The type User controller.
- */
 @RestController
 @RequestMapping("user")
 public class UserController {
@@ -34,9 +31,9 @@ public class UserController {
     private ObjectMapper objectMapper;
 
     /**
-     * Instantiates a new User controller.
+     * Autowired constructor for the class.
      *
-     * @param userService the user service
+     * @param userService userService
      */
     @Autowired
     public UserController(UserService userService) {
@@ -45,10 +42,8 @@ public class UserController {
     }
 
     /**
-     * Is user premium response entity.
-     *
-     * @param userId the user id
-     * @return the response entity
+     * @param userId
+     * @return
      */
     @GetMapping("/{userId}/isPremium")
     @ResponseBody

@@ -45,6 +45,7 @@ public class EquipmentServiceTest {
     @Mock
     private transient EquipmentRepository equipmentRepository;
 
+//    @InjectMocks
     private transient EquipmentService equipmentService;
 
     /**
