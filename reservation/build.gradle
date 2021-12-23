@@ -1,1 +1,17 @@
+
+plugins {
+    id 'jacoco'
+}
+
 group = 'sem.reservation'
+
+test {
+    finalizedBy jacocoTestReport
+}
+jacocoTestReport {
+    dependsOn test
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}

@@ -62,7 +62,6 @@ public class ReservationService {
         reservationRepository.deleteById(reservationId);
     }
 
-
     /**
      * Check reservation by passing the object through Chain of Responsibility.
      * Various checks to be done by different validators.
@@ -151,8 +150,6 @@ public class ReservationService {
         return count;
     }
 
-
-
     /**
      * Checks if sports facility is available at given time.
      * All Reservations start at full hours, so only start time has to be checked.
@@ -175,33 +172,6 @@ public class ReservationService {
     public Reservation makeSportFacilityReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
-
-    /**
-     * Gets user reservation count (for sport rooms, not equipment) on given day.
-     *
-     * @param start      the start
-     * @param end        the end
-     * @param customerId the customer id
-     * @return the user reservation count on day
-     */
-    public int getUserReservationCountOnDay(LocalDateTime start, LocalDateTime end,
-                                            long customerId) {
-
-        List<Reservation> reservationsOnDay =
-            reservationRepository.findReservationByStartingTimeBetweenAndCustomerId(start, end,
-                customerId);
-        int count = 0;
-
-        // Customers have a limit on the number of sport rooms to be reserved
-        // Basic: 1 per day, premium: 3 per day
-        for (Reservation reservation : reservationsOnDay) {
-            if (reservation.getTypeOfReservation() == ReservationType.SPORTS_ROOM) {
-                count++;
-            }
-        }
-        return count;
-    }
-
 
     /**
      * Find reservation by group id and time given.

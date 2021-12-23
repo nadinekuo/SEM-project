@@ -128,14 +128,6 @@ public class SportRoom {
         isSportsHall = sportsHall;
     }
 
-    public String getRelatedSport() {
-        return relatedSport;
-    }
-
-    public void setRelatedSport(String relatedSport) {
-        this.relatedSport = relatedSport;
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(sportRoomName);
