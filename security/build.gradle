@@ -1,5 +1,15 @@
+plugins {
+    id 'jacoco'
+}
+
 group = 'sem.security'
 
+test {
+    finalizedBy jacocoTestReport
+}
+jacocoTestReport {
+    dependsOn test
+}
 
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'

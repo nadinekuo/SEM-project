@@ -15,8 +15,6 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 
     id 'java'
-    // Test coverage
-    id 'jacoco'
 
     // Code style
     id 'checkstyle'
@@ -44,7 +42,6 @@ subprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'java'
-    apply plugin: 'jacoco'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'pmd'
 
@@ -110,11 +107,7 @@ subprojects {
 
     test {
         useJUnitPlatform()
-        jacoco {
-            enabled = true
-            includes = ['nl.tudelft.sem.template.*']
-            excludes = []
-        }
+
     }
 
     repositories {
@@ -122,22 +115,8 @@ subprojects {
         maven { url 'https://repo.spring.io/milestone' }
     }
 
-    jacocoTestCoverageVerification() {
-        dependsOn test
-        violationRules {
-            rule {
-                enabled = true
-                element = 'CLASS'
-                includes = ['nl.tudelft.sem.template.*']
 
-                limit {
-                    counter = 'BRANCH'
-                    value = 'COVEREDRATIO'
-                    minimum = 0.1
-                }
-            }
-        }
-    }
+
 
     checkstyle {
         toolVersion "8.37"

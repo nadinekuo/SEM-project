@@ -6,8 +6,6 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
 
-
-
 public class SportFacilityAvailabilityValidator extends BaseValidator {
 
     private final ReservationService reservationService;
@@ -15,12 +13,11 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
 
     /**
      * Instantiates a new Sport facility availability validator.
+     * Checks:
+     * - whether starting time of reservation is between 16:00 and 23:00
+     * - whether sport room or equipment is physically available
      *
-     *  Checks:
-     *  - whether starting time of reservation is between 16:00 and 23:00
-     *  - whether sport room or equipment is physically available
-     *
-     * @param reservationService  -  the reservation service containing logic
+     * @param reservationService    -  the reservation service containing logic
      * @param reservationController the reservation controller to communicate with other
      *                              microservices
      */
@@ -54,8 +51,8 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
             // but that should not make that room unavailable!
             boolean isGroupReservation = (reservation.getGroupId() != -1);
             boolean sportsRoomAvailable;
-            if (isGroupReservation
-                && reservationService.findByGroupIdAndTime(reservation.getGroupId(),
+            if (isGroupReservation &&
+                reservationService.findByGroupIdAndTime(reservation.getGroupId(),
                     reservation.getStartingTime()) != null) {
                 sportsRoomAvailable = true;
             } else {
