@@ -17,6 +17,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,13 @@ public class ReservationServiceTest {
     private final transient Reservation reservation2;
     private final transient Reservation groupReservation1;
 
+    private final transient long id1 = 53L;
+    private final transient long id2 = 84L;
+    private final transient long idNotExists = 42L;
+    private final transient long idGroup = 99L;
+
+    private final transient LocalDateTime date1;
+
     @Mock
     private transient ReservationRepository reservationRepository;
 
@@ -54,15 +62,16 @@ public class ReservationServiceTest {
      * Instantiates a new Reservation service test.
      */
     public ReservationServiceTest() {
+        date1 = LocalDateTime.of(2022, 10, 5, 16, 0);
         reservation1 = new Reservation(ReservationType.EQUIPMENT, 1L, 42L,
-            LocalDateTime.of(2022, 10, 05, 16, 00));
-        reservation1.setId(53L);
+            date1);
+        reservation1.setId(id1);
         reservation2 = new Reservation(ReservationType.SPORTS_ROOM, 2L, 25L,
-            LocalDateTime.of(2022, 10, 05, 17, 45));
-        reservation2.setId(84L);
+            LocalDateTime.of(2022, 10, 5, 17, 45));
+        reservation2.setId(id2);
         groupReservation1 = new Reservation(ReservationType.SPORTS_ROOM, 3L, 13L,
-            LocalDateTime.of(2022, 02, 3, 20, 30), 84L);
-        groupReservation1.setId(99L);
+            LocalDateTime.of(2022, 2, 3, 20, 30), id2);
+        groupReservation1.setId(idGroup);
     }
 
     /**
@@ -87,14 +96,14 @@ public class ReservationServiceTest {
     @Test
     void getReservationTest() {
 
-        when(reservationRepository.findById(53L)).thenReturn(Optional.of(reservation1));
+        when(reservationRepository.findById(id1)).thenReturn(Optional.of(reservation1));
 
-        Reservation result = reservationService.getReservation(53L);
+        Reservation result = reservationService.getReservation(id1);
 
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(53L);
+        assertThat(result.getId()).isEqualTo(id1);
         assertThat(result.getTypeOfReservation() == ReservationType.EQUIPMENT);
-        verify(reservationRepository, times(1)).findById(53L);
+        verify(reservationRepository, times(1)).findById(id1);
     }
 
     /**
@@ -103,13 +112,13 @@ public class ReservationServiceTest {
     @Test
     void deleteReservationTest() {
 
-        when(reservationRepository.existsById(53L)).thenReturn(true);
+        when(reservationRepository.findById(id1)).thenReturn(Optional.ofNullable(reservation1));
 
         assertDoesNotThrow(() -> {
-            reservationService.deleteReservation(53L);
+            reservationService.deleteReservation(id1);
         });
 
-        verify(reservationRepository, times(1)).deleteById(53L);
+        verify(reservationRepository, times(1)).deleteById(id1);
     }
 
     /**
@@ -118,10 +127,10 @@ public class ReservationServiceTest {
     @Test
     void deleteNonExistingReservationTest() {
 
-        when(reservationRepository.existsById(53L)).thenReturn(false);
+        when(reservationRepository.findById(idNotExists)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalStateException.class, () -> {
-            reservationService.deleteReservation(53L);
+        assertThrows(NoSuchElementException.class, () -> {
+            reservationService.deleteReservation(idNotExists);
         });
         verify(reservationRepository, never()).deleteById(any());
     }
@@ -194,10 +203,10 @@ public class ReservationServiceTest {
             .thenReturn(Optional.empty());   // Facility is unoccupied
 
         assertThat(reservationService
-            .sportsFacilityIsAvailable(75L, LocalDateTime.of(2022, 10, 05, 16, 00))).isTrue();
+            .sportsFacilityIsAvailable(id1, date1)).isTrue();
 
         verify(reservationRepository, times(1))
-            .findBySportFacilityReservedIdAndTime(75L, LocalDateTime.of(2022, 10, 05, 16, 00));
+            .findBySportFacilityReservedIdAndTime(id1, date1);
     }
 
     /**
@@ -207,13 +216,13 @@ public class ReservationServiceTest {
     void unavailableSportFacility() {
 
         when(reservationRepository.findBySportFacilityReservedIdAndTime(anyLong(), any()))
-            .thenReturn(Optional.of(75L));   // Facility is reserved for this time already!
+            .thenReturn(Optional.of(id1));   // Facility is reserved for this time already!
 
         assertThat(reservationService
-            .sportsFacilityIsAvailable(75L, LocalDateTime.of(2022, 10, 05, 16, 00))).isFalse();
+            .sportsFacilityIsAvailable(id1, date1)).isFalse();
 
         verify(reservationRepository, times(1))
-            .findBySportFacilityReservedIdAndTime(75L, LocalDateTime.of(2022, 10, 05, 16, 00));
+            .findBySportFacilityReservedIdAndTime(id1, date1);
     }
 
     /**
@@ -225,8 +234,8 @@ public class ReservationServiceTest {
         when(reservationRepository.save(reservation1)).thenReturn(reservation1);
 
         Reservation result = reservationService.makeSportFacilityReservation(reservation1);
-        assertThat(result.getId()).isEqualTo(53L);
-        assertThat(result.getStartingTime()).isEqualTo(LocalDateTime.of(2022, 10, 05, 16, 00));
+        assertThat(result.getId()).isEqualTo(id1);
+        assertThat(result.getStartingTime()).isEqualTo(date1);
 
         verify(reservationRepository, times(1)).save(reservation1);
 

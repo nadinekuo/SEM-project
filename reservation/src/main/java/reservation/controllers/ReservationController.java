@@ -2,6 +2,7 @@ package reservation.controllers;
 
 import com.google.gson.Gson;
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,8 +69,15 @@ public class ReservationController {
      */
     @DeleteMapping("/{reservationId}")
     @ResponseBody
-    public void deleteReservation(@PathVariable Long reservationId) {
-        reservationService.deleteReservation(reservationId);
+    public ResponseEntity<?> deleteReservation(@PathVariable Long reservationId) {
+        try{
+            reservationService.deleteReservation(reservationId);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (NoSuchElementException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+        }
+
     }
 
     /**
@@ -81,9 +89,11 @@ public class ReservationController {
      * @param date        the date
      * @return A response based on what happened when trying to make the reservation
      */
+    
+    //TODO make the response return a more clear message
     @PostMapping("/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking")
     @ResponseBody
-    public ResponseEntity<String> makeSportRoomReservation(@PathVariable Long userId,
+    public ResponseEntity<?> makeSportRoomReservation(@PathVariable Long userId,
                                                            @PathVariable Long groupId,
                                                            @PathVariable Long sportRoomId,
                                                            @PathVariable String date) {
@@ -114,9 +124,11 @@ public class ReservationController {
      * @param equipmentName the equipment name
      * @return A response based on what happened when trying to make the reservation
      */
+    
+    //TODO make the response return a more clear message
     @PostMapping("/{userId}/{equipmentName}/{date}/makeEquipmentBooking")
     @ResponseBody
-    public ResponseEntity<String> makeEquipmentReservation(@PathVariable Long userId,
+    public ResponseEntity<?> makeEquipmentReservation(@PathVariable Long userId,
                                                            @PathVariable String equipmentName,
                                                            @PathVariable String date) {
 
@@ -143,12 +155,14 @@ public class ReservationController {
 
     @GetMapping("/{equipmentId}/lastPersonThatUsedEquipment")
     @ResponseBody
-    public Long getLastPersonThatUsedEquipment(@PathVariable Long equipmentId) {
-        return reservationService.getLastPersonThatUsedEquipment(equipmentId);
+    public ResponseEntity<?> getLastPersonThatUsedEquipment(@PathVariable Long equipmentId) {
+        try{
+            Long lastPerson =  reservationService.getLastPersonThatUsedEquipment(equipmentId);
+            return new ResponseEntity<>(lastPerson, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
-
-
-
 
 
     //  -------------------  The methods below communicate with other microservices.
@@ -159,6 +173,8 @@ public class ReservationController {
      * @param userId the user id
      * @return if the user is premium
      */
+    
+    //TODO change all the get for object to exchanges
     public Boolean getUserIsPremium(Long userId) {
         String methodSpecificUrl = "/user/" + userId + "/isPremium";
         String response = restTemplate.getForObject(userUrl + methodSpecificUrl, String.class);

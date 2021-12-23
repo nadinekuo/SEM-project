@@ -52,28 +52,20 @@ public class ReservationControllerTest {
     private final transient String equipmentNameInvalid = "blopp";
 
     private final transient String validDate = "2099-01-06T17:00:00";
-    /**
-     * The Equipment booking url.
-     */
+
     transient String equipmentBookingUrl =
         "/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking";
-    /**
-     * The Sport room booking url.
-     */
+
     transient String sportRoomBookingUrl =
         "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking";
 
     transient String lessonBookingUrl =
         "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking";
 
-    /**
-     * The Date time formatter.
-     */
+
     transient DateTimeFormatter dateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    /**
-     * The Bookable date.
-     */
+
     transient LocalDateTime bookableDate =
         LocalDateTime.parse("2099-01-06 17:00:00", dateTimeFormatter);
 
@@ -142,6 +134,7 @@ public class ReservationControllerTest {
      *
      * @throws Exception the exception
      */
+    //TODO fix this
     @Test
     public void getUserIsPremium() throws Exception {
 
