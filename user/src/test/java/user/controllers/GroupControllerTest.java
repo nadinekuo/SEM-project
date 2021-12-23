@@ -15,14 +15,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
+import user.entities.Customer;
+import user.entities.Group;
 import user.services.GroupService;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,6 +33,7 @@ import user.services.GroupService;
 public class GroupControllerTest {
 
     private final transient long groupId = 15L;
+
     @Mock
     transient GroupService groupService;
 
@@ -44,7 +48,7 @@ public class GroupControllerTest {
     @BeforeEach
     public void setup() {
 
-        Mockito.when(groupService.restTemplate()).thenReturn(restTemplate);
+        when(groupService.restTemplate()).thenReturn(restTemplate);
         this.mockMvc = MockMvcBuilders.standaloneSetup(new GroupController(groupService)).build();
     }
 
