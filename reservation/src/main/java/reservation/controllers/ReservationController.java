@@ -1,10 +1,6 @@
 package reservation.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -96,8 +92,7 @@ public class ReservationController {
 
         // Create reservation object, to be passed through chain of responsibility
         Reservation reservation =
-            new Reservation(ReservationType.SPORTS_ROOM, userId, sportRoomId, dateTime,
-                groupId);
+            new Reservation(ReservationType.SPORTS_ROOM, userId, sportRoomId, dateTime, groupId);
 
         // Creates chain of responsibility
         boolean isValid = reservationService.checkReservation(reservation, this);
@@ -126,12 +121,11 @@ public class ReservationController {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
         Long equipmentId;
-        try{
-             equipmentId = getFirstAvailableEquipmentId(equipmentName);
-        } catch (HttpClientErrorException e){
+        try {
+            equipmentId = getFirstAvailableEquipmentId(equipmentName);
+        } catch (HttpClientErrorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
 
         Reservation reservation =
             new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
@@ -153,10 +147,6 @@ public class ReservationController {
     public Long getLastPersonThatUsedEquipment(@PathVariable Long equipmentId) {
         return reservationService.getLastPersonThatUsedEquipment(equipmentId);
     }
-
-
-
-
 
     //  -------------------  The methods below communicate with other microservices.
 
@@ -184,8 +174,9 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportsRoomId.toString() + "/exists";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
+                String.class);
         Boolean sportRoomExists = Boolean.valueOf(response);
         return sportRoomExists;
     }
@@ -201,8 +192,9 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/isHall";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
+                String.class);
         Boolean sportRoomIsHall = Boolean.valueOf(response);
 
         return sportRoomIsHall;
@@ -219,8 +211,9 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMaximumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
+                String.class);
         int maxCapacity = Integer.valueOf(response);
 
         return maxCapacity;
@@ -236,8 +229,9 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMinimumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
+                String.class);
         int minCapacity = Integer.valueOf(response);
 
         return minCapacity;
@@ -259,21 +253,20 @@ public class ReservationController {
         return Long.valueOf(response.getBody());
     }
 
-
     /**
      * Gets the related sport of the sport field.
      *
      * @param sportFieldId - id of sport field to be reserved
      * @return String - name of related Sport (id of Sport)
-     *       example: soccer, hockey, ...
      */
     public String getSportFieldSport(Long sportFieldId) {
 
         String methodSpecificUrl = "/" + sportFieldId.toString() + "/getSport";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String relatedSport = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        String relatedSport =
+            restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
+                String.class);
 
         return relatedSport;
     }
@@ -289,8 +282,9 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportName + "/getMaxTeamSize";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + "/sport/" + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + "/sport/" + methodSpecificUrl,
+                String.class);
         int maxTeamSize = Integer.valueOf(response);
 
         return maxTeamSize;
@@ -307,8 +301,8 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportName + "/getMinTeamSize";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + "/sport" + methodSpecificUrl, String.class);
+        String response = restTemplate.getForObject(sportFacilityUrl + "/sport" + methodSpecificUrl,
+            String.class);
         int minTeamSize = Integer.valueOf(response);
 
         return minTeamSize;
@@ -330,7 +324,5 @@ public class ReservationController {
         int groupSize = Integer.valueOf(response);
         return groupSize;
     }
-
-
 
 }
