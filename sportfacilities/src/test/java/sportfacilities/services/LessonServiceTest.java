@@ -23,9 +23,6 @@ import org.springframework.web.client.RestTemplate;
 import sportfacilities.entities.Lesson;
 import sportfacilities.repositories.LessonRepository;
 
-/**
- * The type Lesson service test.
- */
 @RunWith(MockitoJUnitRunner.class)
 public class LessonServiceTest {
 
@@ -46,7 +43,7 @@ public class LessonServiceTest {
     private transient LessonService lessonService;
 
     /**
-     * Sets .
+     * Sets up the tests .
      */
     @BeforeEach
     void setup() {
@@ -129,8 +126,7 @@ public class LessonServiceTest {
      */
     @Test
     public void deleteLessonTest() throws NoSuchElementException {
-        doNothing().when(lessonRepository).deleteById(1L);
-        assertDoesNotThrow(() -> lessonService.deleteLesson(1000L));
+        assertThrows(NoSuchElementException.class,() -> lessonService.deleteLesson(1000L));
     }
 
     /**
@@ -138,7 +134,7 @@ public class LessonServiceTest {
      */
     @Test
     public void deleteLessonThatNotExistsTest() {
-        doThrow(new NoSuchElementException()).when(lessonRepository).deleteById(1000L);
-        assertThrows(NoSuchElementException.class, () -> lessonService.deleteLesson(1000L));
+        doThrow(new NoSuchElementException()).when(lessonRepository).deleteById(lessonId);
+        assertThrows(NoSuchElementException.class, () -> lessonService.deleteLesson(lessonId));
     }
 }

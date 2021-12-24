@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -28,6 +29,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -155,9 +157,10 @@ public class ReservationControllerTest {
     @MethodSource("invalidDateGenerator")
     public void testEquipmentReservationInvalidDates(String date) throws Exception {
 
-        Mockito.when(restTemplate.getForObject(
+        Mockito.when(restTemplate.getForEntity(
             ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
-                + "/getAvailableEquipment", String.class)).thenReturn(String.valueOf(1L));
+                + "/getAvailableEquipment", String.class))
+            .thenReturn(ResponseEntity.of(Optional.of(String.valueOf(1L))));
 
         MvcResult result =
             mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date))
@@ -180,9 +183,10 @@ public class ReservationControllerTest {
     @MockitoSettings(strictness = Strictness.LENIENT)
     public void testEquipmentReservationValidDates(String date) throws Exception {
 
-        Mockito.when(restTemplate.getForObject(
+        Mockito.when(restTemplate.getForEntity(
             ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
-                + "/getAvailableEquipment", String.class)).thenReturn(String.valueOf(1L));
+                + "/getAvailableEquipment", String.class))
+            .thenReturn(ResponseEntity.of(Optional.of("1")));
 
         given(reservationService.checkReservation(any(), any())).willReturn(true);
 

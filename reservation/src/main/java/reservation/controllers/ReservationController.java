@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
@@ -130,10 +131,12 @@ public class ReservationController {
                                                       @PathVariable String date) {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
-
-        // Finds the first available instance of equipment name selected,
-        // will be -1 if non-existent / not available
-        Long equipmentId = getFirstAvailableEquipmentId(equipmentName);
+        Long equipmentId;
+        try {
+            equipmentId = getFirstAvailableEquipmentId(equipmentName);
+        } catch (HttpClientErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
         Reservation reservation =
             new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
@@ -267,17 +270,17 @@ public class ReservationController {
 
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
-        Long equipmentId = Long.valueOf(response);
-        return equipmentId;
+        ResponseEntity<String> response =
+            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl, String.class);
+
+        return Long.valueOf(response.getBody());
     }
 
     /**
      * Gets sport field sport.
      *
-     * @param sportFieldId the sport field id
-     * @return the sport field sport
+     * @param sportFieldId - id of sport field to be reserved
+     * @return String - name of related Sport (id of Sport)
      */
     public String getSportFieldSport(Long sportFieldId) {
 

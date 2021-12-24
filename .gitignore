@@ -26,6 +26,8 @@ application-production.properties
 # IntelliJ
 /out/
 
+# MR
+/codemr
 
 
 ### Java ###
