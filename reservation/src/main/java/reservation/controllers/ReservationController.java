@@ -1,7 +1,10 @@
 package reservation.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
@@ -121,10 +125,13 @@ public class ReservationController {
                                                            @PathVariable String date) {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
+        Long equipmentId;
+        try{
+             equipmentId = getFirstAvailableEquipmentId(equipmentName);
+        } catch (HttpClientErrorException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
-        // Finds the first available instance of equipment name selected,
-        // will be -1 if non-existent / not available
-        Long equipmentId = getFirstAvailableEquipmentId(equipmentName);
 
         Reservation reservation =
             new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
@@ -246,10 +253,10 @@ public class ReservationController {
 
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
-        Long equipmentId = Long.valueOf(response);
-        return equipmentId;
+        ResponseEntity<String> response =
+            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl, String.class);
+
+        return Long.valueOf(response.getBody());
     }
 
 
