@@ -70,9 +70,7 @@ public class SportRoomController {
         try {
             Boolean exists = sportRoomService.sportRoomExists(sportRoomId);
             return new ResponseEntity<String>(exists.toString(), HttpStatus.OK);
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            System.out.println("Sport room with id " + sportRoomId + " does not exist!!");
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -89,9 +87,20 @@ public class SportRoomController {
         try {
             Boolean isHall = sportRoomService.getSportRoom(sportRoomId).getIsSportsHall();
             return new ResponseEntity<String>(isHall.toString(), HttpStatus.OK);
-        } catch (IllegalStateException e) {
+        } catch (NoSuchElementException e) {
             e.printStackTrace();
             System.out.println("Sport room with id " + sportRoomId + " does not exist!!");
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{sportRoomId}/getName")
+    @ResponseBody
+    public ResponseEntity<String> getSportRoomName(@PathVariable Long sportRoomId) {
+        try {
+            SportRoom sportRoom = sportRoomService.getSportRoom(sportRoomId);
+            return new ResponseEntity<String>(sportRoom.getSportRoomName(), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -110,8 +119,7 @@ public class SportRoomController {
         try {
             sportRoomService.setSportRoomName(sportRoomId, sportRoomName);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalStateException e) {
-            System.out.println("Sport room with id " + sportRoomId + " does not exist!!");
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -128,7 +136,7 @@ public class SportRoomController {
         try {
             Integer maxCapacity = sportRoomService.getSportRoom(sportRoomId).getMaxCapacity();
             return new ResponseEntity<String>(maxCapacity.toString(), HttpStatus.OK);
-        } catch (IllegalStateException e) {
+        } catch (NoSuchElementException e) {
             e.printStackTrace();
             System.out.println("Sport room with id " + sportRoomId + " does not exist!!");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -147,7 +155,7 @@ public class SportRoomController {
         try {
             Integer minCapacity = sportRoomService.getSportRoom(sportRoomId).getMinCapacity();
             return new ResponseEntity<String>(minCapacity.toString(), HttpStatus.OK);
-        } catch (IllegalStateException e) {
+        } catch (NoSuchElementException e) {
             e.printStackTrace();
             System.out.println("Sport room with id " + sportRoomId + " does not exist!!");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -167,7 +175,7 @@ public class SportRoomController {
         try {
             sportRoomService.setSportRoomMinCapacity(sportRoomId, minCapacity);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalStateException e) {
+        } catch (NoSuchElementException e) {
             System.out.println("Sport room with id " + sportRoomId + " does not exist!!");
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -187,7 +195,7 @@ public class SportRoomController {
         try {
             sportRoomService.setSportRoomMaxCapacity(sportRoomId, maxCapacity);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalStateException e) {
+        } catch (NoSuchElementException e) {
             System.out.println("Sport room with id " + sportRoomId + " does not exist!!");
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -205,7 +213,7 @@ public class SportRoomController {
         try {
             Sport relatedSport = sportRoomService.getSportRoom(sportFieldId).getSports().get(0);
             return new ResponseEntity<>(relatedSport.getSportName(), HttpStatus.OK);
-        } catch (IllegalStateException e) {
+        } catch (NoSuchElementException e) {
             System.out.println("Sport field with id " + sportFieldId + " does not exist!!");
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

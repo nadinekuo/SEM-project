@@ -10,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+/**
+ * The type Reservation.
+ */
 @Entity
 @Table(name = "reservations")
 public class Reservation {
@@ -21,6 +24,9 @@ public class Reservation {
     private Long reservationId;
 
     private ReservationType typeOfReservation;    // 0 = Equipment, 1 = SportRoom, 2 = Lesson
+    private String bookedItemName;
+    // Name of reservation, it can be Sport Hall or Equipment name or
+    // Lesson title
     private Long customerId;   // for group reservations, there will be separate reservations
     private Long groupId;     // will be -1 if it's not a group reservation
     private Long sportFacilityReservedId;   // EquipmentId, LessonId or sportRoomId
@@ -30,19 +36,20 @@ public class Reservation {
 
     private int timeSlotInMinutes;
 
-
     /**
      * Instantiates a new Reservation.
      *
      * @param typeOfReservation       the type of reservation
+     * @param bookedItemName          the booked item name
      * @param customerId              the customer id
      * @param sportFacilityReservedId the sport facility reserved id
      * @param startingTime            the starting time
      */
-    public Reservation(ReservationType typeOfReservation, Long customerId,
+    public Reservation(ReservationType typeOfReservation, String bookedItemName, Long customerId,
                        Long sportFacilityReservedId, LocalDateTime startingTime) {
 
         this.typeOfReservation = typeOfReservation;
+        this.bookedItemName = bookedItemName;
         this.customerId = customerId;
         this.sportFacilityReservedId = sportFacilityReservedId;
         this.startingTime = startingTime;
@@ -50,21 +57,21 @@ public class Reservation {
         this.groupId = -1L;    // If not a group reservation
     }
 
-
     /**
      * Instantiates a new Reservation.
      *
      * @param typeOfReservation       the type of reservation
+     * @param bookedItemName          the booked item name
      * @param customerId              the customer id
      * @param sportFacilityReservedId the sport facility reserved id
      * @param startingTime            the starting time
-     * @param groupId                 id of group that is associated with this reservation, will
-     *                                be -1L if this is not a group reservation.
+     * @param groupId                 the group id
      */
-    public Reservation(ReservationType typeOfReservation, Long customerId,
+    public Reservation(ReservationType typeOfReservation, String bookedItemName, Long customerId,
                        Long sportFacilityReservedId, LocalDateTime startingTime, Long groupId) {
 
         this.typeOfReservation = typeOfReservation;
+        this.bookedItemName = bookedItemName;
         this.customerId = customerId;
         this.sportFacilityReservedId = sportFacilityReservedId;
         this.startingTime = startingTime;
@@ -73,72 +80,169 @@ public class Reservation {
     }
 
     /**
-     * Empty constructor needed for Spring JPA.
+     * Instantiates a new Reservation.
      */
     public Reservation() {
     }
 
+    /**
+     * Gets booked item name.
+     *
+     * @return the booked item name
+     */
+    public String getBookedItemName() {
+        return bookedItemName;
+    }
+
+    /**
+     * Sets booked item name.
+     *
+     * @param bookedItemName the booked item name
+     */
+    public void setBookedItemName(String bookedItemName) {
+        this.bookedItemName = bookedItemName;
+    }
+
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public Long getId() {
         return reservationId;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(Long id) {
         this.reservationId = id;
     }
 
+    /**
+     * Gets sport facility reserved id.
+     *
+     * @return the sport facility reserved id
+     */
     public Long getSportFacilityReservedId() {
         return sportFacilityReservedId;
     }
 
-
+    /**
+     * Sets sport facility reserved id.
+     *
+     * @param sportFacilityReservedId the sport facility reserved id
+     */
     public void setSportFacilityReservedId(Long sportFacilityReservedId) {
         this.sportFacilityReservedId = sportFacilityReservedId;
     }
 
+    /**
+     * Gets type of reservation.
+     *
+     * @return the type of reservation
+     */
     public ReservationType getTypeOfReservation() {
         return typeOfReservation;
     }
 
+    /**
+     * Sets type of reservation.
+     *
+     * @param typeOfReservation the type of reservation
+     */
     public void setTypeOfReservation(ReservationType typeOfReservation) {
         this.typeOfReservation = typeOfReservation;
     }
 
+    /**
+     * Gets reservation id.
+     *
+     * @return the reservation id
+     */
     public Long getReservationId() {
         return reservationId;
     }
 
+    /**
+     * Sets reservation id.
+     *
+     * @param reservationId the reservation id
+     */
     public void setReservationId(Long reservationId) {
         this.reservationId = reservationId;
     }
 
+    /**
+     * Gets starting time.
+     *
+     * @return the starting time
+     */
     public LocalDateTime getStartingTime() {
         return startingTime;
     }
 
+    /**
+     * Sets starting time.
+     *
+     * @param startingTime the starting time
+     */
     public void setStartingTime(LocalDateTime startingTime) {
         this.startingTime = startingTime;
     }
 
+    /**
+     * Gets customer id.
+     *
+     * @return the customer id
+     */
     public Long getCustomerId() {
         return customerId;
     }
 
+    /**
+     * Sets customer id.
+     *
+     * @param customerId the customer id
+     */
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 
+    /**
+     * Gets time slot in minutes.
+     *
+     * @return the time slot in minutes
+     */
     public int getTimeSlotInMinutes() {
         return timeSlotInMinutes;
     }
 
+    /**
+     * Sets time slot in minutes.
+     *
+     * @param timeSlotInMinutes the time slot in minutes
+     */
     public void setTimeSlotInMinutes(int timeSlotInMinutes) {
         this.timeSlotInMinutes = timeSlotInMinutes;
     }
 
+    /**
+     * Gets group id.
+     *
+     * @return the group id
+     */
     public Long getGroupId() {
         return groupId;
     }
 
+    /**
+     * Sets group id.
+     *
+     * @param groupId the group id
+     */
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
     }

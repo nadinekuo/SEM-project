@@ -142,7 +142,7 @@ public class SportRoomServiceTest {
 
         when(sportRoomRepository.findBySportRoomId(id1)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(NoSuchElementException.class, () -> {
             sportRoomService.getSportRoom(id1);
         });
     }

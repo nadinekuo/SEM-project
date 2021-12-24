@@ -47,9 +47,12 @@ public class BookingSystemTest {
         restTemplate = Mockito.mock(RestTemplate.class);
         reservations = new Reservation[size];
 
+        String[] titles = {"Tango", "Krav Maga", "Ziou Zitsou", "Krav Maga", "Box", "Yoga"};
+
         for (int i = 0; i < size; i++) {
-            Reservation reservation = new Reservation(ReservationType.EQUIPMENT, (long) i, (long) i,
-                LocalDateTime.of(2020, i + 1, 1, 1, 1));
+            Reservation reservation =
+                new Reservation(ReservationType.EQUIPMENT, titles[i], (long) i, (long) i,
+                    LocalDateTime.of(2020, i + 1, 1, 1, 1));
             reservation.setReservationId((long) i + 1);
             userIdStrategy.add(reservation);
             reservations[i] = reservation;
@@ -117,27 +120,19 @@ public class BookingSystemTest {
     @Test
     void getNextReservationEquipmentName() {
         BookingSystem equipmentNameStrategy =
-            new BookingSystem(new EquipmentNameStrategy(restTemplate));
+            new BookingSystem(new EquipmentNameStrategy());
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 6; i++) {
             equipmentNameStrategy.addReservation(reservations[i]);
         }
 
-        String[] titles = {"Tango", "Krav Maga", "Ziou Zitsou", "Krav Maga"};
-
-        for (int i = 0; i < 4; i++) {
-            Mockito.when(restTemplate.getForObject(
-                equipmentUrl + "/equipment/" + reservations[i].getSportFacilityReservedId()
-                    + "/getEquipmentName", String.class)).thenReturn(titles[i]);
-        }
-
-        assertEquals(reservations[1], equipmentNameStrategy.getNextReservation());
+        assertEquals(reservations[4], equipmentNameStrategy.getNextReservation());
     }
 
     @Test
     void getNextReservationEquipmentNameEmpty() {
         BookingSystem equipmentNameStrategy =
-            new BookingSystem(new EquipmentNameStrategy(restTemplate));
+            new BookingSystem(new EquipmentNameStrategy());
 
         assertNull(equipmentNameStrategy.getNextReservation());
     }
@@ -164,8 +159,8 @@ public class BookingSystemTest {
             bookingSystem.addReservation(reservations[i]);
 
         }
-        assertEquals(
-            "BookingSystem{bookings=[" + reservations[0].toString() + ", " + reservations[1]
-                .toString() + ", " + reservations[2].toString() + "]}", bookingSystem.toString());
+        assertEquals("BookingSystem{bookings=[" + reservations[0].toString() + ", "
+                + reservations[1].toString() + ", " + reservations[2].toString() + "]}",
+            bookingSystem.toString());
     }
 }

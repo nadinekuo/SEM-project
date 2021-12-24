@@ -41,10 +41,10 @@ public class TeamRoomCapacityValidatorTest {
         this.teamRoomCapacityValidator =
             new TeamRoomCapacityValidator(reservationService, reservationController);
 
-        groupReservation = new Reservation(ReservationType.SPORTS_ROOM, 3L, 13L,
+        groupReservation = new Reservation(ReservationType.SPORTS_ROOM, "Hall 1", 3L, 13L,
             LocalDateTime.of(2022, 02, 3, 20, 30), 84L);
         groupReservation.setId(99L);
-        reservation1 = new Reservation(ReservationType.EQUIPMENT, 1L, 42L,
+        reservation1 = new Reservation(ReservationType.EQUIPMENT, "hockey", 1L, 42L,
             LocalDateTime.of(2022, 10, 05, 16, 00));
         reservation1.setId(53L);
 

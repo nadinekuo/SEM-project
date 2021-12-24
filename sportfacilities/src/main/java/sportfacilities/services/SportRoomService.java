@@ -39,7 +39,7 @@ public class SportRoomService {
      */
     public SportRoom getSportRoom(Long sportRoomId) {
         return sportRoomRepository.findBySportRoomId(sportRoomId).orElseThrow(
-            () -> new IllegalStateException(
+            () -> new NoSuchElementException(
                 "Sport room with id " + sportRoomId + " does not exist!"));
     }
 
