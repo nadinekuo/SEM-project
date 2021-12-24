@@ -49,6 +49,7 @@ public class ReservationServiceTest {
     private final transient long idGroup = 99L;
 
     private final transient LocalDateTime date1;
+    private final transient LocalDateTime date2;
 
     @Mock
     private transient ReservationRepository reservationRepository;
@@ -63,14 +64,15 @@ public class ReservationServiceTest {
      */
     public ReservationServiceTest() {
         date1 = LocalDateTime.of(2022, 10, 5, 16, 0);
+        date2 = LocalDateTime.of(2022, 10, 5, 17, 45);
         reservation1 = new Reservation(ReservationType.EQUIPMENT, 1L, 42L,
             date1);
         reservation1.setId(id1);
         reservation2 = new Reservation(ReservationType.SPORTS_ROOM, 2L, 25L,
-            LocalDateTime.of(2022, 10, 5, 17, 45));
+            date2);
         reservation2.setId(id2);
         groupReservation1 = new Reservation(ReservationType.SPORTS_ROOM, 3L, 13L,
-            LocalDateTime.of(2022, 2, 3, 20, 30), id2);
+            date2, id2);
         groupReservation1.setId(idGroup);
     }
 
