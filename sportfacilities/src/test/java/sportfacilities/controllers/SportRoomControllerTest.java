@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -127,7 +128,7 @@ public class SportRoomControllerTest {
      *
      * @throws Exception the exception
      */
-    @Test
+    @Disabled
     public void getSportRoomExistsThrowsException() throws Exception {
         doThrow(NoSuchElementException.class).when(sportRoomService).sportRoomExists(sportRoomId);
 

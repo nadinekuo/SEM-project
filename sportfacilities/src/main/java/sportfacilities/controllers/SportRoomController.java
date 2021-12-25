@@ -94,6 +94,12 @@ public class SportRoomController {
         }
     }
 
+    /**
+     * Gets sport room name.
+     *
+     * @param sportRoomId the sport room id
+     * @return the sport room name
+     */
     @GetMapping("/{sportRoomId}/getName")
     @ResponseBody
     public ResponseEntity<String> getSportRoomName(@PathVariable Long sportRoomId) {
@@ -166,6 +172,7 @@ public class SportRoomController {
      * Sets sport room minimum capacity.
      *
      * @param sportRoomId the sport room id
+     * @param minCapacity the min capacity
      * @return the sport room minimum capacity
      */
     @PostMapping("/{sportRoomId}/{minCapacity}/setMinimumCapacity/admin")
@@ -182,11 +189,11 @@ public class SportRoomController {
     }
 
     /**
-     * Sets sport room minimum capacity.
+     * Sets sport room maximum capacity.
      *
      * @param sportRoomId the sport room id
-     * @param maxCapacity the min capacity
-     * @return the sport room minimum capacity
+     * @param maxCapacity the max capacity
+     * @return the sport room maximum capacity
      */
     @PostMapping("/{sportRoomId}/{maxCapacity}/setMaximumCapacity/admin")
     @ResponseBody
@@ -223,9 +230,9 @@ public class SportRoomController {
      * Add sport room response entity.
      *
      * @param name        the name
+     * @param sport       the sport
      * @param minCapacity the min capacity
      * @param maxCapacity the max capacity
-     * @param sport       the related sport
      * @param isSportHall the is sport hall
      * @return the response entity
      */
@@ -259,7 +266,7 @@ public class SportRoomController {
     }
 
     /**
-     * Adds a sport to sports hall .
+     * Add sport to sports hall response entity.
      *
      * @param sportRoomId the sport room id
      * @param sportName   the sport name
