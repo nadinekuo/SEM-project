@@ -401,7 +401,7 @@ public class SportRoomControllerTest {
      */
     @Test
     public void addSportToSportRoomTestException() throws Exception {
-        doThrow(new IllegalStateException("test")).when(sportRoomService)
+        doThrow(new NoSuchElementException("test")).when(sportRoomService)
             .addSportToSportsHall(sportRoomId, sportName);
 
         mockMvc.perform(
