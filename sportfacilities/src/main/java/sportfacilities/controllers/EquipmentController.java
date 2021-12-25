@@ -104,12 +104,12 @@ public class EquipmentController {
     @PutMapping("/{equipmentName}/{relatedSportName}/addNewEquipment/admin")
     @ResponseBody
     public ResponseEntity<?> addNewEquipment(@PathVariable String equipmentName,
-                                @PathVariable String relatedSportName) {
-        try{
+                                             @PathVariable String relatedSportName) {
+        try {
             Sport sport = sportService.getSportById(relatedSportName);
             equipmentService.addEquipment(new Equipment(equipmentName, sport, false));
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -128,7 +128,7 @@ public class EquipmentController {
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        
+
     }
 
     /**
@@ -155,13 +155,13 @@ public class EquipmentController {
     @PostMapping("/{equipmentId}/reserved")
     @ResponseBody
     public ResponseEntity<?> equipmentReserved(@PathVariable Long equipmentId) {
-        try{
+        try {
             equipmentService.setEquipmentToInUse(equipmentId);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        
+
     }
 
 }

@@ -72,8 +72,8 @@ public class SportRoomController {
     @GetMapping("/{sportRoomId}/exists")
     @ResponseBody
     public ResponseEntity<?> sportRoomExists(@PathVariable Long sportRoomId) {
-            Boolean exists = sportRoomService.sportRoomExists(sportRoomId);
-            return new ResponseEntity<>(exists.toString(), HttpStatus.OK);
+        Boolean exists = sportRoomService.sportRoomExists(sportRoomId);
+        return new ResponseEntity<>(exists.toString(), HttpStatus.OK);
     }
 
     /**

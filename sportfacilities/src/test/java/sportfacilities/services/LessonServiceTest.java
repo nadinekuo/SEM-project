@@ -2,9 +2,7 @@ package sportfacilities.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -126,7 +124,7 @@ public class LessonServiceTest {
      */
     @Test
     public void deleteLessonTest() throws NoSuchElementException {
-        assertThrows(NoSuchElementException.class,() -> lessonService.deleteLesson(1000L));
+        assertThrows(NoSuchElementException.class, () -> lessonService.deleteLesson(1000L));
     }
 
     /**
