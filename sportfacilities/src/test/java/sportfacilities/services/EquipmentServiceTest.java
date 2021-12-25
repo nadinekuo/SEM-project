@@ -8,12 +8,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -40,7 +37,7 @@ public class EquipmentServiceTest {
     private final transient Sport tennis;
     private final transient Equipment equipment1;
     private final transient Equipment equipment2;
-    
+
     private final long id1 = 66L;
     private final long id2 = 12L;
 
@@ -93,7 +90,7 @@ public class EquipmentServiceTest {
 
         assertThat(result.getEquipmentId()).isEqualTo(id1);
         assertThat(result.isInUse()).isTrue();
-        assertThat(result.getName().equals( "boxingGloves"));
+        assertThat(result.getName().equals("boxingGloves"));
     }
 
     /**
@@ -103,8 +100,8 @@ public class EquipmentServiceTest {
     public void setEquipmentToNotInUseTest() {
 
         Mockito.when(equipmentRepository.existsById(id1)).thenReturn(true);
-        when(equipmentRepository.findByEquipmentId(id1)).thenReturn(
-            Optional.ofNullable(equipment1));
+        when(equipmentRepository.findByEquipmentId(id1))
+            .thenReturn(Optional.ofNullable(equipment1));
 
         equipmentService.setEquipmentToNotInUse(id1);
 
@@ -118,8 +115,8 @@ public class EquipmentServiceTest {
     public void setEquipmentToInUseTest() {
 
         Mockito.when(equipmentRepository.existsById(id2)).thenReturn(true);
-        when(equipmentRepository.findByEquipmentId(id2)).thenReturn(
-            Optional.ofNullable(equipment2));
+        when(equipmentRepository.findByEquipmentId(id2))
+            .thenReturn(Optional.ofNullable(equipment2));
 
         equipmentService.setEquipmentToInUse(id2);
 
@@ -149,8 +146,7 @@ public class EquipmentServiceTest {
             .thenReturn(java.util.Optional.empty());
 
         assertThrows(NoSuchElementException.class,
-            () -> equipmentService.getAvailableEquipmentIdsByName(
-            "test"));
+            () -> equipmentService.getAvailableEquipmentIdsByName("test"));
     }
 
     /**
@@ -170,7 +166,7 @@ public class EquipmentServiceTest {
     }
 
     @Test
-    public void deleteEquipmentTest()  {
+    public void deleteEquipmentTest() {
         Mockito.when(equipmentRepository.findByEquipmentId(equipment1.getEquipmentId()))
             .thenReturn(Optional.of(equipment1));
         assertDoesNotThrow(() -> equipmentService.deleteEquipment(equipment1.getEquipmentId()));
@@ -179,10 +175,8 @@ public class EquipmentServiceTest {
 
     @Test
     public void deleteEquipmentWithNonExistentId() throws Exception {
-        doThrow(new NoSuchElementException()).when(equipmentRepository)
-            .deleteByEquipmentId(id1);
-        assertThrows(NoSuchElementException.class,
-            () -> equipmentService.deleteEquipment(id1));
+        doThrow(new NoSuchElementException()).when(equipmentRepository).deleteByEquipmentId(id1);
+        assertThrows(NoSuchElementException.class, () -> equipmentService.deleteEquipment(id1));
     }
 
     /**

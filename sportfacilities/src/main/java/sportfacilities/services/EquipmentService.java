@@ -95,10 +95,12 @@ public class EquipmentService {
      */
     
     //TODO potentially distinguish between the equipment doesn't exist or if its fully booked
-    public long getAvailableEquipmentIdsByName(String equipmentName) {
+    public Long getAvailableEquipmentIdsByName(String equipmentName) {
+
         return
             equipmentRepository.findAvailableEquipment(equipmentName).orElseThrow(
                 () -> new NoSuchElementException("Currently this equipment is fully booked"));
+
     }
 
     /**

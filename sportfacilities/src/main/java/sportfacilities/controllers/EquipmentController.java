@@ -136,7 +136,7 @@ public class EquipmentController {
      *
      * @param equipmentId the equipment id
      */
-    @PostMapping("/{equipmentId}/broughtBack/admin")
+    @PutMapping("/{equipmentId}/broughtBack/admin")
     @ResponseBody
     public ResponseEntity<?> equipmentBroughtBack(@PathVariable Long equipmentId) {
         try {
@@ -152,7 +152,7 @@ public class EquipmentController {
      *
      * @param equipmentId the equipment id
      */
-    @PostMapping("/{equipmentId}/reserved")
+    @PutMapping("/{equipmentId}/reserved")
     @ResponseBody
     public ResponseEntity<?> equipmentReserved(@PathVariable Long equipmentId) {
         try{
