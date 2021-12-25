@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.floatThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -114,7 +115,8 @@ public class ReservationServiceTest {
     @Test
     void deleteReservationTest() {
 
-        when(reservationRepository.findById(id1)).thenReturn(Optional.ofNullable(reservation1));
+        when(reservationRepository.existsById(id1))
+            .thenReturn(true);
 
         assertDoesNotThrow(() -> {
             reservationService.deleteReservation(id1);
@@ -129,7 +131,8 @@ public class ReservationServiceTest {
     @Test
     void deleteNonExistingReservationTest() {
 
-        when(reservationRepository.findById(idNotExists)).thenReturn(Optional.empty());
+        when(reservationRepository
+            .existsById(idNotExists)).thenReturn(false);
 
         assertThrows(NoSuchElementException.class, () -> {
             reservationService.deleteReservation(idNotExists);
@@ -167,7 +170,8 @@ public class ReservationServiceTest {
         Mockito.doReturn(userReservationBalanceValidator)
             .when(reservationServiceSpy).createChainOfResponsibility(any(), any());
 
-        when(userReservationBalanceValidator.handle(reservation1)).thenReturn(false);
+        when(userReservationBalanceValidator.handle(reservation1))
+            .thenThrow(InvalidReservationException.class);
 
         assertFalse(reservationServiceSpy.checkReservation(reservation1,
             new ReservationController(reservationServiceSpy)));
@@ -182,9 +186,6 @@ public class ReservationServiceTest {
         String date = "2022-10-05T15:00:30";
         LocalDateTime start = LocalDateTime.parse(date.substring(0, 10) + "T00:00:00");
         LocalDateTime end = LocalDateTime.parse(date.substring(0, 10) + "T23:59:59");
-
-        //        LocalDateTime start = LocalDateTime.of(2022, 10, 05, 00, 00, 00);
-        //        LocalDateTime end = LocalDateTime.of(2022, 10, 05, 23, 59, 59);
 
         when(
             reservationRepository.findReservationByStartingTimeBetweenAndCustomerId(start, end, 1L))
@@ -242,6 +243,26 @@ public class ReservationServiceTest {
         verify(reservationRepository, times(1)).save(reservation1);
 
     }
+
+
+
+    /**
+     * Find reservation by group id and time test.
+     */
+    @Test
+    void findReservationByGroupIdAndTimeTest() {
+
+        when(reservationRepository.findByGroupIdAndTime(anyLong(), any()))
+            .thenReturn(Optional.of(groupReservation1.getReservationId()));
+
+        Long result = reservationService.findByGroupIdAndTime(idGroup,
+            groupReservation1.getStartingTime());
+        assertThat(result).isEqualTo(groupReservation1.getReservationId());
+
+        verify(reservationRepository, times(1))
+            .findByGroupIdAndTime(idGroup, groupReservation1.getStartingTime());
+    }
+
 
     /**
      * Gets last person that used equipment test.

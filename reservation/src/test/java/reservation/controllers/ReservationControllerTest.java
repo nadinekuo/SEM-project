@@ -2,17 +2,21 @@ package reservation.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +36,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
@@ -118,34 +123,7 @@ public class ReservationControllerTest {
             MockMvcBuilders.standaloneSetup(new ReservationController(reservationService)).build();
     }
 
-    /**
-     * Gets reservation id.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getReservationId() throws Exception {
-        mockMvc.perform(get("/reservation/{reservationId}", reservationId))
-            .andExpect(status().isOk());
-        verify(reservationService).getReservation(1L);
-    }
 
-
-    /**
-     * Gets user is premium.
-     *
-     * @throws Exception the exception
-     */
-    //TODO fix this
-    @Test
-    public void getUserIsPremium() throws Exception {
-
-        //        Mockito.when(restTemplate
-        //            .getForObject(ReservationController.userUrl + "/user/" + userId +
-        //            "/isPremium",
-        //                Boolean.class)).thenReturn(true);
-
-    }
 
     /**
      * Test equipment reservation invalid dates.
@@ -241,6 +219,66 @@ public class ReservationControllerTest {
     }
 
     /**
+     * Gets reservation by id.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void getReservation() throws Exception {
+        mockMvc.perform(get("/reservation/{reservationId}", reservationId))
+            .andExpect(status().isOk());
+        verify(reservationService).getReservation(reservationId);
+    }
+
+
+    /**
+     * Gets invalid reservation by id.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void getInvalidReservation() throws Exception {
+        when(reservationService.getReservation(any()))
+            .thenThrow(NoSuchElementException.class);
+
+        mockMvc.perform(get("/reservation/{reservationId}", reservationId))
+            .andExpect(status().isBadRequest());
+        verify(reservationService).getReservation(reservationId);
+    }
+
+
+    /**
+     * Deletes invalid reservation by id.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void deleteInvalidReservation() throws Exception {
+        when(reservationService.deleteReservation(anyLong()))
+            .thenThrow(NoSuchElementException.class);
+
+        mockMvc.perform(delete("/reservation/{reservationId}", reservationId))
+            .andExpect(status().isBadRequest());
+        verify(reservationService).deleteReservation(reservationId);
+    }
+
+
+    /**
+     * Deletes reservation by id.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void deleteReservation() throws Exception {
+        mockMvc.perform(delete("/reservation/{reservationId}", reservationId))
+            .andExpect(status().isOk());
+        verify(reservationService).deleteReservation(reservationId);
+    }
+
+
+
+
+    /**
      * Test lesson reservation lesson id does not exist.
      *
      * @throws Exception the exception
@@ -280,5 +318,29 @@ public class ReservationControllerTest {
             e.printStackTrace();
         }
     }
+
+
+    // Tests communication with other microservices
+    // TODO: to be tested from the new helper class created (not as mockMVC here)
+
+
+
+//    /**
+//     * Gets user is premium.
+//     *
+//     * @throws Exception the exception
+//     */
+//    @Test
+//    public void getUserIsPremium() throws Exception {
+//
+//        Mockito.when(restTemplate
+//            .getForObject(ReservationController.userUrl + "/user/" + userId +
+//            "/isPremium",
+//                Boolean.class)).thenReturn(true);
+//
+//    }
+
+
+
 
 }

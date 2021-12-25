@@ -58,8 +58,13 @@ public class ReservationController {
      */
     @GetMapping("/{reservationId}")
     @ResponseBody
-    public Reservation getReservation(@PathVariable Long reservationId) {
-        return reservationService.getReservation(reservationId);
+    public ResponseEntity<?> getReservation(@PathVariable Long reservationId) {
+        try {
+            reservationService.getReservation(reservationId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -73,10 +78,9 @@ public class ReservationController {
     public ResponseEntity<?> deleteReservation(@PathVariable Long reservationId) {
         try {
             reservationService.deleteReservation(reservationId);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-
         }
 
     }
@@ -90,7 +94,6 @@ public class ReservationController {
      * @param date        the date
      * @return the response entity
      */
-    //TODO make the response return a more clear message
     @PostMapping("/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking")
     @ResponseBody
     public ResponseEntity<?> makeSportRoomReservation(@PathVariable Long userId,
@@ -104,7 +107,9 @@ public class ReservationController {
         Reservation reservation =
             new Reservation(ReservationType.SPORTS_ROOM, userId, sportRoomId, dateTime, groupId);
 
-        // Creates chain of responsibility
+        // Chain of responsibility:
+        // If any condition to be checked is violated by this reservation, the respective
+        // validator will throw an InvalidReservationException with appropriate message
         boolean isValid = reservationService.checkReservation(reservation, this);
 
         if (isValid) {
@@ -123,7 +128,6 @@ public class ReservationController {
      * @param date          the date
      * @return the response entity
      */
-    //TODO make the response return a more clear message
     @PostMapping("/{userId}/{equipmentName}/{date}/makeEquipmentBooking")
     @ResponseBody
     public ResponseEntity<?> makeEquipmentReservation(@PathVariable Long userId,
@@ -134,14 +138,22 @@ public class ReservationController {
         Long equipmentId;
         try {
             equipmentId = getFirstAvailableEquipmentId(equipmentName);
+            System.out.println(
+                "######### First available equipment id for " + equipmentName + " =" + " "
+                    + equipmentId);
         } catch (HttpClientErrorException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            equipmentId = -1L;
+            System.out.println(
+                "############ Equipment " + equipmentName + " not available / " + "non-existent!!! "
+                    + "Set id to -1L in ReservationController.");
         }
 
         Reservation reservation =
             new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
 
-        // Creates chain of responsibility
+        // Chain of responsibility:
+        // If any condition to be checked is violated by this reservation, the respective
+        // validator will throw an InvalidReservationException with appropriate message
         boolean isValid = reservationService.checkReservation(reservation, this);
 
         if (isValid) {
@@ -170,7 +182,8 @@ public class ReservationController {
         }
     }
 
-    //  -------------------  The methods below communicate with other microservices.
+    //  -------------------  The methods below communicate with other microservices
+    // Any exceptions that may occur, are caught in that respective microservice.
 
     /**
      * Gets user is premium.
@@ -197,9 +210,8 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportsRoomId.toString() + "/exists";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
-                String.class);
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
         Boolean sportRoomExists = Boolean.valueOf(response);
         return sportRoomExists;
     }
@@ -215,9 +227,8 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/isHall";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
-                String.class);
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
         Boolean sportRoomIsHall = Boolean.valueOf(response);
 
         return sportRoomIsHall;
@@ -234,9 +245,8 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMaximumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
-                String.class);
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
         int maxCapacity = Integer.valueOf(response);
 
         return maxCapacity;
@@ -252,9 +262,8 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMinimumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
-                String.class);
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
         int minCapacity = Integer.valueOf(response);
 
         return minCapacity;
@@ -287,9 +296,8 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportFieldId.toString() + "/getSport";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String relatedSport =
-            restTemplate.getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl,
-                String.class);
+        String relatedSport = restTemplate
+            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
 
         return relatedSport;
     }
@@ -305,9 +313,8 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportName + "/getMaxTeamSize";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + "/sport/" + methodSpecificUrl,
-                String.class);
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sport/" + methodSpecificUrl, String.class);
         int maxTeamSize = Integer.valueOf(response);
 
         return maxTeamSize;
@@ -324,8 +331,8 @@ public class ReservationController {
         String methodSpecificUrl = "/" + sportName + "/getMinTeamSize";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate.getForObject(sportFacilityUrl + "/sport" + methodSpecificUrl,
-            String.class);
+        String response = restTemplate
+            .getForObject(sportFacilityUrl + "/sport" + methodSpecificUrl, String.class);
         int minTeamSize = Integer.valueOf(response);
 
         return minTeamSize;

@@ -54,9 +54,14 @@ public class ReservationService {
      *
      * @param reservationId the reservation id
      */
-    public void deleteReservation(Long reservationId) {
-        Reservation reservation = getReservation(reservationId);
-        reservationRepository.deleteById(reservation.getReservationId());
+    public boolean deleteReservation(Long reservationId) {
+        boolean exists = reservationRepository.existsById(reservationId);
+        if (!exists) {
+            throw new NoSuchElementException(
+                "Reservation with id " + reservationId + " does not " + "exist!");
+        }
+        reservationRepository.deleteById(reservationId);
+        return true;
     }
 
     /**
