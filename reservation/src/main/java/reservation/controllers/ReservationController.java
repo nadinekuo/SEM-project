@@ -1,6 +1,5 @@
 package reservation.controllers;
 
-import com.google.gson.Gson;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -81,12 +80,14 @@ public class ReservationController {
      * @param date        the date
      * @return A response based on what happened when trying to make the reservation
      */
-    @PostMapping("/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking")
+    @PostMapping("/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}"
+        + "/makeSportRoomBooking")
     @ResponseBody
     public ResponseEntity<String> makeSportRoomReservation(@PathVariable Long userId,
                                                            @PathVariable Long groupId,
                                                            @PathVariable Long sportRoomId,
-                                                           @PathVariable String date) {
+                                                           @PathVariable String date,
+                                                           @PathVariable Boolean madeByPremiumUser) {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
@@ -97,7 +98,7 @@ public class ReservationController {
         // Create reservation object, to be passed through chain of responsibility
         Reservation reservation =
             new Reservation(ReservationType.SPORTS_ROOM, sportRoomName, userId, sportRoomId,
-                dateTime, groupId);
+                dateTime, groupId, madeByPremiumUser);
 
         // Creates chain of responsibility
         boolean isValid = reservationService.checkReservation(reservation, this);
@@ -118,11 +119,12 @@ public class ReservationController {
      * @param equipmentName the equipment name
      * @return A response based on what happened when trying to make the reservation
      */
-    @PostMapping("/{userId}/{equipmentName}/{date}/makeEquipmentBooking")
+    @PostMapping("/{userId}/{equipmentName}/{date}/{madeByPremiumUser}/makeEquipmentBooking")
     @ResponseBody
     public ResponseEntity<String> makeEquipmentReservation(@PathVariable Long userId,
                                                            @PathVariable String equipmentName,
-                                                           @PathVariable String date) {
+                                                           @PathVariable String date,
+                                                           @PathVariable Boolean madeByPremiumUser) {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
@@ -132,7 +134,7 @@ public class ReservationController {
 
         Reservation reservation =
             new Reservation(ReservationType.EQUIPMENT, equipmentName, userId, equipmentId,
-                dateTime);
+                dateTime, madeByPremiumUser);
 
         // Creates chain of responsibility
         boolean isValid = reservationService.checkReservation(reservation, this);
@@ -158,18 +160,6 @@ public class ReservationController {
 
     //  -------------------  The methods below communicate with other microservices.
 
-    /**
-     * Gets if user is premium.
-     *
-     * @param userId the user id
-     * @return if the user is premium
-     */
-    public Boolean getUserIsPremium(Long userId) {
-        String methodSpecificUrl = "/user/" + userId + "/isPremium";
-        String response = restTemplate.getForObject(userUrl + methodSpecificUrl, String.class);
-        Boolean isPremium = Boolean.valueOf(response);
-        return isPremium;
-    }
 
     /**
      * Gets if sports room to be reserved exists.

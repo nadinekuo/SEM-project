@@ -10,6 +10,7 @@ import reservation.services.ReservationService;
 @Component
 public class TeamRoomCapacityValidator extends BaseValidator {
 
+    //TODO make use of this variable or remove it
     private final ReservationService reservationService;
     private final ReservationController reservationController;
 

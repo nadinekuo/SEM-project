@@ -48,23 +48,24 @@ public class ReservationControllerTest {
     private final transient long groupId = 1L;
     private final transient long sportFacilityId = 1L;
     private final transient String equipmentNameValid = "hockeyStick";
+    private final transient Boolean madeByPremiumUser = true;
 
     private final transient String equipmentNameInvalid = "blopp";
 
     private final transient String validDate = "2099-01-06T17:00:00";
-    /**
-     * The Equipment booking url.
-     */
+
     transient String equipmentBookingUrl =
-        "/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking";
+        "/reservation/{userId}/{equipmentName}/{date}/{madeByPremiumUser}/makeEquipmentBooking";
     /**
      * The Sport room booking url.
      */
     transient String sportRoomBookingUrl =
-        "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking";
+        "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}"
+            + "/makeSportRoomBooking";
 
     transient String lessonBookingUrl =
-        "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking";
+        "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}"
+            + "/makeSportRoomBooking";
 
     /**
      * The Date time formatter.
@@ -78,7 +79,8 @@ public class ReservationControllerTest {
         LocalDateTime.parse("2099-01-06 17:00:00", dateTimeFormatter);
 
     private final transient Reservation reservation =
-        new Reservation(ReservationType.EQUIPMENT, "hockey", userId, sportFacilityId, bookableDate);
+        new Reservation(ReservationType.EQUIPMENT, "hockey", userId, sportFacilityId, bookableDate,
+            madeByPremiumUser);
 
     /**
      * The Reservation service.
@@ -165,7 +167,7 @@ public class ReservationControllerTest {
                 + "/getAvailableEquipment", String.class)).thenReturn(String.valueOf(1L));
 
         MvcResult result =
-            mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date))
+            mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date, madeByPremiumUser))
                 .andExpect(status().is4xxClientError()).andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo(
@@ -192,7 +194,7 @@ public class ReservationControllerTest {
         given(reservationService.checkReservation(any(), any())).willReturn(true);
 
         MvcResult result =
-            mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date))
+            mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date, madeByPremiumUser))
                 .andExpect(status().isOk()).andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Reservation successful!");
@@ -210,7 +212,7 @@ public class ReservationControllerTest {
     public void testSportRoomReservationInvalidDates(String date) throws Exception {
 
         MvcResult result =
-            mockMvc.perform(post(sportRoomBookingUrl, userId, groupId, sportFacilityId, date))
+            mockMvc.perform(post(sportRoomBookingUrl, userId, groupId, sportFacilityId, date, madeByPremiumUser))
                 .andExpect(status().is4xxClientError()).andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo(
@@ -233,7 +235,7 @@ public class ReservationControllerTest {
         given(reservationService.checkReservation(any(), any())).willReturn(true);
 
         MvcResult result =
-            mockMvc.perform(post(sportRoomBookingUrl, userId, groupId, sportFacilityId, date))
+            mockMvc.perform(post(sportRoomBookingUrl, userId, groupId, sportFacilityId, date, madeByPremiumUser))
                 .andExpect(status().isOk()).andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Reservation successful!");

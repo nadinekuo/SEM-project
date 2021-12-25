@@ -49,19 +49,20 @@ public class ReservationServiceTest {
     private transient UserReservationBalanceValidator userReservationBalanceValidator;
 
     private transient ReservationService reservationService;
+    private static boolean madeByPremiumUser = true;
 
     /**
      * Instantiates a new Reservation service test.
      */
     public ReservationServiceTest() {
         reservation1 = new Reservation(ReservationType.EQUIPMENT, "hockey", 1L, 42L,
-            LocalDateTime.of(2022, 10, 05, 16, 00));
+            LocalDateTime.of(2022, 10, 05, 16, 00), madeByPremiumUser);
         reservation1.setId(53L);
         reservation2 = new Reservation(ReservationType.SPORTS_ROOM, "hockey", 2L, 25L,
-            LocalDateTime.of(2022, 10, 05, 17, 45));
+            LocalDateTime.of(2022, 10, 05, 17, 45), madeByPremiumUser);
         reservation2.setId(84L);
         groupReservation1 = new Reservation(ReservationType.SPORTS_ROOM, "Hall 1", 3L, 13L,
-            LocalDateTime.of(2022, 02, 3, 20, 30), 84L);
+            LocalDateTime.of(2022, 02, 3, 20, 30), 84L, madeByPremiumUser);
         groupReservation1.setId(99L);
     }
 
@@ -239,7 +240,7 @@ public class ReservationServiceTest {
         List<Reservation> reservations = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             Reservation r = new Reservation(ReservationType.EQUIPMENT, "hockey", (long) i, 2L,
-                LocalDateTime.of(2022, i + 1, 1, 0, 0), 1L);
+                LocalDateTime.of(2022, i + 1, 1, 0, 0), 1L, madeByPremiumUser);
             r.setId((long) i);
             reservations.add(r);
         }

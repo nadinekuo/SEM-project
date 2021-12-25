@@ -31,21 +31,23 @@ public class TeamRoomCapacityValidatorTest {
     // Class under test:
     private final transient TeamRoomCapacityValidator teamRoomCapacityValidator;
     private final transient String sportName;
+    private final transient boolean madeByPremiumUser = true;
 
     /**
      * Constructor for this test suite.
      */
     public TeamRoomCapacityValidatorTest() {
+
         reservationService = mock(ReservationService.class);
         reservationController = mock(ReservationController.class);
         this.teamRoomCapacityValidator =
             new TeamRoomCapacityValidator(reservationService, reservationController);
 
         groupReservation = new Reservation(ReservationType.SPORTS_ROOM, "Hall 1", 3L, 13L,
-            LocalDateTime.of(2022, 02, 3, 20, 30), 84L);
+            LocalDateTime.of(2022, 02, 3, 20, 30), 84L, madeByPremiumUser);
         groupReservation.setId(99L);
         reservation1 = new Reservation(ReservationType.EQUIPMENT, "hockey", 1L, 42L,
-            LocalDateTime.of(2022, 10, 05, 16, 00));
+            LocalDateTime.of(2022, 10, 05, 16, 00), madeByPremiumUser);
         reservation1.setId(53L);
 
         sportName = "soccer";
