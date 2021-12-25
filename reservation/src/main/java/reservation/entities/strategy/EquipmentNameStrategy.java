@@ -14,19 +14,8 @@ import reservation.entities.strategy.ReservationSortingStrategy;
  */
 public class EquipmentNameStrategy implements ReservationSortingStrategy {
 
-    @Autowired
-    private final transient RestTemplate restTemplate;
-
     transient String equipmentUrl = "http://eureka-equipment";
 
-    /**
-     * Instantiates a new Equipment name strategy.
-     *
-     * @param restTemplate the rest template
-     */
-    public EquipmentNameStrategy(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
 
     /**
      * Returns the next reservation in order.
@@ -65,17 +54,10 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
                 return 0;
             } else {
 
-                Long equipmentId1 = reservation1.getSportFacilityReservedId();
-                Long equipmentId2 = reservation2.getSportFacilityReservedId();
+                String name1 = reservation1.getBookedItemName();
+                String name2 = reservation2.getBookedItemName();
 
-                String equipmentName1 = restTemplate.getForObject(
-                    equipmentUrl + "/equipment/" + equipmentId1 + "/getEquipmentName",
-                    String.class);
-                String equipmentName2 = restTemplate.getForObject(
-                    equipmentUrl + "/equipment/" + equipmentId2 + "/getEquipmentName",
-                    String.class);
-
-                int compareName = equipmentName1.compareTo(equipmentName2);
+                int compareName = name1.compareTo(name2);
                 if (compareName != 0) {
                     return compareName;
                 }

@@ -46,22 +46,22 @@ public class SportFacilityAvailabilityValidatorTest {
         this.sportFacilityAvailabilityValidator =
             new SportFacilityAvailabilityValidator(reservationService, reservationController);
 
-        reservationInvalidTime = new Reservation(ReservationType.EQUIPMENT, 1L, 42L,
+        reservationInvalidTime = new Reservation(ReservationType.EQUIPMENT, "hockey", 1L, 42L,
             LocalDateTime.of(2022, 10, 05, 15, 59));
         reservationInvalidTime.setId(53L);
 
-        equipmentReservation = new Reservation(ReservationType.EQUIPMENT, 1L, 42L,
+        equipmentReservation = new Reservation(ReservationType.EQUIPMENT, "hockey", 1L, 42L,
             LocalDateTime.of(2022, 10, 05, 15, 59));
         equipmentReservation.setId(54L);
-        equipmentReservationInvalid = new Reservation(ReservationType.EQUIPMENT, 1L, -1L,
+        equipmentReservationInvalid = new Reservation(ReservationType.EQUIPMENT, "hockey", 1L, -1L,
             LocalDateTime.of(2022, 10, 05, 15, 59));
         equipmentReservationInvalid.setId(55L);
 
-        sportRoomReservation = new Reservation(ReservationType.SPORTS_ROOM, 2L, 25L,
+        sportRoomReservation = new Reservation(ReservationType.SPORTS_ROOM, "hockey", 2L, 25L,
             LocalDateTime.of(2022, 10, 05, 17, 45));
         sportRoomReservation.setId(84L);
 
-        groupReservation = new Reservation(ReservationType.SPORTS_ROOM, 3L, 13L,
+        groupReservation = new Reservation(ReservationType.SPORTS_ROOM, "hockey", 3L, 13L,
             LocalDateTime.of(2022, 02, 3, 20, 30), 84L);
         groupReservation.setId(99L);
     }
@@ -98,9 +98,9 @@ public class SportFacilityAvailabilityValidatorTest {
         assertThrows(InvalidReservationException.class, () -> {
             sportFacilityAvailabilityValidator.handle(sportRoomReservation);
         });
-        verify(reservationService)
-            .sportsFacilityIsAvailable(sportRoomReservation.getSportFacilityReservedId(),
-                sportRoomReservation.getStartingTime());
+        verify(reservationService).sportsFacilityIsAvailable(
+            sportRoomReservation.getSportFacilityReservedId(),
+            sportRoomReservation.getStartingTime());
     }
 
     @Test
@@ -113,11 +113,11 @@ public class SportFacilityAvailabilityValidatorTest {
         assertThrows(InvalidReservationException.class, () -> {
             sportFacilityAvailabilityValidator.handle(sportRoomReservation);
         });
-        verify(reservationService)
-            .sportsFacilityIsAvailable(sportRoomReservation.getSportFacilityReservedId(),
-                sportRoomReservation.getStartingTime());
-        verify(reservationController)
-            .getSportsRoomExists(sportRoomReservation.getSportFacilityReservedId());
+        verify(reservationService).sportsFacilityIsAvailable(
+            sportRoomReservation.getSportFacilityReservedId(),
+            sportRoomReservation.getStartingTime());
+        verify(reservationController).getSportsRoomExists(
+            sportRoomReservation.getSportFacilityReservedId());
     }
 
     @Test
@@ -134,8 +134,8 @@ public class SportFacilityAvailabilityValidatorTest {
 
         verify(reservationService).findByGroupIdAndTime(groupReservation.getGroupId(),
             groupReservation.getStartingTime());
-        verify(reservationController)
-            .getSportsRoomExists(groupReservation.getSportFacilityReservedId());
+        verify(reservationController).getSportsRoomExists(
+            groupReservation.getSportFacilityReservedId());
     }
 
 }

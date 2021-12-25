@@ -90,9 +90,14 @@ public class ReservationController {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
+        String methodSpecificUrl = "/sportRoom/" + sportRoomId + "/getName";
+        String sportRoomName = restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl,
+            String.class);
+
         // Create reservation object, to be passed through chain of responsibility
         Reservation reservation =
-            new Reservation(ReservationType.SPORTS_ROOM, userId, sportRoomId, dateTime, groupId);
+            new Reservation(ReservationType.SPORTS_ROOM, sportRoomName, userId, sportRoomId,
+                dateTime, groupId);
 
         // Creates chain of responsibility
         boolean isValid = reservationService.checkReservation(reservation, this);
@@ -128,7 +133,8 @@ public class ReservationController {
         }
 
         Reservation reservation =
-            new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
+            new Reservation(ReservationType.EQUIPMENT, equipmentName, userId, equipmentId,
+                dateTime);
 
         // Creates chain of responsibility
         boolean isValid = reservationService.checkReservation(reservation, this);

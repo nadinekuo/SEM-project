@@ -80,7 +80,7 @@ public class ReservationControllerTest {
         LocalDateTime.parse("2099-01-06 17:00:00", dateTimeFormatter);
 
     private final transient Reservation reservation =
-        new Reservation(ReservationType.EQUIPMENT, userId, sportFacilityId, bookableDate);
+        new Reservation(ReservationType.EQUIPMENT, "hockey", userId, sportFacilityId, bookableDate);
 
     /**
      * The Reservation service.
@@ -121,7 +121,6 @@ public class ReservationControllerTest {
     public void setup() {
         Mockito.when(reservationService.restTemplate()).thenReturn(restTemplate);
 
-
         this.mockMvc =
             MockMvcBuilders.standaloneSetup(new ReservationController(reservationService)).build();
     }
@@ -137,7 +136,6 @@ public class ReservationControllerTest {
             .andExpect(status().isOk());
         verify(reservationService).getReservation(1L);
     }
-
 
     /**
      * Gets user is premium.
@@ -215,9 +213,9 @@ public class ReservationControllerTest {
     @MethodSource("invalidDateGenerator")
     public void testSportRoomReservationInvalidDates(String date) throws Exception {
 
-        MvcResult result = mockMvc.perform(post(sportRoomBookingUrl, userId, groupId,
-            sportFacilityId, date))
-            .andExpect(status().is4xxClientError()).andReturn();
+        MvcResult result =
+            mockMvc.perform(post(sportRoomBookingUrl, userId, groupId, sportFacilityId, date))
+                .andExpect(status().is4xxClientError()).andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo(
             "Reservation could not be made.");
@@ -238,9 +236,9 @@ public class ReservationControllerTest {
 
         given(reservationService.checkReservation(any(), any())).willReturn(true);
 
-        MvcResult result = mockMvc.perform(post(sportRoomBookingUrl, userId, groupId,
-            sportFacilityId, date))
-            .andExpect(status().isOk()).andReturn();
+        MvcResult result =
+            mockMvc.perform(post(sportRoomBookingUrl, userId, groupId, sportFacilityId, date))
+                .andExpect(status().isOk()).andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Reservation successful!");
         verify(reservationService).makeSportFacilityReservation(reservation);

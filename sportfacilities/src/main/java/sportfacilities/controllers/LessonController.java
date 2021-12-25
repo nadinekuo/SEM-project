@@ -1,6 +1,5 @@
 package sportfacilities.controllers;
 
-import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.NoSuchElementException;
@@ -101,7 +100,7 @@ public class LessonController {
             String startingTime = lessonService.getLessonStartingTime(lessonId);
             return new ResponseEntity<>(startingTime, HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);   
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -117,7 +116,8 @@ public class LessonController {
     @ResponseBody
     public ResponseEntity<?> createNewLesson(@PathVariable String title,
                                              @PathVariable String startingTime,
-                                             @PathVariable String endingTime, @PathVariable int size) {
+                                             @PathVariable String endingTime,
+                                             @PathVariable int size) {
         try {
             LocalDateTime startTime = LocalDateTime.parse(startingTime);
             LocalDateTime endTime = LocalDateTime.parse(endingTime);
@@ -137,11 +137,11 @@ public class LessonController {
     @ResponseBody
     public ResponseEntity<?> deleteLesson(@PathVariable long lessonId) {
         try {
-            lessonService.deleteLesson(lessonId);    
+            lessonService.deleteLesson(lessonId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        
+
     }
 }

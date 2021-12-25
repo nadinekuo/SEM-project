@@ -33,9 +33,8 @@ public class LessonService {
      * @return the lesson by id
      */
     public Lesson getLessonById(long lessonId) {
-        return lessonRepository.findById(lessonId).orElseThrow(() -> new NoSuchElementException(
-            "Lesson with id " + lessonId + "does not exist!"
-        ));
+        return lessonRepository.findById(lessonId).orElseThrow(
+            () -> new NoSuchElementException("Lesson with id " + lessonId + "does not exist!"));
     }
 
     /**
@@ -58,9 +57,8 @@ public class LessonService {
      * @param size     the size
      */
     public void setLessonSize(long lessonId, int size) {
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NoSuchElementException(
-            "Lesson with id " + lessonId + "does not exist!"
-        ));
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(
+            () -> new NoSuchElementException("Lesson with id " + lessonId + "does not exist!"));
         lesson.setSize(size);
         lessonRepository.save(lesson);
     }
@@ -72,9 +70,8 @@ public class LessonService {
      * @return the lesson size
      */
     public int getLessonSize(long lessonId) {
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NoSuchElementException(
-            "Lesson with id " + lessonId + "does not exist!"
-        ));
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(
+            () -> new NoSuchElementException("Lesson with id " + lessonId + "does not exist!"));
         return lesson.getSize();
     }
 
@@ -85,9 +82,8 @@ public class LessonService {
      * @return the lesson starting time
      */
     public String getLessonStartingTime(long lessonId) {
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NoSuchElementException(
-            "Lesson with id " + lessonId + "does not exist!"
-        ));
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(
+            () -> new NoSuchElementException("Lesson with id " + lessonId + "does not exist!"));
         return lesson.getStartingTime().toString();
     }
 
@@ -97,9 +93,8 @@ public class LessonService {
      * @param lessonId the lesson id
      */
     public void deleteLesson(long lessonId) throws NoSuchElementException {
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NoSuchElementException(
-            "Lesson with id " + lessonId + "does not exist!"
-        ));
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(
+            () -> new NoSuchElementException("Lesson with id " + lessonId + "does not exist!"));
         lessonRepository.deleteById(lesson.getLessonId());
     }
 }
