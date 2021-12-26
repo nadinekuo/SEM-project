@@ -92,7 +92,7 @@ public class BookingSystemTest {
     @Test
     void getNextReservationBasicPremium() {
         BookingSystem userPremiumStrategy =
-            new BookingSystem(new BasicPremiumUserStrategy(restTemplate));
+            new BookingSystem(new BasicPremiumUserStrategy());
 
         for (int i = 0; i < 4; i++) {
             userPremiumStrategy.addReservation(reservations[i]);
@@ -109,7 +109,7 @@ public class BookingSystemTest {
     @Test
     void getNextReservationBasicPremiumEmpty() {
         BookingSystem userPremiumStrategy =
-            new BookingSystem(new BasicPremiumUserStrategy(restTemplate));
+            new BookingSystem(new BasicPremiumUserStrategy());
 
         assertNull(userPremiumStrategy.getNextReservation());
     }

@@ -13,18 +13,13 @@ import reservation.entities.strategy.ReservationSortingStrategy;
  */
 public class BasicPremiumUserStrategy implements ReservationSortingStrategy {
 
-    @Autowired
-    private final transient RestTemplate restTemplate;
-
-    private final transient String userUrl = "http://eureka-user";
 
     /**
      * Instantiates a new Basic premium user strategy.
-     *
-     * @param restTemplate the rest template
+
      */
-    public BasicPremiumUserStrategy(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public BasicPremiumUserStrategy() {
+
     }
 
     /**
