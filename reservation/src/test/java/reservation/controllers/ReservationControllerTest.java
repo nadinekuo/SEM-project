@@ -36,9 +36,6 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
 
-/**
- * The type Reservation controller test.
- */
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 public class ReservationControllerTest {
@@ -56,9 +53,7 @@ public class ReservationControllerTest {
 
     transient String equipmentBookingUrl =
         "/reservation/{userId}/{equipmentName}/{date}/{madeByPremiumUser}/makeEquipmentBooking";
-    /**
-     * The Sport room booking url.
-     */
+
     transient String sportRoomBookingUrl =
         "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}"
             + "/makeSportRoomBooking";
@@ -67,14 +62,9 @@ public class ReservationControllerTest {
         "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}"
             + "/makeSportRoomBooking";
 
-    /**
-     * The Date time formatter.
-     */
     transient DateTimeFormatter dateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    /**
-     * The Bookable date.
-     */
+
     transient LocalDateTime bookableDate =
         LocalDateTime.parse("2099-01-06 17:00:00", dateTimeFormatter);
 
@@ -82,14 +72,9 @@ public class ReservationControllerTest {
         new Reservation(ReservationType.EQUIPMENT, "hockey", userId, sportFacilityId, bookableDate,
             madeByPremiumUser);
 
-    /**
-     * The Reservation service.
-     */
     @Mock
     transient ReservationService reservationService;
-    /**
-     * The Rest template.
-     */
+
     @Mock
     transient RestTemplate restTemplate;
     @Autowired
@@ -114,7 +99,7 @@ public class ReservationControllerTest {
     }
 
     /**
-     * Sets .
+     * Sets up the tests.
      */
     @BeforeEach
     @MockitoSettings(strictness = Strictness.LENIENT)
