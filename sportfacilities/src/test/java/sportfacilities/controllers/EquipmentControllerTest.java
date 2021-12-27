@@ -100,7 +100,7 @@ public class EquipmentControllerTest {
 
     @Test
     public void equipmentBroughtBackTest() throws Exception {
-        mockMvc.perform(post("/equipment/{equipmentId}/broughtBack/admin", equipmentId))
+        mockMvc.perform(put("/equipment/{equipmentId}/broughtBack/admin", equipmentId))
             .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
 
         verify(equipmentService).setEquipmentToNotInUse(equipmentId);
@@ -109,7 +109,7 @@ public class EquipmentControllerTest {
 
     @Test
     public void equipmentReservedTest() throws Exception {
-        mockMvc.perform(post("/equipment/{equipmentId}/reserved", equipmentId))
+        mockMvc.perform(put("/equipment/{equipmentId}/reserved", equipmentId))
             .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
 
         verify(equipmentService).setEquipmentToInUse(equipmentId);

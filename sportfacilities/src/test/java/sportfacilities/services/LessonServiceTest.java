@@ -47,8 +47,8 @@ public class LessonServiceTest {
     void setup() {
         lessonRepository = Mockito.mock(LessonRepository.class);
         lessonService = new LessonService(lessonRepository);
-        when(lessonRepository.findById(lessonId)).thenReturn(
-            java.util.Optional.of(new Lesson(name, startingTime, endingTime, size)));
+        when(lessonRepository.findById(lessonId))
+            .thenReturn(java.util.Optional.of(new Lesson(name, startingTime, endingTime, size)));
         lesson1 = new Lesson(name, startingTime, endingTime, size);
         lessonRepository.save(lesson1);
     }

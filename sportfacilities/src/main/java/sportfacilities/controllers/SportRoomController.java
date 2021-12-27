@@ -64,7 +64,7 @@ public class SportRoomController {
     }
 
     /**
-     * Sport room exists response entity.
+     * Response entity containing boolean, whether or not sport room exists in database.
      *
      * @param sportRoomId the sport room id
      * @return the response entity

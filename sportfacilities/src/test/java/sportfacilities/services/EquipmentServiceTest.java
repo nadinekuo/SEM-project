@@ -100,8 +100,8 @@ public class EquipmentServiceTest {
     public void setEquipmentToNotInUseTest() {
 
         Mockito.when(equipmentRepository.existsById(id1)).thenReturn(true);
-        when(equipmentRepository.findByEquipmentId(id1)).thenReturn(
-            Optional.ofNullable(equipment1));
+        when(equipmentRepository.findByEquipmentId(id1))
+            .thenReturn(Optional.ofNullable(equipment1));
 
         equipmentService.setEquipmentToNotInUse(id1);
 
@@ -115,8 +115,8 @@ public class EquipmentServiceTest {
     public void setEquipmentToInUseTest() {
 
         Mockito.when(equipmentRepository.existsById(id2)).thenReturn(true);
-        when(equipmentRepository.findByEquipmentId(id2)).thenReturn(
-            Optional.ofNullable(equipment2));
+        when(equipmentRepository.findByEquipmentId(id2))
+            .thenReturn(Optional.ofNullable(equipment2));
 
         equipmentService.setEquipmentToInUse(id2);
 
