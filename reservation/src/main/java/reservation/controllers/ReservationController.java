@@ -94,21 +94,20 @@ public class ReservationController {
      * @param date        the date
      * @return the response entity
      */
-    @PostMapping("/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}"
-        + "/makeSportRoomBooking")
+    @PostMapping(
+        "/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}" + "/makeSportRoomBooking")
     @ResponseBody
     public ResponseEntity<?> makeSportRoomReservation(@PathVariable Long userId,
-                                                           @PathVariable Long groupId,
-                                                           @PathVariable Long sportRoomId,
-                                                           @PathVariable String date,
-                                                           @PathVariable Boolean madeByPremiumUser) {
-
+                                                      @PathVariable Long groupId,
+                                                      @PathVariable Long sportRoomId,
+                                                      @PathVariable String date,
+                                                      @PathVariable Boolean madeByPremiumUser) {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
         String methodSpecificUrl = "/sportRoom/" + sportRoomId + "/getName";
-        String sportRoomName = restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl,
-            String.class);
+        String sportRoomName =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
 
         // Create reservation object, to be passed through chain of responsibility
         Reservation reservation =
@@ -138,16 +137,10 @@ public class ReservationController {
      */
     @PostMapping("/{userId}/{equipmentName}/{date}/{madeByPremiumUser}/makeEquipmentBooking")
     @ResponseBody
-<<<<<<< reservation/src/main/java/reservation/controllers/ReservationController.java
-    public ResponseEntity<String> makeEquipmentReservation(@PathVariable Long userId,
-                                                           @PathVariable String equipmentName,
-                                                           @PathVariable String date,
-                                                           @PathVariable Boolean madeByPremiumUser) {
-=======
     public ResponseEntity<?> makeEquipmentReservation(@PathVariable Long userId,
                                                       @PathVariable String equipmentName,
-                                                      @PathVariable String date) {
->>>>>>> reservation/src/main/java/reservation/controllers/ReservationController.java
+                                                      @PathVariable String date,
+                                                      @PathVariable Boolean madeByPremiumUser) {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
         Long equipmentId;
@@ -164,8 +157,8 @@ public class ReservationController {
         }
 
         Reservation reservation =
-            new Reservation(ReservationType.EQUIPMENT, equipmentName, userId, equipmentId,
-                dateTime, madeByPremiumUser);
+            new Reservation(ReservationType.EQUIPMENT, equipmentName, userId, equipmentId, dateTime,
+                madeByPremiumUser);
 
         // Chain of responsibility:
         // If any condition to be checked is violated by this reservation, the respective
@@ -201,23 +194,6 @@ public class ReservationController {
     //  -------------------  The methods below communicate with other microservices
     // Any exceptions that may occur, are caught in that respective microservice.
 
-<<<<<<< reservation/src/main/java/reservation/controllers/ReservationController.java
-=======
-    /**
-     * Gets user is premium.
-     *
-     * @param userId the user id
-     * @return the user is premium
-     */
-    //TODO change all the get for object to exchanges
-    public Boolean getUserIsPremium(Long userId) {
-        String methodSpecificUrl = "/user/" + userId + "/isPremium";
-        String response = restTemplate.getForObject(userUrl + methodSpecificUrl, String.class);
-        Boolean isPremium = Boolean.valueOf(response);
-        return isPremium;
-    }
->>>>>>> reservation/src/main/java/reservation/controllers/ReservationController.java
-
     /**
      * Gets sports room exists.
      *
@@ -229,8 +205,8 @@ public class ReservationController {
         String methodSpecificUrl = "/sportRoom/" + sportsRoomId.toString() + "/exists";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
         Boolean sportRoomExists = Boolean.valueOf(response);
         return sportRoomExists;
     }
@@ -246,8 +222,8 @@ public class ReservationController {
         String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/isHall";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
         Boolean sportRoomIsHall = Boolean.valueOf(response);
 
         return sportRoomIsHall;
@@ -264,8 +240,8 @@ public class ReservationController {
         String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/getMaximumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
         int maxCapacity = Integer.valueOf(response);
 
         return maxCapacity;
@@ -281,8 +257,8 @@ public class ReservationController {
         String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/getMinimumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
         int minCapacity = Integer.valueOf(response);
 
         return minCapacity;
@@ -299,8 +275,7 @@ public class ReservationController {
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
         ResponseEntity<String> response =
-            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl,
-                String.class);
+            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl, String.class);
 
         Long equipmentId = Long.valueOf(response.getBody());
 
@@ -320,8 +295,6 @@ public class ReservationController {
         restTemplate.put(sportFacilityUrl + methodSpecificUrl, String.class);
     }
 
-
-
     /**
      * Gets sport field sport.
      *
@@ -333,8 +306,8 @@ public class ReservationController {
         String methodSpecificUrl = "/sportRoom/" + sportFieldId.toString() + "/getSport";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String relatedSport = restTemplate
-            .getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
+        String relatedSport =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
 
         return relatedSport;
     }
@@ -350,8 +323,8 @@ public class ReservationController {
         String methodSpecificUrl = "/sport/" + sportName + "/getMaxTeamSize";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
         int maxTeamSize = Integer.valueOf(response);
 
         return maxTeamSize;
@@ -368,8 +341,8 @@ public class ReservationController {
         String methodSpecificUrl = "/sport/" + sportName + "/getMinTeamSize";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
         int minTeamSize = Integer.valueOf(response);
 
         return minTeamSize;
@@ -386,8 +359,7 @@ public class ReservationController {
         String methodSpecificUrl = "/group/" + groupId.toString() + "/getGroupSize";
 
         // Call to GroupController in User microservice
-        String response =
-            restTemplate.getForObject(userUrl + methodSpecificUrl, String.class);
+        String response = restTemplate.getForObject(userUrl + methodSpecificUrl, String.class);
         int groupSize = Integer.valueOf(response);
         return groupSize;
     }

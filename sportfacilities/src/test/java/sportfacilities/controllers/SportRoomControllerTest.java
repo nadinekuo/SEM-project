@@ -405,8 +405,10 @@ public class SportRoomControllerTest {
             .addSportToSportsHall(sportRoomId, sportName);
 
         mockMvc.perform(
-                post("/sportRoom/{sportRoomId}/{sportName}/addSportToSportHall/admin", sportRoomId,
-                    sportName)).andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print())
+                post("/sportRoom/{sportRoomId}/{sportName}/addSportToSportHall/admin",
+                    sportRoomId, sportName))
+            .andExpect(status().isBadRequest())
+            .andDo(MockMvcResultHandlers.print())
             .andReturn();
 
         verify(sportRoomService, times(1)).addSportToSportsHall(sportRoomId, sportName);
@@ -423,8 +425,10 @@ public class SportRoomControllerTest {
             .addSportToSportsHall(sportRoomId, sportName);
 
         mockMvc.perform(
-                post("/sportRoom/{sportRoomId}/{sportName}/addSportToSportHall/admin", sportRoomId,
-                    sportName)).andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print())
+                post("/sportRoom/{sportRoomId}/{sportName}/addSportToSportHall/admin",
+                    sportRoomId, sportName))
+            .andExpect(status().isBadRequest())
+            .andDo(MockMvcResultHandlers.print())
             .andReturn();
 
         verify(sportRoomService, times(1)).addSportToSportsHall(sportRoomId, sportName);
