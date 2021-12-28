@@ -2,17 +2,22 @@ package reservation.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -28,6 +33,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -111,33 +117,6 @@ public class ReservationControllerTest {
     }
 
     /**
-     * Gets reservation id.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getReservationId() throws Exception {
-        mockMvc.perform(get("/reservation/{reservationId}", reservationId))
-            .andExpect(status().isOk());
-        verify(reservationService).getReservation(1L);
-    }
-
-    /**
-     * Gets user is premium.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getUserIsPremium() throws Exception {
-
-        //        Mockito.when(restTemplate
-        //            .getForObject(ReservationController.userUrl + "/user/" + userId +
-        //            "/isPremium",
-        //                Boolean.class)).thenReturn(true);
-
-    }
-
-    /**
      * Test equipment reservation invalid dates.
      *
      * @param date the date
@@ -147,16 +126,17 @@ public class ReservationControllerTest {
     @MethodSource("invalidDateGenerator")
     public void testEquipmentReservationInvalidDates(String date) throws Exception {
 
-        Mockito.when(restTemplate.getForObject(
+        Mockito.when(restTemplate.getForEntity(
             ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
-                + "/getAvailableEquipment", String.class)).thenReturn(String.valueOf(1L));
+                + "/getAvailableEquipment", String.class))
+            .thenReturn(ResponseEntity.of(Optional.of(String.valueOf(1L))));
 
         MvcResult result =
             mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date, madeByPremiumUser))
                 .andExpect(status().is4xxClientError()).andReturn();
 
-        assertThat(result.getResponse().getContentAsString()).isEqualTo(
-            "Reservation could not be made.");
+        assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Reservation could not be made.");
         verify(reservationService, never()).makeSportFacilityReservation(reservation);
 
     }
@@ -172,9 +152,10 @@ public class ReservationControllerTest {
     @MockitoSettings(strictness = Strictness.LENIENT)
     public void testEquipmentReservationValidDates(String date) throws Exception {
 
-        Mockito.when(restTemplate.getForObject(
+        Mockito.when(restTemplate.getForEntity(
             ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
-                + "/getAvailableEquipment", String.class)).thenReturn(String.valueOf(1L));
+                + "/getAvailableEquipment", String.class))
+            .thenReturn(ResponseEntity.of(Optional.of("1")));
 
         given(reservationService.checkReservation(any(), any())).willReturn(true);
 
@@ -200,8 +181,8 @@ public class ReservationControllerTest {
             mockMvc.perform(post(sportRoomBookingUrl, userId, groupId, sportFacilityId, date, madeByPremiumUser))
                 .andExpect(status().is4xxClientError()).andReturn();
 
-        assertThat(result.getResponse().getContentAsString()).isEqualTo(
-            "Reservation could not be made.");
+        assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Reservation could not be made.");
         verify(reservationService, never()).makeSportFacilityReservation(reservation);
 
     }
@@ -226,6 +207,59 @@ public class ReservationControllerTest {
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Reservation successful!");
         verify(reservationService).makeSportFacilityReservation(reservation);
 
+    }
+
+    /**
+     * Gets reservation by id.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void getReservation() throws Exception {
+        mockMvc.perform(get("/reservation/{reservationId}", reservationId))
+            .andExpect(status().isOk());
+        verify(reservationService).getReservation(reservationId);
+    }
+
+    /**
+     * Gets invalid reservation by id.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void getInvalidReservation() throws Exception {
+        when(reservationService.getReservation(any())).thenThrow(NoSuchElementException.class);
+
+        mockMvc.perform(get("/reservation/{reservationId}", reservationId))
+            .andExpect(status().isBadRequest());
+        verify(reservationService).getReservation(reservationId);
+    }
+
+    /**
+     * Deletes invalid reservation by id.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void deleteInvalidReservation() throws Exception {
+        when(reservationService.deleteReservation(anyLong()))
+            .thenThrow(NoSuchElementException.class);
+
+        mockMvc.perform(delete("/reservation/{reservationId}", reservationId))
+            .andExpect(status().isBadRequest());
+        verify(reservationService).deleteReservation(reservationId);
+    }
+
+    /**
+     * Deletes reservation by id.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void deleteReservation() throws Exception {
+        mockMvc.perform(delete("/reservation/{reservationId}", reservationId))
+            .andExpect(status().isOk());
+        verify(reservationService).deleteReservation(reservationId);
     }
 
     /**
@@ -268,5 +302,23 @@ public class ReservationControllerTest {
             e.printStackTrace();
         }
     }
+
+    // Tests communication with other microservices
+    // TODO: to be tested from the new helper class created (not as mockMVC here)
+
+    //    /**
+    //     * Gets user is premium.
+    //     *
+    //     * @throws Exception the exception
+    //     */
+    //    @Test
+    //    public void getUserIsPremium() throws Exception {
+    //
+    //        Mockito.when(restTemplate
+    //            .getForObject(ReservationController.userUrl + "/user/" + userId +
+    //            "/isPremium",
+    //                Boolean.class)).thenReturn(true);
+    //
+    //    }
 
 }
