@@ -29,6 +29,7 @@ public class UserReservationBalanceValidatorTest {
     // Class under test:
     private final transient UserReservationBalanceValidator userReservationBalanceValidator;
 
+
     /**
      * Constructor for this test suite.
      */
@@ -39,7 +40,7 @@ public class UserReservationBalanceValidatorTest {
             new UserReservationBalanceValidator(reservationService, reservationController);
 
         reservation1 = new Reservation(ReservationType.EQUIPMENT, "hockey", 1L, 42L,
-            LocalDateTime.of(2022, 10, 05, 16, 00));
+            LocalDateTime.of(2022, 10, 05, 16, 00), false);
         reservation1.setId(53L);
 
         startDay = LocalDateTime.parse(
@@ -60,50 +61,45 @@ public class UserReservationBalanceValidatorTest {
     public void testBasicUserLimitNotReachedYet() throws InvalidReservationException {
 
         when(reservationService.getUserReservationCountOnDay(startDay, endDay, 1L)).thenReturn(0);
-        when(reservationController.getUserIsPremium(anyLong())).thenReturn(false);
 
         this.userReservationBalanceValidator.handle(reservation1);
 
         verify(reservationService).getUserReservationCountOnDay(startDay, endDay, 1L);
-        verify(reservationController).getUserIsPremium(1L);
     }
 
     @Test
-    public void testBasicUserLimitReached() throws InvalidReservationException {
+    public void testBasicUserLimitReached() {
 
         when(reservationService.getUserReservationCountOnDay(startDay, endDay, 1L)).thenReturn(1);
-        when(reservationController.getUserIsPremium(anyLong())).thenReturn(false);
 
         assertThrows(InvalidReservationException.class, () -> {
             userReservationBalanceValidator.handle(reservation1);
         });
         verify(reservationService).getUserReservationCountOnDay(startDay, endDay, 1L);
-        verify(reservationController).getUserIsPremium(1L);
     }
 
     @Test
     public void testPremiumUserLimitNotReachedYet() throws InvalidReservationException {
+        reservation1.setMadeByPremiumUser(true);
 
         when(reservationService.getUserReservationCountOnDay(startDay, endDay, 1L)).thenReturn(2);
-        when(reservationController.getUserIsPremium(anyLong())).thenReturn(true);
 
         this.userReservationBalanceValidator.handle(reservation1);
 
         verify(reservationService).getUserReservationCountOnDay(startDay, endDay, 1L);
-        verify(reservationController).getUserIsPremium(1L);
     }
 
     @Test
-    public void testPremiumUserLimitReached() throws InvalidReservationException {
+    public void testPremiumUserLimitReached() {
 
+        reservation1.setMadeByPremiumUser(true);
         when(reservationService.getUserReservationCountOnDay(startDay, endDay, 1L)).thenReturn(3);
-        when(reservationController.getUserIsPremium(anyLong())).thenReturn(true);
 
         assertThrows(InvalidReservationException.class, () -> {
             userReservationBalanceValidator.handle(reservation1);
         });
         verify(reservationService).getUserReservationCountOnDay(startDay, endDay, 1L);
-        verify(reservationController).getUserIsPremium(1L);
+
     }
 
 }

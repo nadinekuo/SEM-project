@@ -36,6 +36,7 @@ public class SportFacilityAvailabilityValidatorTest {
     // Class under test:
     private final transient SportFacilityAvailabilityValidator sportFacilityAvailabilityValidator;
     private transient Long groupId;
+    private final transient boolean madeByPremiumUser = true;
 
     /**
      * Constructor for this test suite.
@@ -47,22 +48,22 @@ public class SportFacilityAvailabilityValidatorTest {
             new SportFacilityAvailabilityValidator(reservationService, reservationController);
 
         reservationInvalidTime = new Reservation(ReservationType.EQUIPMENT, "hockey", 1L, 42L,
-            LocalDateTime.of(2022, 10, 05, 15, 59));
+            LocalDateTime.of(2022, 10, 05, 15, 59), madeByPremiumUser);
         reservationInvalidTime.setId(53L);
 
         equipmentReservation = new Reservation(ReservationType.EQUIPMENT, "hockey", 1L, 42L,
-            LocalDateTime.of(2022, 10, 05, 15, 59));
+            LocalDateTime.of(2022, 10, 05, 15, 59), madeByPremiumUser);
         equipmentReservation.setId(54L);
         equipmentReservationInvalid = new Reservation(ReservationType.EQUIPMENT, "hockey", 1L, -1L,
-            LocalDateTime.of(2022, 10, 05, 15, 59));
+            LocalDateTime.of(2022, 10, 05, 15, 59), madeByPremiumUser);
         equipmentReservationInvalid.setId(55L);
 
         sportRoomReservation = new Reservation(ReservationType.SPORTS_ROOM, "hockey", 2L, 25L,
-            LocalDateTime.of(2022, 10, 05, 17, 45));
+            LocalDateTime.of(2022, 10, 05, 17, 45), madeByPremiumUser);
         sportRoomReservation.setId(84L);
 
         groupReservation = new Reservation(ReservationType.SPORTS_ROOM, "hockey", 3L, 13L,
-            LocalDateTime.of(2022, 02, 3, 20, 30), 84L);
+            LocalDateTime.of(2022, 02, 3, 20, 30), 84L, madeByPremiumUser);
         groupReservation.setId(99L);
     }
 

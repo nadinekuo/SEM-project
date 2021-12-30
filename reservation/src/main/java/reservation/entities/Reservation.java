@@ -35,6 +35,7 @@ public class Reservation {
     private LocalDateTime startingTime;
 
     private int timeSlotInMinutes;
+    private Boolean madeByPremiumUser;
 
     /**
      * Instantiates a new Reservation.
@@ -44,15 +45,18 @@ public class Reservation {
      * @param customerId              the customer id
      * @param sportFacilityReservedId the sport facility reserved id
      * @param startingTime            the starting time
+     * @param madeByPremiumUser       if its made by a premium user
      */
     public Reservation(ReservationType typeOfReservation, String bookedItemName, Long customerId,
-                       Long sportFacilityReservedId, LocalDateTime startingTime) {
+                       Long sportFacilityReservedId, LocalDateTime startingTime,
+                       Boolean madeByPremiumUser) {
 
         this.typeOfReservation = typeOfReservation;
         this.bookedItemName = bookedItemName;
         this.customerId = customerId;
         this.sportFacilityReservedId = sportFacilityReservedId;
         this.startingTime = startingTime;
+        this.madeByPremiumUser = madeByPremiumUser;
         this.timeSlotInMinutes = 60;   // Default time slot for Equipment / Sport room reservations
         this.groupId = -1L;    // If not a group reservation
     }
@@ -66,15 +70,18 @@ public class Reservation {
      * @param sportFacilityReservedId the sport facility reserved id
      * @param startingTime            the starting time
      * @param groupId                 the group id
+     * @param madeByPremiumUser       if its made by a premium user
      */
     public Reservation(ReservationType typeOfReservation, String bookedItemName, Long customerId,
-                       Long sportFacilityReservedId, LocalDateTime startingTime, Long groupId) {
+                       Long sportFacilityReservedId, LocalDateTime startingTime, Long groupId,
+                       Boolean madeByPremiumUser) {
 
         this.typeOfReservation = typeOfReservation;
         this.bookedItemName = bookedItemName;
         this.customerId = customerId;
         this.sportFacilityReservedId = sportFacilityReservedId;
         this.startingTime = startingTime;
+        this.madeByPremiumUser = madeByPremiumUser;
         this.timeSlotInMinutes = 60;
         this.groupId = groupId;
     }
@@ -269,5 +276,13 @@ public class Reservation {
         return "Reservation{" + "reservationId=" + reservationId + ", typeOfReservation="
             + typeOfReservation + ", customerId=" + customerId + ", groupId=" + groupId
             + ", startingTime=" + startingTime + '}';
+    }
+
+    public Boolean getMadeByPremiumUser() {
+        return madeByPremiumUser;
+    }
+
+    public void setMadeByPremiumUser(Boolean madeByPremiumUser) {
+        this.madeByPremiumUser = madeByPremiumUser;
     }
 }

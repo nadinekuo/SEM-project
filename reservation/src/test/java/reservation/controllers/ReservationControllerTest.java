@@ -42,9 +42,6 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
 
-/**
- * The type Reservation controller test.
- */
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 public class ReservationControllerTest {
@@ -54,19 +51,22 @@ public class ReservationControllerTest {
     private final transient long groupId = 1L;
     private final transient long sportFacilityId = 1L;
     private final transient String equipmentNameValid = "hockeyStick";
+    private final transient Boolean madeByPremiumUser = true;
 
     private final transient String equipmentNameInvalid = "blopp";
 
     private final transient String validDate = "2099-01-06T17:00:00";
 
     transient String equipmentBookingUrl =
-        "/reservation/{userId}/{equipmentName}/{date}/makeEquipmentBooking";
+        "/reservation/{userId}/{equipmentName}/{date}/{madeByPremiumUser}/makeEquipmentBooking";
 
     transient String sportRoomBookingUrl =
-        "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking";
+        "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}"
+            + "/makeSportRoomBooking";
 
     transient String lessonBookingUrl =
-        "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking";
+        "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}"
+            + "/makeSportRoomBooking";
 
     transient DateTimeFormatter dateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -75,16 +75,12 @@ public class ReservationControllerTest {
         LocalDateTime.parse("2099-01-06 17:00:00", dateTimeFormatter);
 
     private final transient Reservation reservation =
-        new Reservation(ReservationType.EQUIPMENT, "hockey", userId, sportFacilityId, bookableDate);
+        new Reservation(ReservationType.EQUIPMENT, "hockey", userId, sportFacilityId, bookableDate,
+            madeByPremiumUser);
 
-    /**
-     * The Reservation service.
-     */
     @Mock
     transient ReservationService reservationService;
-    /**
-     * The Rest template.
-     */
+
     @Mock
     transient RestTemplate restTemplate;
     @Autowired
@@ -109,7 +105,7 @@ public class ReservationControllerTest {
     }
 
     /**
-     * Sets .
+     * Sets up the tests.
      */
     @BeforeEach
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -131,16 +127,16 @@ public class ReservationControllerTest {
     public void testEquipmentReservationInvalidDates(String date) throws Exception {
 
         Mockito.when(restTemplate.getForEntity(
-            ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
-                + "/getAvailableEquipment", String.class))
+                ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
+                    + "/getAvailableEquipment", String.class))
             .thenReturn(ResponseEntity.of(Optional.of(String.valueOf(1L))));
 
-        MvcResult result =
-            mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date))
-                .andExpect(status().is4xxClientError()).andReturn();
+        MvcResult result = mockMvc.perform(
+                post(equipmentBookingUrl, userId, equipmentNameValid, date, madeByPremiumUser))
+            .andExpect(status().is4xxClientError()).andReturn();
 
-        assertThat(result.getResponse().getContentAsString())
-            .isEqualTo("Reservation could not be made.");
+        assertThat(result.getResponse().getContentAsString()).isEqualTo(
+            "Reservation could not be made.");
         verify(reservationService, never()).makeSportFacilityReservation(reservation);
 
     }
@@ -157,15 +153,15 @@ public class ReservationControllerTest {
     public void testEquipmentReservationValidDates(String date) throws Exception {
 
         Mockito.when(restTemplate.getForEntity(
-            ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
-                + "/getAvailableEquipment", String.class))
+                ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
+                    + "/getAvailableEquipment", String.class))
             .thenReturn(ResponseEntity.of(Optional.of("1")));
 
         given(reservationService.checkReservation(any(), any())).willReturn(true);
 
-        MvcResult result =
-            mockMvc.perform(post(equipmentBookingUrl, userId, equipmentNameValid, date))
-                .andExpect(status().isOk()).andReturn();
+        MvcResult result = mockMvc.perform(
+                post(equipmentBookingUrl, userId, equipmentNameValid, date, madeByPremiumUser))
+            .andExpect(status().isOk()).andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Reservation successful!");
         verify(reservationService).makeSportFacilityReservation(reservation);
@@ -181,12 +177,13 @@ public class ReservationControllerTest {
     @MethodSource("invalidDateGenerator")
     public void testSportRoomReservationInvalidDates(String date) throws Exception {
 
-        MvcResult result =
-            mockMvc.perform(post(sportRoomBookingUrl, userId, groupId, sportFacilityId, date))
-                .andExpect(status().is4xxClientError()).andReturn();
+        MvcResult result = mockMvc.perform(
+                post(sportRoomBookingUrl, userId, groupId, sportFacilityId, date,
+                    madeByPremiumUser))
+            .andExpect(status().is4xxClientError()).andReturn();
 
-        assertThat(result.getResponse().getContentAsString())
-            .isEqualTo("Reservation could not be made.");
+        assertThat(result.getResponse().getContentAsString()).isEqualTo(
+            "Reservation could not be made.");
         verify(reservationService, never()).makeSportFacilityReservation(reservation);
 
     }
@@ -204,9 +201,10 @@ public class ReservationControllerTest {
 
         given(reservationService.checkReservation(any(), any())).willReturn(true);
 
-        MvcResult result =
-            mockMvc.perform(post(sportRoomBookingUrl, userId, groupId, sportFacilityId, date))
-                .andExpect(status().isOk()).andReturn();
+        MvcResult result = mockMvc.perform(
+                post(sportRoomBookingUrl, userId, groupId, sportFacilityId, date,
+                    madeByPremiumUser))
+            .andExpect(status().isOk()).andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Reservation successful!");
         verify(reservationService).makeSportFacilityReservation(reservation);
@@ -246,8 +244,8 @@ public class ReservationControllerTest {
      */
     @Test
     public void deleteInvalidReservation() throws Exception {
-        when(reservationService.deleteReservation(anyLong()))
-            .thenThrow(NoSuchElementException.class);
+        when(reservationService.deleteReservation(anyLong())).thenThrow(
+            NoSuchElementException.class);
 
         mockMvc.perform(delete("/reservation/{reservationId}", reservationId))
             .andExpect(status().isBadRequest());
