@@ -1,7 +1,7 @@
 package reservation.controllers;
 
-import com.google.gson.Gson;
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
@@ -39,7 +40,7 @@ public class ReservationController {
     private final transient RestTemplate restTemplate;
 
     /**
-     * Autowired constructor for the class.
+     * Instantiates a new Reservation controller.
      *
      * @param reservationService the reservation service
      */
@@ -50,52 +51,72 @@ public class ReservationController {
     }
 
     /**
-     * Gets reservation from id.
+     * Gets reservation.
      *
      * @param reservationId the reservation id
      * @return the reservation
      */
     @GetMapping("/{reservationId}")
     @ResponseBody
-    public Reservation getReservation(@PathVariable Long reservationId) {
-        return reservationService.getReservation(reservationId);
+    public ResponseEntity<?> getReservation(@PathVariable Long reservationId) {
+        try {
+            reservationService.getReservation(reservationId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
-     * Delete reservation by id.
+     * Delete reservation response entity.
      *
      * @param reservationId the reservation id
+     * @return the response entity
      */
     @DeleteMapping("/{reservationId}")
     @ResponseBody
-    public void deleteReservation(@PathVariable Long reservationId) {
-        reservationService.deleteReservation(reservationId);
+    public ResponseEntity<?> deleteReservation(@PathVariable Long reservationId) {
+        try {
+            reservationService.deleteReservation(reservationId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     /**
-     * Make sport room reservation.
+     * Make sport room reservation response entity.
      *
      * @param userId      the user id
-     * @param groupId     the group id, passed -1 if it's not a group reservation
+     * @param groupId     the group id
      * @param sportRoomId the sport room id
      * @param date        the date
-     * @return A response based on what happened when trying to make the reservation
+     * @return the response entity
      */
-    @PostMapping("/{userId}/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking")
+    @PostMapping(
+        "/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}" + "/makeSportRoomBooking")
     @ResponseBody
-    public ResponseEntity<String> makeSportRoomReservation(@PathVariable Long userId,
-                                                           @PathVariable Long groupId,
-                                                           @PathVariable Long sportRoomId,
-                                                           @PathVariable String date) {
+    public ResponseEntity<?> makeSportRoomReservation(@PathVariable Long userId,
+                                                      @PathVariable Long groupId,
+                                                      @PathVariable Long sportRoomId,
+                                                      @PathVariable String date,
+                                                      @PathVariable Boolean madeByPremiumUser) {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
+
+        String methodSpecificUrl = "/sportRoom/" + sportRoomId + "/getName";
+        String sportRoomName =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
 
         // Create reservation object, to be passed through chain of responsibility
         Reservation reservation =
-            new Reservation(ReservationType.SPORTS_ROOM, userId, sportRoomId, dateTime,
-                groupId);
+            new Reservation(ReservationType.SPORTS_ROOM, sportRoomName, userId, sportRoomId,
+                dateTime, groupId, madeByPremiumUser);
 
-        // Creates chain of responsibility
+        // Chain of responsibility:
+        // If any condition to be checked is violated by this reservation, the respective
+        // validator will throw an InvalidReservationException with appropriate message
         boolean isValid = reservationService.checkReservation(reservation, this);
 
         if (isValid) {
@@ -107,29 +128,41 @@ public class ReservationController {
     }
 
     /**
-     * Make equipment reservation.
+     * Make equipment reservation response entity.
      *
      * @param userId        the user id
-     * @param date          the date
      * @param equipmentName the equipment name
-     * @return A response based on what happened when trying to make the reservation
+     * @param date          the date
+     * @return the response entity
      */
-    @PostMapping("/{userId}/{equipmentName}/{date}/makeEquipmentBooking")
+    @PostMapping("/{userId}/{equipmentName}/{date}/{madeByPremiumUser}/makeEquipmentBooking")
     @ResponseBody
-    public ResponseEntity<String> makeEquipmentReservation(@PathVariable Long userId,
-                                                           @PathVariable String equipmentName,
-                                                           @PathVariable String date) {
+    public ResponseEntity<?> makeEquipmentReservation(@PathVariable Long userId,
+                                                      @PathVariable String equipmentName,
+                                                      @PathVariable String date,
+                                                      @PathVariable Boolean madeByPremiumUser) {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
-
-        // Finds the first available instance of equipment name selected,
-        // will be -1 if non-existent / not available
-        Long equipmentId = getFirstAvailableEquipmentId(equipmentName);
+        Long equipmentId;
+        try {
+            equipmentId = getFirstAvailableEquipmentId(equipmentName);
+            System.out.println(
+                "######### First available equipment id for " + equipmentName + " =" + " "
+                    + equipmentId);
+        } catch (HttpClientErrorException e) {
+            equipmentId = -1L;
+            System.out.println(
+                "############ Equipment " + equipmentName + " not available / " + "non-existent!!! "
+                    + "Set id to -1L in ReservationController.");
+        }
 
         Reservation reservation =
-            new Reservation(ReservationType.EQUIPMENT, userId, equipmentId, dateTime);
+            new Reservation(ReservationType.EQUIPMENT, equipmentName, userId, equipmentId, dateTime,
+                madeByPremiumUser);
 
-        // Creates chain of responsibility
+        // Chain of responsibility:
+        // If any condition to be checked is violated by this reservation, the respective
+        // validator will throw an InvalidReservationException with appropriate message
         boolean isValid = reservationService.checkReservation(reservation, this);
 
         if (isValid) {
@@ -141,61 +174,56 @@ public class ReservationController {
 
     }
 
+    /**
+     * Gets last person that used equipment.
+     *
+     * @param equipmentId the equipment id
+     * @return the last person that used equipment
+     */
     @GetMapping("/{equipmentId}/lastPersonThatUsedEquipment")
     @ResponseBody
-    public Long getLastPersonThatUsedEquipment(@PathVariable Long equipmentId) {
-        return reservationService.getLastPersonThatUsedEquipment(equipmentId);
+    public ResponseEntity<?> getLastPersonThatUsedEquipment(@PathVariable Long equipmentId) {
+        try {
+            Long lastPerson = reservationService.getLastPersonThatUsedEquipment(equipmentId);
+            return new ResponseEntity<>(lastPerson, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-
-
-
-
-    //  -------------------  The methods below communicate with other microservices.
+    //  -------------------  The methods below communicate with other microservices
+    // Any exceptions that may occur, are caught in that respective microservice.
 
     /**
-     * Gets if user is premium.
-     *
-     * @param userId the user id
-     * @return if the user is premium
-     */
-    public Boolean getUserIsPremium(Long userId) {
-        String methodSpecificUrl = "/user/" + userId + "/isPremium";
-        String response = restTemplate.getForObject(userUrl + methodSpecificUrl, String.class);
-        Boolean isPremium = Boolean.valueOf(response);
-        return isPremium;
-    }
-
-    /**
-     * Gets if sports room to be reserved exists.
+     * Gets sports room exists.
      *
      * @param sportsRoomId the sports room id
-     * @return if the user is premium
+     * @return the sports room exists
      */
     public Boolean getSportsRoomExists(Long sportsRoomId) {
 
-        String methodSpecificUrl = "/" + sportsRoomId.toString() + "/exists";
+        String methodSpecificUrl = "/sportRoom/" + sportsRoomId.toString() + "/exists";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
         Boolean sportRoomExists = Boolean.valueOf(response);
         return sportRoomExists;
     }
 
     /**
-     * Returns whether or not this room is a sport hall.
+     * Gets is sport hall.
      *
-     * @param sportRoomId the sports room id
-     * @return if the to be reserved sports room is a hall, meaning it holds multiple sports.
+     * @param sportRoomId the sport room id
+     * @return the is sport hall
      */
     public Boolean getIsSportHall(Long sportRoomId) {
 
-        String methodSpecificUrl = "/" + sportRoomId.toString() + "/isHall";
+        String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/isHall";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
         Boolean sportRoomIsHall = Boolean.valueOf(response);
 
         return sportRoomIsHall;
@@ -209,121 +237,131 @@ public class ReservationController {
      */
     public int getSportRoomMaximumCapacity(Long sportRoomId) {
 
-        String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMaximumCapacity";
+        String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/getMaximumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
         int maxCapacity = Integer.valueOf(response);
 
         return maxCapacity;
     }
 
     /**
-     * Gets sport room maximum capacity.
+     * Gets sport room minimum capacity.
      *
      * @param sportRoomId the sport room id
-     * @return the sport room maximum capacity
+     * @return the sport room minimum capacity
      */
     public int getSportRoomMinimumCapacity(Long sportRoomId) {
-        String methodSpecificUrl = "/" + sportRoomId.toString() + "/getMinimumCapacity";
+        String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/getMinimumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
         int minCapacity = Integer.valueOf(response);
 
         return minCapacity;
     }
 
     /**
-     * Gets sport room maximum capacity.
+     * Gets first available equipment id.
      *
-     * @param equipmentName the sport room id
-     * @return first available instance of this equipment name specified
+     * @param equipmentName the equipment name
+     * @return the first available equipment id
      */
     public Long getFirstAvailableEquipmentId(String equipmentName) {
 
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
-        Long equipmentId = Long.valueOf(response);
+        ResponseEntity<String> response =
+            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl, String.class);
+
+        Long equipmentId = Long.valueOf(response.getBody());
+
+        setEquipmentToInUse(equipmentId);   // Makes equipment (id) unavailable
+
         return equipmentId;
     }
 
+    /**
+     * Sets reserved piece of equipment (id) to "in use".
+     *
+     * @param equipmentId the equipment id
+     */
+    public void setEquipmentToInUse(Long equipmentId) {
+
+        String methodSpecificUrl = "/equipment/" + equipmentId.toString() + "/reserved";
+        restTemplate.put(sportFacilityUrl + methodSpecificUrl, String.class);
+    }
 
     /**
-     * Gets the related sport of the sport field.
+     * Gets sport field sport.
      *
      * @param sportFieldId - id of sport field to be reserved
      * @return String - name of related Sport (id of Sport)
-     *       example: soccer, hockey, ...
      */
     public String getSportFieldSport(Long sportFieldId) {
 
-        String methodSpecificUrl = "/" + sportFieldId.toString() + "/getSport";
+        String methodSpecificUrl = "/sportRoom/" + sportFieldId.toString() + "/getSport";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String relatedSport = restTemplate
-            .getForObject(sportFacilityUrl + "/sportRoom/" + methodSpecificUrl, String.class);
+        String relatedSport =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
 
         return relatedSport;
     }
 
     /**
-     * Gets the max team size needed to reserve a field for this sport.
+     * Gets sport max team size.
      *
-     * @param sportName the sport id
-     * @return the max team size for this sport
+     * @param sportName the sport name
+     * @return the sport max team size
      */
     public int getSportMaxTeamSize(String sportName) {
 
-        String methodSpecificUrl = "/" + sportName + "/getMaxTeamSize";
+        String methodSpecificUrl = "/sport/" + sportName + "/getMaxTeamSize";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + "/sport/" + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
         int maxTeamSize = Integer.valueOf(response);
 
         return maxTeamSize;
     }
 
     /**
-     * Gets the min team size needed to reserve a field for this sport.
+     * Gets sport min team size.
      *
-     * @param sportName the sport id
-     * @return the min team size for this sport
+     * @param sportName the sport name
+     * @return the sport min team size
      */
     public int getSportMinTeamSize(String sportName) {
 
-        String methodSpecificUrl = "/" + sportName + "/getMinTeamSize";
+        String methodSpecificUrl = "/sport/" + sportName + "/getMinTeamSize";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response = restTemplate
-            .getForObject(sportFacilityUrl + "/sport" + methodSpecificUrl, String.class);
+        String response =
+            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
         int minTeamSize = Integer.valueOf(response);
 
         return minTeamSize;
     }
 
     /**
-     * Returns how many members are part of this group.
+     * Gets group size.
      *
-     * @param groupId - Long
-     * @return group size - int
+     * @param groupId the group id
+     * @return the group size
      */
     public int getGroupSize(Long groupId) {
 
-        String methodSpecificUrl = "/" + groupId.toString() + "/getGroupSize";
+        String methodSpecificUrl = "/group/" + groupId.toString() + "/getGroupSize";
 
         // Call to GroupController in User microservice
-        String response =
-            restTemplate.getForObject(userUrl + "/group/" + methodSpecificUrl, String.class);
+        String response = restTemplate.getForObject(userUrl + methodSpecificUrl, String.class);
         int groupSize = Integer.valueOf(response);
         return groupSize;
     }
-
-
 
 }

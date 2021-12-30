@@ -109,17 +109,18 @@ public class GroupControllerTest {
     @Test
     void makeValidGroupReservation() throws Exception {
         final String url =
-            "http://eureka-reservation/reservation/" + 0L + "/" + groupId + "/" + 2L + "/"
-                + "2099-01-06T21:00:00" + "/" + "makeSportRoomBooking";
+            "http://eureka-reservation/reservation/" + 0L + "/" + groupId + "/"
+                + "2099-01-06T21:00:00" + "/" + 2 + "/" + false + "/" + "makeSportRoomBooking";
         List<Customer> customers = List.of(new Customer("arslan123", "password1", false),
             new Customer("emil123", "password2", false),
-            new Customer("emma123", "password3", true));
+            new Customer("emma123", "password3", false));
 
         Group group = new Group("basketball", customers);
         group.setGroupId(groupId);
         when(groupService.getUsersInaGroup(groupId)).thenReturn(customers);
         mockMvc.perform(
-                post("/group/reservation/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking",
+                post("/group/reservation/{groupId}/{sportRoomId}/{date}"
+                        + "/makeSportRoomBooking",
                     groupId,
                     2L, "2099-01-06T21:00:00")).andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print());

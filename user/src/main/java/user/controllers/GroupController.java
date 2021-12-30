@@ -151,19 +151,21 @@ public class GroupController {
                                                        @PathVariable long sportRoomId,
                                                        @PathVariable String date) {
 
-        String methodSpecificUrl = "/reservation/";
+        String methodSpecificUrl = "/reservation";
+
         List<Customer> customers;
         customers = groupService.getUsersInaGroup(groupId);
 
         for (Customer customer : customers) {
 
-            String url = reservationUrl +
-                    methodSpecificUrl +
-                    customer.getId() + "/" +
-                    groupId + "/" +
-                    sportRoomId + "/" +
-                    date + "/" +
-                    "makeSportRoomBooking";
+            String url = reservationUrl
+                + methodSpecificUrl
+                + "/" + customer.getId()
+                + "/" + groupId
+                + "/" + date
+                + "/" + sportRoomId
+                + "/" + customer.isPremiumUser()
+                + "/" + "makeSportRoomBooking";
 
             System.out.println("customer Id : " + customer.getId());
             System.out.println(url);

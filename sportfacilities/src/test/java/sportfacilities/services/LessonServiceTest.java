@@ -2,9 +2,7 @@ package sportfacilities.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -23,9 +21,6 @@ import org.springframework.web.client.RestTemplate;
 import sportfacilities.entities.Lesson;
 import sportfacilities.repositories.LessonRepository;
 
-/**
- * The type Lesson service test.
- */
 @RunWith(MockitoJUnitRunner.class)
 public class LessonServiceTest {
 
@@ -46,14 +41,14 @@ public class LessonServiceTest {
     private transient LessonService lessonService;
 
     /**
-     * Sets .
+     * Sets up the tests .
      */
     @BeforeEach
     void setup() {
         lessonRepository = Mockito.mock(LessonRepository.class);
         lessonService = new LessonService(lessonRepository);
-        when(lessonRepository.findById(lessonId)).thenReturn(
-            java.util.Optional.of(new Lesson(name, startingTime, endingTime, size)));
+        when(lessonRepository.findById(lessonId))
+            .thenReturn(java.util.Optional.of(new Lesson(name, startingTime, endingTime, size)));
         lesson1 = new Lesson(name, startingTime, endingTime, size);
         lessonRepository.save(lesson1);
     }
@@ -129,8 +124,7 @@ public class LessonServiceTest {
      */
     @Test
     public void deleteLessonTest() throws NoSuchElementException {
-        doNothing().when(lessonRepository).deleteById(1L);
-        assertDoesNotThrow(() -> lessonService.deleteLesson(1000L));
+        assertThrows(NoSuchElementException.class, () -> lessonService.deleteLesson(1000L));
     }
 
     /**
@@ -138,7 +132,7 @@ public class LessonServiceTest {
      */
     @Test
     public void deleteLessonThatNotExistsTest() {
-        doThrow(new NoSuchElementException()).when(lessonRepository).deleteById(1000L);
-        assertThrows(NoSuchElementException.class, () -> lessonService.deleteLesson(1000L));
+        doThrow(new NoSuchElementException()).when(lessonRepository).deleteById(lessonId);
+        assertThrows(NoSuchElementException.class, () -> lessonService.deleteLesson(lessonId));
     }
 }

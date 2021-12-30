@@ -42,7 +42,7 @@ public class UserReservationBalanceValidator extends BaseValidator {
             .getUserReservationCountOnDay(startDay, endDay, reservation.getCustomerId());
 
         // Communicates with user microservice
-        boolean isPremium = reservationController.getUserIsPremium(reservation.getCustomerId());
+        boolean isPremium = reservation.getMadeByPremiumUser();
 
         System.out.println(
             "########## USER ID " + reservation.getCustomerId() + " (Premium: " + isPremium + ") "

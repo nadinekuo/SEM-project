@@ -11,7 +11,7 @@ import sportfacilities.client.SportFacilitiesControllerEureka;
 
 @SpringBootApplication
 @RestController
-public class SportFacilitiesApplication implements SportFacilitiesControllerEureka {
+public class SportFacilitiesApplication {
 
     @Autowired
     @Lazy
@@ -24,8 +24,4 @@ public class SportFacilitiesApplication implements SportFacilitiesControllerEure
         SpringApplication.run(SportFacilitiesApplication.class, args);
     }
 
-    @Override
-    public String greeting() {
-        return String.format("Hello from '%s'!", eurekaClient.getApplication(appName).getName());
-    }
 }
