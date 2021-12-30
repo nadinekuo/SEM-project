@@ -1,6 +1,5 @@
 package user.services;
 
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -38,7 +37,8 @@ public class UserService {
      * @return Optional of User having this id
      */
     public User getUserById(long userId) {
-        return customerRepository.findById(userId);
+        return customerRepository.findById(userId).orElseThrow(
+                () -> new IllegalStateException("user with id " + userId + "does not exist!"));
     }
 
     @Bean
@@ -70,16 +70,42 @@ public class UserService {
             .save(new Admin(data.getUsername(), passwordEncoder.encode(data.getPassword())));
     }
 
+    /**
+     * Upgrade Customer from basic to premium.
+     *
+     * @param customer
+     * @throws IllegalStateException
+     */
     public void upgradeCustomer(Customer customer) {
+        long id = customer.getId();
+        customerRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Customer does not exist"));
+
         customer.setPremiumUser(true);
         customerRepository.save(customer);
     }
 
-    public Optional<Customer> checkCustomerExists(String username) {
-        return customerRepository.findByUsername(username);
+    /**
+     * Check if the Customer exists through the database.
+     *
+     * @param username
+     * @return true if customer exists, else false
+     */
+    public boolean checkCustomerExists(String username) {
+        Customer customer = customerRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalStateException("User with username " + username + " does not exist"));
+        return true;
     }
 
-    public Optional<Admin> checkAdminExists(String username) {
-        return adminRepository.findByUsername(username);
+    /**
+     * Check if the admin exists through the database.
+     *
+     * @param username
+     * @return true if admin exists, else false
+     */
+    public boolean checkAdminExists(String username) {
+        Admin admin = adminRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalStateException("Admin with username " + username + " does not exist"));
+        return true;
     }
 }

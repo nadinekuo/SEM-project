@@ -89,6 +89,11 @@ public class GroupController {
         }
     }
 
+    /**
+     * returns the group by group name.
+     * @param groupName
+     * @return the Group
+     */
     @GetMapping("/groupName/{groupName}")
     public ResponseEntity<?> getGroupByGroupName(@PathVariable String groupName) {
         try{
@@ -109,7 +114,7 @@ public class GroupController {
     public ResponseEntity<?> createGroup(@PathVariable String groupName) {
         try{
             groupService.createGroup(groupName);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>("Group created successfully", HttpStatus.OK);
         }catch(IllegalStateException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -147,14 +152,18 @@ public class GroupController {
                                                        @PathVariable String date) {
 
         String methodSpecificUrl = "/reservation/";
-
         List<Customer> customers;
         customers = groupService.getUsersInaGroup(groupId);
 
         for (Customer customer : customers) {
 
-            String url = reservationUrl + methodSpecificUrl + customer.getId() + "/" + groupId + "/"
-                + sportRoomId + "/" + date + "/" + "makeSportRoomBooking";
+            String url = reservationUrl +
+                    methodSpecificUrl +
+                    customer.getId() + "/" +
+                    groupId + "/" +
+                    sportRoomId + "/" +
+                    date + "/" +
+                    "makeSportRoomBooking";
 
             System.out.println("customer Id : " + customer.getId());
             System.out.println(url);
