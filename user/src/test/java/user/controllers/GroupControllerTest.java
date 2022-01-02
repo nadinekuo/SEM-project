@@ -18,6 +18,7 @@ import user.entities.Group;
 import user.services.GroupService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -58,7 +59,7 @@ public class GroupControllerTest {
 
     @Test
     public void getGroupSizeInvalidTest() throws Exception {
-        when(groupService.getGroupSizeById(groupId)).thenThrow(new IllegalStateException());
+        when(groupService.getGroupSizeById(groupId)).thenThrow(NoSuchElementException.class);
         mockMvc.perform(get("/group/{groupId}/getGroupSize", groupId))
             .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
         verify(groupService).getGroupSizeById(groupId);

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import user.entities.Customer;
 import user.services.CustomerService;
 
 import java.util.NoSuchElementException;
@@ -35,9 +36,10 @@ public class CustomerController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getCustomerById(@PathVariable long id) {
         try{
-            customerService.getCustomerById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            Customer customer = customerService.getCustomerById(id);
+            return new ResponseEntity<>(customer, HttpStatus.OK);
         }catch(NoSuchElementException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

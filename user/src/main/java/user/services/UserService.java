@@ -12,6 +12,8 @@ import user.entities.Customer;
 import user.entities.User;
 import user.repositories.UserRepository;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class UserService {
 
@@ -35,10 +37,11 @@ public class UserService {
      *
      * @param userId - long
      * @return Optional of User having this id
+     * @throws NoSuchElementException
      */
     public User getUserById(long userId) {
         return customerRepository.findById(userId).orElseThrow(
-                () -> new IllegalStateException("user with id " + userId + "does not exist!"));
+                () -> new NoSuchElementException("user with id " + userId + "does not exist!"));
     }
 
     @Bean
@@ -74,12 +77,12 @@ public class UserService {
      * Upgrade Customer from basic to premium.
      *
      * @param customer
-     * @throws IllegalStateException
+     * @throws NoSuchElementException
      */
     public void upgradeCustomer(Customer customer) {
         long id = customer.getId();
         customerRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Customer does not exist"));
+                .orElseThrow(() -> new NoSuchElementException("Customer does not exist"));
 
         customer.setPremiumUser(true);
         customerRepository.save(customer);
@@ -90,10 +93,11 @@ public class UserService {
      *
      * @param username
      * @return true if customer exists, else false
+     * @throws NoSuchElementException
      */
     public boolean checkCustomerExists(String username) {
         Customer customer = customerRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalStateException("User with username " + username + " does not exist"));
+                () -> new NoSuchElementException("User with username " + username + " does not exist"));
         return true;
     }
 
@@ -102,10 +106,11 @@ public class UserService {
      *
      * @param username
      * @return true if admin exists, else false
+     * @throws NoSuchElementException
      */
     public boolean checkAdminExists(String username) {
         Admin admin = adminRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalStateException("Admin with username " + username + " does not exist"));
+                () -> new NoSuchElementException("Admin with username " + username + " does not exist"));
         return true;
     }
 }

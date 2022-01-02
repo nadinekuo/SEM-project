@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import user.entities.Customer;
 import user.repositories.CustomerRepository;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class CustomerService {
 
@@ -27,7 +29,7 @@ public class CustomerService {
      */
     public Customer getCustomerById(long CustomerId) {
         return customerRepository.findById(CustomerId).orElseThrow(
-                () -> new IllegalStateException("Customer with id " + CustomerId + " does not exist!"));
+                () -> new NoSuchElementException("Customer with id " + CustomerId + " does not exist!"));
     }
 
     /**

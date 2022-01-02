@@ -11,6 +11,7 @@ import user.repositories.GroupRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * The type Group service.
@@ -71,7 +72,7 @@ public class GroupService {
      */
     public int getGroupSizeById(Long groupId) {
         Group group = groupRepository.findByGroupId(groupId).orElseThrow(
-            () -> new IllegalStateException("Group with id " + groupId + " does not exist!"));
+            () -> new NoSuchElementException("Group with id " + groupId + " does not exist!"));
         return group.getGroupSize();
     }
 
@@ -83,7 +84,7 @@ public class GroupService {
      */
     public Group getGroupById(Long groupId) {
         return groupRepository.findByGroupId(groupId).orElseThrow(
-            () -> new IllegalStateException("Group with id " + groupId + " does not exist!"));
+            () -> new NoSuchElementException("Group with id " + groupId + " does not exist!"));
 
     }
 
@@ -94,7 +95,7 @@ public class GroupService {
      */
     public Group getGroupByGroupName(String groupName) {
         return groupRepository.findByGroupName(groupName).orElseThrow(
-            () -> new IllegalStateException("Group with name " + groupName + " does not exist!"));
+            () -> new NoSuchElementException("Group with name " + groupName + " does not exist!"));
     }
 
     /**
@@ -108,11 +109,10 @@ public class GroupService {
         Customer oldCustomer = customerService.getCustomerById(customerId);
 
         Group groupToAdd = groupRepository.findByGroupId(groupId).orElseThrow(
-            () -> new IllegalStateException("Group with id " + groupId + " does not exist!"));
+            () -> new NoSuchElementException("Group with id " + groupId + " does not exist!"));
         oldCustomer.addGroupToUsersGroupList(groupToAdd);
 
-        //customer service only called for the persistence of the updated group attribute of the
-        // customer
+        //customer service only called for the persistence of the updated group attribute of the customer
         customerService.saveCustomer(oldCustomer);
         return groupToAdd;
 
@@ -126,7 +126,7 @@ public class GroupService {
      */
     public List<Customer> getUsersInaGroup(long groupId) {
         Group group = groupRepository.findByGroupId(groupId).orElseThrow(
-            () -> new IllegalStateException("Group with id " + groupId + " does not exist!"));
+            () -> new NoSuchElementException("Group with id " + groupId + " does not exist!"));
         return group.getGroupMembers();
     }
 

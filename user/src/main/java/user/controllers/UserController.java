@@ -12,6 +12,7 @@ import user.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 /**
  * The type User controller.
@@ -53,9 +54,8 @@ public class UserController {
             Customer customer = (Customer) userService.getUserById(userId);
             Boolean isPremium = customer.isPremiumUser();
             return new ResponseEntity<>(isPremium.toString(), HttpStatus.OK);
-        } catch (IllegalStateException e) {
+        } catch (NoSuchElementException e) {
             e.printStackTrace();
-            System.out.println("User with id " + userId + " does not exist!!");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -118,9 +118,8 @@ public class UserController {
             }
             userService.upgradeCustomer(customer);
             return new ResponseEntity<>("User has been upgraded to premium.", HttpStatus.OK);
-        } catch (IllegalStateException e) {
+        } catch (NoSuchElementException e) {
             e.printStackTrace();
-            System.out.println("User with id " + userId + " does not exist!!");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

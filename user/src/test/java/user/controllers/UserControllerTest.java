@@ -1,12 +1,5 @@
 package user.controllers;
 
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +13,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import user.entities.Customer;
 import user.services.UserService;
+
+import java.util.NoSuchElementException;
+
+import static org.mockito.Mockito.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -54,7 +54,7 @@ public class UserControllerTest {
 
     @Test
     void isUserPremiumNotValidTest() throws Exception {
-        when(userService.getUserById(1L)).thenThrow(new IllegalStateException());
+        when(userService.getUserById(1L)).thenThrow(NoSuchElementException.class);
         mockMvc.perform(get("/user/{userId}/isPremium", userId)).andExpect(status().isBadRequest())
             .andDo(MockMvcResultHandlers.print());
         verify(userService).getUserById(userId);
@@ -84,7 +84,7 @@ public class UserControllerTest {
     @Test
     void upgradeUserNotValidTest() throws Exception {
         Customer customer = new Customer();
-        when(userService.getUserById(userId)).thenThrow(new IllegalStateException());
+        when(userService.getUserById(userId)).thenThrow(NoSuchElementException.class);
         mockMvc.perform(put("/user/{userId}/upgrade", userId)).andExpect(status().isBadRequest())
             .andDo(MockMvcResultHandlers.print());
         verify(userService, never()).upgradeCustomer(customer);
