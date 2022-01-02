@@ -74,7 +74,7 @@ public class SportControllerTest {
 
     @Test
     public void invalidSportNameGetMaxTeamSize() throws Exception {
-        doThrow(IllegalStateException.class).when(sportService).getSportById(anyString());
+        doThrow(NoSuchElementException.class).when(sportService).getSportById(anyString());
 
         mockMvc.perform(get("/sport/{sportName}/getMaxTeamSize", "bowling"))
             .andExpect(status().isBadRequest());
@@ -93,7 +93,7 @@ public class SportControllerTest {
 
     @Test
     public void invalidSportNameGetMinTeamSize() throws Exception {
-        doThrow(IllegalStateException.class).when(sportService).getSportById(anyString());
+        doThrow(NoSuchElementException.class).when(sportService).getSportById(anyString());
 
         mockMvc.perform(get("/sport/{sportName}/getMinTeamSize", "bowling"))
             .andExpect(status().isBadRequest());

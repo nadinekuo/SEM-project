@@ -3,6 +3,7 @@ package reservation.services;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -37,29 +38,30 @@ public class ReservationService {
     }
 
     /**
-     * Gets reservation.
+     * Gets reservation from repository.
      *
-     * @param reservationId the reservation id
-     * @return the reservation
+     * @param reservationId the reservation id to search for
+     * @return the found reservation, or throw exception if non-existent id
      */
     public Reservation getReservation(Long reservationId) {
         return reservationRepository.findById(reservationId).orElseThrow(
-            () -> new IllegalStateException(
+            () -> new NoSuchElementException(
                 "Reservation with id " + reservationId + " does not exist!"));
     }
 
     /**
-     * Delete reservation.
+     * Delete reservation if id exists.
      *
      * @param reservationId the reservation id
      */
-    public void deleteReservation(Long reservationId) {
+    public boolean deleteReservation(Long reservationId) {
         boolean exists = reservationRepository.existsById(reservationId);
         if (!exists) {
-            throw new IllegalStateException(
+            throw new NoSuchElementException(
                 "Reservation with id " + reservationId + " does not " + "exist!");
         }
         reservationRepository.deleteById(reservationId);
+        return true;
     }
 
     /**
@@ -72,14 +74,36 @@ public class ReservationService {
      * @param reservationController the reservation controller through which API calls to other
      *                              microservices are made
      * @return boolean - true if Reservation can be made, else false.
-     * If the reservation was not valid, that means one or more checks (in some validator)
-     * were violated -> exception thrown.
      */
     public boolean checkReservation(Reservation reservation,
                                     ReservationController reservationController) {
 
-        // Checks whether or not customers have exceeded their daily reservation limit for sport
-        // rooms
+        // Returns first validator in chain created for this reservation
+        ReservationValidator reservationValidator =
+            createChainOfResponsibility(reservation, reservationController);
+
+        try {
+            return reservationValidator.handle(reservation);   // Start of chain
+        } catch (InvalidReservationException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Creates Chain of Responsibility object.
+     * Having a separate method for this creation, facilitates testability.
+     *
+     * @param reservation           - Reservation to be checked
+     * @param reservationController - API to communicate with other microservices
+     * @return - The first validator in the chain of responsibility created
+     */
+    public ReservationValidator createChainOfResponsibility(
+        Reservation reservation,
+        ReservationController reservationController) {
+
+        // Checks whether or not customers have exceeded their daily
+        // reservation limit for sport rooms
         ReservationValidator userBalanceHandler =
             new UserReservationBalanceValidator(this, reservationController);
 
@@ -99,39 +123,11 @@ public class ReservationService {
                 new TeamRoomCapacityValidator(this, reservationController);
             sportFacilityHandler.setNext(capacityHandler);
         }
-
-        try {
-            return userBalanceHandler.handle(reservation);   // Start of chain
-        } catch (InvalidReservationException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return userBalanceHandler;
     }
 
     /**
-     * Sports facility is available boolean.
-     *
-     * @param sportFacilityId the sport facility id
-     * @param time            the time
-     * @return the boolean
-     */
-    public boolean sportsFacilityIsAvailable(Long sportFacilityId, LocalDateTime time) {
-        return reservationRepository.findBySportFacilityReservedIdAndTime(sportFacilityId, time)
-            .isEmpty();
-    }
-
-    /**
-     * Make sport facility reservation reservation.
-     *
-     * @param reservation the reservation
-     * @return the reservation
-     */
-    public Reservation makeSportFacilityReservation(Reservation reservation) {
-        return reservationRepository.save(reservation);
-    }
-
-    /**
-     * Gets user reservation count on day.
+     * Gets user reservation count (for sport rooms, not equipment) on given day.
      *
      * @param start      the start
      * @param end        the end
@@ -157,11 +153,34 @@ public class ReservationService {
     }
 
     /**
-     * Find by group id and time long.
+     * Checks if sports facility is available at given time.
+     * All Reservations start at full hours, so only start time has to be checked.
+     *
+     * @param sportFacilityId the sport facility id to check
+     * @param time            the time to check
+     * @return boolean - true if sport facility is not associated with any reservation yet.
+     */
+    public boolean sportsFacilityIsAvailable(Long sportFacilityId, LocalDateTime time) {
+        return reservationRepository.findBySportFacilityReservedIdAndTime(sportFacilityId, time)
+            .isEmpty();
+    }
+
+    /**
+     * Make sport facility (Equipment, Sport Room, Lesson) reservation.
+     *
+     * @param reservation - reservation object to be saved in database
+     * @return the reservation
+     */
+    public Reservation makeSportFacilityReservation(Reservation reservation) {
+        return reservationRepository.save(reservation);
+    }
+
+    /**
+     * Find reservation by group id and time given.
      *
      * @param groupId the group id
      * @param time    the time
-     * @return the long
+     * @return the Long corresponding to reservation found, null if not found.
      */
     public Long findByGroupIdAndTime(Long groupId, LocalDateTime time) {
         return reservationRepository.findByGroupIdAndTime(groupId, time).orElse(null);

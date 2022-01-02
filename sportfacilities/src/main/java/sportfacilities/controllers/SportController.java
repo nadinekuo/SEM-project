@@ -39,16 +39,16 @@ public class SportController {
      * @param sportName the sport name
      * @return the sport max team size
      */
+    
+    //TODO return correct type instead of string
     @GetMapping("/{sportName}/getMaxTeamSize")
     @ResponseBody
     public ResponseEntity<String> getSportMaxTeamSize(@PathVariable String sportName) {
         try {
             Integer maxSize = sportService.getSportById(sportName).getMaxTeamSize();
-            return new ResponseEntity<String>(maxSize.toString(), HttpStatus.OK);
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            System.out.println("Sport with id " + sportName + " does not exist!!");
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(maxSize.toString(), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -63,11 +63,9 @@ public class SportController {
     public ResponseEntity<String> getSportMinTeamSize(@PathVariable String sportName) {
         try {
             Integer minSize = sportService.getSportById(sportName).getMinTeamSize();
-            return new ResponseEntity<String>(minSize.toString(), HttpStatus.OK);
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            System.out.println("Sport with id " + sportName + " does not exist!!");
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(minSize.toString(), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -114,7 +112,7 @@ public class SportController {
         try {
             sportService.deleteSport(sportName);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("No such element", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);
 

@@ -9,6 +9,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +62,7 @@ public class EquipmentControllerTest {
 
     @Test
     public void getEquipmentWithNotValidIdTest() throws Exception {
-        when(equipmentService.getEquipment(10L)).thenThrow(new IllegalStateException());
+        when(equipmentService.getEquipment(10L)).thenThrow(new NoSuchElementException());
 
         MvcResult result = mockMvc.perform(get("/equipment/10")).andExpect(status().isBadRequest())
             .andDo(MockMvcResultHandlers.print()).andReturn();
@@ -99,7 +100,7 @@ public class EquipmentControllerTest {
 
     @Test
     public void equipmentBroughtBackTest() throws Exception {
-        mockMvc.perform(post("/equipment/{equipmentId}/broughtBack/admin", equipmentId))
+        mockMvc.perform(put("/equipment/{equipmentId}/broughtBack/admin", equipmentId))
             .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
 
         verify(equipmentService).setEquipmentToNotInUse(equipmentId);
@@ -108,7 +109,7 @@ public class EquipmentControllerTest {
 
     @Test
     public void equipmentReservedTest() throws Exception {
-        mockMvc.perform(post("/equipment/{equipmentId}/reserved", equipmentId))
+        mockMvc.perform(put("/equipment/{equipmentId}/reserved", equipmentId))
             .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
 
         verify(equipmentService).setEquipmentToInUse(equipmentId);

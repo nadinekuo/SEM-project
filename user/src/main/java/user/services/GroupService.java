@@ -45,12 +45,11 @@ public class GroupService {
     }
 
     /**
-     * Creats a new Group.
+     * Creates a group by saving it in the Group database.
      *
-     * @param groupName the group name
-     * @return the boolean
+     * @param groupName - name of group
+     * @return true if group created, else false
      */
-    //TODO make this with try and catch and not a boolean
     public boolean createGroup(String groupName) {
         boolean res = false;
         if (groupRepository.findByGroupName(groupName).isPresent()) {

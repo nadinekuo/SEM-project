@@ -34,33 +34,7 @@ public class ReservationApplication implements ReservationControllerEureka {
      * @param args the input arguments
      */
     public static void main(String[] args) {
-
-        BookingSystem bookings = new BookingSystem(new UserIdStrategy());
-
-        Reservation reservation1 =
-            new Reservation(ReservationType.EQUIPMENT, 1L, 1L, LocalDateTime.of(2020, 1, 1, 1, 1));
-        Reservation reservation2 =
-            new Reservation(ReservationType.EQUIPMENT, 3L, 2L, LocalDateTime.of(2020, 1, 2, 1, 1));
-        Reservation reservation3 =
-            new Reservation(ReservationType.EQUIPMENT, 5L, 3L, LocalDateTime.of(2020, 3, 3, 1, 1));
-        Reservation reservation4 =
-            new Reservation(ReservationType.EQUIPMENT, 3L, 4L, LocalDateTime.of(2021, 1, 1, 1, 1));
-        Reservation reservation5 =
-            new Reservation(ReservationType.EQUIPMENT, 4L, 5L, LocalDateTime.of(2020, 2, 2, 1, 1));
-        Reservation reservation6 =
-            new Reservation(ReservationType.EQUIPMENT, 5L, 6L, LocalDateTime.of(2020, 1, 3, 1, 1));
-
-        bookings.addReservation(reservation1);
-        bookings.addReservation(reservation2);
-        bookings.addReservation(reservation3);
-        bookings.addReservation(reservation4);
-        bookings.addReservation(reservation5);
-        bookings.addReservation(reservation6);
-
-        System.out.println(bookings);
-
         SpringApplication.run(ReservationApplication.class, args);
-
     }
 
     @Override

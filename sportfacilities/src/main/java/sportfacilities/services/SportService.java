@@ -31,7 +31,7 @@ public class SportService {
      */
     public Sport getSportById(String sportName) {
         return sportRepository.findById(sportName).orElseThrow(
-            () -> new IllegalStateException("Sport with id " + sportName + " does not exist!"));
+            () -> new NoSuchElementException("Sport with id " + sportName + " does not exist!"));
     }
 
     /**
@@ -41,11 +41,7 @@ public class SportService {
      * @throws IllegalStateException the no such element exception
      */
     public void deleteSport(String sportName) throws IllegalStateException {
-        boolean exists = sportRepository.existsById(sportName);
-        if (!exists) {
-            throw new IllegalStateException(
-                "Sport with id " + sportName + " does not " + "exist!");
-        }
+        Sport sport = getSportById(sportName);
         sportRepository.deleteById(sportName);
     }
 
