@@ -40,6 +40,12 @@ public class AuthenticationController {
         this.restTemplate = restTemplate;
     }
 
+    /**
+     * Get the information of a customer
+     *
+     * @param userName
+     * @return AppUser
+     */
     public static AppUser getCustomerInfo(@PathVariable String userName){
 
         String methodSpecificUrl = "/user/" + userName + "/getCustomerInfo";
@@ -53,6 +59,13 @@ public class AuthenticationController {
         return new AppUser(userInfo.get(0), userInfo.get(1), "user");
     }
 
+
+    /**
+     * Get the information of an admin
+     *
+     * @param userName
+     * @return AppUser
+     */
     public static AppUser getAdminInfo(@PathVariable String userName){
         String methodSpecificUrl = "/user/" + userName + "/getAdminInfo";
         List<String> userInfo =

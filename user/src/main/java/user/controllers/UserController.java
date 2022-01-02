@@ -128,7 +128,7 @@ public class UserController {
             || data.getPassword().isEmpty()) {
             return new ResponseEntity<>("Fill in all fields.", HttpStatus.BAD_REQUEST);
         }
-        if (userService.checkCustomerExists(data.getUsername()).isPresent()) {
+        if (userService.getCustomerByUsername(data.getUsername()).isPresent()) {
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
         userService.registerCustomer(data);
@@ -149,7 +149,7 @@ public class UserController {
             || data.getPassword().isEmpty()) {
             return new ResponseEntity<>("Fill in all fields.", HttpStatus.BAD_REQUEST);
         }
-        if (userService.checkAdminExists(data.getUsername()).isPresent()) {
+        if (userService.getAdminByUsername(data.getUsername()).isPresent()) {
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
         userService.registerAdmin(data);

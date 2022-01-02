@@ -48,7 +48,7 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
     Optional<Customer> findCustomerByUsername(String username);
 
     /**
-     * See if there is a admin matching the given username.
+     * See if there is an admin matching the given username.
      *
      * @param username the username
      * @return the optional admin
