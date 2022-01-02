@@ -22,6 +22,7 @@ public class JwtConfig {
         return Uri;
     }
 
+    //Getters
     public String getHeader() {
         return header;
     }

@@ -18,7 +18,7 @@ import security.users.AppUser;
 import static security.controllers.AuthenticationController.getAdminInfo;
 import static security.controllers.AuthenticationController.getCustomerInfo;
 
-@Service   // This is for testing purposes. Will be changed later to get users from database
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
