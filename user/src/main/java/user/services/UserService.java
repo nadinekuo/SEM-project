@@ -101,23 +101,23 @@ public class UserService {
         customerRepository.save(customer);
     }
 
-    /**
-     * Finds customer by username
-     *
-     * @param username - String
-     * @return Optional of Admin having this name
-     */
-    public Optional<Customer> checkCustomerExists(String username) {
-        return customerRepository.findByUsername(username);
-    }
-
-    /**
-     * Finds Admin by username
-     *
-     * @param username - String
-     * @return Optional of Admin having this name
-     */
-    public Optional<Admin> checkAdminExists(String username) {
-        return adminRepository.findByUsername(username);
-    }
+//    /**
+//     * Finds customer by username
+//     *
+//     * @param username - String
+//     * @return Optional of Admin having this name
+//     */
+//    public Optional<Customer> checkCustomerExists(String username) {
+//        return customerRepository.findByUsername(username);
+//    }
+//
+//    /**
+//     * Finds Admin by username
+//     *
+//     * @param username - String
+//     * @return Optional of Admin having this name
+//     */
+//    public Optional<Admin> checkAdminExists(String username) {
+//        return adminRepository.findByUsername(username);
+//    }
 }

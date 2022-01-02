@@ -24,6 +24,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
+    /**
+     * Gives the correct role to the user that wants to login
+     *
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException
+     */
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         AppUser customer = getCustomerInfo(username);
