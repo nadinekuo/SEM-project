@@ -30,14 +30,6 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
     void deleteById(Long userId);
 
     /**
-     * See if there is a user matching the given username.
-     *
-     * @param username the username
-     * @return the optional user
-     */
-    Optional<T> findByUsername(String username);
-
-    /**
      * See if there is a customer matching the given username.
      *
      * @param username the username

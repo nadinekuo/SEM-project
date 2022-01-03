@@ -1,8 +1,7 @@
 package user.controllers;
 
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -18,14 +17,19 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import user.entities.Admin;
 import user.entities.Customer;
 import user.services.UserService;
+
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 public class UserControllerTest {
 
     private final transient long userId = 1L;
+
+    private final transient String userName = "emma";
 
     @Mock
     transient UserService userService;
@@ -89,6 +93,25 @@ public class UserControllerTest {
             .andDo(MockMvcResultHandlers.print());
         verify(userService, never()).upgradeCustomer(customer);
     }
+
+    @Test
+    void getCustomerInfoTest() throws Exception {
+        Customer customer = new Customer();
+        when(userService.getCustomerByUsername(userName)).thenReturn(Optional.of(customer));
+        mockMvc.perform(get("/user/{userName}/getCustomerInfo", userName)).andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+        verify(userService).getCustomerByUsername(userName);
+    }
+
+    @Test
+    void getAdminInfoTest() throws Exception {
+        Admin admin = new Admin();
+        when(userService.getAdminByUsername(userName)).thenReturn(Optional.of(admin));
+        mockMvc.perform(get("/user/{userName}/getAdminInfo", userName)).andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+        verify(userService).getAdminByUsername(userName);
+    }
+
 
     //    @Test
     //    void customerRegistrationValidTest() throws Exception {

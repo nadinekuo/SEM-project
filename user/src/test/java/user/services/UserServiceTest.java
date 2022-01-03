@@ -112,22 +112,6 @@ class UserServiceTest {
         assertTrue(basic.isPremiumUser());
     }
 
-//    @Test
-//    void checkCustomerExists() {
-//        when(customerRepository.findByUsername("erwin")).thenReturn(Optional.of(customer));
-//        Optional<Customer> result = userService.checkCustomerExists("erwin");
-//        verify(customerRepository, times(1)).findByUsername("erwin");
-//        assertEquals(result.get(), customer);
-//    }
-//
-//    @Test
-//    void checkAdminExists() {
-//        when(adminRepository.findByUsername("admin")).thenReturn(Optional.of(admin));
-//        Optional<Admin> result = userService.checkAdminExists("admin");
-//        verify(adminRepository, times(1)).findByUsername("admin");
-//        assertEquals(result.get(), admin);
-//    }
-
     @Test
     void getCustomerByUsernameTest() {
         when(customerRepository.findCustomerByUsername("erwin")).thenReturn(Optional.of(customer));
@@ -142,5 +126,19 @@ class UserServiceTest {
         Optional<Admin> result = userService.getAdminByUsername("admin");
         verify(adminRepository, times(1)).findAdminByUsername("admin");
         assertEquals(result.get(), admin);
+    }
+
+    @Test
+    void getCustomerByUsernameFalseTest() {
+        Optional<Customer> result = userService.getCustomerByUsername("emma");
+        verify(customerRepository, times(1)).findCustomerByUsername("emma");
+        assertEquals(Optional.empty(), result);
+    }
+
+    @Test
+    void getAdminByUsernameFalseTest() {
+        Optional<Admin> result = userService.getAdminByUsername("adminfalse");
+        verify(adminRepository, times(1)).findAdminByUsername("adminfalse");
+        assertEquals(Optional.empty(), result);
     }
 }
