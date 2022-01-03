@@ -52,8 +52,8 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
         return super.checkNext(reservation);
     }
 
-
-    /** Checks whether starting time of reservation is valid.
+    /**
+     * Checks whether starting time of reservation is valid.
      *
      * @param reservation - reservation object to be checked
      * @throws InvalidReservationException - message contains error
@@ -72,13 +72,14 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
         }
     }
 
-
-    /** Checks whether sport room id of reservation object belongs to an available, existing room.
+    /**
+     * Checks whether sport room id of reservation object belongs to an available, existing room.
      *
      * @param reservation - reservation object to be checked
      * @throws InvalidReservationException - message contains error
      */
-    private void checkExistingAvailableSportsRoom(Reservation reservation) throws InvalidReservationException {
+    private void checkExistingAvailableSportsRoom(Reservation reservation)
+        throws InvalidReservationException {
 
         long sportsRoomId = reservation.getSportFacilityReservedId();
 
@@ -89,13 +90,13 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
         boolean isGroupReservation = (reservation.getGroupId() != -1);
 
         boolean sportsRoomAvailable;
-        if (isGroupReservation &&
-            reservationService.findByGroupIdAndTime(reservation.getGroupId(), reservation.getStartingTime())
+        if (isGroupReservation && reservationService
+            .findByGroupIdAndTime(reservation.getGroupId(), reservation.getStartingTime())
             != null) {
             sportsRoomAvailable = true;
         } else {
-            sportsRoomAvailable =
-                reservationService.sportsFacilityIsAvailable(sportsRoomId, reservation.getStartingTime());
+            sportsRoomAvailable = reservationService
+                .sportsFacilityIsAvailable(sportsRoomId, reservation.getStartingTime());
         }
         if (!sportsRoomAvailable) {
             throw new InvalidReservationException(
@@ -110,8 +111,5 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
             throw new InvalidReservationException("Sports room does not exist.");
         }
     }
-
-
-
 
 }
