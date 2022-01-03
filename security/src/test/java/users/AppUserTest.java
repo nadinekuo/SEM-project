@@ -1,12 +1,10 @@
 package users;
 
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import security.users.AppUser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class AppUserTest {
 
@@ -15,7 +13,7 @@ public class AppUserTest {
     String role;
     AppUser appUser;
 
-    @BeforeAll
+    @BeforeEach
     void setup() {
         username = "emma";
         password = "emma123";
@@ -59,5 +57,32 @@ public class AppUserTest {
     void setRoleTest() {
         appUser.setRole("admin");
         assertEquals("admin", appUser.getRole());
+    }
+
+    @Test
+    void equalsTest() {
+        AppUser appUserTest = new AppUser("emma", "emma123", "user");
+        assertTrue(appUser.equals(appUserTest));
+    }
+
+    @Test
+    void equalsSameTest() {
+        assertTrue(appUser.equals(appUser));
+    }
+
+    @Test
+    void notEqualsTest() {
+        AppUser appUserTest = new AppUser("erwin", "emma123", "user");
+        assertFalse(appUser.equals(appUserTest));
+    }
+
+    @Test
+    void toStringTest() {
+        String check = "AppUser{" +
+                "username='" + "emma" + '\'' +
+                ", password='" + "emma123" + '\'' +
+                ", role='" + "user" + '\'' +
+                '}';
+        assertEquals(check, appUser.toString());
     }
 }
