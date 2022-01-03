@@ -2,6 +2,7 @@ package sportfacilities.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -22,12 +23,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.web.client.RestTemplate;
 import sportfacilities.entities.Equipment;
 import sportfacilities.entities.Lesson;
 import sportfacilities.repositories.LessonRepository;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class LessonServiceTest {
 
     private final transient long lessonId = 0L;
@@ -38,9 +42,7 @@ public class LessonServiceTest {
         LocalDateTime.of(2021, 1, 1, 11, 0, 0);
     private final transient int size = 10;
     private transient Lesson lesson1;
-
-    @Mock
-    private transient RestTemplate restTemplate;
+    private long invalidId = 13;
 
     @Mock
     private transient LessonRepository lessonRepository;
@@ -56,6 +58,12 @@ public class LessonServiceTest {
         lessonRepository = Mockito.mock(LessonRepository.class);
         lessonService = new LessonService(lessonRepository);
         lesson1 = new Lesson(name, startingTime, endingTime, size);
+        when(lessonRepository.findById(lessonId))
+            .thenReturn(java.util.Optional.of(lesson1));
+        when(lessonRepository.findById(invalidId))
+            .thenReturn(Optional.empty());
+
+
     }
 
     /**
@@ -73,11 +81,13 @@ public class LessonServiceTest {
      */
     @Test
     public void getLessonByIdTest() throws NoSuchFieldException {
-        when(lessonRepository.findById(lessonId))
-            .thenReturn(java.util.Optional.of(lesson1));
-
         assertEquals(Optional.of(0L),
             Optional.of(lessonService.getLessonById(lessonId).getLessonId()));
+    }
+
+    @Test
+    public void getLessonByIdThrowsExceptionTest() throws NoSuchFieldException {
+        assertThrows(NoSuchElementException.class, () -> lessonService.getLessonById(invalidId));
     }
 
     /**
@@ -87,14 +97,16 @@ public class LessonServiceTest {
      */
     @Test
     public void setLessonSizeTest() throws NoSuchFieldException {
-        when(lessonRepository.findById(lessonId))
-            .thenReturn(java.util.Optional.of(lesson1));
-
         int newSize = 5;
         lessonService.setLessonSize(lessonId, newSize);
 
         assertEquals(newSize, lessonService.getLessonSize(lessonId));
         verify(lessonRepository).save(lesson1);
+    }
+
+    @Test
+    public void setLessonSizeThrowsExceptionTest() throws NoSuchFieldException {
+        assertThrows(NoSuchElementException.class, () -> lessonService.setLessonSize(invalidId, 42));
     }
 
     /**
@@ -104,10 +116,13 @@ public class LessonServiceTest {
      */
     @Test
     public void getLessonSizeTest() throws NoSuchFieldException {
-        when(lessonRepository.findById(lessonId))
-            .thenReturn(java.util.Optional.of(lesson1));
-
         assertEquals(size, lessonService.getLessonSize(lessonId));
+    }
+
+    @Test
+    public void getLessonSizeThrowsExceptionTest() throws NoSuchFieldException {
+        assertThrows(NoSuchElementException.class,
+            () -> lessonService.getLessonSize(invalidId));
     }
 
     /**
@@ -117,10 +132,13 @@ public class LessonServiceTest {
      */
     @Test
     public void getLessonStartingTimeTest() throws NoSuchFieldException {
-        when(lessonRepository.findById(lessonId))
-            .thenReturn(java.util.Optional.of(lesson1));
-
         assertEquals(startingTime.toString(), lessonService.getLessonStartingTime(lessonId));
+    }
+
+    @Test
+    public void getStartingTimeThrowsExceptionTest() throws NoSuchFieldException {
+        assertThrows(NoSuchElementException.class,
+            () -> lessonService.getLessonStartingTime(invalidId));
     }
 
     /**
@@ -148,15 +166,14 @@ public class LessonServiceTest {
      */
     @Test
     public void deleteLessonTest() throws NoSuchElementException {
-        assertThrows(NoSuchElementException.class, () -> lessonService.deleteLesson(1000L));
+        assertDoesNotThrow(() -> lessonService.deleteLesson(lessonId));
     }
 
     /**
-     * Delete lesson that not exists test.
+     * Dele.
      */
     @Test
     public void deleteLessonThatNotExistsTest() {
-        doThrow(new NoSuchElementException()).when(lessonRepository).findById(lessonId);
-        assertThrows(NoSuchElementException.class, () -> lessonService.deleteLesson(lessonId));
+        assertThrows(NoSuchElementException.class, () -> lessonService.deleteLesson(invalidId));
     }
 }
