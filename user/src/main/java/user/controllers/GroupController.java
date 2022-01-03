@@ -52,7 +52,6 @@ public class GroupController {
             Integer groupSize = groupService.getGroupSizeById(groupId);
             return new ResponseEntity<String>(groupSize.toString(), HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -69,7 +68,6 @@ public class GroupController {
             Group group = groupService.getGroupById(id);
             return new ResponseEntity<>(group, HttpStatus.OK);
         }catch(NoSuchElementException e){
-            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -86,7 +84,6 @@ public class GroupController {
             List<Customer> customers = groupService.getUsersInaGroup(id);
             return new ResponseEntity<>(customers, HttpStatus.OK);
         }catch(NoSuchElementException e) {
-            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -102,7 +99,6 @@ public class GroupController {
             Group group = groupService.getGroupByGroupName(groupName);
             return new ResponseEntity<>(group, HttpStatus.OK);
         }catch(NoSuchElementException e){
-            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -118,8 +114,7 @@ public class GroupController {
         try{
             groupService.createGroup(groupName);
             return new ResponseEntity<>("Group created successfully", HttpStatus.OK);
-        }catch(IllegalStateException e) {
-            e.printStackTrace();
+        }catch(IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -138,7 +133,6 @@ public class GroupController {
             groupService.addCustomerToGroup(customerId, groupId);
             return new ResponseEntity<>("Customer added successfully to the group!", HttpStatus.OK);
         }catch (NoSuchElementException e) {
-            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 

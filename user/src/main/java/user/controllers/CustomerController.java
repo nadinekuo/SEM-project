@@ -39,7 +39,6 @@ public class CustomerController {
             Customer customer = customerService.getCustomerById(id);
             return new ResponseEntity<>(customer, HttpStatus.OK);
         }catch(NoSuchElementException e) {
-            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

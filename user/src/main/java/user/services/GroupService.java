@@ -55,7 +55,7 @@ public class GroupService {
     public boolean createGroup(String groupName) {
         boolean res = false;
         if (groupRepository.findByGroupName(groupName).isPresent()) {
-            throw new IllegalStateException(
+            throw new IllegalArgumentException(
                 "group with name " + groupName + " already exists! Try a new name");
         } else {
             groupRepository.save(new Group(groupName, new ArrayList<>()));

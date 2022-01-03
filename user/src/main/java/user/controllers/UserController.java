@@ -55,7 +55,6 @@ public class UserController {
             Boolean isPremium = customer.isPremiumUser();
             return new ResponseEntity<>(isPremium.toString(), HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -119,7 +118,6 @@ public class UserController {
             userService.upgradeCustomer(customer);
             return new ResponseEntity<>("User has been upgraded to premium.", HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

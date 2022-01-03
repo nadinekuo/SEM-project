@@ -125,7 +125,7 @@ public class GroupServiceTest {
     public void createAlreadyExistingGroupTest() {
         when(groupRepository.findByGroupName("soccerTeam1")).thenReturn(Optional.of(group1));
 
-        assertThrows(IllegalStateException.class, () -> groupService.createGroup("soccerTeam1"));
+        assertThrows(IllegalArgumentException.class, () -> groupService.createGroup("soccerTeam1"));
         verify(groupRepository, times(1)).findByGroupName("soccerTeam1");
     }
 

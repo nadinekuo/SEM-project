@@ -95,7 +95,7 @@ public class GroupControllerTest {
 
     @Test
     void createGroupInvalid() throws Exception {
-        when(groupService.createGroup("basketball")).thenThrow(IllegalStateException.class);
+        when(groupService.createGroup("basketball")).thenThrow(IllegalArgumentException.class);
         mockMvc.perform(post("/group/create/{groupName}/", "basketball"))
             .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
     }
