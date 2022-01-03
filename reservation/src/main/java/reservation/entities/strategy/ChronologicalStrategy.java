@@ -15,7 +15,7 @@ public class ChronologicalStrategy implements ReservationSortingStrategy {
      * @return the next reservation
      */
     public Reservation getNextReservation(List<Reservation> reservations) {
-        if (reservations == null || reservations.isEmpty()) {
+        if (reservations.isEmpty()) {
             return null;
         }
         this.sort(reservations);
