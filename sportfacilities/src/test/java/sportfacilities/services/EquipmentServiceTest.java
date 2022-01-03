@@ -17,11 +17,13 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
 import sportfacilities.entities.Equipment;
 import sportfacilities.entities.Sport;
@@ -30,7 +32,7 @@ import sportfacilities.repositories.EquipmentRepository;
 /**
  * The type Equipment service test.
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class EquipmentServiceTest {
 
     private final transient Sport kickboxing;
@@ -99,7 +101,6 @@ public class EquipmentServiceTest {
     @Test
     public void setEquipmentToNotInUseTest() {
 
-        Mockito.when(equipmentRepository.existsById(id1)).thenReturn(true);
         when(equipmentRepository.findByEquipmentId(id1))
             .thenReturn(Optional.ofNullable(equipment1));
 
@@ -114,7 +115,6 @@ public class EquipmentServiceTest {
     @Test
     public void setEquipmentToInUseTest() {
 
-        Mockito.when(equipmentRepository.existsById(id2)).thenReturn(true);
         when(equipmentRepository.findByEquipmentId(id2))
             .thenReturn(Optional.ofNullable(equipment2));
 
@@ -175,7 +175,7 @@ public class EquipmentServiceTest {
 
     @Test
     public void deleteEquipmentWithNonExistentId() throws Exception {
-        doThrow(new NoSuchElementException()).when(equipmentRepository).deleteByEquipmentId(id1);
+        doThrow(new NoSuchElementException()).when(equipmentRepository).findByEquipmentId(id1);
         assertThrows(NoSuchElementException.class, () -> equipmentService.deleteEquipment(id1));
     }
 
