@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -56,8 +57,6 @@ public class SportRoomControllerTest {
     /**
      * The Sport service.
      */
-    @Mock
-    transient SportService sportService;
     @Autowired
     private transient MockMvc mockMvc;
 
@@ -67,7 +66,7 @@ public class SportRoomControllerTest {
     @BeforeEach
     public void setup() {
         this.mockMvc =
-            MockMvcBuilders.standaloneSetup(new SportRoomController(sportRoomService, sportService))
+            MockMvcBuilders.standaloneSetup(new SportRoomController(sportRoomService))
                 .build();
     }
 
@@ -83,8 +82,16 @@ public class SportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 
-    /**
-     * Gets sport room name test.
+
+    @Test
+    public void getSportRoomThrowsExceptionTest() throws Exception {
+        Mockito.when(sportRoomService.getSportRoom(sportRoomId)).thenThrow(NoSuchElementException.class);
+        mockMvc.perform(get("/sportRoom/{sportRoomId}", sportRoomId))
+            .andExpect(status().isBadRequest());
+    }
+
+/**
+ * Gets sport room name test.
      *
      * @throws Exception the exception
      */
