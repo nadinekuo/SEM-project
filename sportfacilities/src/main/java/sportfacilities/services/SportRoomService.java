@@ -39,7 +39,7 @@ public class SportRoomService {
      */
     public SportRoom getSportRoom(Long sportRoomId) {
         return sportRoomRepository.findBySportRoomId(sportRoomId).orElseThrow(
-            () -> new IllegalStateException(
+            () -> new NoSuchElementException(
                 "Sport room with id " + sportRoomId + " does not exist!"));
     }
 
@@ -103,7 +103,7 @@ public class SportRoomService {
      * @param sportRoomId the sport room id
      * @throws NoSuchElementException if the sport room does not exist
      */
-    public void deleteSportRoom(Long sportRoomId) throws NoSuchElementException {
+    public void deleteSportRoom(Long sportRoomId) {
         sportRoomRepository.deleteBySportRoomId(sportRoomId);
     }
 

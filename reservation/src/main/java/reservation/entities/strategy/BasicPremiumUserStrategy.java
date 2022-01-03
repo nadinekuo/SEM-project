@@ -13,18 +13,13 @@ import reservation.entities.strategy.ReservationSortingStrategy;
  */
 public class BasicPremiumUserStrategy implements ReservationSortingStrategy {
 
-    @Autowired
-    private final transient RestTemplate restTemplate;
-
-    private final transient String userUrl = "http://eureka-user";
 
     /**
      * Instantiates a new Basic premium user strategy.
-     *
-     * @param restTemplate the rest template
+
      */
-    public BasicPremiumUserStrategy(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public BasicPremiumUserStrategy() {
+
     }
 
     /**
@@ -47,18 +42,12 @@ public class BasicPremiumUserStrategy implements ReservationSortingStrategy {
     /**
      * The type Reservation comparator.
      */
-    protected class ReservationComparator implements Comparator {
+    protected static class ReservationComparator implements Comparator {
         @Override
         public int compare(Object o1, Object o2) {
-            Reservation reservation1 = (Reservation) o1;
-            Reservation reservation2 = (Reservation) o2;
-            Long userId1 = reservation1.getCustomerId();
-            Long userId2 = reservation2.getCustomerId();
 
-            boolean b1 = restTemplate.getForObject(userUrl + "/user/" + userId1 + "/isPremium",
-                Boolean.class);
-            boolean b2 = restTemplate.getForObject(userUrl + "/user/" + userId2 + "/isPremium",
-                Boolean.class);
+            boolean b1 = ((Reservation) o1).getMadeByPremiumUser();
+            boolean b2 = ((Reservation) o2).getMadeByPremiumUser();
 
             if (b1 && !b2) {
                 return -1;

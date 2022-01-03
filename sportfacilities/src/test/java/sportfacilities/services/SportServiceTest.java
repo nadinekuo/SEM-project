@@ -7,11 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,13 +69,13 @@ public class SportServiceTest {
 
         when(sportRepository.findById(anyString())).thenReturn(Optional.of(volleyball));
 
-        Sport result = sportService.getSportById("volleyball");
+        Sport result = sportService.getSportById(volleyball.getSportName());
 
         assertThat(result).isNotNull();
-        assertThat(result.getSportName()).isEqualTo("volleyball");
+        assertThat(result.getSportName()).isEqualTo(volleyball.getSportName());
         assertThat(result.getMaxTeamSize()).isEqualTo(12);
         assertThat(result.getMinTeamSize()).isEqualTo(4);
-        verify(sportRepository, times(1)).findById("volleyball");
+        verify(sportRepository, times(1)).findById(volleyball.getSportName());
     }
 
 
@@ -85,7 +87,7 @@ public class SportServiceTest {
 
         when(sportRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(NoSuchElementException.class, () -> {
             sportService.getSportById("test");
         });
     }
@@ -97,13 +99,13 @@ public class SportServiceTest {
     @Test
     public void deleteSport() {
 
-        when(sportRepository.existsById(anyString())).thenReturn(true);
+        when(sportRepository.findById(yoga.getSportName())).thenReturn(Optional.ofNullable(yoga));
 
         assertDoesNotThrow(() -> {
-            sportService.deleteSport("hockey");
+            sportService.deleteSport(yoga.getSportName());
         });
 
-        verify(sportRepository).existsById("hockey");
+        verify(sportRepository).findById(yoga.getSportName());
     }
 
 
@@ -112,11 +114,10 @@ public class SportServiceTest {
      */
     @Test
     public void deleteNonExistingSport() {
+        doThrow(new NoSuchElementException()).when(sportRepository).findById("hockey");
 
-        when(sportRepository.existsById(anyString())).thenReturn(false);
-
-        assertThrows(IllegalStateException.class, () -> {
-            sportService.deleteSport("test");
+        assertThrows(NoSuchElementException.class, () -> {
+            sportService.deleteSport("hockey");
         });
     }
 

@@ -3,6 +3,7 @@ package reservation.services;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -44,7 +45,7 @@ public class ReservationService {
      */
     public Reservation getReservation(Long reservationId) {
         return reservationRepository.findById(reservationId).orElseThrow(
-            () -> new IllegalStateException(
+            () -> new NoSuchElementException(
                 "Reservation with id " + reservationId + " does not exist!"));
     }
 
@@ -53,13 +54,14 @@ public class ReservationService {
      *
      * @param reservationId the reservation id
      */
-    public void deleteReservation(Long reservationId) {
+    public boolean deleteReservation(Long reservationId) {
         boolean exists = reservationRepository.existsById(reservationId);
         if (!exists) {
-            throw new IllegalStateException(
+            throw new NoSuchElementException(
                 "Reservation with id " + reservationId + " does not " + "exist!");
         }
         reservationRepository.deleteById(reservationId);
+        return true;
     }
 
     /**

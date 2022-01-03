@@ -15,10 +15,10 @@ public class UserReservationBalanceValidator extends BaseValidator {
 
     /**
      * Instantiates a new User Reservation Balance validator.
-     *  Checks:
-     *  - whether daily limit on sports room reservations is not reached yet
+     * Checks:
+     * - whether daily limit on sports room reservations is not reached yet
      *
-     * @param reservationService  -  the reservation service containing logic
+     * @param reservationService    -  the reservation service containing logic
      * @param reservationController the reservation controller to communicate with other
      *                              microservices
      */
@@ -33,21 +33,22 @@ public class UserReservationBalanceValidator extends BaseValidator {
     public boolean handle(Reservation reservation) throws InvalidReservationException {
 
         // We want to count all reservations from 00:00 to 23:59 on the day specified.
-        LocalDateTime startDay = LocalDateTime
-            .parse(reservation.getStartingTime().toString().substring(0, 10) + "T00:00:00");
-        LocalDateTime endDay = LocalDateTime
-            .parse(reservation.getStartingTime().toString().substring(0, 10) + "T23:59:59");
+        LocalDateTime startingTimeReservation = reservation.getStartingTime();
+        LocalDateTime startDay = getStartOfDay(startingTimeReservation);
+        LocalDateTime endDay = getEndOfDay(startingTimeReservation);
 
         int reservationBalanceOnDate = reservationService
             .getUserReservationCountOnDay(startDay, endDay, reservation.getCustomerId());
 
         // Communicates with user microservice
-        boolean isPremium = reservationController.getUserIsPremium(reservation.getCustomerId());
+        boolean isPremium = reservation.getMadeByPremiumUser();
 
-        System.out.println(
-            "########## USER ID " + reservation.getCustomerId() + " (Premium: " + isPremium + ") "
-                + " HAS " + reservationBalanceOnDate + " RESERVATIONS FOR THE DATE " + reservation
-                .getStartingTime().toString());
+        //        System.out.println(
+        //            "########## USER ID " + reservation.getCustomerId() + " (Premium: " +
+        //            isPremium + ") "
+        //                + " HAS " + reservationBalanceOnDate + " RESERVATIONS FOR THE DATE " +
+        //                reservation
+        //                .getStartingTime().toString());
 
         // Basic users can have 1 sports room reservation per day
         if (!isPremium && reservationBalanceOnDate >= 1) {
@@ -63,4 +64,21 @@ public class UserReservationBalanceValidator extends BaseValidator {
 
         return super.checkNext(reservation);
     }
+
+    /**
+     * @param startingTime starting time of Reservation object to be checked
+     * @return LocalDateTime of same day, but time 00:00:00, which is the start of the day.
+     */
+    private LocalDateTime getStartOfDay(LocalDateTime startingTime) {
+        return LocalDateTime.parse(startingTime.toString().substring(0, 10) + "T00:00:00");
+    }
+
+    /**
+     * @param startingTime - starting time of Reservation object to be checked
+     * @return LocalDateTime of same day, but time 23:59:59, which is the end of the day.
+     */
+    private LocalDateTime getEndOfDay(LocalDateTime startingTime) {
+        return LocalDateTime.parse(startingTime.toString().substring(0, 10) + "T23:59:59");
+    }
+
 }
