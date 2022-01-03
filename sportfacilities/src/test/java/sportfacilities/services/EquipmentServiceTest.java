@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -70,8 +69,7 @@ public class EquipmentServiceTest {
     void setup() {
         equipmentRepository = Mockito.mock(EquipmentRepository.class);
         equipmentService = new EquipmentService(equipmentRepository);
-        when(equipmentRepository.findByEquipmentId(Id1))
-            .thenReturn(Optional.of(equipment1));
+        when(equipmentRepository.findByEquipmentId(Id1)).thenReturn(Optional.of(equipment1));
     }
 
     /**
@@ -94,14 +92,19 @@ public class EquipmentServiceTest {
         assertThat(result.getName().equals("boxingGloves"));
     }
 
+    /**
+     * Gets equipment throws exception test.
+     */
     @Test
     public void getEquipmentThrowsExceptionTest() {
         Long invalidId = 13L;
-        when(equipmentRepository.findByEquipmentId(invalidId))
-            .thenReturn(Optional.empty());
+        when(equipmentRepository.findByEquipmentId(invalidId)).thenReturn(Optional.empty());
         assertThrows(NoSuchElementException.class, () -> equipmentService.getEquipment(invalidId));
     }
 
+    /**
+     * Gets equipment name test.
+     */
     @Test
     public void getEquipmentNameTest() {
         assertThat(equipmentService.getEquipmentName(Id1)).isEqualTo("boxingGloves");
@@ -122,8 +125,7 @@ public class EquipmentServiceTest {
      */
     @Test
     public void setEquipmentToInUseTest() {
-        when(equipmentRepository.findByEquipmentId(Id2))
-            .thenReturn(Optional.of(equipment2));
+        when(equipmentRepository.findByEquipmentId(Id2)).thenReturn(Optional.of(equipment2));
         equipmentService.setEquipmentToInUse(Id2);
 
         assertTrue(equipmentService.getEquipment(Id2).isInUse());
@@ -172,6 +174,9 @@ public class EquipmentServiceTest {
         Assertions.assertEquals(capturedEquipment.getName(), "tennisBall");
     }
 
+    /**
+     * Delete equipment test.
+     */
     @Test
     public void deleteEquipmentTest() {
         assertDoesNotThrow(() -> equipmentService.deleteEquipment(Id1));
