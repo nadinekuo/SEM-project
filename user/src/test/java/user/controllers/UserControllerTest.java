@@ -3,8 +3,7 @@ package user.controllers;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,10 +18,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import user.config.UserDtoConfig;
 import user.entities.Admin;
 import user.entities.Customer;
 import user.services.UserService;
 
+import javax.servlet.ServletInputStream;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -135,16 +136,16 @@ public class UserControllerTest {
     }
 
 
-    //    @Test
-    //    void customerRegistrationValidTest() throws Exception {
-    //        UserDtoConfig data = new UserDtoConfig("customer", "password", true);
-    //        Customer customer = new Customer("customer", "password", true);
-    //        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-    //            .thenReturn(data);
-    //        when(userService.checkCustomerExists("erwin")).thenReturn(Optional.of(customer));
-    //        mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isOk())
-    //            .andDo(MockMvcResultHandlers.print());
-    //        verify(userService).registerCustomer(data);
-    //    }
+    @Test
+    void customerRegistrationValidTest() throws Exception {
+        UserDtoConfig data = new UserDtoConfig("customer", "password", true);
+        Customer customer = new Customer("customer", "password", true);
+        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+            .thenReturn(data);
+        when(userService.getCustomerByUsername("erwin")).thenReturn(Optional.of(customer));
+        mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isOk())
+            .andDo(MockMvcResultHandlers.print());
+        verify(userService).registerCustomer(data);
+    }
 
 }
