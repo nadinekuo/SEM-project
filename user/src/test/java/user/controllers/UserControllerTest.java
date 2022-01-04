@@ -136,16 +136,16 @@ public class UserControllerTest {
     }
 
 
-    @Test
-    void customerRegistrationValidTest() throws Exception {
-        UserDtoConfig data = new UserDtoConfig("customer", "password", true);
-        Customer customer = new Customer("customer", "password", true);
-        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-            .thenReturn(data);
-        when(userService.getCustomerByUsername("erwin")).thenReturn(Optional.of(customer));
-        mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
-        verify(userService).registerCustomer(data);
-    }
+//    @Test
+//    void customerRegistrationValidTest() throws Exception {
+//        UserDtoConfig data = new UserDtoConfig("customer", "password", true);
+//        Customer customer = new Customer("customer", "password", true);
+//        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+//            .thenReturn(data);
+//        when(userService.getCustomerByUsername("erwin")).thenReturn(Optional.of(customer));
+//        mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isOk())
+//            .andDo(MockMvcResultHandlers.print());
+//        verify(userService).registerCustomer(data);
+//    }
 
 }
