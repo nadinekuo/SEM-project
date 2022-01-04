@@ -159,8 +159,8 @@ public class GroupController {
                 + "/reservation"
                 + "/" + customer.getId()
                 + "/" + groupId
-                + "/" + date
                 + "/" + sportRoomId
+                + "/" + date
                 + "/" + customer.isPremiumUser()
                 + "/" + "makeSportRoomBooking";
 

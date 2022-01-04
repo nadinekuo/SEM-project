@@ -109,9 +109,15 @@ public class GroupControllerTest {
 
     @Test
     void makeValidGroupReservation() throws Exception {
-        final String url =
-            "http://eureka-reservation/reservation/" + 0L + "/" + groupId + "/"
-                + "2099-01-06T21:00:00" + "/" + 2 + "/" + false + "/" + "makeSportRoomBooking";
+
+        final String url = "http://eureka-reservation/reservation" +
+                    "/" + 0L +
+                    "/" + groupId +
+                    "/" + 2 +
+                    "/" + "2099-01-06T21:00:00" +
+                    "/" + false +
+                    "/" + "makeSportRoomBooking";
+
         List<Customer> customers = List.of(new Customer("arslan123", "password1", false),
             new Customer("emil123", "password2", false),
             new Customer("emma123", "password3", false));
