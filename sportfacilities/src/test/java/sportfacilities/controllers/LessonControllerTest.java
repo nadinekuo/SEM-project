@@ -1,6 +1,10 @@
 package sportfacilities.controllers;
 
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -8,6 +12,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,11 +24,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import sportfacilities.services.LessonService;
 
+/**
+ * The type Lesson controller test.
+ */
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 public class LessonControllerTest {
 
     private final transient long lessonId = 1L;
+    private final transient long invalidId = 13L;
     private final transient String name = "Tango";
     private final transient LocalDateTime startingTime = LocalDateTime.of(2020, 1, 1, 10, 0, 0);
     private final transient LocalDateTime endingTime = LocalDateTime.of(2020, 1, 1, 11, 0, 0);
@@ -35,7 +44,7 @@ public class LessonControllerTest {
     private transient LessonService lessonService;
 
     /**
-     * Sets up the tests.
+     * Sets .
      */
     @BeforeEach
     public void setup() {
@@ -43,18 +52,57 @@ public class LessonControllerTest {
         //equipmentService.addEquipment(equipment);
     }
 
+    /**
+     * Gets lesson test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getLessonTest() throws Exception {
         mockMvc.perform(get("/lesson/{lessonId}", lessonId)).andExpect(status().isOk());
         verify(lessonService).getLessonById(lessonId);
     }
 
+    /**
+     * Gets lesson throws exception test.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void getLessonThrowsExceptionTest() throws Exception {
+        when(lessonService.getLessonById(invalidId)).thenThrow(new NoSuchElementException());
+        mockMvc.perform(get("/lesson/{lessonId}", invalidId)).andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Gets size test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getSizeTest() throws Exception {
         mockMvc.perform(get("/lesson/{lessonId}/getSize", lessonId)).andExpect(status().isOk());
         verify(lessonService).getLessonSize(lessonId);
     }
 
+    /**
+     * Gets size throws exception test.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void getSizeThrowsExceptionTest() throws Exception {
+        doThrow(NoSuchElementException.class).when(lessonService).getLessonSize(invalidId);
+        mockMvc.perform(get("/lesson/{lessonId}/getSize", invalidId))
+            .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Sets lesson size test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void setLessonSizeTest() throws Exception {
         int newSize = 5;
@@ -63,6 +111,28 @@ public class LessonControllerTest {
         verify(lessonService).setLessonSize(lessonId, newSize);
     }
 
+    /**
+     * Sets lesson size throws exception test.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void setLessonSizeThrowsExceptionTest() throws Exception {
+        int newSize = 5;
+
+        doThrow(NoSuchElementException.class).when(lessonService).setLessonSize(invalidId, newSize);
+
+        mockMvc.perform(post("/lesson/{lessonId}/{newSize}/setSize/admin", invalidId, newSize))
+            .andExpect(status().isBadRequest());
+
+        verify(lessonService).setLessonSize(invalidId, newSize);
+    }
+
+    /**
+     * Gets lesson starting time test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getLessonStartingTimeTest() throws Exception {
         mockMvc.perform(get("/lesson/{lessonId}/getStartingTime", lessonId))
@@ -70,6 +140,23 @@ public class LessonControllerTest {
         verify(lessonService).getLessonStartingTime(lessonId);
     }
 
+    /**
+     * Gets starting time throws exception test.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void getStartingTimeThrowsExceptionTest() throws Exception {
+        when(lessonService.getLessonStartingTime(lessonId)).thenThrow(new NoSuchElementException());
+        mockMvc.perform(get("/lesson/{lessonId}/getStartingTime", lessonId))
+            .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Create new lesson test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void createNewLessonTest() throws Exception {
         mockMvc.perform(
@@ -78,10 +165,40 @@ public class LessonControllerTest {
         verify(lessonService).addNewLesson(name, startingTime, endingTime, size);
     }
 
+    /**
+     * Create new lesson throw exception test.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void createNewLessonThrowExceptionTest() throws Exception {
+        String fakeTime = "blippBloppBlingBlong";
+        mockMvc.perform(
+            put("/lesson/{title}/{startingTime}/{endingTime}/{size}/createNewLesson" + "/admin",
+                name, fakeTime, endingTime, size)).andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Delete lesson test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void deleteLessonTest() throws Exception {
         mockMvc.perform(delete("/lesson/{lessonId}/admin", lessonId)).andExpect(status().isOk());
         verify(lessonService).deleteLesson(lessonId);
+    }
+
+    /**
+     * Delete lesson throws exception test.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void deleteLessonThrowsExceptionTest() throws Exception {
+        doThrow(NoSuchElementException.class).when(lessonService).deleteLesson(invalidId);
+        mockMvc.perform(delete("/lesson/{lessonId}/admin", invalidId))
+            .andExpect(status().isBadRequest());
     }
 
 }
