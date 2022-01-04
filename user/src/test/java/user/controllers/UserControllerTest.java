@@ -1,5 +1,6 @@
 package user.controllers;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -15,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import user.entities.Admin;
@@ -98,18 +100,38 @@ public class UserControllerTest {
     void getCustomerInfoTest() throws Exception {
         Customer customer = new Customer();
         when(userService.getCustomerByUsername(userName)).thenReturn(Optional.of(customer));
-        mockMvc.perform(get("/user/{userName}/getCustomerInfo", userName)).andExpect(status().isOk())
-                .andDo(MockMvcResultHandlers.print());
+        MvcResult result = mockMvc.perform(get("/user/{userName}/getCustomerInfo", userName)).andExpect(status().isOk())
+                .andReturn();
         verify(userService).getCustomerByUsername(userName);
+        assertThat(result.getResponse().getContentType()).isNotNull();
     }
 
     @Test
     void getAdminInfoTest() throws Exception {
         Admin admin = new Admin();
         when(userService.getAdminByUsername(userName)).thenReturn(Optional.of(admin));
-        mockMvc.perform(get("/user/{userName}/getAdminInfo", userName)).andExpect(status().isOk())
-                .andDo(MockMvcResultHandlers.print());
+        MvcResult result = mockMvc.perform(get("/user/{userName}/getAdminInfo", userName)).andExpect(status().isOk())
+                .andReturn();
         verify(userService).getAdminByUsername(userName);
+        assertThat(result.getResponse().getContentType()).isNotNull();
+    }
+
+    @Test
+    void getFalseCustomerInfoTest() throws Exception {
+        when(userService.getCustomerByUsername(userName)).thenReturn(Optional.empty());
+        MvcResult result = mockMvc.perform(get("/user/{userName}/getCustomerInfo", userName)).andExpect(status().isOk())
+                .andReturn();
+        verify(userService).getCustomerByUsername(userName);
+        assertThat(result.getResponse().getContentType()).isNull();
+    }
+
+    @Test
+    void getFalseAdminInfoTest() throws Exception {
+        when(userService.getAdminByUsername(userName)).thenReturn(Optional.empty());
+        MvcResult result = mockMvc.perform(get("/user/{userName}/getAdminInfo", userName)).andExpect(status().isOk())
+                .andReturn();
+        verify(userService).getAdminByUsername(userName);
+        assertThat(result.getResponse().getContentType()).isNull();
     }
 
 
