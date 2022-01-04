@@ -24,7 +24,6 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
      * Delete a user matching the given userId.
      *
      * @param userId the userId
-     * @return void
      */
     @Transactional
     void deleteById(Long userId);
@@ -35,8 +34,7 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
      * @param username the username
      * @return the optional customer
      */
-    @Query(value = "SELECT * " + "FROM customers "
-            + "WHERE username = ?1", nativeQuery = true)
+    @Query(value = "SELECT * " + "FROM customers " + "WHERE username = ?1", nativeQuery = true)
     Optional<Customer> findCustomerByUsername(String username);
 
     /**
@@ -45,7 +43,6 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
      * @param username the username
      * @return the optional admin
      */
-    @Query(value = "SELECT * " + "FROM admins "
-            + "WHERE username = ?1", nativeQuery = true)
+    @Query(value = "SELECT * " + "FROM admins " + "WHERE username = ?1", nativeQuery = true)
     Optional<Admin> findAdminByUsername(String username);
 }

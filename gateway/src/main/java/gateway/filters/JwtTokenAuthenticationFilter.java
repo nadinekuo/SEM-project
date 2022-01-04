@@ -24,12 +24,13 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Gateway server checks the JWT token and authenticates the user if it is valid
-     * @param request the request that needs to be verified
+     * Gateway server that checks the JWT token and authenticates the user if it is valid.
+     *
+     * @param request  the request that needs to be verified
      * @param response the response that is returned
-     * @param chain the chain
+     * @param chain    the chain
      * @throws ServletException servlet exception
-     * @throws IOException IO exception
+     * @throws IOException      IO exception
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -38,7 +39,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
         //Gets the header, where the JWT token is
         String header = request.getHeader(jwtConfig.getHeader());
 
-        //Validate the header and check the prefix
+        //Validate the header and checks the prefix
         if (header == null || !header.startsWith(jwtConfig.getPrefix())) {
             chain.doFilter(request, response);        // If not valid, go to the next filter.
             return;

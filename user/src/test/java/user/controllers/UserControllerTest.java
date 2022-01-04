@@ -1,12 +1,15 @@
 package user.controllers;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,13 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import user.config.UserDtoConfig;
 import user.entities.Admin;
 import user.entities.Customer;
 import user.services.UserService;
-
-import javax.servlet.ServletInputStream;
-import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -101,8 +100,8 @@ public class UserControllerTest {
     void getCustomerInfoTest() throws Exception {
         Customer customer = new Customer();
         when(userService.getCustomerByUsername(userName)).thenReturn(Optional.of(customer));
-        MvcResult result = mockMvc.perform(get("/user/{userName}/getCustomerInfo", userName)).andExpect(status().isOk())
-                .andReturn();
+        MvcResult result = mockMvc.perform(get("/user/{userName}/getCustomerInfo", userName))
+            .andExpect(status().isOk()).andReturn();
         verify(userService).getCustomerByUsername(userName);
         assertThat(result.getResponse().getContentType()).isNotNull();
     }
@@ -111,8 +110,8 @@ public class UserControllerTest {
     void getAdminInfoTest() throws Exception {
         Admin admin = new Admin();
         when(userService.getAdminByUsername(userName)).thenReturn(Optional.of(admin));
-        MvcResult result = mockMvc.perform(get("/user/{userName}/getAdminInfo", userName)).andExpect(status().isOk())
-                .andReturn();
+        MvcResult result = mockMvc.perform(get("/user/{userName}/getAdminInfo", userName))
+            .andExpect(status().isOk()).andReturn();
         verify(userService).getAdminByUsername(userName);
         assertThat(result.getResponse().getContentType()).isNotNull();
     }
@@ -120,8 +119,8 @@ public class UserControllerTest {
     @Test
     void getFalseCustomerInfoTest() throws Exception {
         when(userService.getCustomerByUsername(userName)).thenReturn(Optional.empty());
-        MvcResult result = mockMvc.perform(get("/user/{userName}/getCustomerInfo", userName)).andExpect(status().isOk())
-                .andReturn();
+        MvcResult result = mockMvc.perform(get("/user/{userName}/getCustomerInfo", userName))
+            .andExpect(status().isOk()).andReturn();
         verify(userService).getCustomerByUsername(userName);
         assertThat(result.getResponse().getContentType()).isNull();
     }
@@ -129,23 +128,22 @@ public class UserControllerTest {
     @Test
     void getFalseAdminInfoTest() throws Exception {
         when(userService.getAdminByUsername(userName)).thenReturn(Optional.empty());
-        MvcResult result = mockMvc.perform(get("/user/{userName}/getAdminInfo", userName)).andExpect(status().isOk())
-                .andReturn();
+        MvcResult result = mockMvc.perform(get("/user/{userName}/getAdminInfo", userName))
+            .andExpect(status().isOk()).andReturn();
         verify(userService).getAdminByUsername(userName);
         assertThat(result.getResponse().getContentType()).isNull();
     }
 
-
-//    @Test
-//    void customerRegistrationValidTest() throws Exception {
-//        UserDtoConfig data = new UserDtoConfig("customer", "password", true);
-//        Customer customer = new Customer("customer", "password", true);
-//        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-//            .thenReturn(data);
-//        when(userService.getCustomerByUsername("erwin")).thenReturn(Optional.of(customer));
-//        mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isOk())
-//            .andDo(MockMvcResultHandlers.print());
-//        verify(userService).registerCustomer(data);
-//    }
+    //    @Test
+    //    void customerRegistrationValidTest() throws Exception {
+    //        UserDtoConfig data = new UserDtoConfig("customer", "password", true);
+    //        Customer customer = new Customer("customer", "password", true);
+    //        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+    //            .thenReturn(data);
+    //        when(userService.getCustomerByUsername("erwin")).thenReturn(Optional.of(customer));
+    //        mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isOk())
+    //            .andDo(MockMvcResultHandlers.print());
+    //        verify(userService).registerCustomer(data);
+    //    }
 
 }

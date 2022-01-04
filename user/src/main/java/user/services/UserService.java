@@ -1,6 +1,5 @@
 package user.services;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -20,12 +19,6 @@ public class UserService {
     private final transient UserRepository<Customer> customerRepository;
     private final transient UserRepository<Admin> adminRepository;
 
-    @Bean
-    @LoadBalanced
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
     /**
      * Constructor for UserService.
      *
@@ -36,6 +29,12 @@ public class UserService {
     public UserService(UserRepository customerRepository, UserRepository adminRepository) {
         this.customerRepository = customerRepository;
         this.adminRepository = adminRepository;
+    }
+
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     /**
@@ -49,7 +48,7 @@ public class UserService {
     }
 
     /**
-     * Finds Customer by userName
+     * Finds Customer by userName.
      *
      * @param userName - String
      * @return Optional of Customer having this name
@@ -59,7 +58,7 @@ public class UserService {
     }
 
     /**
-     * Finds Admin by userName
+     * Finds Admin by userName.
      *
      * @param userName - String
      * @return Optional of Admin having this name

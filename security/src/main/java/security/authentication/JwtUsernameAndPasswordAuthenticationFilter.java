@@ -27,7 +27,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter
     private final AuthenticationManager authManager;
 
     /**
-     * Constructor for the filter
+     * Constructor for the filter.
      *
      * @param authManager authentication manager
      * @param jwtConfig   the configuration for JWT we defined
@@ -43,7 +43,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter
     }
 
     /**
-     * Attempt login request
+     * Attempt login request.
      *
      * @param request  the request that contains login information
      * @param response the response
@@ -76,14 +76,14 @@ public class JwtUsernameAndPasswordAuthenticationFilter
     }
 
     /**
-     * Upon successful authentication, generate a token and add it to the header
+     * Upon successful authentication, generate a token and add it to the header.
      *
      * @param request  the request
      * @param response the response that is returned
      * @param chain    the chain
      * @param auth     the current authenticated user
-     * @throws IOException
-     * @throws ServletException
+     * @throws IOException IOException
+     * @throws ServletException ServletException
      */
     @Override
     protected void successfulAuthentication(HttpServletRequest request,

@@ -2,13 +2,16 @@ package security.users;
 
 public class AppUser {
 
-    private String username, password;
+    private String username;
+    private String password;
     private String role;
 
     /**
-     * @param username
-     * @param password
-     * @param role
+     * Constructor for app user.
+     *
+     * @param username username
+     * @param password password
+     * @param role     user's role, customer or admin
      */
     public AppUser(String username, String password, String role) {
         this.username = username;
@@ -17,6 +20,8 @@ public class AppUser {
     }
 
     /**
+     * Getter for username.
+     *
      * @return String Username
      */
     public String getUsername() {
@@ -24,6 +29,8 @@ public class AppUser {
     }
 
     /**
+     * Setter for username.
+     *
      * @Set Username
      */
     public void setUsername(String username) {
@@ -31,6 +38,8 @@ public class AppUser {
     }
 
     /**
+     * Getter for password.
+     *
      * @return String Password
      */
     public String getPassword() {
@@ -38,6 +47,8 @@ public class AppUser {
     }
 
     /**
+     * Setter for password.
+     *
      * @Set Password
      */
     public void setPassword(String password) {
@@ -45,6 +56,8 @@ public class AppUser {
     }
 
     /**
+     * Getter for role.
+     *
      * @return String Role
      */
     public String getRole() {
@@ -52,26 +65,41 @@ public class AppUser {
     }
 
     /**
+     * Setter for role.
+     *
      * @Set Role
      */
     public void setRole(String role) {
         this.role = role;
     }
 
+    /**
+     * Equals method.
+     *
+     * @param o object
+     * @return result
+     */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         AppUser appUser = (AppUser) o;
-        return username.equals(appUser.username) && password.equals(appUser.password) && role.equals(appUser.role);
+        return username.equals(appUser.username) && password.equals(appUser.password) && role
+            .equals(appUser.role);
     }
 
+    /**
+     * To string method.
+     *
+     * @return string
+     */
     @Override
     public String toString() {
-        return "AppUser{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
-                '}';
+        return "AppUser{" + "username='" + username + '\'' + ", password='" + password + '\''
+            + ", role='" + role + '\'' + '}';
     }
 }

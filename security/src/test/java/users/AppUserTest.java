@@ -1,10 +1,13 @@
 package users;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-import security.users.AppUser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import security.users.AppUser;
 
 public class AppUserTest {
 
@@ -77,12 +80,19 @@ public class AppUserTest {
     }
 
     @Test
+    void nullEqualsTest() {
+        assertFalse(appUser.equals(null));
+    }
+
+    @Test
+    void differentClassEqualsTest() {
+        assertFalse(appUser.equals("test"));
+    }
+
+    @Test
     void toStringTest() {
-        String check = "AppUser{" +
-                "username='" + "emma" + '\'' +
-                ", password='" + "emma123" + '\'' +
-                ", role='" + "user" + '\'' +
-                '}';
+        String check = "AppUser{" + "username='" + "emma" + '\'' + ", password='" + "emma123" + '\''
+            + ", role='" + "user" + '\'' + '}';
         assertEquals(check, appUser.toString());
     }
 }

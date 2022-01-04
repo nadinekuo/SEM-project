@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class JwtConfig {
     @Value("${security.jwt.uri:/eureka-security/**}")
-    private String Uri;
+    private String uri;
 
     @Value("${security.jwt.header:Authorization}")
     private String header;
@@ -12,6 +12,7 @@ public class JwtConfig {
     @Value("${security.jwt.prefix:Bearer }")
     private String prefix;
 
+    //Expires in a day
     @Value("${security.jwt.expiration:#{24*60*60}}")
     private int expiration;
 
@@ -19,7 +20,7 @@ public class JwtConfig {
     private String secret;
 
     public String getUri() {
-        return Uri;
+        return uri;
     }
 
     //Getters

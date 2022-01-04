@@ -22,7 +22,7 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
     private JwtConfig jwtConfig;
 
     /**
-     * Sets the password encoder we are using
+     * Sets the password encoder we are using.
      *
      * @param auth the user that is being authenticated
      * @throws Exception exception
@@ -33,9 +33,10 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Security configuration
+     * Security configuration.
+     *
      * @param http http
-     * @throws Exception
+     * @throws Exception exception
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -44,7 +45,7 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             // handle an authorized attempts
             .exceptionHandling().authenticationEntryPoint(
-            (req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED)).and()
+                (req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED)).and()
             // Add a filter to validate user credentials and add token in the response header
             .addFilter(
                 new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig))

@@ -29,8 +29,4 @@ public class UserApplication implements UserControllerEureka {
         return String.format("Hello from '%s'!", eurekaClient.getApplication(appName).getName());
     }
 
-    @Override
-    public String adminGreeting() {
-        return null;
-    }
 }
