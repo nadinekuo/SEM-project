@@ -27,7 +27,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.services.SportRoomService;
-import sportfacilities.services.SportService;
 
 //TODO put test in every method name
 
@@ -66,8 +65,7 @@ public class SportRoomControllerTest {
     @BeforeEach
     public void setup() {
         this.mockMvc =
-            MockMvcBuilders.standaloneSetup(new SportRoomController(sportRoomService))
-                .build();
+            MockMvcBuilders.standaloneSetup(new SportRoomController(sportRoomService)).build();
     }
 
     /**
@@ -82,16 +80,16 @@ public class SportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 
-
     @Test
     public void getSportRoomThrowsExceptionTest() throws Exception {
-        Mockito.when(sportRoomService.getSportRoom(sportRoomId)).thenThrow(NoSuchElementException.class);
+        Mockito.when(sportRoomService.getSportRoom(sportRoomId))
+            .thenThrow(NoSuchElementException.class);
         mockMvc.perform(get("/sportRoom/{sportRoomId}", sportRoomId))
             .andExpect(status().isBadRequest());
     }
 
-/**
- * Gets sport room name test.
+    /**
+     * Gets sport room name test.
      *
      * @throws Exception the exception
      */
@@ -414,8 +412,7 @@ public class SportRoomControllerTest {
         mockMvc.perform(
                 post("/sportRoom/{sportRoomId}/{sportName}/addSportToSportHall/admin",
                     sportRoomId, sportName))
-            .andExpect(status().isBadRequest())
-            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print())
             .andReturn();
 
         verify(sportRoomService, times(1)).addSportToSportsHall(sportRoomId, sportName);
@@ -434,8 +431,7 @@ public class SportRoomControllerTest {
         mockMvc.perform(
                 post("/sportRoom/{sportRoomId}/{sportName}/addSportToSportHall/admin",
                     sportRoomId, sportName))
-            .andExpect(status().isBadRequest())
-            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print())
             .andReturn();
 
         verify(sportRoomService, times(1)).addSportToSportsHall(sportRoomId, sportName);

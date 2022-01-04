@@ -74,16 +74,16 @@ public class EquipmentControllerTest {
 
     @Test
     public void getEquipmentNameTest() throws Exception {
-        mockMvc.perform(get("/equipment/{equipmentId}/getEquipmentName", equipmentId)).andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(get("/equipment/{equipmentId}/getEquipmentName", equipmentId))
+            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
         verify(equipmentService).getEquipmentName(equipmentId);
     }
 
     @Test
     public void getEquipmentNameThrowsExceptionTest() throws Exception {
         when(equipmentService.getEquipmentName(invalidId)).thenThrow(new NoSuchElementException());
-        mockMvc.perform(get("/equipment/{equipmentId}/getEquipmentName", invalidId)).andExpect(status().isBadRequest())
-            .andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(get("/equipment/{equipmentId}/getEquipmentName", invalidId))
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
     }
 
     /**
@@ -119,7 +119,8 @@ public class EquipmentControllerTest {
     @Test
     public void getAvailableEquipmentThrowExceptionTest() throws Exception {
         String name = "eSports";
-        when(equipmentService.getAvailableEquipmentIdsByName(name)).thenThrow(new NoSuchElementException());
+        when(equipmentService.getAvailableEquipmentIdsByName(name)).thenThrow(
+            new NoSuchElementException());
         mockMvc.perform(get("/equipment/{name}/getAvailableEquipment", name))
             .andExpect(status().isBadRequest());
     }
@@ -140,11 +141,13 @@ public class EquipmentControllerTest {
 
     @Test
     public void addNewEquipmentThrowsExceptionTest() throws Exception {
-        String notASport = "Golf";
-        when(sportService.getSportById(notASport)).thenThrow(new NoSuchElementException());
+        String invalidSport = "Golf";
+        when(sportService.getSportById(invalidSport)).thenThrow(new NoSuchElementException());
         mockMvc.perform(
-            put("/equipment/{equipmentName}/{relatedSport}/addNewEquipment/admin", equipmentName,
-                notASport)).andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
+                put("/equipment/{equipmentName}/{relatedSport}/addNewEquipment/admin",
+                    equipmentName,
+                    invalidSport)).andExpect(status().isBadRequest())
+            .andDo(MockMvcResultHandlers.print());
 
     }
 
@@ -185,7 +188,8 @@ public class EquipmentControllerTest {
 
     @Test
     public void equipmentBroughtBackThrowsExceptionTest() throws Exception {
-        doThrow(NoSuchElementException.class).when(equipmentService).setEquipmentToNotInUse(invalidId);
+        doThrow(NoSuchElementException.class).when(equipmentService)
+            .setEquipmentToNotInUse(invalidId);
         mockMvc.perform(put("/equipment/{equipmentId}/broughtBack/admin", invalidId))
             .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
 
