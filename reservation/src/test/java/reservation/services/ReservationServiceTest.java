@@ -129,42 +129,6 @@ public class ReservationServiceTest {
     }
 
     /**
-     * Valid reservation passed through chain of responsibility.
-     * Validator is mocked, since their logic is tested in the Validator unit tests.
-     */
-    @Test
-    void checkValidReservationTest() throws InvalidReservationException {
-
-        ReservationService reservationServiceSpy =
-            Mockito.spy(new ReservationService(reservationRepository));
-        Mockito.doReturn(userReservationBalanceValidator).when(reservationServiceSpy)
-            .createChainOfResponsibility(any(), any());
-
-        when(userReservationBalanceValidator.handle(reservation1)).thenReturn(true);
-
-        assertTrue(reservationServiceSpy.checkReservation(reservation1,
-            new ReservationController(reservationServiceSpy)));
-    }
-
-    /**
-     * Invalid reservation passed through chain of responsibility.
-     * Validator is mocked, since their logic is tested in the Validator unit tests.
-     */
-    @Test
-    void checkInvalidReservationTest() throws InvalidReservationException {
-
-        ReservationService reservationServiceSpy =
-            Mockito.spy(new ReservationService(reservationRepository));
-        Mockito.doReturn(userReservationBalanceValidator).when(reservationServiceSpy)
-            .createChainOfResponsibility(any(), any());
-
-        when(userReservationBalanceValidator.handle(reservation1)).thenReturn(false);
-
-        assertFalse(reservationServiceSpy.checkReservation(reservation1,
-            new ReservationController(reservationServiceSpy)));
-    }
-
-    /**
      * Count one sport facility reservation test.
      */
     @Test
