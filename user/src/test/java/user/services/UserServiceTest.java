@@ -1,5 +1,14 @@
 package user.services;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -14,13 +23,6 @@ import user.entities.Admin;
 import user.entities.Customer;
 import user.entities.User;
 import user.repositories.UserRepository;
-
-import java.util.Optional;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 class UserServiceTest {
@@ -103,25 +105,23 @@ class UserServiceTest {
         assertTrue(passwordEncoder.matches(data.getPassword(), captured.getPassword()));
     }
 
-//    @Test
-//    void upgradeCustomer() {
-//        UserDtoConfig basic = new UserDtoConfig("erwin", "password", false);
-//        userService.registerCustomer(basic);
-//        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
-//
-//        verify(customerRepository).save(customerArgumentCaptor.capture());
-//        verify(customerRepository, times(1)).save(customer);
-//
-//        Customer captured = customerArgumentCaptor.getValue();
-//
-//        //when(customerRepository.save(captured).thenReturn(captured);
-//
-//        userService.upgradeCustomer(captured);
-//
-//        //verify(customerRepository, times(1)).save(basic);
-//
-//        assertTrue(captured.isPremiumUser());
-//    }
+    @Test
+    void upgradeCustomer() {
+        UserDtoConfig basicCustomer = new UserDtoConfig("erwin", "password", false);
+        userService.registerCustomer(basicCustomer);
+        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+
+        verify(customerRepository).save(customerArgumentCaptor.capture());
+        verify(customerRepository, times(1)).save(customerArgumentCaptor.capture());
+
+        Customer capturedCustomer = customerArgumentCaptor.getValue();
+        assertFalse(capturedCustomer.isPremiumUser());
+
+        when(customerRepository.findById(0)).thenReturn(Optional.of(capturedCustomer));
+
+        userService.upgradeCustomer(capturedCustomer);
+        assertTrue(capturedCustomer.isPremiumUser());
+    }
 
     @Test
     void checkCustomerExists() {

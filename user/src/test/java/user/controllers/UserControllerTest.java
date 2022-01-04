@@ -1,6 +1,14 @@
 package user.controllers;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,13 +21,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import user.entities.Customer;
 import user.services.UserService;
-
-import java.util.NoSuchElementException;
-
-import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -89,17 +90,5 @@ public class UserControllerTest {
             .andDo(MockMvcResultHandlers.print());
         verify(userService, never()).upgradeCustomer(customer);
     }
-
-    //    @Test
-    //    void customerRegistrationValidTest() throws Exception {
-    //        UserDtoConfig data = new UserDtoConfig("customer", "password", true);
-    //        Customer customer = new Customer("customer", "password", true);
-    //        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-    //            .thenReturn(data);
-    //        when(userService.checkCustomerExists("erwin")).thenReturn(Optional.of(customer));
-    //        mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isOk())
-    //            .andDo(MockMvcResultHandlers.print());
-    //        verify(userService).registerCustomer(data);
-    //    }
 
 }
