@@ -143,10 +143,7 @@ public class ReservationService {
         return new RestTemplate();
     }
 
-    @Bean
-    public ReservationChecker reservationChecker() {
-        return new ReservationChecker(this);
-    }
+    
 }
 
 
