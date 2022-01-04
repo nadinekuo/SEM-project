@@ -1,5 +1,6 @@
 package user.services;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -60,7 +61,7 @@ class UserServiceTest {
 
     @Test
     void getUserById() {
-        when(customerRepository.findById(1L)).thenReturn(customer);
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
         User result = userService.getUserById(1L);
         assertEquals(result, customer);
     }
@@ -106,25 +107,35 @@ class UserServiceTest {
 
     @Test
     void upgradeCustomer() {
-        Customer basic = new Customer("basicuser", "strongpassword", false);
-        userService.upgradeCustomer(basic);
-        verify(customerRepository, times(1)).save(customer);
-        assertTrue(basic.isPremiumUser());
+        UserDtoConfig basicCustomer = new UserDtoConfig("erwin", "password", false);
+        userService.registerCustomer(basicCustomer);
+        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+
+        verify(customerRepository).save(customerArgumentCaptor.capture());
+        verify(customerRepository, times(1)).save(customerArgumentCaptor.capture());
+
+        Customer capturedCustomer = customerArgumentCaptor.getValue();
+        assertFalse(capturedCustomer.isPremiumUser());
+
+        when(customerRepository.findById(0)).thenReturn(Optional.of(capturedCustomer));
+
+        userService.upgradeCustomer(capturedCustomer);
+        assertTrue(capturedCustomer.isPremiumUser());
     }
 
     @Test
     void checkCustomerExists() {
         when(customerRepository.findByUsername("erwin")).thenReturn(Optional.of(customer));
-        Optional<Customer> result = userService.checkCustomerExists("erwin");
+        boolean result = userService.checkCustomerExists("erwin");
         verify(customerRepository, times(1)).findByUsername("erwin");
-        assertEquals(result.get(), customer);
+        assertEquals(result, true);
     }
 
     @Test
     void checkAdminExists() {
         when(adminRepository.findByUsername("admin")).thenReturn(Optional.of(admin));
-        Optional<Admin> result = userService.checkAdminExists("admin");
+        boolean result = userService.checkAdminExists("admin");
         verify(adminRepository, times(1)).findByUsername("admin");
-        assertEquals(result.get(), admin);
+        assertEquals(result, true);
     }
 }
