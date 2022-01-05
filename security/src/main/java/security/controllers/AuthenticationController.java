@@ -2,10 +2,12 @@ package security.controllers;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import security.users.AppUser;
 
@@ -36,11 +38,14 @@ public class AuthenticationController {
     public static AppUser getCustomerInfo(@PathVariable String userName) {
 
         String methodSpecificUrl = "/user/" + userName + "/getCustomerInfo";
-        List<String> userInfo = restTemplate.getForObject(userUrl + methodSpecificUrl, List.class);
-
-        if (userInfo == null) {
+        ResponseEntity<List> response;
+        try{
+             response =
+                restTemplate.getForEntity(userUrl + methodSpecificUrl, List.class);
+        } catch (HttpClientErrorException e){
             return null;
         }
+        List<String> userInfo = response.getBody();
 
         return new AppUser(userInfo.get(0), userInfo.get(1), "user");
     }
@@ -53,13 +58,16 @@ public class AuthenticationController {
      */
     public static AppUser getAdminInfo(@PathVariable String userName) {
         String methodSpecificUrl = "/user/" + userName + "/getAdminInfo";
-        List<String> userInfo = restTemplate.getForObject(userUrl + methodSpecificUrl, List.class);
-
-        if (userInfo == null) {
+        ResponseEntity<List> response;
+        try{
+            response =
+                restTemplate.getForEntity(userUrl + methodSpecificUrl, List.class);
+        }catch(HttpClientErrorException e){
             return null;
         }
+        List<String> userInfo = response.getBody();
 
-        AppUser user = new AppUser(userInfo.get(0), userInfo.get(1), "admin");
-        return user;
+        return new AppUser(userInfo.get(0), userInfo.get(1), "admin");
+
     }
 }

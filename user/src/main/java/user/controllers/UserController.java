@@ -77,11 +77,11 @@ public class UserController {
      */
     @GetMapping("/{userName}/getCustomerInfo")
     @ResponseBody
-    public ResponseEntity<?> getCustomerInfo(@PathVariable String userName) {
+    public ResponseEntity<List<String>> getCustomerInfo(@PathVariable String userName) {
         List<String> customerInfo = new ArrayList<>();
         Optional<Customer> customer = userService.getCustomerByUsername(userName);
         if (customer.isEmpty()) {
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         Customer customerPresent = customer.get();
         customerInfo.add(customerPresent.getUsername());
@@ -97,11 +97,11 @@ public class UserController {
      */
     @GetMapping("/{userName}/getAdminInfo")
     @ResponseBody
-    public ResponseEntity<?> getAdminInfo(@PathVariable String userName) {
+    public ResponseEntity<List<String>> getAdminInfo(@PathVariable String userName) {
         List<String> adminInfo = new ArrayList<>();
         Optional<Admin> admin = userService.getAdminByUsername(userName);
         if (admin.isEmpty()) {
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         Admin adminPresent = admin.get();
         adminInfo.add(adminPresent.getUsername());
