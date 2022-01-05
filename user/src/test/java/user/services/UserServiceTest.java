@@ -42,16 +42,16 @@ class UserServiceTest {
     //    @InjectMocks
     private transient UserService userService;
 
-    public UserServiceTest() {
-        admin = new Admin("admin", "password");
-        customer = new Customer("erwin", "password", true);
-    }
-
     @BeforeEach
     void setUp() {
         customerRepository = Mockito.mock(UserRepository.class);
         adminRepository = Mockito.mock(UserRepository.class);
         userService = new UserService(customerRepository, adminRepository);
+    }
+
+    public UserServiceTest() {
+        admin = new Admin("admin", "password");
+        customer = new Customer("erwin", "password", true);
     }
 
     @Test
@@ -67,13 +67,13 @@ class UserServiceTest {
     }
 
     @Test
-    void restTemplate() {
+    void restTemplateTest() {
         restTemplate = userService.restTemplate();
         assertNotNull(restTemplate);
     }
 
     @Test
-    void registerCustomer() {
+    void registerCustomerTest() {
         UserDtoConfig data = new UserDtoConfig("erwin", "password", true);
         userService.registerCustomer(data);
         ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
@@ -90,7 +90,7 @@ class UserServiceTest {
     }
 
     @Test
-    void registerAdmin() {
+    void registerAdminTest() {
         UserDtoConfig data = new UserDtoConfig("erwin", "password", true);
         userService.registerAdmin(data);
         ArgumentCaptor<Admin> customerArgumentCaptor = ArgumentCaptor.forClass(Admin.class);
@@ -137,5 +137,19 @@ class UserServiceTest {
         boolean result = userService.checkAdminExists("admin");
         verify(adminRepository, times(1)).findByUsername("admin");
         assertEquals(result, true);
+    }
+
+    @Test
+    void getCustomerByUsernameFalseTest() {
+        Optional<Customer> result = userService.getCustomerByUsername("emma");
+        verify(customerRepository, times(1)).findCustomerByUsername("emma");
+        assertEquals(Optional.empty(), result);
+    }
+
+    @Test
+    void getAdminByUsernameFalseTest() {
+        Optional<Admin> result = userService.getAdminByUsername("adminfalse");
+        verify(adminRepository, times(1)).findAdminByUsername("adminfalse");
+        assertEquals(Optional.empty(), result);
     }
 }

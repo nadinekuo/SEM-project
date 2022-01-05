@@ -1,8 +1,11 @@
 package user.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import user.entities.Admin;
+import user.entities.Customer;
 import user.entities.User;
 
 import java.util.Optional;

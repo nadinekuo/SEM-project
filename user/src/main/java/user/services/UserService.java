@@ -32,6 +32,12 @@ public class UserService {
         this.adminRepository = adminRepository;
     }
 
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
     /**
      * Finds User by id.
      *
@@ -44,10 +50,24 @@ public class UserService {
                 () -> new NoSuchElementException("user with id " + userId + "does not exist!"));
     }
 
-    @Bean
-    @LoadBalanced
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    /**
+     * Finds Customer by userName.
+     *
+     * @param userName - String
+     * @return Optional of Customer having this name
+     */
+    public Optional<Customer> getCustomerByUsername(String userName) {
+        return customerRepository.findCustomerByUsername(userName);
+    }
+
+    /**
+     * Finds Admin by userName.
+     *
+     * @param userName - String
+     * @return Optional of Admin having this name
+     */
+    public Optional<Admin> getAdminByUsername(String userName) {
+        return adminRepository.findAdminByUsername(userName);
     }
 
     /**
@@ -74,10 +94,9 @@ public class UserService {
     }
 
     /**
-     * Upgrade Customer from basic to premium.
+     * Upgrade a customer to premium.
      *
-     * @param customer
-     * @throws NoSuchElementException
+     * @param customer the customer
      */
     public void upgradeCustomer(Customer customer) {
         long id = customer.getId();
@@ -86,31 +105,5 @@ public class UserService {
 
         customer.setPremiumUser(true);
         customerRepository.save(customer);
-    }
-
-    /**
-     * Check if the Customer exists through the database.
-     *
-     * @param username
-     * @return true if customer exists, else false
-     * @throws NoSuchElementException
-     */
-    public boolean checkCustomerExists(String username) {
-        Customer customer = customerRepository.findByUsername(username).orElseThrow(
-                () -> new NoSuchElementException("User with username " + username + " does not exist"));
-        return true;
-    }
-
-    /**
-     * Check if the admin exists through the database.
-     *
-     * @param username
-     * @return true if admin exists, else false
-     * @throws NoSuchElementException
-     */
-    public boolean checkAdminExists(String username) {
-        Admin admin = adminRepository.findByUsername(username).orElseThrow(
-                () -> new NoSuchElementException("Admin with username " + username + " does not exist"));
-        return true;
     }
 }
