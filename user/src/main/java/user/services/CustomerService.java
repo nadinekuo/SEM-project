@@ -5,24 +5,38 @@ import org.springframework.stereotype.Service;
 import user.entities.Customer;
 import user.repositories.CustomerRepository;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class CustomerService {
 
     @Autowired
     private final CustomerRepository customerRepository;
 
+    /**
+     * Instantiates a new Customer service
+     * @param customerRepository
+     */
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 
-    public Customer getCustomerById(long id) {
-        return customerRepository.findById(id).orElse(null);
+    /**
+     * Gets the Customer from the Customer repository.
+     *
+     * @param CustomerId
+     * @return the Customer, else throw IllegalStateException
+     */
+    public Customer getCustomerById(long CustomerId) {
+        return customerRepository.findById(CustomerId).orElseThrow(
+                () -> new NoSuchElementException("Customer with id " + CustomerId + " does not exist!"));
     }
 
-    //    public void saveCustomer(Customer customer) {
-    //        customerRepository.save(customer);
-    //    }
-
+    /**
+     * The Customer is persisted into the database using customerRepository
+     * @param customer
+     * @return the Customer which is saved.
+     */
     public Customer saveCustomer(Customer customer) {
         return customerRepository.save(customer);
     }

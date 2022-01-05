@@ -66,18 +66,22 @@ public class UserReservationBalanceValidator extends BaseValidator {
     }
 
     /**
+     * Gets the first second of a certain day.
+     *
      * @param startingTime starting time of Reservation object to be checked
      * @return LocalDateTime of same day, but time 00:00:00, which is the start of the day.
      */
-    private LocalDateTime getEndOfDay(LocalDateTime startingTime) {
+    private LocalDateTime getStartOfDay(LocalDateTime startingTime) {
         return LocalDateTime.parse(startingTime.toString().substring(0, 10) + "T00:00:00");
     }
 
     /**
+     * Gets the last second of the day.
+     *
      * @param startingTime - starting time of Reservation object to be checked
      * @return LocalDateTime of same day, but time 23:59:59, which is the end of the day.
      */
-    private LocalDateTime getStartOfDay(LocalDateTime startingTime) {
+    private LocalDateTime getEndOfDay(LocalDateTime startingTime) {
         return LocalDateTime.parse(startingTime.toString().substring(0, 10) + "T23:59:59");
     }
 

@@ -1,22 +1,18 @@
 package user.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import user.config.UserDtoConfig;
 import user.entities.Customer;
 import user.services.UserService;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.NoSuchElementException;
 
 /**
  * The type User controller.
@@ -58,9 +54,7 @@ public class UserController {
             Customer customer = (Customer) userService.getUserById(userId);
             Boolean isPremium = customer.isPremiumUser();
             return new ResponseEntity<>(isPremium.toString(), HttpStatus.OK);
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            System.out.println("User with id " + userId + " does not exist!!");
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -80,7 +74,7 @@ public class UserController {
             || data.getPassword().isEmpty()) {
             return new ResponseEntity<>("Fill in all fields.", HttpStatus.BAD_REQUEST);
         }
-        if (userService.checkCustomerExists(data.getUsername()).isPresent()) {
+        if (userService.checkCustomerExists(data.getUsername())) {
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
         userService.registerCustomer(data);
@@ -101,7 +95,7 @@ public class UserController {
             || data.getPassword().isEmpty()) {
             return new ResponseEntity<>("Fill in all fields.", HttpStatus.BAD_REQUEST);
         }
-        if (userService.checkAdminExists(data.getUsername()).isPresent()) {
+        if (userService.checkAdminExists(data.getUsername())) {
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
         userService.registerAdmin(data);
@@ -123,9 +117,7 @@ public class UserController {
             }
             userService.upgradeCustomer(customer);
             return new ResponseEntity<>("User has been upgraded to premium.", HttpStatus.OK);
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            System.out.println("User with id " + userId + " does not exist!!");
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

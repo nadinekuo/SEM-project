@@ -11,6 +11,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,7 +62,7 @@ public class GroupControllerTest {
 
     @Test
     public void getGroupSizeInvalidTest() throws Exception {
-        when(groupService.getGroupSizeById(groupId)).thenThrow(new IllegalStateException());
+        when(groupService.getGroupSizeById(groupId)).thenThrow(NoSuchElementException.class);
         mockMvc.perform(get("/group/{groupId}/getGroupSize", groupId))
             .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
         verify(groupService).getGroupSizeById(groupId);
@@ -97,9 +98,9 @@ public class GroupControllerTest {
 
     @Test
     void createGroupInvalid() throws Exception {
-        when(groupService.createGroup("basketball")).thenReturn(false);
+        when(groupService.createGroup("basketball")).thenThrow(IllegalArgumentException.class);
         mockMvc.perform(post("/group/create/{groupName}/", "basketball"))
-            .andExpect(status().isForbidden()).andDo(MockMvcResultHandlers.print());
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
     }
 
     @Test
@@ -111,9 +112,11 @@ public class GroupControllerTest {
 
     @Test
     void makeValidGroupReservation() throws Exception {
+
         final String url =
-            "http://eureka-reservation/reservation/" + 0L + "/" + groupId + "/"
-                + "2099-01-06T21:00:00" + "/" + 2 + "/" + false + "/" + "makeSportRoomBooking";
+            "http://eureka-reservation/reservation" + "/" + 0L + "/" + groupId + "/" + 2 + "/"
+                + "2099-01-06T21:00:00" + "/" + false + "/" + "makeSportRoomBooking";
+
         List<Customer> customers = List.of(new Customer("arslan123", "password1", false),
             new Customer("emil123", "password2", false),
             new Customer("emma123", "password3", false));
@@ -122,10 +125,8 @@ public class GroupControllerTest {
         group.setGroupId(groupId);
         when(groupService.getUsersInaGroup(groupId)).thenReturn(customers);
         mockMvc.perform(
-                post("/group/reservation/{groupId}/{sportRoomId}/{date}"
-                        + "/makeSportRoomBooking",
-                    groupId,
-                    2L, "2099-01-06T21:00:00")).andExpect(status().isOk())
+                post("/group/reservation/{groupId}/{sportRoomId}/{date}" + "/makeSportRoomBooking",
+                    groupId, 2L, "2099-01-06T21:00:00")).andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print());
 
         verify(restTemplate, times(customers.size())).exchange(eq(url), eq(HttpMethod.POST),
