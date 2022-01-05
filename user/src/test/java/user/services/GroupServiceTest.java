@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,6 +78,7 @@ public class GroupServiceTest {
     public void getGroupByIdTest() {
         when(groupRepository.findByGroupId(33L)).thenReturn(Optional.of(group1));
 
+
         Group result = groupService.getGroupById(33L);
 
         assertThat(result).isNotNull();
@@ -90,7 +90,7 @@ public class GroupServiceTest {
     public void getNonExistingGroupByIdTest() {
         when(groupRepository.findByGroupId(33L)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> {
+        assertThrows(IllegalStateException.class, () -> {
             groupService.getGroupById(33L);
         });
     }
@@ -125,7 +125,7 @@ public class GroupServiceTest {
     public void createAlreadyExistingGroupTest() {
         when(groupRepository.findByGroupName("soccerTeam1")).thenReturn(Optional.of(group1));
 
-        assertThrows(IllegalArgumentException.class, () -> groupService.createGroup("soccerTeam1"));
+        assertThrows(IllegalStateException.class, () -> groupService.createGroup("soccerTeam1"));
         verify(groupRepository, times(1)).findByGroupName("soccerTeam1");
     }
 

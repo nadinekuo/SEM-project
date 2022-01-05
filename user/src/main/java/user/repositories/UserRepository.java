@@ -1,5 +1,6 @@
 package user.repositories;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -8,32 +9,40 @@ import user.entities.Admin;
 import user.entities.Customer;
 import user.entities.User;
 
-import java.util.Optional;
-
 @Repository
 public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
 
     /**
-     * find user by Id
+     * See if there is a user matching the given userId.
      *
-     * @param userId
-     * @return Optional
+     * @param userId the userId
+     * @return the optional user
      */
-    Optional<T> findById(long userId);
+    T findById(long userId);
 
     /**
-     * delete the user by Id.
+     * Delete a user matching the given userId.
      *
-     * @param userId
+     * @param userId the userId
      */
     @Transactional
     void deleteById(Long userId);
 
     /**
-     * find user by username.
+     * See if there is a customer matching the given username.
      *
-     * @param username
-     * @return
+     * @param username the username
+     * @return the optional customer
      */
-    Optional<T> findByUsername(String username);
+    @Query(value = "SELECT * " + "FROM customers " + "WHERE username = ?1", nativeQuery = true)
+    Optional<Customer> findCustomerByUsername(String username);
+
+    /**
+     * See if there is an admin matching the given username.
+     *
+     * @param username the username
+     * @return the optional admin
+     */
+    @Query(value = "SELECT * " + "FROM admins " + "WHERE username = ?1", nativeQuery = true)
+    Optional<Admin> findAdminByUsername(String username);
 }

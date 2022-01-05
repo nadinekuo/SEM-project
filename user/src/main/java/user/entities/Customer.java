@@ -2,9 +2,14 @@ package user.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.persistence.*;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 /**
  * The type Customer.
@@ -96,6 +101,14 @@ public class Customer extends User {
     public void setGroupsForTeamSports(List<Group> groupsForTeamSports) {
         this.groupsForTeamSports = groupsForTeamSports;
     }
+
+    //    public boolean isPremiumSubscription() {
+    //        return premiumSubscription;
+    //    }
+
+    //    public void setPremiumSubscription(boolean premiumSubscription) {
+    //        this.premiumSubscription = premiumSubscription;
+    //    }
 
     /**
      * Add group to users group list.

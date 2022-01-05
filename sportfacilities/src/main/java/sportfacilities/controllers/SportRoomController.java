@@ -26,16 +26,24 @@ import sportfacilities.services.SportService;
 @RequestMapping("sportRoom")
 public class SportRoomController {
 
+    @Autowired
+    private final transient RestTemplate restTemplate;
+
     private final transient SportRoomService sportRoomService;
+
+    private final transient SportService sportService;
 
     /**
      * Instantiates a new Sport room controller.
      *
      * @param sportRoomService the sport room service
+     * @param sportService     the sport service
      */
     @Autowired
-    public SportRoomController(SportRoomService sportRoomService) {
+    public SportRoomController(SportRoomService sportRoomService, SportService sportService) {
         this.sportRoomService = sportRoomService;
+        this.sportService = sportService;
+        this.restTemplate = sportRoomService.restTemplate();
     }
 
     /**

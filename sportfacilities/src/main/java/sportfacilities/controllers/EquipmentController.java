@@ -89,9 +89,9 @@ public class EquipmentController {
     public ResponseEntity<String> getAvailableEquipment(@PathVariable String equipmentName) {
         try {
             Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
-            return new ResponseEntity<>(equipmentId.toString(), HttpStatus.OK);
+            return ResponseEntity.ok(equipmentId.toString());
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

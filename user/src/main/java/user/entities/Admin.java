@@ -22,11 +22,6 @@ public class Admin extends User {
         super(id, username, password);
     }
 
-    /**
-     * Initiates a new Admin
-     * @param username the username
-     * @param password  the password
-     */
     public Admin(String username, String password) {
         super(username, password);
     }
