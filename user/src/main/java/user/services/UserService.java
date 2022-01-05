@@ -1,6 +1,5 @@
 package user.services;
 
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +11,8 @@ import user.entities.Admin;
 import user.entities.Customer;
 import user.entities.User;
 import user.repositories.UserRepository;
+
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -42,9 +43,11 @@ public class UserService {
      *
      * @param userId - long
      * @return Optional of User having this id
+     * @throws NoSuchElementException
      */
     public User getUserById(long userId) {
-        return customerRepository.findById(userId);
+        return customerRepository.findById(userId).orElseThrow(
+                () -> new NoSuchElementException("user with id " + userId + "does not exist!"));
     }
 
     /**
@@ -96,6 +99,10 @@ public class UserService {
      * @param customer the customer
      */
     public void upgradeCustomer(Customer customer) {
+        long id = customer.getId();
+        customerRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Customer does not exist"));
+
         customer.setPremiumUser(true);
         customerRepository.save(customer);
     }

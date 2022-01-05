@@ -1,7 +1,5 @@
 package user.services;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +8,10 @@ import org.springframework.web.client.RestTemplate;
 import user.entities.Customer;
 import user.entities.Group;
 import user.repositories.GroupRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * The type Group service.
@@ -53,7 +55,7 @@ public class GroupService {
     public boolean createGroup(String groupName) {
         boolean res = false;
         if (groupRepository.findByGroupName(groupName).isPresent()) {
-            throw new IllegalStateException(
+            throw new IllegalArgumentException(
                 "group with name " + groupName + " already exists! Try a new name");
         } else {
             groupRepository.save(new Group(groupName, new ArrayList<>()));
@@ -70,7 +72,7 @@ public class GroupService {
      */
     public int getGroupSizeById(Long groupId) {
         Group group = groupRepository.findByGroupId(groupId).orElseThrow(
-            () -> new IllegalStateException("Group with id " + groupId + " does not exist!"));
+            () -> new NoSuchElementException("Group with id " + groupId + " does not exist!"));
         return group.getGroupSize();
     }
 
@@ -82,13 +84,18 @@ public class GroupService {
      */
     public Group getGroupById(Long groupId) {
         return groupRepository.findByGroupId(groupId).orElseThrow(
-            () -> new IllegalStateException("Group with id " + groupId + " does not exist!"));
+            () -> new NoSuchElementException("Group with id " + groupId + " does not exist!"));
 
     }
 
+    /**
+     * Gets group by group name.
+     * @param groupName
+     * @return Group
+     */
     public Group getGroupByGroupName(String groupName) {
         return groupRepository.findByGroupName(groupName).orElseThrow(
-            () -> new IllegalStateException("Group with name " + groupName + " does not exist!"));
+            () -> new NoSuchElementException("Group with name " + groupName + " does not exist!"));
     }
 
     /**
@@ -102,10 +109,10 @@ public class GroupService {
         Customer oldCustomer = customerService.getCustomerById(customerId);
 
         Group groupToAdd = groupRepository.findByGroupId(groupId).orElseThrow(
-            () -> new IllegalStateException("Group with id " + groupId + " does not exist!"));
+            () -> new NoSuchElementException("Group with id " + groupId + " does not exist!"));
         oldCustomer.addGroupToUsersGroupList(groupToAdd);
-        //customer service only called for the persistence of the updated group attribute of the
-        // customer
+
+        //customer service only called for the persistence of the updated group attribute of the customer
         customerService.saveCustomer(oldCustomer);
         return groupToAdd;
 
@@ -119,7 +126,7 @@ public class GroupService {
      */
     public List<Customer> getUsersInaGroup(long groupId) {
         Group group = groupRepository.findByGroupId(groupId).orElseThrow(
-            () -> new IllegalStateException("Group with id " + groupId + " does not exist!"));
+            () -> new NoSuchElementException("Group with id " + groupId + " does not exist!"));
         return group.getGroupMembers();
     }
 
