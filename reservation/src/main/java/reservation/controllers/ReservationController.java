@@ -16,6 +16,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
+import reservation.entities.chainofresponsibility.ReservationChecker;
 import reservation.services.ReservationService;
 
 /**
@@ -35,9 +36,10 @@ public class ReservationController {
     public static final String userUrl = "http://eureka-user";
 
     private final transient ReservationService reservationService;
-
     @Autowired
     private final transient RestTemplate restTemplate;
+    @Autowired
+    private final transient ReservationChecker reservationChecker;
 
     /**
      * Instantiates a new Reservation controller.
@@ -45,9 +47,11 @@ public class ReservationController {
      * @param reservationService the reservation service
      */
     @Autowired
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService,
+                                 ReservationChecker reservationChecker) {
         this.reservationService = reservationService;
         this.restTemplate = reservationService.restTemplate();
+        this.reservationChecker = reservationChecker;
     }
 
     /**
@@ -117,7 +121,7 @@ public class ReservationController {
         // Chain of responsibility:
         // If any condition to be checked is violated by this reservation, the respective
         // validator will throw an InvalidReservationException with appropriate message
-        boolean isValid = reservationService.checkReservation(reservation, this);
+        boolean isValid = reservationChecker.checkReservation(reservation, this);
 
         if (isValid) {
             reservationService.makeSportFacilityReservation(reservation);
@@ -163,7 +167,7 @@ public class ReservationController {
         // Chain of responsibility:
         // If any condition to be checked is violated by this reservation, the respective
         // validator will throw an InvalidReservationException with appropriate message
-        boolean isValid = reservationService.checkReservation(reservation, this);
+        boolean isValid = reservationChecker.checkReservation(reservation, this);
 
         if (isValid) {
             reservationService.makeSportFacilityReservation(reservation);

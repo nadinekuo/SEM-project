@@ -9,14 +9,9 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
-import reservation.entities.chainofresponsibility.InvalidReservationException;
-import reservation.entities.chainofresponsibility.ReservationValidator;
-import reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
-import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
-import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
+import reservation.entities.chainofresponsibility.ReservationChecker;
 import reservation.repositories.ReservationRepository;
 
 /**
@@ -65,68 +60,6 @@ public class ReservationService {
     }
 
     /**
-     * Check reservation by passing the object through Chain of Responsibility.
-     * Various checks to be done by different validators.
-     * If the reservation was not valid, that means one or more checks (in some validator)
-     * were violated -> exception thrown.
-     *
-     * @param reservation           the reservation
-     * @param reservationController the reservation controller through which API calls to other
-     *                              microservices are made
-     * @return boolean - true if Reservation can be made, else false.
-     */
-    public boolean checkReservation(Reservation reservation,
-                                    ReservationController reservationController) {
-
-        // Returns first validator in chain created for this reservation
-        ReservationValidator reservationValidator =
-            createChainOfResponsibility(reservation, reservationController);
-
-        try {
-            return reservationValidator.handle(reservation);   // Start of chain
-        } catch (InvalidReservationException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * Creates Chain of Responsibility object.
-     * Having a separate method for this creation, facilitates testability.
-     *
-     * @param reservation           - Reservation to be checked
-     * @param reservationController - API to communicate with other microservices
-     * @return - The first validator in the chain of responsibility created
-     */
-    public ReservationValidator createChainOfResponsibility(
-        Reservation reservation,
-        ReservationController reservationController) {
-
-        // Checks whether or not customers have exceeded their daily
-        // reservation limit for sport rooms
-        ReservationValidator userBalanceHandler =
-            new UserReservationBalanceValidator(this, reservationController);
-
-        // Checks whether the reserved sports room or equipment is available for reservation
-        ReservationValidator sportFacilityHandler =
-            new SportFacilityAvailabilityValidator(this, reservationController);
-        userBalanceHandler.setNext(sportFacilityHandler);
-
-        // Only for sports room reservations, we check the room capacity/team size
-        if (reservation.getTypeOfReservation() == ReservationType.SPORTS_ROOM) {
-
-            //  Checks the compatibility of the reserved sports room (hall/field) capacity
-            //  with the group size of the customers who want to reserve that sports room
-            // For sport fields (hold 1 sport),
-            // the team size requirements of that sport is also checked
-            ReservationValidator capacityHandler =
-                new TeamRoomCapacityValidator(this, reservationController);
-            sportFacilityHandler.setNext(capacityHandler);
-        }
-        return userBalanceHandler;
-    }
-
-    /**
      * Gets user reservation count (for sport rooms, not equipment) on given day.
      *
      * @param start      the start
@@ -135,11 +68,10 @@ public class ReservationService {
      * @return the user reservation count on day
      */
     public int getUserReservationCountOnDay(LocalDateTime start, LocalDateTime end,
-                                            long customerId) {
+                                            Long customerId) {
 
-        List<Reservation> reservationsOnDay =
-            reservationRepository.findReservationByStartingTimeBetweenAndCustomerId(start, end,
-                customerId);
+        List<Reservation> reservationsOnDay = reservationRepository
+            .findReservationByStartingTimeBetweenAndCustomerId(start, end, customerId);
         int count = 0;
 
         // Customers have a limit on the number of sport rooms to be reserved
@@ -211,6 +143,7 @@ public class ReservationService {
         return new RestTemplate();
     }
 
+    
 }
 
 
