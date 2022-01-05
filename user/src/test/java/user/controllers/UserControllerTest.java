@@ -1,6 +1,5 @@
 package user.controllers;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,10 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import user.entities.Admin;
 import user.entities.Customer;
 import user.services.UserService;
 
@@ -31,8 +27,6 @@ import user.services.UserService;
 public class UserControllerTest {
 
     private final transient long userId = 1L;
-
-    private final transient String userName = "emma";
 
     @Mock
     transient UserService userService;
@@ -96,55 +90,5 @@ public class UserControllerTest {
             .andDo(MockMvcResultHandlers.print());
         verify(userService, never()).upgradeCustomer(customer);
     }
-
-    @Test
-    void getCustomerInfoTest() throws Exception {
-        Customer customer = new Customer();
-        when(userService.getCustomerByUsername(userName)).thenReturn(Optional.of(customer));
-        MvcResult result = mockMvc.perform(get("/user/{userName}/getCustomerInfo", userName))
-            .andExpect(status().isOk()).andReturn();
-        verify(userService).getCustomerByUsername(userName);
-        assertThat(result.getResponse().getContentType()).isNotNull();
-    }
-
-    @Test
-    void getAdminInfoTest() throws Exception {
-        Admin admin = new Admin();
-        when(userService.getAdminByUsername(userName)).thenReturn(Optional.of(admin));
-        MvcResult result = mockMvc.perform(get("/user/{userName}/getAdminInfo", userName))
-            .andExpect(status().isOk()).andReturn();
-        verify(userService).getAdminByUsername(userName);
-        assertThat(result.getResponse().getContentType()).isNotNull();
-    }
-
-    @Test
-    void getFalseCustomerInfoTest() throws Exception {
-        when(userService.getCustomerByUsername(userName)).thenReturn(Optional.empty());
-        MvcResult result = mockMvc.perform(get("/user/{userName}/getCustomerInfo", userName))
-            .andExpect(status().isOk()).andReturn();
-        verify(userService).getCustomerByUsername(userName);
-        assertThat(result.getResponse().getContentType()).isNull();
-    }
-
-    @Test
-    void getFalseAdminInfoTest() throws Exception {
-        when(userService.getAdminByUsername(userName)).thenReturn(Optional.empty());
-        MvcResult result = mockMvc.perform(get("/user/{userName}/getAdminInfo", userName))
-            .andExpect(status().isOk()).andReturn();
-        verify(userService).getAdminByUsername(userName);
-        assertThat(result.getResponse().getContentType()).isNull();
-    }
-
-    //    @Test
-    //    void customerRegistrationValidTest() throws Exception {
-    //        UserDtoConfig data = new UserDtoConfig("customer", "password", true);
-    //        Customer customer = new Customer("customer", "password", true);
-    //        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-    //            .thenReturn(data);
-    //        when(userService.getCustomerByUsername("erwin")).thenReturn(Optional.of(customer));
-    //        mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isOk())
-    //            .andDo(MockMvcResultHandlers.print());
-    //        verify(userService).registerCustomer(data);
-    //    }
 
 }
