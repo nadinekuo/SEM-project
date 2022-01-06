@@ -122,9 +122,8 @@ public class UserController {
                 return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
             }
         } catch (NoSuchElementException e) {
-
+            userService.registerCustomer(data);
         }
-        userService.registerCustomer(data);
         return new ResponseEntity<>("User has been registered.", HttpStatus.OK);
     }
 
@@ -147,9 +146,8 @@ public class UserController {
                 return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
             }
         } catch (NoSuchElementException e) {
-
+            userService.registerAdmin(data);
         }
-        userService.registerAdmin(data);
         return new ResponseEntity<>("User has been registered.", HttpStatus.OK);
     }
 
