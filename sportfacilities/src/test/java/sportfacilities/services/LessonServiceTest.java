@@ -141,7 +141,7 @@ public class LessonServiceTest {
         verify(lessonRepository).save(lessonArgumentCaptor.capture());
 
         Lesson capturedLesson = lessonArgumentCaptor.getValue();
-        Assertions.assertEquals(capturedLesson.getTitle(), "NewLesson");
+        assertEquals(capturedLesson.getTitle(), "NewLesson");
     }
 
     /**
