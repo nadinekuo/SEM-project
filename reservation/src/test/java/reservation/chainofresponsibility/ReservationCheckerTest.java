@@ -1,5 +1,6 @@
 package reservation.chainofresponsibility;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,8 +13,12 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
+import reservation.entities.ReservationType;
 import reservation.entities.chainofresponsibility.InvalidReservationException;
 import reservation.entities.chainofresponsibility.ReservationChecker;
+import reservation.entities.chainofresponsibility.ReservationValidator;
+import reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
+import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
 import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import reservation.services.ReservationService;
 
@@ -54,40 +59,40 @@ class ReservationCheckerTest {
             new ReservationController(reservationService, reservationCheckerSpy)));
     }
 
-//    @Test
-//    void createChainOfResponsibilityNotSportRoom() {
-//        ReservationChecker reservationChecker = new ReservationChecker(reservationService);
-//        ReservationController reservationController =
-//            new ReservationController(reservationService, reservationChecker);
-//        ReservationValidator userBalanceHandler =
-//            new UserReservationBalanceValidator(reservationService, reservationController);
-//
-//        ReservationValidator sportFacilityHandler =
-//            new UserReservationBalanceValidator(reservationService, reservationController);
-//        userBalanceHandler.setNext(sportFacilityHandler);
-//        assertThat(reservationChecker
-//            .createChainOfResponsibility(new Reservation(), reservationController))
-//            .usingRecursiveComparison().isEqualTo(userBalanceHandler);
-//    }
-//
-//    @Test
-//    void createChainOfResponsibilitySportRoom() {
-//        ReservationChecker reservationChecker = new ReservationChecker(reservationService);
-//        ReservationController reservationController =
-//            new ReservationController(reservationService, reservationChecker);
-//        ReservationValidator userBalanceHandler =
-//            new UserReservationBalanceValidator(reservationService, reservationController);
-//        ReservationValidator sportFacilityHandler =
-//            new UserReservationBalanceValidator(reservationService, reservationController);
-//        userBalanceHandler.setNext(sportFacilityHandler);
-//        ReservationValidator capacityHandler =
-//            new TeamRoomCapacityValidator(reservationService, reservationController);
-//        sportFacilityHandler.setNext(capacityHandler);
-//        Reservation reservation = new Reservation();
-//        reservation.setTypeOfReservation(ReservationType.SPORTS_ROOM);
-//        assertThat(
-//            reservationChecker.createChainOfResponsibility(reservation, reservationController))
-//            .usingRecursiveComparison().isEqualTo(userBalanceHandler);
-//    }
+    @Test
+    void createChainOfResponsibilityNotSportRoom() {
+        ReservationChecker reservationChecker = new ReservationChecker(reservationService);
+        ReservationController reservationController =
+            new ReservationController(reservationService, reservationChecker);
+        ReservationValidator userBalanceHandler =
+            new UserReservationBalanceValidator(reservationService, reservationController);
+
+        ReservationValidator sportFacilityHandler =
+            new SportFacilityAvailabilityValidator(reservationService, reservationController);
+        userBalanceHandler.setNext(sportFacilityHandler);
+        assertThat(reservationChecker
+            .createChainOfResponsibility(new Reservation(), reservationController))
+            .usingRecursiveComparison().isEqualTo(userBalanceHandler);
+    }
+
+    @Test
+    void createChainOfResponsibilitySportRoom() {
+        ReservationChecker reservationChecker = new ReservationChecker(reservationService);
+        ReservationController reservationController =
+            new ReservationController(reservationService, reservationChecker);
+        ReservationValidator userBalanceHandler =
+            new UserReservationBalanceValidator(reservationService, reservationController);
+        ReservationValidator sportFacilityHandler =
+            new SportFacilityAvailabilityValidator(reservationService, reservationController);
+        userBalanceHandler.setNext(sportFacilityHandler);
+        ReservationValidator capacityHandler =
+            new TeamRoomCapacityValidator(reservationService, reservationController);
+        sportFacilityHandler.setNext(capacityHandler);
+        Reservation reservation = new Reservation();
+        reservation.setTypeOfReservation(ReservationType.SPORTS_ROOM);
+        assertThat(
+            reservationChecker.createChainOfResponsibility(reservation, reservationController))
+            .usingRecursiveComparison().isEqualTo(userBalanceHandler);
+    }
 
 }
