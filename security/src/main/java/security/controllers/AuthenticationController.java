@@ -39,10 +39,10 @@ public class AuthenticationController {
 
         String methodSpecificUrl = "/user/" + userName + "/getCustomerInfo";
         ResponseEntity<List> response;
-        try{
-             response =
-                restTemplate.getForEntity(userUrl + methodSpecificUrl, List.class);
-        } catch (HttpClientErrorException e){
+        try {
+            response =
+                    restTemplate.getForEntity(userUrl + methodSpecificUrl, List.class);
+        } catch (HttpClientErrorException e) {
             return null;
         }
         List<String> userInfo = response.getBody();
@@ -59,10 +59,10 @@ public class AuthenticationController {
     public static AppUser getAdminInfo(@PathVariable String userName) {
         String methodSpecificUrl = "/user/" + userName + "/getAdminInfo";
         ResponseEntity<List> response;
-        try{
+        try {
             response =
                 restTemplate.getForEntity(userUrl + methodSpecificUrl, List.class);
-        }catch(HttpClientErrorException e){
+        } catch (HttpClientErrorException e) {
             return null;
         }
         List<String> userInfo = response.getBody();
