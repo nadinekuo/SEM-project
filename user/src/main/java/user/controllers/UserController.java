@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,6 @@ import user.config.UserDtoConfig;
 import user.entities.Admin;
 import user.entities.Customer;
 import user.services.UserService;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.NoSuchElementException;
 
 /**
  * The type User controller.

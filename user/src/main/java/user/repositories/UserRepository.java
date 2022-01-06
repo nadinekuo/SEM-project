@@ -1,5 +1,6 @@
 package user.repositories;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -8,23 +9,13 @@ import user.entities.Admin;
 import user.entities.Customer;
 import user.entities.User;
 
-import java.util.Optional;
-
 @Repository
 public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
 
-//    /**
-//     * See if there is a user matching the given userId.
-//     *
-//     * @param userId the userId
-//     * @return the optional user
-//     */
-//    T findById(long userId);
-
     /**
-     * find user by Id
+     * Find user by id.
      *
-     * @param userId
+     * @param userId user id
      * @return Optional
      */
     Optional<T> findById(long userId);
@@ -56,10 +47,10 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
     Optional<Admin> findAdminByUsername(String username);
 
     /**
-     * find user by username.
+     * Find user by username.
      *
-     * @param username
-     * @return
+     * @param username user name
+     * @return Optional
      */
     Optional<T> findByUsername(String username);
 }

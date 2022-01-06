@@ -2,10 +2,9 @@ package user.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.*;
 
 /**
  * The type Group.
