@@ -7,17 +7,18 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
-import reservation.entities.chainofresponsibility.ReservationChecker;
 import reservation.repositories.ReservationRepository;
 
 /**
  * The type Reservation service.
  */
 @Service
+@Configuration
 public class ReservationService {
 
     private final transient ReservationRepository reservationRepository;
