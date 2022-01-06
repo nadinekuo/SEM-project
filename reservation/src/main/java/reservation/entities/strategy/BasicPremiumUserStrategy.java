@@ -1,19 +1,25 @@
-package reservation.entities;
+package reservation.entities.strategy;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
+import reservation.entities.Reservation;
 import reservation.entities.strategy.ReservationSortingStrategy;
 
 /**
- * The type User id strategy.
+ * The type Basic premium user strategy.
  */
-public class UserIdStrategy implements ReservationSortingStrategy {
+public class BasicPremiumUserStrategy implements ReservationSortingStrategy {
+
 
     /**
-     * Instantiates a new User id strategy.
+     * Instantiates a new Basic premium user strategy.
+
      */
-    public UserIdStrategy() {
+    public BasicPremiumUserStrategy() {
+
     }
 
     /**
@@ -36,15 +42,20 @@ public class UserIdStrategy implements ReservationSortingStrategy {
     /**
      * The type Reservation comparator.
      */
-    protected class ReservationComparator implements Comparator {
+    protected static class ReservationComparator implements Comparator {
         @Override
         public int compare(Object o1, Object o2) {
-            Reservation reservation1 = (Reservation) o1;
-            Reservation reservation2 = (Reservation) o2;
-            Long userId1 = reservation1.getCustomerId();
-            Long userId2 = reservation2.getCustomerId();
 
-            return userId1.compareTo(userId2);
+            boolean b1 = ((Reservation) o1).getMadeByPremiumUser();
+            boolean b2 = ((Reservation) o2).getMadeByPremiumUser();
+
+            if (b1 && !b2) {
+                return -1;
+            }
+            if (!b1 && b2) {
+                return +1;
+            }
+            return 0;
         }
     }
 }

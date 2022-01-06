@@ -8,6 +8,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,7 +55,7 @@ public class UserControllerTest {
 
     @Test
     void isUserPremiumNotValidTest() throws Exception {
-        when(userService.getUserById(1L)).thenThrow(new IllegalStateException());
+        when(userService.getUserById(1L)).thenThrow(NoSuchElementException.class);
         mockMvc.perform(get("/user/{userId}/isPremium", userId)).andExpect(status().isBadRequest())
             .andDo(MockMvcResultHandlers.print());
         verify(userService).getUserById(userId);
@@ -84,22 +85,10 @@ public class UserControllerTest {
     @Test
     void upgradeUserNotValidTest() throws Exception {
         Customer customer = new Customer();
-        when(userService.getUserById(userId)).thenThrow(new IllegalStateException());
+        when(userService.getUserById(userId)).thenThrow(NoSuchElementException.class);
         mockMvc.perform(put("/user/{userId}/upgrade", userId)).andExpect(status().isBadRequest())
             .andDo(MockMvcResultHandlers.print());
         verify(userService, never()).upgradeCustomer(customer);
     }
-
-    //    @Test
-    //    void customerRegistrationValidTest() throws Exception {
-    //        UserDtoConfig data = new UserDtoConfig("customer", "password", true);
-    //        Customer customer = new Customer("customer", "password", true);
-    //        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-    //            .thenReturn(data);
-    //        when(userService.checkCustomerExists("erwin")).thenReturn(Optional.of(customer));
-    //        mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isOk())
-    //            .andDo(MockMvcResultHandlers.print());
-    //        verify(userService).registerCustomer(data);
-    //    }
 
 }

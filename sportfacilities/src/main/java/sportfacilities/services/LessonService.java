@@ -1,6 +1,7 @@
 package sportfacilities.services;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sportfacilities.entities.Lesson;
@@ -32,7 +33,8 @@ public class LessonService {
      * @return the lesson by id
      */
     public Lesson getLessonById(long lessonId) {
-        return lessonRepository.findById(lessonId).orElseThrow();
+        return lessonRepository.findById(lessonId).orElseThrow(
+            () -> new NoSuchElementException("Lesson with id " + lessonId + "does not exist!"));
     }
 
     /**
@@ -55,7 +57,7 @@ public class LessonService {
      * @param size     the size
      */
     public void setLessonSize(long lessonId, int size) {
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow();
+        Lesson lesson = getLessonById(lessonId);
         lesson.setSize(size);
         lessonRepository.save(lesson);
     }
@@ -67,7 +69,8 @@ public class LessonService {
      * @return the lesson size
      */
     public int getLessonSize(long lessonId) {
-        return lessonRepository.findById(lessonId).get().getSize();
+        Lesson lesson = getLessonById(lessonId);
+        return lesson.getSize();
     }
 
     /**
@@ -77,6 +80,17 @@ public class LessonService {
      * @return the lesson starting time
      */
     public String getLessonStartingTime(long lessonId) {
-        return lessonRepository.findById(lessonId).get().getStartingTime().toString();
+        Lesson lesson = getLessonById(lessonId);
+        return lesson.getStartingTime().toString();
+    }
+
+    /**
+     * Delete lesson.
+     *
+     * @param lessonId the lesson id
+     */
+    public void deleteLesson(long lessonId) throws NoSuchElementException {
+        Lesson lesson = getLessonById(lessonId);
+        lessonRepository.deleteById(lesson.getLessonId());
     }
 }

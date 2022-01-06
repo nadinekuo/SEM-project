@@ -1,11 +1,14 @@
 package sportfacilities.services;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import sportfacilities.controllers.EquipmentController;
 import sportfacilities.entities.Equipment;
 import sportfacilities.repositories.EquipmentRepository;
 
@@ -46,7 +49,7 @@ public class EquipmentService {
      */
     public Equipment getEquipment(Long equipmentId) {
         return equipmentRepository.findByEquipmentId(equipmentId).orElseThrow(
-            () -> new IllegalStateException(
+            () -> new NoSuchElementException(
                 "Equipment with id " + equipmentId + " does not exist!"));
     }
 
@@ -55,10 +58,11 @@ public class EquipmentService {
      *
      * @param equipmentId the equipment id
      * @return the equipment name
-     * @throws NoSuchFieldException the no such field exception
+     * @throws NoSuchElementException the no such field exception
      */
-    public String getEquipmentName(Long equipmentId) throws NoSuchFieldException {
-        return equipmentRepository.findByEquipmentId(equipmentId).get().getName();
+    public String getEquipmentName(Long equipmentId) {
+        Equipment equipment = getEquipment(equipmentId);
+        return equipment.getName();
     }
 
     /**
@@ -67,13 +71,7 @@ public class EquipmentService {
      * @param equipmentId the equipment id
      */
     public void setEquipmentToNotInUse(Long equipmentId) {
-
-        boolean exists = equipmentRepository.existsById(equipmentId);
-        if (!exists) {
-            throw new IllegalStateException(
-                "Equipment with id " + equipmentId + " does not " + "exist!");
-        }
-        Equipment equipment = equipmentRepository.findByEquipmentId(equipmentId).get();
+        Equipment equipment = getEquipment(equipmentId);
         equipment.setInUse(false);
         equipmentRepository.save(equipment);
     }
@@ -84,12 +82,7 @@ public class EquipmentService {
      * @param equipmentId the equipment id
      */
     public void setEquipmentToInUse(Long equipmentId) {
-        boolean exists = equipmentRepository.existsById(equipmentId);
-        if (!exists) {
-            throw new IllegalStateException(
-                "Equipment with id " + equipmentId + " does not " + "exist!");
-        }
-        Equipment equipment = equipmentRepository.findByEquipmentId(equipmentId).get();
+        Equipment equipment = getEquipment(equipmentId);
         equipment.setInUse(true);
         equipmentRepository.save(equipment);
     }
@@ -100,14 +93,14 @@ public class EquipmentService {
      * @param equipmentName the equipment name
      * @return the available equipment ids by name
      */
-    public long getAvailableEquipmentIdsByName(String equipmentName) {
-        Optional<Long> res = equipmentRepository.findAvailableEquipment(equipmentName);
-        if (res.isPresent()) {
-            return res.get();
-        } else {
-            System.out.println("Equipment " + equipmentName + " does not exist / is unavailable!");
-            return -1L;
-        }
+    
+    //TODO potentially distinguish between the equipment doesn't exist or if its fully booked
+    public Long getAvailableEquipmentIdsByName(String equipmentName) {
+
+        return
+            equipmentRepository.findAvailableEquipment(equipmentName).orElseThrow(
+                () -> new NoSuchElementException("Currently this equipment is fully booked"));
+
     }
 
     /**
@@ -117,5 +110,10 @@ public class EquipmentService {
      */
     public void addEquipment(Equipment equipment) {
         equipmentRepository.save(equipment);
+    }
+
+    public void deleteEquipment(long equipmentId) {
+        Equipment equipment = getEquipment(equipmentId);
+        equipmentRepository.deleteByEquipmentId(equipment.getEquipmentId());
     }
 }

@@ -12,8 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.web.client.RestTemplate;
+import reservation.entities.strategy.BasicPremiumUserStrategy;
+import reservation.entities.strategy.BookingSystem;
 import reservation.entities.strategy.ChronologicalStrategy;
+import reservation.entities.strategy.EquipmentNameStrategy;
 import reservation.entities.strategy.ReservationSortingStrategy;
+import reservation.entities.strategy.UserIdStrategy;
 import reservation.services.ReservationService;
 
 public class BookingSystemTest {
@@ -43,9 +47,12 @@ public class BookingSystemTest {
         restTemplate = Mockito.mock(RestTemplate.class);
         reservations = new Reservation[size];
 
+        String[] titles = {"Tango", "Krav Maga", "Ziou Zitsou", "Krav Maga", "Box", "Yoga"};
+
         for (int i = 0; i < size; i++) {
-            Reservation reservation = new Reservation(ReservationType.EQUIPMENT, (long) i, (long) i,
-                LocalDateTime.of(2020, i + 1, 1, 1, 1));
+            Reservation reservation =
+                new Reservation(ReservationType.EQUIPMENT, titles[i], (long) i, (long) i,
+                    LocalDateTime.of(2020, i + 1, 1, 1, 1), false);
             reservation.setReservationId((long) i + 1);
             userIdStrategy.add(reservation);
             reservations[i] = reservation;
@@ -85,17 +92,15 @@ public class BookingSystemTest {
     @Test
     void getNextReservationBasicPremium() {
         BookingSystem userPremiumStrategy =
-            new BookingSystem(new BasicPremiumUserStrategy(restTemplate));
+            new BookingSystem(new BasicPremiumUserStrategy());
 
         for (int i = 0; i < 4; i++) {
             userPremiumStrategy.addReservation(reservations[i]);
 
-            //only third user is premium
-            boolean premium = i == 1 || i == 2;
-
-            Mockito.when(restTemplate.getForObject(
-                userUrl+ "/user/" + reservations[i].getCustomerId() + "/isPremium",
-                Boolean.class)).thenReturn(premium);
+            //only second user is premium
+            if (i == 1) {
+                reservations[i].setMadeByPremiumUser(true);
+            }
         }
 
         assertEquals(reservations[1], userPremiumStrategy.getNextReservation());
@@ -104,35 +109,25 @@ public class BookingSystemTest {
     @Test
     void getNextReservationBasicPremiumEmpty() {
         BookingSystem userPremiumStrategy =
-            new BookingSystem(new BasicPremiumUserStrategy(restTemplate));
+            new BookingSystem(new BasicPremiumUserStrategy());
 
         assertNull(userPremiumStrategy.getNextReservation());
     }
 
     @Test
     void getNextReservationEquipmentName() {
-        BookingSystem equipmentNameStrategy =
-            new BookingSystem(new EquipmentNameStrategy(restTemplate));
+        BookingSystem equipmentNameStrategy = new BookingSystem(new EquipmentNameStrategy());
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 6; i++) {
             equipmentNameStrategy.addReservation(reservations[i]);
         }
 
-        String[] titles = {"Tango", "Krav Maga", "Ziou Zitsou", "Krav Maga"};
-
-        for (int i = 0; i < 4; i++) {
-            Mockito.when(restTemplate.getForObject(
-                equipmentUrl + "/equipment/" + reservations[i].getSportFacilityReservedId()
-                    + "/getEquipmentName", String.class)).thenReturn(titles[i]);
-        }
-
-        assertEquals(reservations[1], equipmentNameStrategy.getNextReservation());
+        assertEquals(reservations[4], equipmentNameStrategy.getNextReservation());
     }
 
     @Test
     void getNextReservationEquipmentNameEmpty() {
-        BookingSystem equipmentNameStrategy =
-            new BookingSystem(new EquipmentNameStrategy(restTemplate));
+        BookingSystem equipmentNameStrategy = new BookingSystem(new EquipmentNameStrategy());
 
         assertNull(equipmentNameStrategy.getNextReservation());
     }

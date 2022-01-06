@@ -1,7 +1,12 @@
 package sportfacilities.controllers;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,8 +44,13 @@ public class LessonController {
      */
     @GetMapping("/{lessonId}")
     @ResponseBody
-    public Lesson getLesson(@PathVariable long lessonId) {
-        return lessonService.getLessonById(lessonId);
+    public ResponseEntity<?> getLesson(@PathVariable long lessonId) {
+        try {
+            Lesson lesson = lessonService.getLessonById(lessonId);
+            return new ResponseEntity<>(lesson, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -51,8 +61,13 @@ public class LessonController {
      */
     @GetMapping("/{lessonId}/getSize")
     @ResponseBody
-    public int getLessonSize(@PathVariable long lessonId) {
-        return lessonService.getLessonSize(lessonId);
+    public ResponseEntity<?> getLessonSize(@PathVariable long lessonId) {
+        try {
+            int lessonSize = lessonService.getLessonSize(lessonId);
+            return new ResponseEntity<>(lessonSize, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -61,10 +76,15 @@ public class LessonController {
      * @param lessonId the lesson id
      * @param size     the size
      */
-    @PostMapping("/{lessonId}/{size}/setSize")
+    @PostMapping("/{lessonId}/{size}/setSize/admin")
     @ResponseBody
-    public void setLessonSize(@PathVariable long lessonId, @PathVariable int size) {
-        lessonService.setLessonSize(lessonId, size);
+    public ResponseEntity<?> setLessonSize(@PathVariable long lessonId, @PathVariable int size) {
+        try {
+            lessonService.setLessonSize(lessonId, size);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -75,8 +95,13 @@ public class LessonController {
      */
     @GetMapping("/{lessonId}/getStartingTime")
     @ResponseBody
-    public String getLessonStartingTime(@PathVariable long lessonId) {
-        return lessonService.getLessonStartingTime(lessonId);
+    public ResponseEntity<?> getLessonStartingTime(@PathVariable long lessonId) {
+        try {
+            String startingTime = lessonService.getLessonStartingTime(lessonId);
+            return new ResponseEntity<>(startingTime, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -89,12 +114,34 @@ public class LessonController {
      */
     @PutMapping("/{title}/{startingTime}/{endingTime}/{size}/createNewLesson/admin")
     @ResponseBody
-    public void createNewLesson(@PathVariable String title, @PathVariable String startingTime,
-                                @PathVariable String endingTime, @PathVariable int size) {
+    public ResponseEntity<?> createNewLesson(@PathVariable String title,
+                                             @PathVariable String startingTime,
+                                             @PathVariable String endingTime,
+                                             @PathVariable int size) {
+        try {
+            LocalDateTime startTime = LocalDateTime.parse(startingTime);
+            LocalDateTime endTime = LocalDateTime.parse(endingTime);
+            lessonService.addNewLesson(title, startTime, endTime, size);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (DateTimeParseException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
-        LocalDateTime startTime = LocalDateTime.parse(startingTime);
-        LocalDateTime endTime = LocalDateTime.parse(endingTime);
+    /**
+     * Delete lesson.
+     *
+     * @param lessonId the lesson id
+     */
+    @DeleteMapping("/{lessonId}/admin")
+    @ResponseBody
+    public ResponseEntity<?> deleteLesson(@PathVariable long lessonId) {
+        try {
+            lessonService.deleteLesson(lessonId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
-        lessonService.addNewLesson(title, startTime, endTime, size);
     }
 }

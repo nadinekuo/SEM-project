@@ -1,29 +1,29 @@
 package user.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import user.config.UserDtoConfig;
 import user.entities.Customer;
 import user.services.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.NoSuchElementException;
+
+/**
+ * The type User controller.
+ */
 @RestController
 @RequestMapping("user")
 public class UserController {
 
     private final transient UserService userService;
 
+    //TODO if the restTemplate isn't used we should remove it
     @Autowired
     private final transient RestTemplate restTemplate;
 
@@ -31,9 +31,9 @@ public class UserController {
     private ObjectMapper objectMapper;
 
     /**
-     * Autowired constructor for the class.
+     * Instantiates a new User controller.
      *
-     * @param userService userService
+     * @param userService the user service
      */
     @Autowired
     public UserController(UserService userService) {
@@ -42,8 +42,10 @@ public class UserController {
     }
 
     /**
-     * @param userId
-     * @return
+     * Is user premium response entity.
+     *
+     * @param userId the user id
+     * @return the response entity
      */
     @GetMapping("/{userId}/isPremium")
     @ResponseBody
@@ -52,18 +54,17 @@ public class UserController {
             Customer customer = (Customer) userService.getUserById(userId);
             Boolean isPremium = customer.isPremiumUser();
             return new ResponseEntity<>(isPremium.toString(), HttpStatus.OK);
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            System.out.println("User with id " + userId + " does not exist!!");
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     /**
-     * Customer registration.
+     * Customer registration response entity.
      *
-     * @param request the request to register a user.
-     * @throws IOException If customer can't be registered
+     * @param request the request
+     * @return the response entity
+     * @throws IOException the io exception
      */
     @PostMapping("/registerCustomer")
     public ResponseEntity<String> customerRegistration(HttpServletRequest request)
@@ -73,7 +74,7 @@ public class UserController {
             || data.getPassword().isEmpty()) {
             return new ResponseEntity<>("Fill in all fields.", HttpStatus.BAD_REQUEST);
         }
-        if (userService.checkCustomerExists(data.getUsername()).isPresent()) {
+        if (userService.checkCustomerExists(data.getUsername())) {
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
         userService.registerCustomer(data);
@@ -81,10 +82,11 @@ public class UserController {
     }
 
     /**
-     * Admin registration.
+     * Admin registration response entity.
      *
-     * @param request the request to register an admin
-     * @throws IOException if admin can't be registered
+     * @param request the request
+     * @return the response entity
+     * @throws IOException the io exception
      */
     @PostMapping("/registerAdmin/admin")
     public ResponseEntity<String> adminRegistration(HttpServletRequest request) throws IOException {
@@ -93,13 +95,19 @@ public class UserController {
             || data.getPassword().isEmpty()) {
             return new ResponseEntity<>("Fill in all fields.", HttpStatus.BAD_REQUEST);
         }
-        if (userService.checkAdminExists(data.getUsername()).isPresent()) {
+        if (userService.checkAdminExists(data.getUsername())) {
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
         userService.registerAdmin(data);
         return new ResponseEntity<>("User has been registered.", HttpStatus.OK);
     }
 
+    /**
+     * Turns basic subscription of customers into premium.
+     *
+     * @param userId - long
+     * @return ResponseEntity containing error message, if applicable.
+     */
     @PutMapping("/{userId}/upgrade")
     public ResponseEntity<String> upgradeUser(@PathVariable Long userId) {
         try {
@@ -109,9 +117,7 @@ public class UserController {
             }
             userService.upgradeCustomer(customer);
             return new ResponseEntity<>("User has been upgraded to premium.", HttpStatus.OK);
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            System.out.println("User with id " + userId + " does not exist!!");
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

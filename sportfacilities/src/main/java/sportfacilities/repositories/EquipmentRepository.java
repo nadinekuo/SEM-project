@@ -17,6 +17,6 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
 
     @Query(value = "SELECT equipment_id " + "FROM equipment " + "WHERE name = ?1 AND NOT in_use "
         + "LIMIT 1", nativeQuery = true)
-    Optional<Long> findAvailableEquipment(String equipment);
+    Optional<Long> findAvailableEquipment(String equipmentName);
 
 }
