@@ -1,6 +1,5 @@
 package user.repositories;
 
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -8,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import user.entities.Admin;
 import user.entities.Customer;
 import user.entities.User;
+
+import java.util.Optional;
 
 @Repository
 public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
@@ -19,6 +20,13 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
      * @return the optional user
      */
     T findById(long userId);
+    /**
+     * find user by Id
+     *
+     * @param userId
+     * @return Optional
+     */
+    Optional<T> findById(long userId);
 
     /**
      * Delete a user matching the given userId.
@@ -45,4 +53,11 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
      */
     @Query(value = "SELECT * " + "FROM admins " + "WHERE username = ?1", nativeQuery = true)
     Optional<Admin> findAdminByUsername(String username);
+    /**
+     * find user by username.
+     *
+     * @param username
+     * @return
+     */
+    Optional<T> findByUsername(String username);
 }
