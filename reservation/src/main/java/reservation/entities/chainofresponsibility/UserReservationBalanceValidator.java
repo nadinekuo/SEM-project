@@ -44,10 +44,10 @@ public class UserReservationBalanceValidator extends BaseValidator {
         // Communicates with user microservice
         boolean isPremium = reservation.getMadeByPremiumUser();
 
-//        System.out.println(
-//            "########## USER ID " + reservation.getCustomerId() + " (Premium: " + isPremium + ") "
-//                + " HAS " + reservationBalanceOnDate + " RESERVATIONS FOR THE DATE " + reservation
-//                .getStartingTime().toString());
+        System.out.println(
+            "########## USER ID " + reservation.getCustomerId() + " (Premium: " + isPremium + ") "
+                + " HAS " + reservationBalanceOnDate + " RESERVATIONS FOR THE DATE " + reservation
+                    .getStartingTime().toString());
 
         // Basic users can have 1 sports room reservation per day
         if (!isPremium && reservationBalanceOnDate >= 1) {
@@ -67,6 +67,8 @@ public class UserReservationBalanceValidator extends BaseValidator {
 
 
     /**
+     * Get the end of the day.
+     *
      * @param startingTime  starting time of Reservation object to be checked
      * @return LocalDateTime of same day, but time 00:00:00, which is the start of the day.
      */
@@ -75,6 +77,8 @@ public class UserReservationBalanceValidator extends BaseValidator {
     }
 
     /**
+     * Get the end of the day.
+     *
      * @param startingTime - starting time of Reservation object to be checked
      * @return LocalDateTime of same day, but time 23:59:59, which is the end of the day.
      */

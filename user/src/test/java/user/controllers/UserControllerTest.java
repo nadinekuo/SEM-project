@@ -120,7 +120,7 @@ public class UserControllerTest {
     void getFalseCustomerInfoTest() throws Exception {
         when(userService.getCustomerByUsername(userName)).thenReturn(Optional.empty());
         MvcResult result = mockMvc.perform(get("/user/{userName}/getCustomerInfo", userName))
-            .andExpect(status().isOk()).andReturn();
+            .andExpect(status().isBadRequest()).andReturn();
         verify(userService).getCustomerByUsername(userName);
         assertThat(result.getResponse().getContentType()).isNull();
     }
@@ -129,7 +129,7 @@ public class UserControllerTest {
     void getFalseAdminInfoTest() throws Exception {
         when(userService.getAdminByUsername(userName)).thenReturn(Optional.empty());
         MvcResult result = mockMvc.perform(get("/user/{userName}/getAdminInfo", userName))
-            .andExpect(status().isOk()).andReturn();
+            .andExpect(status().isBadRequest()).andReturn();
         verify(userService).getAdminByUsername(userName);
         assertThat(result.getResponse().getContentType()).isNull();
     }
