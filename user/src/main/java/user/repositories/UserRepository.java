@@ -13,13 +13,14 @@ import java.util.Optional;
 @Repository
 public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
 
-    /**
-     * See if there is a user matching the given userId.
-     *
-     * @param userId the userId
-     * @return the optional user
-     */
-    T findById(long userId);
+//    /**
+//     * See if there is a user matching the given userId.
+//     *
+//     * @param userId the userId
+//     * @return the optional user
+//     */
+//    T findById(long userId);
+
     /**
      * find user by Id
      *
@@ -53,6 +54,7 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
      */
     @Query(value = "SELECT * " + "FROM admins " + "WHERE username = ?1", nativeQuery = true)
     Optional<Admin> findAdminByUsername(String username);
+
     /**
      * find user by username.
      *
