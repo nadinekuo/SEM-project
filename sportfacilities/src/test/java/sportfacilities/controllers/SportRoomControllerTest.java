@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,7 +27,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.services.SportRoomService;
-import sportfacilities.services.SportService;
 
 //TODO put test in every method name
 
@@ -56,8 +56,6 @@ public class SportRoomControllerTest {
     /**
      * The Sport service.
      */
-    @Mock
-    transient SportService sportService;
     @Autowired
     private transient MockMvc mockMvc;
 
@@ -67,8 +65,7 @@ public class SportRoomControllerTest {
     @BeforeEach
     public void setup() {
         this.mockMvc =
-            MockMvcBuilders.standaloneSetup(new SportRoomController(sportRoomService, sportService))
-                .build();
+            MockMvcBuilders.standaloneSetup(new SportRoomController(sportRoomService)).build();
     }
 
     /**
@@ -81,6 +78,14 @@ public class SportRoomControllerTest {
         mockMvc.perform(get("/sportRoom/{sportRoomId}", sportRoomId)).andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print());
         verify(sportRoomService).getSportRoom(sportRoomId);
+    }
+
+    @Test
+    public void getSportRoomThrowsExceptionTest() throws Exception {
+        Mockito.when(sportRoomService.getSportRoom(sportRoomId))
+            .thenThrow(NoSuchElementException.class);
+        mockMvc.perform(get("/sportRoom/{sportRoomId}", sportRoomId))
+            .andExpect(status().isBadRequest());
     }
 
     /**
@@ -407,8 +412,7 @@ public class SportRoomControllerTest {
         mockMvc.perform(
                 post("/sportRoom/{sportRoomId}/{sportName}/addSportToSportHall/admin",
                     sportRoomId, sportName))
-            .andExpect(status().isBadRequest())
-            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print())
             .andReturn();
 
         verify(sportRoomService, times(1)).addSportToSportsHall(sportRoomId, sportName);
@@ -427,8 +431,7 @@ public class SportRoomControllerTest {
         mockMvc.perform(
                 post("/sportRoom/{sportRoomId}/{sportName}/addSportToSportHall/admin",
                     sportRoomId, sportName))
-            .andExpect(status().isBadRequest())
-            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print())
             .andReturn();
 
         verify(sportRoomService, times(1)).addSportToSportsHall(sportRoomId, sportName);
