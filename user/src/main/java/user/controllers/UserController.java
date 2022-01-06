@@ -117,8 +117,12 @@ public class UserController {
             || data.getPassword().isEmpty()) {
             return new ResponseEntity<>("Fill in all fields.", HttpStatus.BAD_REQUEST);
         }
-        if (userService.checkCustomerExists(data.getUsername())) {
-            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+        try {
+            if (userService.checkCustomerExists(data.getUsername())) {
+                return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+            }
+        } catch (NoSuchElementException e) {
+
         }
         userService.registerCustomer(data);
         return new ResponseEntity<>("User has been registered.", HttpStatus.OK);
@@ -138,8 +142,12 @@ public class UserController {
             || data.getPassword().isEmpty()) {
             return new ResponseEntity<>("Fill in all fields.", HttpStatus.BAD_REQUEST);
         }
-        if (userService.checkAdminExists(data.getUsername())) {
-            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+        try {
+            if (userService.checkAdminExists(data.getUsername())) {
+                return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+            }
+        } catch (NoSuchElementException e) {
+
         }
         userService.registerAdmin(data);
         return new ResponseEntity<>("User has been registered.", HttpStatus.OK);

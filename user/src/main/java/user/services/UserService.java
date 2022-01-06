@@ -77,8 +77,8 @@ public class UserService {
      */
     public void registerCustomer(UserDtoConfig data) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        customerRepository.save(
-            new Customer(data.getUsername(), passwordEncoder.encode(data.getPassword()),
+        customerRepository
+                .save(new Customer(data.getUsername(), passwordEncoder.encode(data.getPassword()),
                 data.isPremiumSubscription()));
     }
 
