@@ -1,8 +1,8 @@
 package sportfacilities.entities;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
 
 class EquipmentTest {
 
@@ -11,8 +11,8 @@ class EquipmentTest {
     private final transient Sport football;
 
     public EquipmentTest() {
-        hockey = new Sport("hockey", true, 8, 12);
-        football = new Sport("football", true, 6, 10);
+        hockey = new Sport("hockey", 8, 12);
+        football = new Sport("football", 6, 10);
 
         hockeyStick = new Equipment(6L, "hockey stick", hockey, true);
     }

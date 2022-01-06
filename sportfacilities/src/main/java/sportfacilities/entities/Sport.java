@@ -12,7 +12,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * The type Sport.
@@ -57,7 +56,7 @@ public class Sport {
      * @param minTeamSize the min team size
      * @param maxTeamSize the max team size
      */
-    public Sport(String sportName,  int minTeamSize, int maxTeamSize) {
+    public Sport(String sportName, int minTeamSize, int maxTeamSize) {
         this.sportName = sportName;
         this.teamSport = true;
         this.minTeamSize = minTeamSize;

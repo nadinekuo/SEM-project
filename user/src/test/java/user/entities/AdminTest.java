@@ -2,8 +2,6 @@ package user.entities;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class AdminTest {
 
     private final transient Admin admin;
@@ -19,7 +17,7 @@ class AdminTest {
 
     @Test
     public void getPasswordtest() {
-
+        
     }
 
 
