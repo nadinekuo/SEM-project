@@ -67,9 +67,9 @@ public class UserReservationBalanceValidator extends BaseValidator {
 
 
     /**
-     * Get the end of the day.
+     * Gets the first second of a certain day.
      *
-     * @param startingTime  starting time of Reservation object to be checked
+     * @param startingTime starting time of Reservation object to be checked
      * @return LocalDateTime of same day, but time 00:00:00, which is the start of the day.
      */
     private LocalDateTime getEndOfDay(LocalDateTime startingTime) {
@@ -77,7 +77,7 @@ public class UserReservationBalanceValidator extends BaseValidator {
     }
 
     /**
-     * Get the end of the day.
+     * Gets the last second of the day.
      *
      * @param startingTime - starting time of Reservation object to be checked
      * @return LocalDateTime of same day, but time 23:59:59, which is the end of the day.
