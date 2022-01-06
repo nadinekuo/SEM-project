@@ -83,29 +83,11 @@ class SportRoomTest {
     }
 
 
-//
-//    @Test
-//    void getIsSportsHall() {
-//
-//    }
-//
-//    @Test
-//    void setSportsHall() {
-//    }
-//
 //    @Test
 //    void getRelatedSport() {
 //    }
 //
 //    @Test
 //    void setRelatedSport() {
-//    }
-//
-//    @Test
-//    void getSports() {
-//    }
-//
-//    @Test
-//    void setSports() {
 //    }
 }

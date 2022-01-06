@@ -34,7 +34,7 @@ public class Admin extends User {
     @Override
     public String toString() {
         return "Admin{" + "id=" + super.getId() + ", username='" + super.getUsername() + '\''
-            + ", password" + "='" + super.getPassword();
+            + ", password" + "='" + super.getPassword() + "'}";
     }
 
 }

@@ -1,5 +1,7 @@
 package user.entities;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 
 class AdminTest {
@@ -7,17 +9,13 @@ class AdminTest {
     private final transient Admin admin;
 
     public AdminTest() {
-        admin = new Admin("admin1", "adminpwd");
+        admin = new Admin(1l, "admin1", "adminpwd");
     }
 
     @Test
-    public void getUserNameTest() {
-
-    }
-
-    @Test
-    public void getPasswordtest() {
-        
+    public void toStringTest() {
+        String result = "Admin{id=1, username='admin1', password='adminpwd'}";
+        assertThat(result).isEqualTo(admin.toString());
     }
 
 

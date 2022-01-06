@@ -1,12 +1,11 @@
 package user.entities;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class CustomerTest {
 
@@ -74,12 +73,4 @@ class CustomerTest {
         assertThat(arslan.getGroupsForTeamSports().contains(group1)).isTrue();
     }
 
-//    @Test
-//    void testToString() {
-//        arslan.setId(1l);
-//        arslan.setGroupsForTeamSports(new ArrayList<>());
-//        arslan.addGroupToUsersGroupList(group1);
-//
-//        String temp = "Customer{id=1, username='arslan123"
-//    }
 }
