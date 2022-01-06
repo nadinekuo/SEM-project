@@ -32,12 +32,6 @@ class CustomerTest {
 
 
     @Test
-    void isPremiumUser() {
-        assertThat(arslan.isPremiumUser()).isTrue();
-        assertThat(emil.isPremiumUser()).isFalse();
-    }
-
-    @Test
     void setPremiumUser() {
         arslan.setPremiumUser(false);
         assertThat(arslan.isPremiumUser()).isFalse();

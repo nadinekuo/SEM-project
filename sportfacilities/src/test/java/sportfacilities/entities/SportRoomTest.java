@@ -49,20 +49,9 @@ class SportRoomTest {
     }
 
     @Test
-    void getSportRoomName() {
-        assertThat(hallX1.getSportRoomName()).isEqualTo("X1");
-        assertThat(hockeyField.getSportRoomName()).isEqualTo("hockeyfieldA");
-    }
-
-    @Test
     void setSportRoomName() {
         hallX1.setSportRoomName("hallX5");
         assertThat(hallX1.getSportRoomName()).isEqualTo("hallX5");
-    }
-
-    @Test
-    void getMinCapacity() {
-        assertThat(hallX1.getMinCapacity()).isEqualTo(10);
     }
 
     @Test
@@ -72,21 +61,11 @@ class SportRoomTest {
     }
 
     @Test
-    void getMaxCapacity() {
-        assertThat(hallX2.getMaxCapacity()).isEqualTo(60);
-    }
-
-    @Test
     void setMaxCapacity() {
         hallX3.setMaxCapacity(50);
         assertThat(hallX3.getMaxCapacity()).isEqualTo(50);
     }
 
-
-//    @Test
-//    void getRelatedSport() {
-//    }
-//
 //    @Test
 //    void setRelatedSport() {
 //    }

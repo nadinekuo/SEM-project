@@ -1,10 +1,9 @@
 package sportfacilities.entities;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 
 import java.time.LocalDateTime;
-
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class LessonTest {
 
@@ -20,11 +19,6 @@ class LessonTest {
     }
 
     @Test
-    void getSize() {
-        assertThat(tango.getSize()).isEqualTo(10L);
-    }
-
-    @Test
     void setSize() {
         tango.setSize(15);
         assertThat(tango.getSize()).isEqualTo(15);
@@ -37,27 +31,9 @@ class LessonTest {
     }
 
     @Test
-    void getLessonId() {
-        tango.setLessonId(12L);
-        assertThat(tango.getLessonId()).isEqualTo(12L);
-    }
-
-
-    @Test
-    void getTitle() {
-        assertThat(tango.getTitle()).isEqualTo("Tango");
-    }
-
-    @Test
     void setTitle() {
         tango.setTitle("tango1");
         assertThat(tango.getTitle()).isEqualTo("tango1");
-    }
-
-    @Test
-    void getStartingTime() {
-        LocalDateTime startingDate = LocalDateTime.of(2021, 1, 1, 1, 1);
-        assertThat(tango.getStartingTime()).isEqualTo(startingDate);
     }
 
     @Test
@@ -65,12 +41,6 @@ class LessonTest {
         LocalDateTime startingDate = LocalDateTime.of(2021, 2, 2, 2, 2);
         tango.setStartingTime(startingDate);
         assertThat(tango.getStartingTime()).isEqualTo(startingDate);
-    }
-
-    @Test
-    void getEndingTime() {
-        LocalDateTime endingDate = LocalDateTime.of(2021, 1, 1, 1, 1);
-        assertThat(tango.getEndingTime()).isEqualTo(endingDate);
     }
 
     @Test

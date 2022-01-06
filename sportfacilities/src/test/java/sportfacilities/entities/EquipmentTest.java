@@ -18,19 +18,9 @@ class EquipmentTest {
     }
 
     @Test
-    void isInUse() {
-        assertThat(hockeyStick.isInUse()).isTrue();
-    }
-
-    @Test
     void setInUse() {
         hockeyStick.setInUse(false);
         assertThat(hockeyStick.isInUse()).isFalse();
-    }
-
-    @Test
-    void getEquipmentId() {
-        assertThat(hockeyStick.getEquipmentId()).isEqualTo(6L);
     }
 
     @Test
@@ -40,19 +30,9 @@ class EquipmentTest {
     }
 
     @Test
-    void getName() {
-        assertThat(hockeyStick.getName()).isEqualTo("hockey stick");
-    }
-
-    @Test
     void setName() {
         hockeyStick.setName("hockeyStick1");
         assertThat(hockeyStick.getName()).isEqualTo("hockeyStick1");
-    }
-
-    @Test
-    void getRelatedSport() {
-        assertThat(hockeyStick.getRelatedSport()).isEqualTo(hockey);
     }
 
     @Test

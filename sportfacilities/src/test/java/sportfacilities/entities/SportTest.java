@@ -37,21 +37,9 @@ class SportTest {
     }
 
     @Test
-    void getSportName() {
-        assertThat(soccer.getSportName()).isEqualTo("soccer");
-        assertThat(zumba.getSportName()).isEqualTo("zumba");
-    }
-
-    @Test
     void setSportName() {
         soccer.setSportName("soccer1");
         assertThat(soccer.getSportName()).isEqualTo("soccer1");
-    }
-
-    @Test
-    void isTeamSport() {
-        assertThat(soccer.isTeamSport()).isTrue();
-        assertThat(yoga.isTeamSport()).isFalse();
     }
 
     @Test
@@ -61,19 +49,9 @@ class SportTest {
     }
 
     @Test
-    void getMinTeamSize() {
-        assertThat(soccer.getMinTeamSize()).isEqualTo(6);
-    }
-
-    @Test
     void setMinTeamSize() {
         hockey.setMinTeamSize(10);
         assertThat(hockey.getMinTeamSize()).isEqualTo(10);
-    }
-
-    @Test
-    void getMaxTeamSize() {
-        assertThat(tennis.getMaxTeamSize()).isEqualTo(13);
     }
 
     @Test
@@ -90,17 +68,9 @@ class SportTest {
     }
 
 //    @Test
-//    void getSportLocations() {
-//    }
-//
-//    @Test
 //    void setSportLocations() {
 //    }
-//
-//    @Test
-//    void getEquipmentList() {
-//    }
-//
+
 //    @Test
 //    void setEquipmentList() {
 //    }

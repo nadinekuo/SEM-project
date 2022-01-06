@@ -34,21 +34,9 @@ class GroupTest {
     }
 
     @Test
-    void getGroupId() {
-        assertThat(group1.getGroupId()).isEqualTo(33L);
-        assertThat(group2.getGroupId()).isEqualTo(42L);
-    }
-
-    @Test
     void setGroupId() {
         group1.setGroupId(56L);
         assertThat(group1.getGroupId()).isEqualTo(56L);
-    }
-
-    @Test
-    void getGroupName() {
-        assertThat(group1.getGroupName()).isEqualTo("soccerTeam1");
-        assertThat(group2.getGroupName()).isEqualTo("volleyballTeam3");
     }
 
     @Test
@@ -87,12 +75,6 @@ class GroupTest {
                 assertThat(group2.getGroupMembers().get(i).getUsername()).isEqualTo("nadine123");
             }
         }
-    }
-
-    @Test
-    void getGroupSize() {
-        assertThat(group1.getGroupSize()).isEqualTo(6L);
-        assertThat(group2.getGroupSize()).isEqualTo(3L);
     }
 
     @Test
