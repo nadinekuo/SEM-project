@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -27,24 +28,15 @@ public class BookingSystemTest {
      */
     @Mock
     transient ReservationService reservationService;
-    /**
-     * The Rest template.
-     */
-    @Mock
-    transient RestTemplate restTemplate;
 
     ReservationSortingStrategy sortingStrategy = new ChronologicalStrategy();
     transient List<Reservation> userIdStrategy = new ArrayList<>();
     transient BookingSystem bookingSystem = new BookingSystem(new ChronologicalStrategy());
-    transient String equipmentUrl = "http://eureka-equipment";
-    transient String userUrl = "http://eureka-user";
-
     transient Reservation[] reservations;
 
     @BeforeEach
     void setup() {
         int size = 6;
-        restTemplate = Mockito.mock(RestTemplate.class);
         reservations = new Reservation[size];
 
         String[] titles = {"Tango", "Krav Maga", "Ziou Zitsou", "Krav Maga", "Box", "Yoga"};
@@ -94,11 +86,11 @@ public class BookingSystemTest {
         BookingSystem userPremiumStrategy =
             new BookingSystem(new BasicPremiumUserStrategy());
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             userPremiumStrategy.addReservation(reservations[i]);
 
-            //only second user is premium
-            if (i == 1) {
+            //only first and second user is premium
+            if (i == 1 || i == 2) {
                 reservations[i].setMadeByPremiumUser(true);
             }
         }
@@ -130,6 +122,46 @@ public class BookingSystemTest {
         BookingSystem equipmentNameStrategy = new BookingSystem(new EquipmentNameStrategy());
 
         assertNull(equipmentNameStrategy.getNextReservation());
+    }
+
+    @Test
+    void getNextReservationEquipmentNameNull() {
+        BookingSystem equipmentNameStrategy = new BookingSystem(new EquipmentNameStrategy());
+        equipmentNameStrategy.addReservation(null);
+        assertNull(equipmentNameStrategy.getNextReservation());
+    }
+
+
+    @Test
+    void getNextReservationEquipmentNameWithDifferentObjects() {
+        BookingSystem equipmentNameStrategy =
+            new BookingSystem(new EquipmentNameStrategy());
+
+        for (int i = 0; i < 6; i++) {
+            equipmentNameStrategy.addReservation(reservations[i]);
+        }
+        reservations[0].setTypeOfReservation(ReservationType.LESSON);
+        reservations[2].setTypeOfReservation(ReservationType.LESSON);
+        reservations[3].setTypeOfReservation(ReservationType.LESSON);
+        reservations[5].setTypeOfReservation(ReservationType.LESSON);
+
+        assertEquals(reservations[4], equipmentNameStrategy.getNextReservation());
+    }
+
+    @Test
+    void getNextReservationEquipmentNameWithDifferentObjects2() {
+        BookingSystem equipmentNameStrategy =
+            new BookingSystem(new EquipmentNameStrategy());
+
+        for (int i = 0; i < 4; i++) {
+            equipmentNameStrategy.addReservation(reservations[i]);
+        }
+        reservations[0].setTypeOfReservation(ReservationType.LESSON);
+        reservations[1].setTypeOfReservation(ReservationType.EQUIPMENT);
+        reservations[2].setTypeOfReservation(ReservationType.EQUIPMENT);
+        reservations[3].setTypeOfReservation(ReservationType.LESSON);
+
+        assertEquals(reservations[1], equipmentNameStrategy.getNextReservation());
     }
 
     @Test
