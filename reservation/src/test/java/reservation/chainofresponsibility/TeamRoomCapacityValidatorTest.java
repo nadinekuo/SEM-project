@@ -79,7 +79,8 @@ public class TeamRoomCapacityValidatorTest {
             teamRoomCapacityValidator.handle(groupReservation);
         });
 
-        verify(sportFacilityCommunicator).getIsSportHall(groupReservation.getSportFacilityReservedId());
+        verify(sportFacilityCommunicator).getIsSportHall(
+            groupReservation.getSportFacilityReservedId());
         verify(userFacilityCommunicator).getGroupSize(groupReservation.getGroupId());
         verify(sportFacilityCommunicator).getSportRoomMinimumCapacity(
             groupReservation.getSportFacilityReservedId());
@@ -101,7 +102,8 @@ public class TeamRoomCapacityValidatorTest {
             teamRoomCapacityValidator.handle(groupReservation);
         });
 
-        verify(sportFacilityCommunicator).getIsSportHall(groupReservation.getSportFacilityReservedId());
+        verify(sportFacilityCommunicator).getIsSportHall(
+            groupReservation.getSportFacilityReservedId());
         verify(userFacilityCommunicator).getGroupSize(groupReservation.getGroupId());
         verify(sportFacilityCommunicator).getSportRoomMinimumCapacity(
             groupReservation.getSportFacilityReservedId());
@@ -137,7 +139,8 @@ public class TeamRoomCapacityValidatorTest {
             teamRoomCapacityValidator.handle(groupReservation);
         });
 
-        verify(sportFacilityCommunicator).getIsSportHall(groupReservation.getSportFacilityReservedId());
+        verify(sportFacilityCommunicator).getIsSportHall(
+            groupReservation.getSportFacilityReservedId());
         verify(userFacilityCommunicator).getGroupSize(groupReservation.getGroupId());
         verify(sportFacilityCommunicator).getSportFieldSport(
             groupReservation.getSportFacilityReservedId());
