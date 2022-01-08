@@ -1,6 +1,12 @@
 package user.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +15,6 @@ import org.springframework.web.client.RestTemplate;
 import user.config.UserDtoConfig;
 import user.entities.Customer;
 import user.services.UserService;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.NoSuchElementException;
 
 /**
  * The type User controller.
@@ -74,10 +76,13 @@ public class UserController {
             || data.getPassword().isEmpty()) {
             return new ResponseEntity<>("Fill in all fields.", HttpStatus.BAD_REQUEST);
         }
-        if (userService.checkCustomerExists(data.getUsername())) {
-            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+        try {
+            if (userService.checkCustomerExists(data.getUsername())) {
+                return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+            }
+        } catch (NoSuchElementException e) {
+            userService.registerCustomer(data);
         }
-        userService.registerCustomer(data);
         return new ResponseEntity<>("User has been registered.", HttpStatus.OK);
     }
 
@@ -95,10 +100,13 @@ public class UserController {
             || data.getPassword().isEmpty()) {
             return new ResponseEntity<>("Fill in all fields.", HttpStatus.BAD_REQUEST);
         }
-        if (userService.checkAdminExists(data.getUsername())) {
-            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+        try {
+            if (userService.checkAdminExists(data.getUsername())) {
+                return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+            }
+        } catch (NoSuchElementException e) {
+            userService.registerAdmin(data);
         }
-        userService.registerAdmin(data);
         return new ResponseEntity<>("User has been registered.", HttpStatus.OK);
     }
 

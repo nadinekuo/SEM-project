@@ -1,13 +1,9 @@
 package user.services;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,7 +56,7 @@ class UserServiceTest {
     }
 
     @Test
-    void getUserById() {
+    void getUserByIdTest() {
         when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
         User result = userService.getUserById(1L);
         assertEquals(result, customer);
@@ -86,7 +82,7 @@ class UserServiceTest {
 
         assertEquals(captured.getUsername(), "erwin");
         assertTrue(passwordEncoder.matches(data.getPassword(), captured.getPassword()));
-        assertEquals(captured.isPremiumUser(), true);
+        assertTrue(captured.isPremiumUser());
     }
 
     @Test
@@ -106,7 +102,7 @@ class UserServiceTest {
     }
 
     @Test
-    void upgradeCustomer() {
+    void upgradeCustomerTest() {
         UserDtoConfig basicCustomer = new UserDtoConfig("erwin", "password", false);
         userService.registerCustomer(basicCustomer);
         ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
@@ -124,18 +120,48 @@ class UserServiceTest {
     }
 
     @Test
-    void checkCustomerExists() {
-        when(customerRepository.findByUsername("erwin")).thenReturn(Optional.of(customer));
-        boolean result = userService.checkCustomerExists("erwin");
-        verify(customerRepository, times(1)).findByUsername("erwin");
-        assertEquals(result, true);
+    void getCustomerByUsernameTest() {
+        when(customerRepository.findCustomerByUsername("erwin")).thenReturn(Optional.of(customer));
+        Optional<Customer> result = userService.getCustomerByUsername("erwin");
+        verify(customerRepository, times(1)).findCustomerByUsername("erwin");
+        assertEquals(result.get(), customer);
     }
 
     @Test
-    void checkAdminExists() {
+    void checkCustomerExistsTest() {
+        when(customerRepository.findByUsername("erwin")).thenReturn(Optional.of(customer));
+        boolean result = userService.checkCustomerExists("erwin");
+        verify(customerRepository, times(1)).findByUsername("erwin");
+        assertTrue(result);
+    }
+
+    @Test
+    void getAdminByUsernameTest() {
+        when(adminRepository.findAdminByUsername("admin")).thenReturn(Optional.of(admin));
+        Optional<Admin> result = userService.getAdminByUsername("admin");
+        verify(adminRepository, times(1)).findAdminByUsername("admin");
+        assertEquals(result.get(), admin);
+    }
+
+    @Test
+    void checkAdminExistsTest() {
         when(adminRepository.findByUsername("admin")).thenReturn(Optional.of(admin));
         boolean result = userService.checkAdminExists("admin");
         verify(adminRepository, times(1)).findByUsername("admin");
-        assertEquals(result, true);
+        assertTrue(result);
+    }
+
+    @Test
+    void getCustomerByUsernameFalseTest() {
+        Optional<Customer> result = userService.getCustomerByUsername("emma");
+        verify(customerRepository, times(1)).findCustomerByUsername("emma");
+        assertEquals(Optional.empty(), result);
+    }
+
+    @Test
+    void getAdminByUsernameFalseTest() {
+        Optional<Admin> result = userService.getAdminByUsername("adminFalse");
+        verify(adminRepository, times(1)).findAdminByUsername("adminFalse");
+        assertEquals(Optional.empty(), result);
     }
 }
