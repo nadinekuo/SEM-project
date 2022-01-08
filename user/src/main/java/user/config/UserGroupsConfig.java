@@ -4,7 +4,6 @@ import java.util.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import user.entities.Admin;
 import user.entities.Customer;
 import user.entities.Group;
@@ -13,8 +12,6 @@ import user.repositories.UserRepository;
 
 @Configuration
 public class UserGroupsConfig {
-
-    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Bean
     CommandLineRunner userCommandLineRunner(UserRepository<Customer> customerRepository,
@@ -29,7 +26,7 @@ public class UserGroupsConfig {
             Customer nadine = new Customer("nadine123", "password5", true);
             Customer panagiotis = new Customer("panas123", "password6", false);
 
-            Admin admin1 = new Admin("admin1", encoder.encode("randomstring1"));
+            Admin admin1 = new Admin("admin1", "randomstring1");
 
             customerRepository.saveAll(List.of(arslan, emil, emma, erwin, nadine, panagiotis));
             adminRepository.saveAll(List.of(admin1));

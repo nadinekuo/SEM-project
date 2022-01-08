@@ -6,12 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.web.bind.annotation.RestController;
 import security.client.SecurityControllerEureka;
 
 @SpringBootApplication
-@EnableDiscoveryClient
 @RestController
 public class SecurityApplication implements SecurityControllerEureka {
 
@@ -28,6 +26,7 @@ public class SecurityApplication implements SecurityControllerEureka {
 
     @Override
     public String greeting() {
-        return String.format("Hello from '%s'!", eurekaClient.getApplication(appName).getName());
+        return String.format(
+            "Hello from '%s'!", eurekaClient.getApplication(appName).getName());
     }
 }
