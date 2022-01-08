@@ -2,8 +2,12 @@ package reservation.chainofresponsibility;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
@@ -39,9 +43,9 @@ class ReservationCheckerTest {
         Mockito.doReturn(userReservationBalanceValidator).when(reservationCheckerSpy)
             .createChainOfResponsibility(any(), any());
 
-        when(userReservationBalanceValidator.handle(any())).thenReturn(true);
+        doNothing().when(userReservationBalanceValidator).handle(any());
 
-        assertTrue(reservationCheckerSpy.checkReservation(new Reservation(),
+        assertDoesNotThrow(() -> reservationCheckerSpy.checkReservation(new Reservation(),
             new ReservationController(reservationService, reservationCheckerSpy)));
     }
 
@@ -53,9 +57,10 @@ class ReservationCheckerTest {
         Mockito.doReturn(userReservationBalanceValidator).when(reservationCheckerSpy)
             .createChainOfResponsibility(any(), any());
 
-        when(userReservationBalanceValidator.handle(any())).thenReturn(false);
+        doThrow(InvalidReservationException.class).when(userReservationBalanceValidator).handle(any());
 
-        assertFalse(reservationCheckerSpy.checkReservation(new Reservation(),
+        assertThrows(InvalidReservationException.class,
+            () -> reservationCheckerSpy.checkReservation(new Reservation(),
             new ReservationController(reservationService, reservationCheckerSpy)));
     }
 

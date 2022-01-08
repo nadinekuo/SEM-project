@@ -79,7 +79,8 @@ public class SportController {
      */
     @PutMapping("/{sportName}/{minCapacity}/{maxCapacity}/addTeamSport/admin")
     @ResponseBody
-    public ResponseEntity<?> addSport(@PathVariable String sportName, @PathVariable int minCapacity,
+    public ResponseEntity<String> addSport(@PathVariable String sportName,
+                                       @PathVariable int minCapacity,
                                       @PathVariable int maxCapacity) {
 
         sportService.addSport(new Sport(sportName, minCapacity, maxCapacity));
@@ -94,7 +95,7 @@ public class SportController {
      */
     @PutMapping("/{sportName}/addNonTeamSport/admin")
     @ResponseBody
-    public ResponseEntity<?> addSport(@PathVariable String sportName) {
+    public ResponseEntity<String> addSport(@PathVariable String sportName) {
 
         sportService.addSport(new Sport(sportName));
         return new ResponseEntity<>(HttpStatus.OK);

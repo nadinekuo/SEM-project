@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -164,7 +165,7 @@ public class ReservationControllerTest {
                 + "/getAvailableEquipment", String.class))
             .thenReturn(ResponseEntity.of(Optional.of("1")));
 
-        given(reservationChecker.checkReservation(any(), any())).willReturn(true);
+        //given(reservationChecker.checkReservation(any(), any())).willReturn();
 
         MvcResult result = mockMvc
             .perform(post(equipmentBookingUrl, userId, equipmentNameValid, date, madeByPremiumUser))
@@ -205,7 +206,7 @@ public class ReservationControllerTest {
     @MockitoSettings(strictness = Strictness.LENIENT)
     public void testSportRoomReservationValidDates(String date) throws Exception {
 
-        when(reservationChecker.checkReservation(any(), any())).thenReturn(true);
+        doNothing().when(reservationChecker).checkReservation(any(), any());
 
         MvcResult result = mockMvc.perform(
             post(sportRoomBookingUrl, userId, groupId, sportFacilityId, date, madeByPremiumUser))

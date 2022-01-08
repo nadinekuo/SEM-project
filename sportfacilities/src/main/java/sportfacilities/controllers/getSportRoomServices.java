@@ -34,7 +34,7 @@ public class getSportRoomServices {
         }
     }
 
-    public ResponseEntity<?> getSportRoomMaximumCapacity(Long sportRoomId) {
+    public ResponseEntity<String> getSportRoomMaximumCapacity(Long sportRoomId) {
         try {
             Integer maxCapacity = sportRoomService.getSportRoom(sportRoomId).getMaxCapacity();
             return new ResponseEntity<>(maxCapacity.toString(), HttpStatus.OK);
@@ -43,7 +43,7 @@ public class getSportRoomServices {
         }
     }
 
-    public ResponseEntity<?> getSportRoomMinimumCapacity(Long sportRoomId) {
+    public ResponseEntity<String> getSportRoomMinimumCapacity(Long sportRoomId) {
         try {
             Integer minCapacity = sportRoomService.getSportRoom(sportRoomId).getMinCapacity();
             return new ResponseEntity<>(minCapacity.toString(), HttpStatus.OK);

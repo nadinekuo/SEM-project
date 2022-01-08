@@ -1,6 +1,7 @@
 package reservation.entities.chainofresponsibility;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
@@ -31,18 +32,18 @@ public class ReservationChecker {
      *                              microservices are made
      * @return boolean - true if Reservation can be made, else false.
      */
-    public boolean checkReservation(Reservation reservation,
-                                    ReservationController reservationController) {
+    public void checkReservation(Reservation reservation,
+                                    ReservationController reservationController)
+        throws InvalidReservationException {
 
         // Returns first validator in chain created for this reservation
         ReservationValidator reservationValidator =
             createChainOfResponsibility(reservation, reservationController);
 
         try {
-            return reservationValidator.handle(reservation);   // Start of chain
-        } catch (InvalidReservationException e) {
-            e.printStackTrace();
-            return false;
+            reservationValidator.handle(reservation);   // Start of chain
+        } catch (InvalidReservationException | HttpClientErrorException e) {
+            throw new InvalidReservationException(e.getMessage());
         }
     }
 

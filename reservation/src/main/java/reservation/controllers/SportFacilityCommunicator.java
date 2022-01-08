@@ -1,6 +1,7 @@
 package reservation.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 public class SportFacilityCommunicator {
@@ -26,15 +27,15 @@ public class SportFacilityCommunicator {
      * @param sportsRoomId the sports room id
      * @return the sports room exists
      */
-    public Boolean getSportsRoomExists(Long sportsRoomId) {
+    public Boolean getSportsRoomExists(Long sportsRoomId) throws HttpClientErrorException {
 
         String methodSpecificUrl = "/sportRoom/" + sportsRoomId.toString() + "/exists";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
-        Boolean sportRoomExists = Boolean.valueOf(response);
-        return sportRoomExists;
+        ResponseEntity<String> response =
+            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl, String.class);
+
+        return Boolean.valueOf(response.getBody());
     }
 
 
@@ -44,16 +45,15 @@ public class SportFacilityCommunicator {
      * @param sportRoomId the sport room id
      * @return the is sport hall
      */
-    public Boolean getIsSportHall(Long sportRoomId) {
+    public Boolean getIsSportHall(Long sportRoomId) throws HttpClientErrorException {
 
         String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/isHall";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
-        Boolean sportRoomIsHall = Boolean.valueOf(response);
+        ResponseEntity<String> response =
+            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl, String.class);
 
-        return sportRoomIsHall;
+        return Boolean.valueOf(response.getBody());
     }
 
     /**
@@ -62,16 +62,15 @@ public class SportFacilityCommunicator {
      * @param sportRoomId the sport room id
      * @return the sport room maximum capacity
      */
-    public int getSportRoomMaximumCapacity(Long sportRoomId) {
+    public int getSportRoomMaximumCapacity(Long sportRoomId) throws HttpClientErrorException {
 
         String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/getMaximumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
-        int maxCapacity = Integer.valueOf(response);
+        ResponseEntity<String> response =
+            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl, String.class);
 
-        return maxCapacity;
+        return Integer.parseInt(response.getBody());
     }
 
     /**
@@ -80,15 +79,14 @@ public class SportFacilityCommunicator {
      * @param sportRoomId the sport room id
      * @return the sport room minimum capacity
      */
-    public int getSportRoomMinimumCapacity(Long sportRoomId) {
+    public int getSportRoomMinimumCapacity(Long sportRoomId) throws HttpClientErrorException {
         String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/getMinimumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
-        int minCapacity = Integer.valueOf(response);
+        ResponseEntity<String> response =
+            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl, String.class);
 
-        return minCapacity;
+        return Integer.parseInt(response.getBody());
     }
 
     /**
@@ -97,7 +95,7 @@ public class SportFacilityCommunicator {
      * @param equipmentName the equipment name
      * @return the first available equipment id
      */
-    public Long getFirstAvailableEquipmentId(String equipmentName) {
+    public Long getFirstAvailableEquipmentId(String equipmentName) throws HttpClientErrorException {
 
         String methodSpecificUrl = "/equipment/" + equipmentName + "/getAvailableEquipment";
 
@@ -116,7 +114,7 @@ public class SportFacilityCommunicator {
      *
      * @param equipmentId the equipment id
      */
-    public void setEquipmentToInUse(Long equipmentId) {
+    public void setEquipmentToInUse(Long equipmentId) throws HttpClientErrorException{
 
         String methodSpecificUrl = "/equipment/" + equipmentId.toString() + "/reserved";
         restTemplate.put(sportFacilityUrl + methodSpecificUrl, String.class);
@@ -128,15 +126,15 @@ public class SportFacilityCommunicator {
      * @param sportFieldId - id of sport field to be reserved
      * @return String - name of related Sport (id of Sport)
      */
-    public String getSportFieldSport(Long sportFieldId) {
+    public String getSportFieldSport(Long sportFieldId) throws HttpClientErrorException{
 
         String methodSpecificUrl = "/sportRoom/" + sportFieldId.toString() + "/getSport";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String relatedSport =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
+        ResponseEntity<String> relatedSport =
+            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl, String.class);
 
-        return relatedSport;
+        return relatedSport.getBody();
     }
 
     /**
@@ -145,16 +143,15 @@ public class SportFacilityCommunicator {
      * @param sportName the sport name
      * @return the sport max team size
      */
-    public int getSportMaxTeamSize(String sportName) {
+    public int getSportMaxTeamSize(String sportName) throws HttpClientErrorException {
 
         String methodSpecificUrl = "/sport/" + sportName + "/getMaxTeamSize";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
-        int maxTeamSize = Integer.valueOf(response);
+        ResponseEntity<String> response =
+            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl, String.class);
 
-        return maxTeamSize;
+        return Integer.parseInt(response.getBody());
     }
 
     /**
@@ -163,16 +160,15 @@ public class SportFacilityCommunicator {
      * @param sportName the sport name
      * @return the sport min team size
      */
-    public int getSportMinTeamSize(String sportName) {
+    public int getSportMinTeamSize(String sportName) throws HttpClientErrorException {
 
         String methodSpecificUrl = "/sport/" + sportName + "/getMinTeamSize";
 
         // Call to SportRoomController in Sport Facilities microservice
-        String response =
-            restTemplate.getForObject(sportFacilityUrl + methodSpecificUrl, String.class);
-        int minTeamSize = Integer.valueOf(response);
+        ResponseEntity<String> response =
+            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl, String.class);
 
-        return minTeamSize;
+        return Integer.parseInt(response.getBody());
     }
 
 }
