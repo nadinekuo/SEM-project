@@ -1,6 +1,6 @@
 package reservation.chainofresponsibility;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
@@ -17,6 +17,7 @@ import reservation.entities.ReservationType;
 import reservation.entities.chainofresponsibility.InvalidReservationException;
 import reservation.entities.chainofresponsibility.ReservationChecker;
 import reservation.entities.chainofresponsibility.ReservationValidator;
+import reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
 import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
 import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import reservation.services.ReservationService;
@@ -67,7 +68,7 @@ class ReservationCheckerTest {
             new UserReservationBalanceValidator(reservationService, reservationController);
 
         ReservationValidator sportFacilityHandler =
-            new UserReservationBalanceValidator(reservationService, reservationController);
+            new SportFacilityAvailabilityValidator(reservationService, reservationController);
         userBalanceHandler.setNext(sportFacilityHandler);
         assertThat(reservationChecker
             .createChainOfResponsibility(new Reservation(), reservationController))
@@ -82,7 +83,7 @@ class ReservationCheckerTest {
         ReservationValidator userBalanceHandler =
             new UserReservationBalanceValidator(reservationService, reservationController);
         ReservationValidator sportFacilityHandler =
-            new UserReservationBalanceValidator(reservationService, reservationController);
+            new SportFacilityAvailabilityValidator(reservationService, reservationController);
         userBalanceHandler.setNext(sportFacilityHandler);
         ReservationValidator capacityHandler =
             new TeamRoomCapacityValidator(reservationService, reservationController);

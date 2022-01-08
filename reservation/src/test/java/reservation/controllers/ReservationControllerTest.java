@@ -58,6 +58,8 @@ public class ReservationControllerTest {
 
     private final transient String validDate = "2099-01-06T17:00:00";
 
+    private final transient String sportFacilityUrl = "http://eureka-sport-facilities";
+
     transient String equipmentBookingUrl =
         "/reservation/{userId}/{equipmentName}/{date}/{madeByPremiumUser}/makeEquipmentBooking";
 
@@ -132,7 +134,7 @@ public class ReservationControllerTest {
     public void testEquipmentReservationInvalidDates(String date) throws Exception {
 
         Mockito.when(restTemplate.getForEntity(
-            ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
+            sportFacilityUrl + "/equipment/" + equipmentNameValid
                 + "/getAvailableEquipment", String.class))
             .thenReturn(ResponseEntity.of(Optional.of(String.valueOf(1L))));
 
@@ -158,7 +160,7 @@ public class ReservationControllerTest {
     public void testEquipmentReservationValidDates(String date) throws Exception {
 
         Mockito.when(restTemplate.getForEntity(
-            ReservationController.sportFacilityUrl + "/equipment/" + equipmentNameValid
+            sportFacilityUrl + "/equipment/" + equipmentNameValid
                 + "/getAvailableEquipment", String.class))
             .thenReturn(ResponseEntity.of(Optional.of("1")));
 
@@ -276,7 +278,7 @@ public class ReservationControllerTest {
     public void testLessonReservationLessonIdDoesNotExist() throws Exception {
 
         Mockito.when(restTemplate.getForObject(
-            ReservationController.sportFacilityUrl + "/lesson/" + -1 + "/getStartingTime",
+            sportFacilityUrl + "/lesson/" + -1 + "/getStartingTime",
             String.class)).thenReturn(null);
 
         MvcResult result =
