@@ -1,6 +1,8 @@
 package sportfacilities.entities;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
@@ -55,6 +57,9 @@ class LessonTest {
         tango.setLessonId(20L);
         hiit.setLessonId(15L);
         assertThat(tango.equals(hiit)).isFalse();
+
+        Lesson tango2 = tango;
+        assertTrue(tango.equals(tango2));
     }
 
     @Test
@@ -62,5 +67,11 @@ class LessonTest {
         tango.setLessonId(20L);
         String res = "Lesson{lessonId=20, title='Tango'}";
         assertThat(tango.toString()).isEqualTo(res);
+    }
+
+    @Test
+    void notEqualsTest() {
+        Lesson boxing = null;
+        assertFalse(tango.equals(boxing));
     }
 }

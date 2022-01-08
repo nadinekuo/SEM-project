@@ -1,6 +1,7 @@
 package sportfacilities.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -62,9 +63,9 @@ class SportTest {
     }
 
     @Test
-    void toStringTest() {
-        String expected = "volleyball";
-        assertThat(volleyball.toString()).isEqualTo(expected);
+    void notEqualsTest() {
+        Sport soccer1 = null;
+        assertFalse(soccer.equals(soccer1));
     }
 
 //    @Test
@@ -74,4 +75,10 @@ class SportTest {
 //    @Test
 //    void setEquipmentList() {
 //    }
+
+    @Test
+    void toStringTest() {
+        String res = "Sport{sportName='soccer', teamSport=true, minTeamSize=6, maxTeamSize=11}";
+        assertThat(soccer.toString()).isEqualTo(res);
+    }
 }

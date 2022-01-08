@@ -1,6 +1,8 @@
 package sportfacilities.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +18,15 @@ class EquipmentTest {
 
         hockeyStick = new Equipment(6L, "hockey stick", hockey, true);
     }
+
+    @Test
+    void EquipmentConstructorTest() {
+        Equipment soccerBall = new Equipment("soccer ball", football, false);
+        assertThat(soccerBall.getName()).isEqualTo("soccer ball");
+        assertThat(soccerBall.getRelatedSport()).isEqualTo(football);
+        assertFalse(soccerBall.isInUse());
+    }
+    
 
     @Test
     void setInUse() {
@@ -39,5 +50,23 @@ class EquipmentTest {
     void setRelatedSport() {
         hockeyStick.setRelatedSport(football);
         assertThat(hockeyStick.getRelatedSport()).isEqualTo(football);
+    }
+
+    @Test
+    void testEquals() {
+        Equipment hockeyStick1 = hockeyStick;
+        assertTrue(hockeyStick.equals(hockeyStick1));
+    }
+    
+    @Test
+    void testNoEquals() {
+        Equipment basketBall = null;
+        assertFalse(hockeyStick.equals(basketBall));
+    }
+
+    @Test
+    void testToString() {
+        String res = "Equipment{equipmentId=6, name='hockey stick', relatedSport=hockey}";
+        assertThat(hockeyStick.toString()).isEqualTo(res);
     }
 }

@@ -202,6 +202,9 @@ public class Sport {
 
     @Override
     public String toString() {
-        return "" + sportName + "";
+        return "Sport{" + "sportName='" + sportName + "'" +
+            ", teamSport=" + teamSport +
+            ", minTeamSize=" + minTeamSize +
+            ", maxTeamSize=" + maxTeamSize + '}';
     }
 }

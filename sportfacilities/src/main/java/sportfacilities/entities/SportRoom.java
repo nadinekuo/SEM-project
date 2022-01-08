@@ -124,10 +124,6 @@ public class SportRoom {
         return isSportsHall;
     }
 
-    public void setSportsHall(boolean sportsHall) {
-        isSportsHall = sportsHall;
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(sportRoomName);

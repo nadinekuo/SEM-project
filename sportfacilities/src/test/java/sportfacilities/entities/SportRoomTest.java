@@ -1,6 +1,8 @@
 package sportfacilities.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -37,14 +39,15 @@ class SportRoomTest {
     }
 
     @Test
-    void getSportRoomId() {
-        hallX1.setSportRoomId(1L);
-        assertThat(hallX1.getSportRoomId()).isEqualTo(1L);
+    void setSportRoomId() {
+        hallX1.setSportRoomId(56L);
+        assertThat(hallX1.getSportRoomId()).isEqualTo(56L);
     }
 
     @Test
-    void getIsSportsHall() {
-        assertThat(hallX1.getIsSportsHall()).isTrue();
+    void setIsSportsHall() {
+        hallX2.setIsSportsHall(false);
+        assertThat(hallX2.getIsSportsHall()).isFalse();
         assertThat(hockeyField.getIsSportsHall()).isFalse();
     }
 
@@ -65,6 +68,19 @@ class SportRoomTest {
         hallX3.setMaxCapacity(50);
         assertThat(hallX3.getMaxCapacity()).isEqualTo(50);
     }
+
+    @Test
+    void testEquals() {
+        assertTrue(hallX1.equals(hallX1));
+
+        SportRoom hallX4 = null;
+        assertFalse(hallX1.equals(hallX4));
+
+        assertFalse(hallX1.equals(hockey));
+
+        assertFalse(hallX1.equals(hallX4));
+    }
+
 
 //    @Test
 //    void setRelatedSport() {
