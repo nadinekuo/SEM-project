@@ -52,10 +52,10 @@ public class EquipmentController {
      */
     @GetMapping("/{equipmentId}")
     @ResponseBody
-    public ResponseEntity<String> getEquipment(@PathVariable Long equipmentId) {
+    public ResponseEntity<?> getEquipment(@PathVariable Long equipmentId) {
         try {
             Equipment equipment = equipmentService.getEquipment(equipmentId);
-            return new ResponseEntity<>(equipment.toString(), HttpStatus.OK);
+            return new ResponseEntity<>(equipment, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

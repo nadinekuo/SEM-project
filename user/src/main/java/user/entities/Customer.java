@@ -2,9 +2,14 @@ package user.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.persistence.*;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 /**
  * The type Customer.
@@ -18,8 +23,8 @@ public class Customer extends User {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_groups", joinColumns = {
         @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable =
-            false)},
-        inverseJoinColumns = {
+            false)
+    }, inverseJoinColumns = {
         @JoinColumn(name = "group_id", referencedColumnName = "groupId", nullable = false,
             updatable = false)
     })

@@ -1,5 +1,6 @@
 package user.controllers;
 
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import user.entities.Customer;
 import user.services.CustomerService;
 
-import java.util.NoSuchElementException;
-
 @RestController
 @RequestMapping("customer")
 public class CustomerController {
@@ -21,6 +20,7 @@ public class CustomerController {
 
     /**
      * Instantiates a new Customer Controller
+     *
      * @param customerService
      */
     public CustomerController(CustomerService customerService) {
@@ -35,10 +35,10 @@ public class CustomerController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> getCustomerById(@PathVariable long id) {
-        try{
+        try {
             Customer customer = customerService.getCustomerById(id);
             return new ResponseEntity<>(customer, HttpStatus.OK);
-        }catch(NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
