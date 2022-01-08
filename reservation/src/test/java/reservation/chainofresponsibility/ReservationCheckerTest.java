@@ -1,14 +1,11 @@
 package reservation.chainofresponsibility;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,11 +54,12 @@ class ReservationCheckerTest {
         Mockito.doReturn(userReservationBalanceValidator).when(reservationCheckerSpy)
             .createChainOfResponsibility(any(), any());
 
-        doThrow(InvalidReservationException.class).when(userReservationBalanceValidator).handle(any());
+        doThrow(InvalidReservationException.class).when(userReservationBalanceValidator)
+            .handle(any());
 
         assertThrows(InvalidReservationException.class,
             () -> reservationCheckerSpy.checkReservation(new Reservation(),
-            new ReservationController(reservationService, reservationCheckerSpy)));
+                new ReservationController(reservationService, reservationCheckerSpy)));
     }
 
     @Test
@@ -75,9 +73,8 @@ class ReservationCheckerTest {
         ReservationValidator sportFacilityHandler =
             new SportFacilityAvailabilityValidator(reservationService, reservationController);
         userBalanceHandler.setNext(sportFacilityHandler);
-        assertThat(reservationChecker
-            .createChainOfResponsibility(new Reservation(), reservationController))
-            .usingRecursiveComparison().isEqualTo(userBalanceHandler);
+        assertThat(reservationChecker.createChainOfResponsibility(new Reservation(),
+            reservationController)).usingRecursiveComparison().isEqualTo(userBalanceHandler);
     }
 
     @Test
@@ -95,9 +92,8 @@ class ReservationCheckerTest {
         sportFacilityHandler.setNext(capacityHandler);
         Reservation reservation = new Reservation();
         reservation.setTypeOfReservation(ReservationType.SPORTS_ROOM);
-        assertThat(
-            reservationChecker.createChainOfResponsibility(reservation, reservationController))
-            .usingRecursiveComparison().isEqualTo(userBalanceHandler);
+        assertThat(reservationChecker.createChainOfResponsibility(reservation,
+            reservationController)).usingRecursiveComparison().isEqualTo(userBalanceHandler);
     }
 
 }
