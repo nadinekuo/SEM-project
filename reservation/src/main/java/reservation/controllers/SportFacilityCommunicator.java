@@ -37,7 +37,6 @@ public class SportFacilityCommunicator {
         return sportRoomExists;
     }
 
-
     /**
      * Gets is sport hall.
      *
@@ -64,7 +63,8 @@ public class SportFacilityCommunicator {
      */
     public int getSportRoomMaximumCapacity(Long sportRoomId) {
 
-        String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/getMaximumCapacity";
+        String methodSpecificUrl =
+            "/getSportRoomServices/" + sportRoomId.toString() + "/getMaximumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
         String response =
@@ -81,7 +81,8 @@ public class SportFacilityCommunicator {
      * @return the sport room minimum capacity
      */
     public int getSportRoomMinimumCapacity(Long sportRoomId) {
-        String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/getMinimumCapacity";
+        String methodSpecificUrl =
+            "/getSportRoomServices/" + sportRoomId.toString() + "/getMinimumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
         String response =
@@ -130,7 +131,7 @@ public class SportFacilityCommunicator {
      */
     public String getSportFieldSport(Long sportFieldId) {
 
-        String methodSpecificUrl = "/sportRoom/" + sportFieldId.toString() + "/getSport";
+        String methodSpecificUrl = "/getSportRoomServices/" + sportFieldId.toString() + "/getSport";
 
         // Call to SportRoomController in Sport Facilities microservice
         String relatedSport =

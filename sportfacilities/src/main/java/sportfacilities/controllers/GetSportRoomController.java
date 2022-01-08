@@ -3,20 +3,35 @@ package sportfacilities.controllers;
 import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.services.SportRoomService;
 
-public class getSportRoomServices {
+@RestController
+@RequestMapping("getSportRoomServices")
+public class GetSportRoomController {
 
 
     private final transient SportRoomService sportRoomService;
 
-    public getSportRoomServices(SportRoomService sportRoomService) {
+    public GetSportRoomController(SportRoomService sportRoomService) {
         this.sportRoomService = sportRoomService;
     }
 
-    public ResponseEntity<?> getSportRoom(Long sportRoomId) {
+    /**
+     * Gets sport room.
+     *
+     * @param sportRoomId the sport room id
+     * @return the sport room
+     */
+    @GetMapping("/{sportRoomId}")
+    @ResponseBody
+    public ResponseEntity<?> getSportRoom(@PathVariable Long sportRoomId) {
         try {
             SportRoom sportRoom = sportRoomService.getSportRoom(sportRoomId);
             return new ResponseEntity<>(sportRoom, HttpStatus.OK);
@@ -25,7 +40,15 @@ public class getSportRoomServices {
         }
     }
 
-    public ResponseEntity<String> getSportRoomName(Long sportRoomId) {
+    /**
+     * Gets sport room name.
+     *
+     * @param sportRoomId the sport room id
+     * @return the sport room name
+     */
+    @GetMapping("/{sportRoomId}/getName")
+    @ResponseBody
+    public ResponseEntity<String> getSportRoomName(@PathVariable Long sportRoomId) {
         try {
             SportRoom sportRoom = sportRoomService.getSportRoom(sportRoomId);
             return new ResponseEntity<String>(sportRoom.getSportRoomName(), HttpStatus.OK);
@@ -34,7 +57,15 @@ public class getSportRoomServices {
         }
     }
 
-    public ResponseEntity<?> getSportRoomMaximumCapacity(Long sportRoomId) {
+    /**
+     * Gets sport room maximum capacity.
+     *
+     * @param sportRoomId the sport room id
+     * @return the sport room maximum capacity
+     */
+    @GetMapping("/{sportRoomId}/getMaximumCapacity")
+    @ResponseBody
+    public ResponseEntity<?> getSportRoomMaximumCapacity(@PathVariable Long sportRoomId) {
         try {
             Integer maxCapacity = sportRoomService.getSportRoom(sportRoomId).getMaxCapacity();
             return new ResponseEntity<>(maxCapacity.toString(), HttpStatus.OK);
@@ -43,7 +74,15 @@ public class getSportRoomServices {
         }
     }
 
-    public ResponseEntity<?> getSportRoomMinimumCapacity(Long sportRoomId) {
+    /**
+     * Gets sport room minimum capacity.
+     *
+     * @param sportRoomId the sport room id
+     * @return the sport room minimum capacity
+     */
+    @GetMapping("/{sportRoomId}/getMinimumCapacity")
+    @ResponseBody
+    public ResponseEntity<?> getSportRoomMinimumCapacity(@PathVariable Long sportRoomId) {
         try {
             Integer minCapacity = sportRoomService.getSportRoom(sportRoomId).getMinCapacity();
             return new ResponseEntity<>(minCapacity.toString(), HttpStatus.OK);
@@ -52,7 +91,15 @@ public class getSportRoomServices {
         }
     }
 
-    public ResponseEntity<String> getSportFieldSport(Long sportFieldId) {
+    /**
+     * Gets sport field sport.
+     *
+     * @param sportFieldId the sport field id
+     * @return the sport field sport
+     */
+    @GetMapping("/{sportFieldId}/getSport")
+    @ResponseBody
+    public ResponseEntity<String> getSportFieldSport(@PathVariable Long sportFieldId) {
         try {
             Sport relatedSport = sportRoomService.getSportRoom(sportFieldId).getSports().get(0);
             return new ResponseEntity<>(relatedSport.getSportName(), HttpStatus.OK);

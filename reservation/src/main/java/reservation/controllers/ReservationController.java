@@ -26,16 +26,15 @@ import reservation.services.ReservationService;
 @RequestMapping("reservation")
 public class ReservationController {
 
-
     private final transient ReservationService reservationService;
     @Autowired
     private final transient RestTemplate restTemplate;
     @Autowired
     private final transient ReservationChecker reservationChecker;
 
-    private SportFacilityCommunicator sportFacilityCommunicator;
+    private final SportFacilityCommunicator sportFacilityCommunicator;
 
-    private UserFacilityCommunicator userFacilityCommunicator;
+    private final UserFacilityCommunicator userFacilityCommunicator;
 
     /**
      * Instantiates a new Reservation controller.
@@ -115,10 +114,9 @@ public class ReservationController {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
 
-        String methodSpecificUrl = "/sportRoom/" + sportRoomId + "/getName";
-        String sportRoomName =
-            restTemplate.getForObject(sportFacilityCommunicator.getSportFacilityUrl() + methodSpecificUrl,
-                String.class);
+        String methodSpecificUrl = "/getSportRoomServices/" + sportRoomId + "/getName";
+        String sportRoomName = restTemplate.getForObject(
+            sportFacilityCommunicator.getSportFacilityUrl() + methodSpecificUrl, String.class);
 
         // Create reservation object, to be passed through chain of responsibility
         Reservation reservation =
