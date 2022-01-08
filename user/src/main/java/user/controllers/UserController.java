@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import user.config.UserDtoConfig;
+import user.entities.Admin;
 import user.entities.Customer;
 import user.services.UserService;
 
@@ -62,7 +63,47 @@ public class UserController {
     }
 
     /**
-     * Customer registration response entity.
+     * Get the info of the customer.
+     *
+     * @param userName the userName
+     * @return the response entity
+     */
+    @GetMapping("/{userName}/getCustomerInfo")
+    @ResponseBody
+    public ResponseEntity<List<String>> getCustomerInfo(@PathVariable String userName) {
+        List<String> customerInfo = new ArrayList<>();
+        Optional<Customer> customer = userService.getCustomerByUsername(userName);
+        if (customer.isEmpty()) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        Customer customerPresent = customer.get();
+        customerInfo.add(customerPresent.getUsername());
+        customerInfo.add(customerPresent.getPassword());
+        return new ResponseEntity<>(customerInfo, HttpStatus.OK);
+    }
+
+    /**
+     * Get the info of the admin.
+     *
+     * @param userName the userName
+     * @return the response entity
+     */
+    @GetMapping("/{userName}/getAdminInfo")
+    @ResponseBody
+    public ResponseEntity<List<String>> getAdminInfo(@PathVariable String userName) {
+        List<String> adminInfo = new ArrayList<>();
+        Optional<Admin> admin = userService.getAdminByUsername(userName);
+        if (admin.isEmpty()) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        Admin adminPresent = admin.get();
+        adminInfo.add(adminPresent.getUsername());
+        adminInfo.add(adminPresent.getPassword());
+        return new ResponseEntity<>(adminInfo, HttpStatus.OK);
+    }
+
+    /**
+     * Customer registration.
      *
      * @param request the request
      * @return the response entity

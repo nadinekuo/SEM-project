@@ -28,4 +28,5 @@ public class UserApplication implements UserControllerEureka {
     public String greeting() {
         return String.format("Hello from '%s'!", eurekaClient.getApplication(appName).getName());
     }
+
 }

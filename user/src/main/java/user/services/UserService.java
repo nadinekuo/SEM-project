@@ -32,6 +32,12 @@ public class UserService {
         this.adminRepository = adminRepository;
     }
 
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
     /**
      * Finds User by id.
      *
@@ -44,10 +50,24 @@ public class UserService {
                 () -> new NoSuchElementException("user with id " + userId + "does not exist!"));
     }
 
-    @Bean
-    @LoadBalanced
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    /**
+     * Finds Customer by userName.
+     *
+     * @param userName - String
+     * @return Optional of Customer having this name
+     */
+    public Optional<Customer> getCustomerByUsername(String userName) {
+        return customerRepository.findCustomerByUsername(userName);
+    }
+
+    /**
+     * Finds Admin by userName.
+     *
+     * @param userName - String
+     * @return Optional of Admin having this name
+     */
+    public Optional<Admin> getAdminByUsername(String userName) {
+        return adminRepository.findAdminByUsername(userName);
     }
 
     /**
@@ -74,10 +94,9 @@ public class UserService {
     }
 
     /**
-     * Upgrade Customer from basic to premium.
+     * Upgrade a customer to premium.
      *
-     * @param customer
-     * @throws NoSuchElementException
+     * @param customer the customer
      */
     public void upgradeCustomer(Customer customer) {
         long id = customer.getId();

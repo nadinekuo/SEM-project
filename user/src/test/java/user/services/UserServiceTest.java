@@ -38,16 +38,16 @@ class UserServiceTest {
     //    @InjectMocks
     private transient UserService userService;
 
-    public UserServiceTest() {
-        admin = new Admin("admin", "password");
-        customer = new Customer("erwin", "password", true);
-    }
-
     @BeforeEach
     void setUp() {
         customerRepository = Mockito.mock(UserRepository.class);
         adminRepository = Mockito.mock(UserRepository.class);
         userService = new UserService(customerRepository, adminRepository);
+    }
+
+    public UserServiceTest() {
+        admin = new Admin("admin", "password");
+        customer = new Customer("erwin", "password", true);
     }
 
     @Test
@@ -63,13 +63,13 @@ class UserServiceTest {
     }
 
     @Test
-    void restTemplate() {
+    void restTemplateTest() {
         restTemplate = userService.restTemplate();
         assertNotNull(restTemplate);
     }
 
     @Test
-    void registerCustomer() {
+    void registerCustomerTest() {
         UserDtoConfig data = new UserDtoConfig("erwin", "password", true);
         userService.registerCustomer(data);
         ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
@@ -86,7 +86,7 @@ class UserServiceTest {
     }
 
     @Test
-    void registerAdmin() {
+    void registerAdminTest() {
         UserDtoConfig data = new UserDtoConfig("erwin", "password", true);
         userService.registerAdmin(data);
         ArgumentCaptor<Admin> customerArgumentCaptor = ArgumentCaptor.forClass(Admin.class);

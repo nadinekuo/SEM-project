@@ -5,12 +5,20 @@ plugins {
 group = 'sem.gateway'
 
 test {
-    finalizedBy jacocoTestReport // report is always generated after tests run
+    finalizedBy jacocoTestReport
 }
 jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
+    dependsOn test
 }
 
 jacoco {
     toolVersion = "0.8.7"
+}
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-zuul', version: '2.2.10.RELEASE'
+
 }
