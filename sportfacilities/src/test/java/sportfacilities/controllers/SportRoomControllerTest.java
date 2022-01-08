@@ -26,7 +26,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.services.SportRoomService;
-import sportfacilities.services.SportService;
 
 //TODO put test in every method name
 
@@ -56,8 +55,6 @@ public class SportRoomControllerTest {
     /**
      * The Sport service.
      */
-    @Mock
-    transient SportService sportService;
     @Autowired
     private transient MockMvc mockMvc;
 
@@ -67,48 +64,7 @@ public class SportRoomControllerTest {
     @BeforeEach
     public void setup() {
         this.mockMvc =
-            MockMvcBuilders.standaloneSetup(new SportRoomController(sportRoomService, sportService))
-                .build();
-    }
-
-    /**
-     * Gets sport room test.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getSportRoomTest() throws Exception {
-        mockMvc.perform(get("/sportRoom/{sportRoomId}", sportRoomId)).andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
-        verify(sportRoomService).getSportRoom(sportRoomId);
-    }
-
-    /**
-     * Gets sport room name test.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getSportRoomNameTest() throws Exception {
-        given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
-
-        mockMvc.perform(get("/sportRoom/{sportRoomId}/getName", sportRoomId))
-            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
-
-        verify(sportRoomService).getSportRoom(sportRoomId);
-    }
-
-    /**
-     * Gets sport room name throws exception test.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getSportRoomNameThrowsExceptionTest() throws Exception {
-        doThrow(NoSuchElementException.class).when(sportRoomService).getSportRoom(sportRoomId);
-
-        mockMvc.perform(get("/sportRoom/{sportRoomId}/getName", sportRoomId))
-            .andExpect(status().isBadRequest());
+            MockMvcBuilders.standaloneSetup(new SportRoomController(sportRoomService)).build();
     }
 
     /**
@@ -161,177 +117,6 @@ public class SportRoomControllerTest {
         doThrow(NoSuchElementException.class).when(sportRoomService).getSportRoom(sportRoomId);
 
         mockMvc.perform(get("/sportRoom/{sportRoomId}/isHall", sportRoomId))
-            .andExpect(status().isBadRequest());
-    }
-
-    /**
-     * Gets maximum capacity.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getMaximumCapacity() throws Exception {
-        given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
-
-        mockMvc.perform(get("/sportRoom/{sportRoomId}/getMaximumCapacity", sportRoomId))
-            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
-
-        verify(sportRoomService).getSportRoom(sportRoomId);
-    }
-
-    /**
-     * Gets minimum capacity.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getMinimumCapacity() throws Exception {
-        given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
-
-        mockMvc.perform(get("/sportRoom/{sportRoomId}/getMinimumCapacity", sportRoomId))
-            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
-
-        verify(sportRoomService).getSportRoom(sportRoomId);
-    }
-
-    /**
-     * Sets minimum capacity.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void setMinimumCapacity() throws Exception {
-        mockMvc.perform(
-                post("/sportRoom/{sportRoomId}/{minCapacity}/setMinimumCapacity/admin", sportRoomId,
-                    minCapacity)).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
-            .andReturn();
-        verify(sportRoomService).setSportRoomMinCapacity(sportRoomId, minCapacity);
-    }
-
-    /**
-     * Sets maximum capacity.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void setMaximumCapacity() throws Exception {
-        mockMvc.perform(
-                post("/sportRoom/{sportRoomId}/{maxCapacity}/setMaximumCapacity/admin", sportRoomId,
-                    maxCapacity)).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
-            .andReturn();
-        verify(sportRoomService).setSportRoomMaxCapacity(sportRoomId, maxCapacity);
-    }
-
-    /**
-     * Sets sport name test.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void setSportNameTest() throws Exception {
-        mockMvc.perform(
-                post("/sportRoom/{sportRoomId}/{sportRoomName}/setSportRoomName/admin", sportRoomId,
-                    hallX1.getSportRoomName())).andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print()).andReturn();
-        verify(sportRoomService).setSportRoomName(sportRoomId, hallX1.getSportRoomName());
-    }
-
-    /**
-     * Sets sport room name throws exception test.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void setSportRoomNameThrowsExceptionTest() throws Exception {
-        doThrow(NoSuchElementException.class).when(sportRoomService)
-            .setSportRoomName(sportRoomId, sportName);
-
-        mockMvc.perform(
-            post("/sportRoom/{sportRoomId}/{sportRoomName}/setSportRoomName/admin", sportRoomId,
-                sportName)).andExpect(status().isBadRequest());
-    }
-
-    /**
-     * Gets max capacity throws exception test.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getMaxCapacityThrowsExceptionTest() throws Exception {
-        doThrow(NoSuchElementException.class).when(sportRoomService).getSportRoom(sportRoomId);
-
-        mockMvc.perform(get("/sportRoom/{sportRoomId}/getMaximumCapacity", sportRoomId))
-            .andExpect(status().isBadRequest());
-    }
-
-    /**
-     * Gets min capacity throws exception test.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getMinCapacityThrowsExceptionTest() throws Exception {
-        doThrow(NoSuchElementException.class).when(sportRoomService).getSportRoom(sportRoomId);
-
-        mockMvc.perform(get("/sportRoom/{sportRoomId}/getMinimumCapacity", sportRoomId))
-            .andExpect(status().isBadRequest());
-    }
-
-    /**
-     * Sets max capacity throws exception.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void setMaxCapacityThrowsException() throws Exception {
-        doThrow(NoSuchElementException.class).when(sportRoomService)
-            .setSportRoomMaxCapacity(sportRoomId, maxCapacity);
-
-        mockMvc.perform(
-            post("/sportRoom/{sportRoomId}/{maxCapacity}/setMaximumCapacity/admin", sportRoomId,
-                maxCapacity)).andExpect(status().isBadRequest());
-    }
-
-    /**
-     * Sets min capacity throws exception.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void setMinCapacityThrowsException() throws Exception {
-        doThrow(NoSuchElementException.class).when(sportRoomService)
-            .setSportRoomMinCapacity(sportRoomId, minCapacity);
-
-        mockMvc.perform(
-            post("/sportRoom/{sportRoomId}/{minCapacity}/setMinimumCapacity/admin", sportRoomId,
-                minCapacity)).andExpect(status().isBadRequest());
-    }
-
-    /**
-     * Gets field sport.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getFieldSport() throws Exception {
-        given(sportRoomService.getSportRoom(sportFieldId)).willReturn(hockeyField);
-
-        mockMvc.perform(get("/sportRoom/{sportFieldId}/getSport", sportFieldId))
-            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
-
-        verify(sportRoomService).getSportRoom(sportFieldId);
-    }
-
-    /**
-     * Gets field sport throws exception.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getFieldSportThrowsException() throws Exception {
-        doThrow(NoSuchElementException.class).when(sportRoomService).getSportRoom(sportRoomId);
-
-        mockMvc.perform(get("/sportRoom/{sportRoomId}/getSport", sportRoomId))
             .andExpect(status().isBadRequest());
     }
 
@@ -407,8 +192,7 @@ public class SportRoomControllerTest {
         mockMvc.perform(
                 post("/sportRoom/{sportRoomId}/{sportName}/addSportToSportHall/admin",
                     sportRoomId, sportName))
-            .andExpect(status().isBadRequest())
-            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print())
             .andReturn();
 
         verify(sportRoomService, times(1)).addSportToSportsHall(sportRoomId, sportName);
@@ -427,8 +211,7 @@ public class SportRoomControllerTest {
         mockMvc.perform(
                 post("/sportRoom/{sportRoomId}/{sportName}/addSportToSportHall/admin",
                     sportRoomId, sportName))
-            .andExpect(status().isBadRequest())
-            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print())
             .andReturn();
 
         verify(sportRoomService, times(1)).addSportToSportsHall(sportRoomId, sportName);

@@ -23,7 +23,7 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
      * @param reservations list of reservations to be sorted
      */
     public Reservation getNextReservation(List<Reservation> reservations) {
-        if (reservations == null || reservations.isEmpty()) {
+        if (reservations.isEmpty()) {
             return null;
         }
         this.sort(reservations);
@@ -49,9 +49,6 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
             } else if (!reservation1.getTypeOfReservation().equals(ReservationType.EQUIPMENT)
                 && reservation2.getTypeOfReservation().equals(ReservationType.EQUIPMENT)) {
                 return 1;
-            } else if (!reservation1.getTypeOfReservation().equals(ReservationType.EQUIPMENT)
-                && !reservation2.getTypeOfReservation().equals(ReservationType.EQUIPMENT)) {
-                return 0;
             } else {
 
                 String name1 = reservation1.getBookedItemName();

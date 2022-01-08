@@ -13,12 +13,12 @@ import user.entities.User;
 public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
 
     /**
-     * See if there is a user matching the given userId.
+     * Find user by id.
      *
-     * @param userId the userId
-     * @return the optional user
+     * @param userId user id
+     * @return Optional
      */
-    T findById(long userId);
+    Optional<T> findById(long userId);
 
     /**
      * Delete a user matching the given userId.
@@ -45,4 +45,12 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
      */
     @Query(value = "SELECT * " + "FROM admins " + "WHERE username = ?1", nativeQuery = true)
     Optional<Admin> findAdminByUsername(String username);
+
+    /**
+     * Find user by username.
+     *
+     * @param username user name
+     * @return Optional
+     */
+    Optional<T> findByUsername(String username);
 }

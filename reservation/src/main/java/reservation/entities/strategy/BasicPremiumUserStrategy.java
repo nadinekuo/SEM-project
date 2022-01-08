@@ -28,7 +28,7 @@ public class BasicPremiumUserStrategy implements ReservationSortingStrategy {
      * @param reservations list of reservations to be sorted
      */
     public Reservation getNextReservation(List<Reservation> reservations) {
-        if (reservations == null || reservations.isEmpty()) {
+        if (reservations.isEmpty()) {
             return null;
         }
         this.sort(reservations);

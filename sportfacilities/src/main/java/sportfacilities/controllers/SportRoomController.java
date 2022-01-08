@@ -12,11 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-import sportfacilities.entities.Sport;
-import sportfacilities.entities.SportRoom;
 import sportfacilities.services.SportRoomService;
-import sportfacilities.services.SportService;
 
 /**
  * The type Sport room controller.
@@ -26,42 +22,18 @@ import sportfacilities.services.SportService;
 @RequestMapping("sportRoom")
 public class SportRoomController {
 
-    @Autowired
-    private final transient RestTemplate restTemplate;
-
     private final transient SportRoomService sportRoomService;
-
-    private final transient SportService sportService;
 
     /**
      * Instantiates a new Sport room controller.
      *
      * @param sportRoomService the sport room service
-     * @param sportService     the sport service
      */
     @Autowired
-    public SportRoomController(SportRoomService sportRoomService, SportService sportService) {
+    public SportRoomController(SportRoomService sportRoomService) {
         this.sportRoomService = sportRoomService;
-        this.sportService = sportService;
-        this.restTemplate = sportRoomService.restTemplate();
     }
 
-    /**
-     * Gets sport room.
-     *
-     * @param sportRoomId the sport room id
-     * @return the sport room
-     */
-    @GetMapping("/{sportRoomId}")
-    @ResponseBody
-    public ResponseEntity<?> getSportRoom(@PathVariable Long sportRoomId) {
-        try {
-            SportRoom sportRoom = sportRoomService.getSportRoom(sportRoomId);
-            return new ResponseEntity<>(sportRoom, HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
 
     /**
      * Response entity containing boolean, whether or not sport room exists in database.
@@ -88,131 +60,6 @@ public class SportRoomController {
         try {
             Boolean isHall = sportRoomService.getSportRoom(sportRoomId).getIsSportsHall();
             return new ResponseEntity<>(isHall.toString(), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
-     * Gets sport room name.
-     *
-     * @param sportRoomId the sport room id
-     * @return the sport room name
-     */
-    @GetMapping("/{sportRoomId}/getName")
-    @ResponseBody
-    public ResponseEntity<String> getSportRoomName(@PathVariable Long sportRoomId) {
-        try {
-            SportRoom sportRoom = sportRoomService.getSportRoom(sportRoomId);
-            return new ResponseEntity<String>(sportRoom.getSportRoomName(), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
-     * Sets sport room name.
-     *
-     * @param sportRoomId   the sport room id
-     * @param sportRoomName the sport room name
-     * @return the sport room name
-     */
-    @PostMapping("/{sportRoomId}/{sportRoomName}/setSportRoomName/admin")
-    @ResponseBody
-    public ResponseEntity<?> setSportRoomName(@PathVariable Long sportRoomId,
-                                              @PathVariable String sportRoomName) {
-        try {
-            sportRoomService.setSportRoomName(sportRoomId, sportRoomName);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
-     * Gets sport room maximum capacity.
-     *
-     * @param sportRoomId the sport room id
-     * @return the sport room maximum capacity
-     */
-    @GetMapping("/{sportRoomId}/getMaximumCapacity")
-    @ResponseBody
-    public ResponseEntity<?> getSportRoomMaximumCapacity(@PathVariable Long sportRoomId) {
-        try {
-            Integer maxCapacity = sportRoomService.getSportRoom(sportRoomId).getMaxCapacity();
-            return new ResponseEntity<>(maxCapacity.toString(), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
-     * Gets sport room minimum capacity.
-     *
-     * @param sportRoomId the sport room id
-     * @return the sport room minimum capacity
-     */
-    @GetMapping("/{sportRoomId}/getMinimumCapacity")
-    @ResponseBody
-    public ResponseEntity<?> getSportRoomMinimumCapacity(@PathVariable Long sportRoomId) {
-        try {
-            Integer minCapacity = sportRoomService.getSportRoom(sportRoomId).getMinCapacity();
-            return new ResponseEntity<>(minCapacity.toString(), HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
-     * Sets sport room minimum capacity.
-     *
-     * @param sportRoomId the sport room id
-     * @param minCapacity the min capacity
-     * @return the sport room minimum capacity
-     */
-    @PostMapping("/{sportRoomId}/{minCapacity}/setMinimumCapacity/admin")
-    @ResponseBody
-    public ResponseEntity<?> setSportRoomMinimumCapacity(@PathVariable Long sportRoomId,
-                                                         @PathVariable int minCapacity) {
-        try {
-            sportRoomService.setSportRoomMinCapacity(sportRoomId, minCapacity);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
-     * Sets sport room maximum capacity.
-     *
-     * @param sportRoomId the sport room id
-     * @param maxCapacity the max capacity
-     * @return the sport room maximum capacity
-     */
-    @PostMapping("/{sportRoomId}/{maxCapacity}/setMaximumCapacity/admin")
-    @ResponseBody
-    public ResponseEntity<?> setSportRoomMaximumCapacity(@PathVariable Long sportRoomId,
-                                                         @PathVariable int maxCapacity) {
-        try {
-            sportRoomService.setSportRoomMaxCapacity(sportRoomId, maxCapacity);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
-     * Gets sport field sport.
-     *
-     * @param sportFieldId the sport field id
-     * @return the sport field sport
-     */
-    @GetMapping("/{sportFieldId}/getSport")
-    @ResponseBody
-    public ResponseEntity<String> getSportFieldSport(@PathVariable Long sportFieldId) {
-        try {
-            Sport relatedSport = sportRoomService.getSportRoom(sportFieldId).getSports().get(0);
-            return new ResponseEntity<>(relatedSport.getSportName(), HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -273,7 +120,6 @@ public class SportRoomController {
         } catch (NoSuchElementException | IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
     }
 
 }
