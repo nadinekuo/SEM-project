@@ -66,9 +66,8 @@ class SportTest {
         soccer.addSportToSportLocation(hallX3);
         IllegalStateException thrown = assertThrows(
             IllegalStateException.class,
-            () -> soccer.addSportToSportLocation(hallX3),
-            "soccer already exists for this sport location"
-        );
+            () -> soccer.addSportToSportLocation(hallX3));
+        assertThat(thrown.getMessage()).isEqualTo("soccer already exists for this sport location");
     }
 
     @Test
@@ -86,7 +85,6 @@ class SportTest {
     @Test
     void setMaxTeamSizeTest() {
         volleyball.setMaxTeamSize(15);
-        System.out.println(volleyball.toString());
         assertThat(volleyball.getMaxTeamSize()).isEqualTo(15);
     }
 
