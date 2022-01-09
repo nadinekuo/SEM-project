@@ -2,9 +2,6 @@ package user.config;
 
 import java.io.Serializable;
 
-/**
- * The type User dto config.
- */
 public class UserDtoConfig implements Serializable {
 
     private static final long serialVersionUID = 42L;

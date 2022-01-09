@@ -28,9 +28,6 @@ import sportfacilities.entities.Equipment;
 import sportfacilities.entities.Sport;
 import sportfacilities.repositories.EquipmentRepository;
 
-/**
- * The type Equipment service test.
- */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class EquipmentServiceTest {
@@ -63,7 +60,7 @@ public class EquipmentServiceTest {
     }
 
     /**
-     * Sets .
+     * Sets up the tests.
      */
     @BeforeEach
     void setup() {
@@ -72,17 +69,11 @@ public class EquipmentServiceTest {
         when(equipmentRepository.findByEquipmentId(id1)).thenReturn(Optional.of(equipment1));
     }
 
-    /**
-     * Test constructor.
-     */
     @Test
-    public void testConstructor() {
+    public void constructorTest() {
         assertNotNull(equipmentService);
     }
 
-    /**
-     * Gets equipment test.
-     */
     @Test
     public void getEquipmentTest() {
         Equipment result = equipmentService.getEquipment(id1);
@@ -92,9 +83,6 @@ public class EquipmentServiceTest {
         assertThat(result.getName().equals("boxingGloves"));
     }
 
-    /**
-     * Gets equipment throws exception test.
-     */
     @Test
     public void getEquipmentThrowsExceptionTest() {
         Long invalidId = 13L;
@@ -102,17 +90,11 @@ public class EquipmentServiceTest {
         assertThrows(NoSuchElementException.class, () -> equipmentService.getEquipment(invalidId));
     }
 
-    /**
-     * Gets equipment name test.
-     */
     @Test
     public void getEquipmentNameTest() {
         assertThat(equipmentService.getEquipmentName(id1)).isEqualTo("boxingGloves");
     }
 
-    /**
-     * Sets equipment to not in use test.
-     */
     @Test
     public void setEquipmentToNotInUseTest() {
         equipmentService.setEquipmentToNotInUse(id1);
@@ -120,9 +102,6 @@ public class EquipmentServiceTest {
         verify(equipmentRepository).save(equipment1);
     }
 
-    /**
-     * Sets equipment to in use test.
-     */
     @Test
     public void setEquipmentToInUseTest() {
         when(equipmentRepository.findByEquipmentId(id2)).thenReturn(Optional.of(equipment2));
@@ -132,9 +111,6 @@ public class EquipmentServiceTest {
         verify(equipmentRepository).save(equipment2);
     }
 
-    /**
-     * Gets available equipment ids by name test.
-     */
     @Test
     public void getAvailableEquipmentIdsByNameTest() {
 
@@ -145,9 +121,6 @@ public class EquipmentServiceTest {
             java.util.Optional.of(equipmentService.getAvailableEquipmentIdsByName("boxingGloves")));
     }
 
-    /**
-     * Gets non existing equipment ids by name test.
-     */
     @Test
     public void getNonExistingEquipmentIdsByNameTest() {
 
@@ -158,9 +131,6 @@ public class EquipmentServiceTest {
             () -> equipmentService.getAvailableEquipmentIdsByName("test"));
     }
 
-    /**
-     * Add equipment test.
-     */
     @Test
     public void addEquipmentTest() {
         equipmentService.addEquipment(equipment2);
@@ -174,18 +144,12 @@ public class EquipmentServiceTest {
         Assertions.assertEquals(capturedEquipment.getName(), "tennisBall");
     }
 
-    /**
-     * Delete equipment test.
-     */
     @Test
     public void deleteEquipmentTest() {
         assertDoesNotThrow(() -> equipmentService.deleteEquipment(id1));
 
     }
 
-    /**
-     * Rest template test.
-     */
     @Test
     public void restTemplateTest() {
         restTemplate = equipmentService.restTemplate();

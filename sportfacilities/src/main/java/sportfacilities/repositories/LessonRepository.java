@@ -8,8 +8,6 @@ import sportfacilities.entities.Lesson;
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
-    //Lesson findLessonById(Long lessonId);
-
     @Transactional
     void deleteById(Long lessonId);
 }

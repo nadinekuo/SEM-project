@@ -10,9 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-/**
- * The type Reservation.
- */
 @Entity
 @Table(name = "reservations")
 public class Reservation {

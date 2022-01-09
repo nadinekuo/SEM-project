@@ -26,9 +26,6 @@ import reservation.entities.ReservationType;
 import reservation.entities.chainofresponsibility.ReservationChecker;
 import reservation.services.ReservationService;
 
-/**
- * The type Sport facility communicator test.
- */
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -47,15 +44,9 @@ public class SportFacilityCommunicatorTest {
 
     private final transient String sportFacilityUrl = "http://eureka-sport-facilities";
 
-    /**
-     * The Date time formatter.
-     */
     transient DateTimeFormatter dateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    /**
-     * The Bookable date.
-     */
     transient LocalDateTime bookableDate =
         LocalDateTime.parse("2099-01-06 17:00:00", dateTimeFormatter);
 
@@ -63,33 +54,16 @@ public class SportFacilityCommunicatorTest {
         new Reservation(ReservationType.EQUIPMENT, "hockey", userId, sportFacilityId, bookableDate,
             madeByPremiumUser);
 
-    /**
-     * The Sport facility communicator.
-     */
     SportFacilityCommunicator sportFacilityCommunicator;
-    /**
-     * The Reservation service.
-     */
+
     @Mock
     transient ReservationService reservationService;
 
-    /**
-     * The Reservation checker.
-     */
-    @Mock
-    transient ReservationChecker reservationChecker;
-
-    /**
-     * The Rest template.
-     */
     @Mock
     transient RestTemplate restTemplate;
 
-    @Autowired
-    private transient MockMvc mockMvc;
-
     /**
-     * Sets .
+     * Sets up the tests.
      */
     @BeforeEach
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -98,17 +72,11 @@ public class SportFacilityCommunicatorTest {
         sportFacilityCommunicator = new SportFacilityCommunicator(restTemplate);
     }
 
-    /**
-     * Gets sport facility url test.
-     */
     @Test
     public void getSportFacilityUrlTest() {
         assertEquals(sportFacilityUrl, sportFacilityCommunicator.getSportFacilityUrl());
     }
 
-    /**
-     * Gets sports room exists test.
-     */
     @Test
     public void getSportsRoomExistsTest() {
         Mockito.when(restTemplate.getForEntity(anyString(), any()))
@@ -116,9 +84,6 @@ public class SportFacilityCommunicatorTest {
         assertTrue(sportFacilityCommunicator.getSportsRoomExists(sportRoomId));
     }
 
-    /**
-     * Gets is sport hall test.
-     */
     @Test
     public void getIsSportHallTest() {
         Mockito.when(restTemplate.getForEntity(anyString(), any()))
@@ -126,9 +91,6 @@ public class SportFacilityCommunicatorTest {
         assertTrue(sportFacilityCommunicator.getIsSportHall(sportRoomId));
     }
 
-    /**
-     * Gets sport room maximum capacity test.
-     */
     @Test
     public void getSportRoomMaximumCapacityTest() {
         Mockito.when(restTemplate.getForEntity(anyString(), any()))
@@ -136,9 +98,6 @@ public class SportFacilityCommunicatorTest {
         assertEquals(5, sportFacilityCommunicator.getSportRoomMaximumCapacity(sportRoomId));
     }
 
-    /**
-     * Gets sport room minimum capacity test.
-     */
     @Test
     public void getSportRoomMinimumCapacityTest() {
         Mockito.when(restTemplate.getForEntity(anyString(), any()))
@@ -146,9 +105,6 @@ public class SportFacilityCommunicatorTest {
         assertEquals(5, sportFacilityCommunicator.getSportRoomMinimumCapacity(sportRoomId));
     }
 
-    /**
-     * Gets first available equipment id test.
-     */
     @Test
     public void getFirstAvailableEquipmentIdTest() {
         Mockito.when(restTemplate.getForEntity(anyString(), any()))
@@ -157,9 +113,6 @@ public class SportFacilityCommunicatorTest {
             Optional.of(sportFacilityCommunicator.getFirstAvailableEquipmentId(equipmentName)));
     }
 
-    /**
-     * Gets sport field sport test.
-     */
     @Test
     public void getSportFieldSportTest() {
         Mockito.when(restTemplate.getForEntity(anyString(), any()))
@@ -167,9 +120,6 @@ public class SportFacilityCommunicatorTest {
         assertEquals(sportName, sportFacilityCommunicator.getSportFieldSport(sportFacilityId));
     }
 
-    /**
-     * Gets sport max team size test.
-     */
     @Test
     public void getSportMaxTeamSizeTest() {
         Mockito.when(restTemplate.getForEntity(anyString(), any()))
@@ -177,9 +127,6 @@ public class SportFacilityCommunicatorTest {
         assertEquals(5, sportFacilityCommunicator.getSportMaxTeamSize(sportName));
     }
 
-    /**
-     * Gets sport min team size test.
-     */
     @Test
     public void getSportMinTeamSizeTest() {
         Mockito.when(restTemplate.getForEntity(anyString(), any()))

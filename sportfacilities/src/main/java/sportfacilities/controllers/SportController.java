@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import sportfacilities.entities.Sport;
 import sportfacilities.services.SportService;
 
-/**
- * The type Sport controller.
- */
 @RestController
 @RequestMapping("sport")
 public class SportController {
@@ -39,8 +36,6 @@ public class SportController {
      * @param sportName the sport name
      * @return the sport max team size
      */
-    
-    //TODO return correct type instead of string
     @GetMapping("/{sportName}/getMaxTeamSize")
     @ResponseBody
     public ResponseEntity<String> getSportMaxTeamSize(@PathVariable String sportName) {

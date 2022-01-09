@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import sportfacilities.services.SportRoomService;
 
-/**
- * The type Sport room controller.
- */
-//TODO make every test use assertJ
 @RestController
 @RequestMapping("sportRoom")
 public class SportRoomController {
