@@ -1,6 +1,5 @@
 package reservation.controllers;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.NoSuchElementException;
@@ -118,23 +117,21 @@ public class ReservationController {
                                                       @PathVariable String date,
                                                       @PathVariable Boolean madeByPremiumUser) {
         LocalDateTime dateTime;
-        try{
+        try {
             dateTime = LocalDateTime.parse(date);
-        } catch (DateTimeParseException e){
+        } catch (DateTimeParseException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         String sportRoomName;
         try {
             String methodSpecificUrl = "/sportRoom/" + sportRoomId + "/getName";
-            ResponseEntity<String> response =
-                restTemplate.getForEntity(sportFacilityCommunicator.getSportFacilityUrl() + methodSpecificUrl,
-                    String.class);
+            ResponseEntity<String> response = restTemplate.getForEntity(
+                sportFacilityCommunicator.getSportFacilityUrl() + methodSpecificUrl, String.class);
             sportRoomName = response.getBody();
-        } catch (HttpClientErrorException e){
+        } catch (HttpClientErrorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
 
         // Create reservation object, to be passed through chain of responsibility
         Reservation reservation =
@@ -144,11 +141,11 @@ public class ReservationController {
         // Chain of responsibility:
         // If any condition to be checked is violated by this reservation, the respective
         // validator will throw an InvalidReservationException with appropriate message
-        try{
+        try {
             reservationChecker.checkReservation(reservation, this);
             reservationService.makeSportFacilityReservation(reservation);
             return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
-        } catch (InvalidReservationException e){
+        } catch (InvalidReservationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -190,9 +187,9 @@ public class ReservationController {
         // Chain of responsibility:
         // If any condition to be checked is violated by this reservation, the respective
         // validator will throw an InvalidReservationException with appropriate message
-        try{
+        try {
             reservationChecker.checkReservation(reservation, this);
-        } catch (InvalidReservationException | HttpClientErrorException e){
+        } catch (InvalidReservationException | HttpClientErrorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         reservationService.makeSportFacilityReservation(reservation);

@@ -11,7 +11,9 @@ public class SportFacilityCommunicator {
     private final transient RestTemplate restTemplate;
 
     /**
-     * Constructor
+     * Instantiates a new Sport facility communicator.
+     *
+     * @param restTemplate the rest template
      */
     public SportFacilityCommunicator(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -38,7 +40,6 @@ public class SportFacilityCommunicator {
         return Boolean.valueOf(response.getBody());
     }
 
-
     /**
      * Gets is sport hall.
      *
@@ -64,7 +65,8 @@ public class SportFacilityCommunicator {
      */
     public int getSportRoomMaximumCapacity(Long sportRoomId) throws HttpClientErrorException {
 
-        String methodSpecificUrl = "/getSportRoomServices/" + sportRoomId.toString() + "/getMaximumCapacity";
+        String methodSpecificUrl =
+            "/getSportRoomServices/" + sportRoomId.toString() + "/getMaximumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
         ResponseEntity<String> response =
@@ -80,7 +82,8 @@ public class SportFacilityCommunicator {
      * @return the sport room minimum capacity
      */
     public int getSportRoomMinimumCapacity(Long sportRoomId) {
-        String methodSpecificUrl = "/getSportRoomServices/" + sportRoomId.toString() + "/getMinimumCapacity";
+        String methodSpecificUrl =
+            "/getSportRoomServices/" + sportRoomId.toString() + "/getMinimumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
         ResponseEntity<String> response =
@@ -114,7 +117,7 @@ public class SportFacilityCommunicator {
      *
      * @param equipmentId the equipment id
      */
-    public void setEquipmentToInUse(Long equipmentId) throws HttpClientErrorException{
+    public void setEquipmentToInUse(Long equipmentId) throws HttpClientErrorException {
 
         String methodSpecificUrl = "/equipment/" + equipmentId.toString() + "/reserved";
         restTemplate.put(sportFacilityUrl + methodSpecificUrl, String.class);
@@ -126,7 +129,7 @@ public class SportFacilityCommunicator {
      * @param sportFieldId - id of sport field to be reserved
      * @return String - name of related Sport (id of Sport)
      */
-    public String getSportFieldSport(Long sportFieldId) throws HttpClientErrorException{
+    public String getSportFieldSport(Long sportFieldId) throws HttpClientErrorException {
 
         String methodSpecificUrl = "/getSportRoomServices/" + sportFieldId.toString() + "/getSport";
 

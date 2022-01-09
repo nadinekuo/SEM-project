@@ -38,8 +38,8 @@ public class SportFacilityAvailabilityValidatorTest {
     private final transient SportFacilityCommunicator sportFacilityCommunicator;
     // Class under test:
     private final transient SportFacilityAvailabilityValidator sportFacilityAvailabilityValidator;
-    private transient Long groupId;
     private final transient boolean madeByPremiumUser = true;
+    private transient Long groupId;
 
     /**
      * Constructor for this test suite.
@@ -48,7 +48,8 @@ public class SportFacilityAvailabilityValidatorTest {
         reservationService = mock(ReservationService.class);
         reservationController = mock(ReservationController.class);
         sportFacilityCommunicator = mock(SportFacilityCommunicator.class);
-        when(reservationController.getSportFacilityCommunicator()).thenReturn(sportFacilityCommunicator);
+        when(reservationController.getSportFacilityCommunicator()).thenReturn(
+            sportFacilityCommunicator);
         this.sportFacilityAvailabilityValidator =
             new SportFacilityAvailabilityValidator(reservationService, reservationController);
 
