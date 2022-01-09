@@ -9,7 +9,7 @@ class AdminTest {
     private final transient Admin admin;
 
     public AdminTest() {
-        admin = new Admin(1l, "admin1", "adminpwd");
+        admin = new Admin(1L, "admin1", "adminpwd");
     }
 
     @Test
@@ -17,6 +17,5 @@ class AdminTest {
         String result = "Admin{id=1, username='admin1', password='adminpwd'}";
         assertThat(result).isEqualTo(admin.toString());
     }
-
 
 }

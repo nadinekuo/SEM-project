@@ -2,7 +2,10 @@ package sportfacilities.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +24,9 @@ class SportTest {
     private final transient SportRoom hallX3;
     private final transient SportRoom hockeyField;
 
+    private final transient Equipment hockeyStick;
+    private final transient Equipment soccerBall;
+
     public SportTest() {
         soccer = new Sport("soccer", 6, 11);
         hockey = new Sport("hockey", 7, 14);
@@ -35,12 +41,34 @@ class SportTest {
         hallX3 = new SportRoom("X3", List.of(yoga, zumba, kickboxing), 1, 55, true);
         hockeyField = new SportRoom("hockeyfieldA", List.of(hockey), 10, 200, false);
 
+        hockeyStick = new Equipment(6L, "hockey stick", hockey, true);
+        soccerBall = new Equipment("soccer ball", soccer, false);
+
     }
 
     @Test
     void setSportName() {
         soccer.setSportName("soccer1");
         assertThat(soccer.getSportName()).isEqualTo("soccer1");
+    }
+
+    @Test
+    void addSportToSportLocationTest() {
+        soccer.setSportLocations(new ArrayList<>());
+        soccer.addSportToSportLocation(hallX3);
+        assertThat(soccer.getSportLocations().size()).isEqualTo(1);
+        assertThat(soccer.getSportLocations().get(0)).isEqualTo(hallX3);
+    }
+
+    @Test
+    void addSportToSportLocationThrowsException() {
+        soccer.setSportLocations(new ArrayList<>());
+        soccer.addSportToSportLocation(hallX3);
+        IllegalStateException thrown = assertThrows(
+            IllegalStateException.class,
+            () -> soccer.addSportToSportLocation(hallX3),
+            "soccer already exists for this sport location"
+        );
     }
 
     @Test
@@ -68,13 +96,21 @@ class SportTest {
         assertFalse(soccer.equals(soccer1));
     }
 
-//    @Test
-//    void setSportLocations() {
-//    }
+    @Test
+    void setSportLocations() {
+        soccer.setSportLocations(Arrays.asList(hallX1, hallX2));
+        assertThat(soccer.getSportLocations().size()).isEqualTo(2);
+        assertThat(soccer.getSportLocations().get(0)).isEqualTo(hallX1);
+        assertThat(soccer.getSportLocations().get(1)).isEqualTo(hallX2);
+    }
 
-//    @Test
-//    void setEquipmentList() {
-//    }
+    @Test
+    void setEquipmentList() {
+        soccer.setEquipmentList(Arrays.asList(soccerBall, hockeyStick));
+        assertThat(soccer.getEquipmentList().size()).isEqualTo(2);
+        assertThat(soccer.getEquipmentList().get(0)).isEqualTo(soccerBall);
+        assertThat(soccer.getEquipmentList().get(1)).isEqualTo(hockeyStick);
+    }
 
     @Test
     void toStringTest() {

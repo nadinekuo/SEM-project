@@ -1,5 +1,6 @@
 package user.services;
 
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +12,6 @@ import user.entities.Admin;
 import user.entities.Customer;
 import user.entities.User;
 import user.repositories.UserRepository;
-
-import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -41,7 +40,7 @@ public class UserService {
      */
     public User getUserById(long userId) {
         return customerRepository.findById(userId).orElseThrow(
-                () -> new NoSuchElementException("user with id " + userId + "does not exist!"));
+            () -> new NoSuchElementException("user with id " + userId + "does not exist!"));
     }
 
     @Bean
@@ -69,8 +68,8 @@ public class UserService {
      */
     public void registerAdmin(UserDtoConfig data) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        adminRepository
-            .save(new Admin(data.getUsername(), passwordEncoder.encode(data.getPassword())));
+        adminRepository.save(
+            new Admin(data.getUsername(), passwordEncoder.encode(data.getPassword())));
     }
 
     /**
@@ -82,7 +81,7 @@ public class UserService {
     public void upgradeCustomer(Customer customer) {
         long id = customer.getId();
         customerRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Customer does not exist"));
+            .orElseThrow(() -> new NoSuchElementException("Customer does not exist"));
 
         customer.setPremiumUser(true);
         customerRepository.save(customer);
@@ -97,7 +96,7 @@ public class UserService {
      */
     public boolean checkCustomerExists(String username) {
         Customer customer = customerRepository.findByUsername(username).orElseThrow(
-                () -> new NoSuchElementException("User with username " + username + " does not exist"));
+            () -> new NoSuchElementException("User with username " + username + " does not exist"));
         return true;
     }
 
@@ -110,7 +109,8 @@ public class UserService {
      */
     public boolean checkAdminExists(String username) {
         Admin admin = adminRepository.findByUsername(username).orElseThrow(
-                () -> new NoSuchElementException("Admin with username " + username + " does not exist"));
+            () -> new NoSuchElementException(
+                "Admin with username " + username + " does not exist"));
         return true;
     }
 }

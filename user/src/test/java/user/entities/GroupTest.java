@@ -1,7 +1,9 @@
 package user.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -83,11 +85,16 @@ class GroupTest {
         assertThat(group2.getGroupSize()).isEqualTo(6);
     }
 
-    //    @Test
-    //    void addUserToGroup() {
-    //        //arslan.setGroupsForTeamSports(new ArrayList<>());
-    //        //arslan.addGroupToUsersGroupList(group2);
-    //        group2.addUserToGroup(arslan);
-    //        assertThat(group2.getGroupSize()).isEqualTo(4L);
-    //    }
+    @Test
+    void testEquals() {
+        Group group = null;
+        assertFalse(group1.equals(group));
+    }
+
+    @Test
+    void addUserToGroup() {
+        arslan.setGroupsForTeamSports(new ArrayList<>());
+        group2.addUserToGroup(arslan);
+        assertThat(group2.getGroupSize()).isEqualTo(4L);
+    }
 }

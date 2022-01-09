@@ -26,7 +26,6 @@ class EquipmentTest {
         assertThat(soccerBall.getRelatedSport()).isEqualTo(football);
         assertFalse(soccerBall.isInUse());
     }
-    
 
     @Test
     void setInUse() {
@@ -57,7 +56,7 @@ class EquipmentTest {
         Equipment hockeyStick1 = hockeyStick;
         assertTrue(hockeyStick.equals(hockeyStick1));
     }
-    
+
     @Test
     void testNoEquals() {
         Equipment basketBall = null;

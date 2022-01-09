@@ -30,7 +30,6 @@ public class SportRoom {
     private String sportRoomName; // example: X1, X2, X3 ...
 
     @ManyToMany(mappedBy = "sportLocations", fetch = FetchType.EAGER)
-
     @JsonManagedReference
     @JsonIgnoreProperties("sportLocations")
     private List<Sport> sports;   // Only sport halls will store multiple sports
@@ -66,10 +65,6 @@ public class SportRoom {
 
     public Long getSportRoomId() {
         return sportRoomId;
-    }
-
-    public void setSportRoomId(Long sportRoomId) {
-        this.sportRoomId = sportRoomId;
     }
 
     public void setSportRoomId(long sportRoomId) {

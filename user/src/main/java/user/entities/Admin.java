@@ -24,13 +24,17 @@ public class Admin extends User {
 
     /**
      * Initiates a new Admin
+     *
      * @param username the username
-     * @param password  the password
+     * @param password the password
      */
     public Admin(String username, String password) {
         super(username, password);
     }
 
+    /**
+     * @return String representation of the admin object
+     */
     @Override
     public String toString() {
         return "Admin{" + "id=" + super.getId() + ", username='" + super.getUsername() + '\''

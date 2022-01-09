@@ -1,6 +1,7 @@
 package user.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.jupiter.api.Test;
 
@@ -24,5 +25,11 @@ class UserTest {
     void setPassword() {
         emil.setPassword("pwd123");
         assertThat(emil.getPassword()).isEqualTo("pwd123");
+    }
+
+    @Test
+    void equalsTest() {
+        User user = null;
+        assertFalse(arslan.equals(user));
     }
 }

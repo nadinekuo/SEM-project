@@ -81,8 +81,4 @@ class SportRoomTest {
         assertFalse(hallX1.equals(hallX4));
     }
 
-
-//    @Test
-//    void setRelatedSport() {
-//    }
 }

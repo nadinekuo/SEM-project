@@ -1,6 +1,7 @@
 package user.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,10 +27,18 @@ class CustomerTest {
         nadine = new Customer("nadine123", "password5", true);
         panagiotis = new Customer("panas123", "password6", false);
 
-        group1 = new Group(33L, "soccerTeam1", List.of(arslan, emil, nadine, erwin, emma, panagiotis));
+        group1 =
+            new Group(33L, "soccerTeam1", List.of(arslan, emil, nadine, erwin, emma, panagiotis));
         group2 = new Group(42L, "volleyballTeam3", List.of(emma, panagiotis, erwin));
     }
 
+    @Test
+    void testConstructor() {
+        Customer customer = new Customer("john285", "johnpwd", false);
+        assertThat(customer.getUsername()).isEqualTo("john285");
+        assertThat(customer.getPassword()).isEqualTo("johnpwd");
+        assertFalse(customer.isPremiumUser());
+    }
 
     @Test
     void setPremiumUser() {
@@ -67,4 +76,10 @@ class CustomerTest {
         assertThat(arslan.getGroupsForTeamSports().contains(group1)).isTrue();
     }
 
+    @Test
+    void toStringTest() {
+        Customer customer = new Customer(1L, "jonSnow", "dontknow", true, null);
+        String res = "Customer{id=1, username='jonSnow', password=dontknow}";
+        assertThat(customer.toString()).isEqualTo(res);
+    }
 }
