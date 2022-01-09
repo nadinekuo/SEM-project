@@ -74,7 +74,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    public void ConstructorTest() {
+    public void constructorTest() {
         assertNotNull(reservationService);
     }
 
