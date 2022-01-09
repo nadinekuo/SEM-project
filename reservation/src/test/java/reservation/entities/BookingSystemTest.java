@@ -23,13 +23,6 @@ import reservation.services.ReservationService;
 
 public class BookingSystemTest {
 
-    /**
-     * The Reservation service.
-     */
-    @Mock
-    transient ReservationService reservationService;
-
-    ReservationSortingStrategy sortingStrategy = new ChronologicalStrategy();
     transient List<Reservation> userIdStrategy = new ArrayList<>();
     transient BookingSystem bookingSystem = new BookingSystem(new ChronologicalStrategy());
     transient Reservation[] reservations;

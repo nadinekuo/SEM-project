@@ -28,9 +28,6 @@ import reservation.entities.ReservationType;
 import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import reservation.repositories.ReservationRepository;
 
-/**
- * The type Reservation service test.
- */
 @ExtendWith(MockitoExtension.class)
 public class ReservationServiceTest {
 
@@ -69,24 +66,18 @@ public class ReservationServiceTest {
     }
 
     /**
-     * Sets test attributes.
+     * Sets up test attributes.
      */
     @BeforeEach
     void setup() {
         reservationService = new ReservationService(reservationRepository);
     }
 
-    /**
-     * Test constructor.
-     */
     @Test
-    public void testConstructor() {
+    public void ConstructorTest() {
         assertNotNull(reservationService);
     }
 
-    /**
-     * Gets reservation test.
-     */
     @Test
     void getReservationTest() {
         when(reservationRepository.findById(reservationId1)).thenReturn(Optional.of(reservation1));
@@ -123,9 +114,6 @@ public class ReservationServiceTest {
             null);
     }
 
-    /**
-     * Delete reservation test.
-     */
     @Test
     void deleteReservationTest() {
 
@@ -138,9 +126,6 @@ public class ReservationServiceTest {
         verify(reservationRepository, times(1)).deleteById(reservationId1);
     }
 
-    /**
-     * Delete non existing reservation test.
-     */
     @Test
     void deleteNonExistingReservationTest() {
 
@@ -152,9 +137,6 @@ public class ReservationServiceTest {
         verify(reservationRepository, never()).deleteById(any());
     }
 
-    /**
-     * Count one sport facility reservation test.
-     */
     @Test
     void countOneSportFacilityReservationTest() {
 
@@ -173,9 +155,6 @@ public class ReservationServiceTest {
             start, end, 1L);
     }
 
-    /**
-     * Available sport facility.
-     */
     @Test
     void availableSportFacility() {
 
@@ -189,9 +168,6 @@ public class ReservationServiceTest {
             LocalDateTime.of(2022, 10, 05, 16, 00));
     }
 
-    /**
-     * Unavailable sport facility.
-     */
     @Test
     void unavailableSportFacility() {
 
@@ -205,9 +181,6 @@ public class ReservationServiceTest {
             LocalDateTime.of(2022, 10, 05, 16, 00));
     }
 
-    /**
-     * Make sport facility reservation test.
-     */
     @Test
     void makeSportFacilityReservationTest() {
 
@@ -221,9 +194,6 @@ public class ReservationServiceTest {
 
     }
 
-    /**
-     * Gets last person that used equipment test.
-     */
     @Test
     void getLastPersonThatUsedEquipmentTest() {
         List<Reservation> reservations = new ArrayList<>();
@@ -240,10 +210,7 @@ public class ReservationServiceTest {
             Optional.of(reservationService.getLastPersonThatUsedEquipment(2L)));
 
     }
-
-    /**
-     * Rest template test.
-     */
+    
     @Test
     public void restTemplateTest() {
         RestTemplate restTemplate = reservationService.restTemplate();

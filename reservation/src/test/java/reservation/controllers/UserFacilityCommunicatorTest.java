@@ -21,36 +21,16 @@ import org.springframework.web.client.RestTemplate;
 import reservation.entities.chainofresponsibility.ReservationChecker;
 import reservation.services.ReservationService;
 
-/**
- * The type User facility communicator test.
- */
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class UserFacilityCommunicatorTest {
 
-    private static final String sportFacilityUrl = "http://eureka-user";
-
-    /**
-     * The User facility communicator.
-     */
     UserFacilityCommunicator userFacilityCommunicator;
 
-    /**
-     * The Reservation service.
-     */
     @Mock
     transient ReservationService reservationService;
 
-    /**
-     * The Reservation checker.
-     */
-    @Mock
-    transient ReservationChecker reservationChecker;
-
-    /**
-     * The Rest template.
-     */
     @Mock
     transient RestTemplate restTemplate;
 
@@ -58,7 +38,7 @@ public class UserFacilityCommunicatorTest {
     private transient MockMvc mockMvc;
 
     /**
-     * Sets .
+     * Sets up the tests .
      */
     @BeforeEach
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -67,17 +47,11 @@ public class UserFacilityCommunicatorTest {
         userFacilityCommunicator = new UserFacilityCommunicator(restTemplate);
     }
 
-    /**
-     * Gets user url test.
-     */
     @Test
     public void getUserUrlTest() {
         assertEquals("http://eureka-user", userFacilityCommunicator.getUserUrl());
     }
 
-    /**
-     * Gets group size test.
-     */
     @Test
     public void getGroupSizeTest() {
         Mockito.when(restTemplate.getForEntity(anyString(), any()))

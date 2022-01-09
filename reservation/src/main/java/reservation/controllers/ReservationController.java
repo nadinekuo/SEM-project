@@ -170,14 +170,8 @@ public class ReservationController {
         Long equipmentId;
         try {
             equipmentId = sportFacilityCommunicator.getFirstAvailableEquipmentId(equipmentName);
-            System.out.println(
-                "######### First available equipment id for " + equipmentName + " =" + " "
-                    + equipmentId);
         } catch (HttpClientErrorException e) {
             equipmentId = -1L;
-            System.out.println(
-                "############ Equipment " + equipmentName + " not available / " + "non-existent!!! "
-                    + "Set id to -1L in ReservationController.");
         }
 
         Reservation reservation =
