@@ -30,10 +30,9 @@ public class ReservationChecker {
      * @param reservation           the reservation
      * @param reservationController the reservation controller through which API calls to other
      *                              microservices are made
-     * @return boolean - true if Reservation can be made, else false.
      */
     public void checkReservation(Reservation reservation,
-                                    ReservationController reservationController)
+                                 ReservationController reservationController)
         throws InvalidReservationException {
 
         // Returns first validator in chain created for this reservation
@@ -51,8 +50,8 @@ public class ReservationChecker {
      * Creates Chain of Responsibility object.
      * Having a separate method for this creation, facilitates testability.
      *
-     * @param reservation           - Reservation to be checked
-     * @param controller - API to communicate with other microservices
+     * @param reservation - Reservation to be checked
+     * @param controller  - API to communicate with other microservices
      * @return - The first validator in the chain of responsibility created
      */
     public ReservationValidator createChainOfResponsibility(Reservation reservation,
@@ -75,8 +74,7 @@ public class ReservationChecker {
             //  with the group size of the customers who want to reserve that sports room
             // For sport fields (hold 1 sport),
             // the team size requirements of that sport is also checked
-            ReservationValidator capacityHandler =
-                new TeamRoomCapacityValidator(controller);
+            ReservationValidator capacityHandler = new TeamRoomCapacityValidator(controller);
             sportFacilityHandler.setNext(capacityHandler);
         }
         return userBalanceHandler;
