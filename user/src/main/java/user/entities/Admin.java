@@ -33,6 +33,8 @@ public class Admin extends User {
     }
 
     /**
+     * The overridden toString method.
+     *
      * @return String representation of the admin object
      */
     @Override

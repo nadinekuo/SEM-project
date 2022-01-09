@@ -33,7 +33,7 @@ class CustomerTest {
     }
 
     @Test
-    void ConstructorTest() {
+    void constructorTest() {
         Customer customer = new Customer("john285", "johnpwd", false);
         assertThat(customer.getUsername()).isEqualTo("john285");
         assertThat(customer.getPassword()).isEqualTo("johnpwd");

@@ -29,9 +29,9 @@ public class Sport {
     @JoinTable(name = "sport_locations", joinColumns = {
         @JoinColumn(name = "sport_name", referencedColumnName = "sportName", nullable = false,
             updatable = false)
-    }, inverseJoinColumns = {
-        @JoinColumn(name = "sportroom_id", referencedColumnName = "sportRoomId", nullable = false
-            , updatable = false)
+        }, inverseJoinColumns = {
+        @JoinColumn(name = "sportroom_id", referencedColumnName = "sportRoomId", nullable = false,
+            updatable = false)
     })
     @JsonIgnoreProperties("sports")
     private List<SportRoom> sportLocations;
@@ -73,9 +73,9 @@ public class Sport {
     }
 
     /**
-     * Add sport to a sportroom
+     * Add sport to a sportroom.
      *
-     * @param sportRoom
+     * @param sportRoom the sport room
      */
     public void addSportToSportLocation(SportRoom sportRoom) {
         if (!sportLocations.contains(sportRoom)) {
