@@ -1,6 +1,9 @@
 package reservation.entities;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
@@ -14,12 +17,12 @@ import org.junit.jupiter.api.Test;
 
 public class ReservationTest {
 
+    Reservation reservation;
     @Id
     @SequenceGenerator(name = "reservation_sequence", sequenceName = "reservation_sequence",
-            allocationSize = 1)
+        allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_sequence")
     private Long reservationId;
-
     private ReservationType typeOfReservation;    // 0 = Equipment, 1 = SportRoom, 2 = Lesson
     private String bookedItemName;
     // Name of reservation, it can be Sport Hall or Equipment name or
@@ -27,17 +30,13 @@ public class ReservationTest {
     private Long customerId;   // for group reservations, there will be separate reservations
     private Long groupId;     // will be -1 if it's not a group reservation
     private Long sportFacilityReservedId;   // EquipmentId, LessonId or sportRoomId
-
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startingTime;
     private int timeSlotInMinutes;
     private Boolean madeByPremiumUser;
 
-    Reservation reservation;
-
     /**
      * Sets up the tests.
-     *
      */
     @BeforeEach
     void setup() {
@@ -48,8 +47,9 @@ public class ReservationTest {
         startingTime = LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00);
         madeByPremiumUser = false;
 
-        reservation = new Reservation(typeOfReservation, bookedItemName, customerId,
-                sportFacilityReservedId, startingTime, madeByPremiumUser);
+        reservation =
+            new Reservation(typeOfReservation, bookedItemName, customerId, sportFacilityReservedId,
+                startingTime, madeByPremiumUser);
     }
 
     @Test
@@ -104,15 +104,15 @@ public class ReservationTest {
 
     @Test
     void getStartingTimeTest() {
-        assertTrue(reservation.getStartingTime().equals(
-                LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00)));
+        assertTrue(
+            reservation.getStartingTime().equals(LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00)));
     }
 
     @Test
     void setStartingTimeTest() {
         reservation.setStartingTime(LocalDateTime.of(2021, Month.JANUARY, 5, 17, 00));
-        assertTrue(reservation.getStartingTime().equals(
-                LocalDateTime.of(2021, Month.JANUARY, 5, 17, 00)));
+        assertTrue(
+            reservation.getStartingTime().equals(LocalDateTime.of(2021, Month.JANUARY, 5, 17, 00)));
     }
 
     @Test
@@ -162,8 +162,9 @@ public class ReservationTest {
         startingTime = LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00);
         madeByPremiumUser = false;
 
-        Reservation check = new Reservation(typeOfReservation, bookedItemName, customerId,
-                sportFacilityReservedId, startingTime, madeByPremiumUser);
+        Reservation check =
+            new Reservation(typeOfReservation, bookedItemName, customerId, sportFacilityReservedId,
+                startingTime, madeByPremiumUser);
         check.setReservationId(2L);
         reservation.setReservationId(2L);
         assertTrue(reservation.equals(check));
@@ -188,8 +189,9 @@ public class ReservationTest {
         startingTime = LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00);
         madeByPremiumUser = true;
 
-        Reservation check = new Reservation(typeOfReservation, bookedItemName, customerId,
-                sportFacilityReservedId, startingTime, madeByPremiumUser);
+        Reservation check =
+            new Reservation(typeOfReservation, bookedItemName, customerId, sportFacilityReservedId,
+                startingTime, madeByPremiumUser);
         check.setReservationId(2L);
         reservation.setReservationId(1L);
         assertFalse(reservation.equals(check));
@@ -198,12 +200,10 @@ public class ReservationTest {
     @Test
     void toStringTest() {
         reservation.setReservationId(1L);
-        assertEquals("Reservation{" + "reservationId="
-                + reservation.getReservationId() + ", typeOfReservation="
-                + reservation.getTypeOfReservation() + ", customerId="
-                + reservation.getCustomerId() + ", groupId="
-                + reservation.getGroupId() + ", startingTime="
-                + reservation.getStartingTime() + '}', reservation.toString());
+        assertEquals("Reservation{" + "reservationId=" + reservation.getReservationId()
+            + ", typeOfReservation=" + reservation.getTypeOfReservation() + ", customerId="
+            + reservation.getCustomerId() + ", groupId=" + reservation.getGroupId()
+            + ", startingTime=" + reservation.getStartingTime() + '}', reservation.toString());
     }
 
     @Test
