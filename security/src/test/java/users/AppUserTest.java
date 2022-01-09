@@ -78,8 +78,20 @@ public class AppUserTest {
     }
 
     @Test
-    void notEqualsTest() {
+    void notEqualUsernameTest() {
         AppUser appUserTest = new AppUser("erwin", "emma123", "user");
+        assertFalse(appUser.equals(appUserTest));
+    }
+
+    @Test
+    void notEqualPasswordTest() {
+        AppUser appUserTest = new AppUser("emma", "emma12", "user");
+        assertFalse(appUser.equals(appUserTest));
+    }
+
+    @Test
+    void notEqualRoleTest() {
+        AppUser appUserTest = new AppUser("emma", "emma123", "admin");
         assertFalse(appUser.equals(appUserTest));
     }
 
