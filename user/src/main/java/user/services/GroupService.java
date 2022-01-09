@@ -12,9 +12,6 @@ import user.entities.Customer;
 import user.entities.Group;
 import user.repositories.GroupRepository;
 
-/**
- * The type Group service.
- */
 @Service
 public class GroupService {
 

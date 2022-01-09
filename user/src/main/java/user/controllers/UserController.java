@@ -23,17 +23,12 @@ import user.entities.Admin;
 import user.entities.Customer;
 import user.services.UserService;
 
-/**
- * The type User controller.
- */
 @RestController
 @RequestMapping("user")
 public class UserController {
 
     private final transient UserService userService;
 
-    @Autowired
-    private final transient RestTemplate restTemplate;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -46,7 +41,6 @@ public class UserController {
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
-        this.restTemplate = userService.restTemplate();
     }
 
     /**

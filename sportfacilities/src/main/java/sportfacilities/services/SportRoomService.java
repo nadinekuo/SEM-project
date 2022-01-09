@@ -12,9 +12,6 @@ import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.repositories.SportRoomRepository;
 
-/**
- * The type Sport room service.
- */
 @Service
 public class SportRoomService {
     private final transient SportRoomRepository sportRoomRepository;

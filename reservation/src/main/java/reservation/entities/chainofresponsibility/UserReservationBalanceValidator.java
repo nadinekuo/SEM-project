@@ -44,11 +44,6 @@ public class UserReservationBalanceValidator extends BaseValidator {
         // Communicates with user microservice
         boolean isPremium = reservation.getMadeByPremiumUser();
 
-        System.out.println(
-            "########## USER ID " + reservation.getCustomerId() + " (Premium: " + isPremium + ") "
-                + " HAS " + reservationBalanceOnDate + " RESERVATIONS FOR THE DATE " + reservation
-                    .getStartingTime().toString());
-
         // Basic users can have 1 sports room reservation per day
         if (!isPremium && reservationBalanceOnDate >= 1) {
             throw new InvalidReservationException(
