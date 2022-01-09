@@ -38,7 +38,7 @@ public class SportServiceTest {
     private transient Sport yoga;
 
     /**
-     * Sets each test.
+     * Sets up the tests.
      */
     @BeforeEach
     void setup() {
@@ -53,17 +53,11 @@ public class SportServiceTest {
         yoga = new Sport("yoga");
     }
 
-    /**
-     * Test constructor.
-     */
     @Test
-    public void testConstructor() {
+    public void constructorTest() {
         assertNotNull(sportService);
     }
 
-    /**
-     * Gets valid sport.
-     */
     @Test
     public void getSportByIdTest() {
 
@@ -78,12 +72,8 @@ public class SportServiceTest {
         verify(sportRepository, times(1)).findById(volleyball.getSportName());
     }
 
-
-    /**
-     * Gets non existing sport.
-     */
     @Test
-    public void getNonExistingSport() {
+    public void getNonExistingSportTest() {
 
         when(sportRepository.findById(anyString())).thenReturn(Optional.empty());
 
@@ -92,12 +82,8 @@ public class SportServiceTest {
         });
     }
 
-
-    /**
-     * Deletes valid sport.
-     */
     @Test
-    public void deleteSport() {
+    public void deleteSportTest() {
 
         when(sportRepository.findById(yoga.getSportName())).thenReturn(Optional.ofNullable(yoga));
 
@@ -108,12 +94,8 @@ public class SportServiceTest {
         verify(sportRepository).findById(yoga.getSportName());
     }
 
-
-    /**
-     * Deletes invalid sport.
-     */
     @Test
-    public void deleteNonExistingSport() {
+    public void deleteNonExistingSportTest() {
         doThrow(new NoSuchElementException()).when(sportRepository).findById("hockey");
 
         assertThrows(NoSuchElementException.class, () -> {
@@ -121,13 +103,8 @@ public class SportServiceTest {
         });
     }
 
-
-
-    /**
-     * Add sport.
-     */
     @Test
-    public void addSport() {
+    public void addSportTest() {
 
         sportService.addSport(yoga);
 
@@ -141,9 +118,4 @@ public class SportServiceTest {
         assertEquals(capturedSport.getMaxTeamSize(), -1);
         assertEquals(capturedSport.getMinTeamSize(), 1);
     }
-
-
-
-
-
 }

@@ -210,7 +210,7 @@ public class ReservationServiceTest {
             Optional.of(reservationService.getLastPersonThatUsedEquipment(2L)));
 
     }
-    
+
     @Test
     public void restTemplateTest() {
         RestTemplate restTemplate = reservationService.restTemplate();

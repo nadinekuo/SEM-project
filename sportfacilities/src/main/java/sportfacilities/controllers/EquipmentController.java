@@ -28,9 +28,6 @@ public class EquipmentController {
     private final transient EquipmentService equipmentService;
     private final transient SportService sportService;
 
-    @Autowired
-    private final transient RestTemplate restTemplate;
-
     /**
      * Autowired constructor for the class.
      *
@@ -40,7 +37,6 @@ public class EquipmentController {
     @Autowired
     public EquipmentController(EquipmentService equipmentService, SportService sportService) {
         this.equipmentService = equipmentService;
-        this.restTemplate = equipmentService.restTemplate();
         this.sportService = sportService;
     }
 

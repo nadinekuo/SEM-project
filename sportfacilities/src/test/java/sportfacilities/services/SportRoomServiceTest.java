@@ -28,9 +28,6 @@ import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.repositories.SportRoomRepository;
 
-/**
- * The type Sport room service test.
- */
 @ExtendWith(MockitoExtension.class)
 public class SportRoomServiceTest {
 
@@ -55,7 +52,7 @@ public class SportRoomServiceTest {
     private transient SportRoomService sportRoomService;
 
     /**
-     * Sets .
+     * Sets up the tests.
      */
     @BeforeEach
     void setup() {
@@ -108,19 +105,13 @@ public class SportRoomServiceTest {
 
     }
 
-    /**
-     * Test constructor.
-     */
     @Test
-    public void testConstructor() {
+    public void ConstructorTest() {
         assertNotNull(sportRoomService);
     }
 
-    /**
-     * Gets sports room.
-     */
     @Test
-    public void getSportsRoom() {
+    public void getSportsRoomTest() {
 
         when(sportRoomRepository.findBySportRoomId(id1)).thenReturn(Optional.of(hallX1));
 
@@ -134,11 +125,8 @@ public class SportRoomServiceTest {
         verify(sportRoomRepository).findBySportRoomId(id1);
     }
 
-    /**
-     * Gets non existing sports room.
-     */
     @Test
-    public void getNonExistingSportsRoom() {
+    public void getNonExistingSportsRoomTest() {
 
         when(sportRoomRepository.findBySportRoomId(id1)).thenReturn(Optional.empty());
 
@@ -147,22 +135,16 @@ public class SportRoomServiceTest {
         });
     }
 
-    /**
-     * Sports room exists.
-     */
     @Test
-    public void sportsRoomExists() {
+    public void sportsRoomExistsTest() {
 
         when(sportRoomRepository.findBySportRoomId(id2)).thenReturn(Optional.of(hallX1));
 
         assertThat(sportRoomService.sportRoomExists(id2)).isTrue();
     }
 
-    /**
-     * Sports room does not exist.
-     */
     @Test
-    public void sportsRoomDoesNotExist() {
+    public void sportsRoomDoesNotExistTest() {
         when(sportRoomRepository.findBySportRoomId(id2)).thenReturn(Optional.empty());
 
         assertThat(sportRoomService.sportRoomExists(id2)).isFalse();
@@ -204,7 +186,7 @@ public class SportRoomServiceTest {
     }
 
     @Test
-    public void addSportRoomTestException() throws Exception {
+    public void addSportRoomExceptionTest() throws Exception {
         when(sportService.getSportById("soBBer")).thenThrow(new NoSuchElementException());
 
         assertThrows(NoSuchElementException.class,
@@ -219,14 +201,11 @@ public class SportRoomServiceTest {
     }
 
     @Test
-    public void deleteSportRoomWithNonExistentId() throws Exception {
+    public void deleteSportRoomWithNonExistentIdTest() throws Exception {
         doThrow(new NoSuchElementException()).when(sportRoomRepository).deleteBySportRoomId(1000L);
         assertThrows(NoSuchElementException.class, () -> sportRoomService.deleteSportRoom(1000L));
     }
 
-    /**
-     * Rest template test.
-     */
     @Test
     public void restTemplateTest() {
         RestTemplate restTemplate = sportRoomService.restTemplate();

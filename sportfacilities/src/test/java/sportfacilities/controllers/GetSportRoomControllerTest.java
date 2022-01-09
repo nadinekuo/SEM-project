@@ -23,9 +23,6 @@ import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.services.SportRoomService;
 
-/**
- * The type Sport room controller test.
- */
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 class GetSportRoomControllerTest {
@@ -41,19 +38,15 @@ class GetSportRoomControllerTest {
     private final transient SportRoom hockeyField =
         new SportRoom("hockeyFieldA", List.of(hockey), 10, 200, true);
     private final transient String sportName = "judo";
-    /**
-     * The Sport room service.
-     */
+
     @Mock
     transient SportRoomService sportRoomService;
-    /**
-     * The Sport service.
-     */
+
     @Autowired
     private transient MockMvc mockMvc;
 
     /**
-     * Sets .
+     * Sets up the tests.
      */
     @BeforeEach
     public void setup() {
@@ -61,11 +54,6 @@ class GetSportRoomControllerTest {
             MockMvcBuilders.standaloneSetup(new GetSportRoomController(sportRoomService)).build();
     }
 
-    /**
-     * Gets sport room test.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void getSportRoomTest() throws Exception {
         mockMvc.perform(get("/getSportRoomServices/{sportRoomId}", sportRoomId)).andExpect(status().isOk())
@@ -81,11 +69,6 @@ class GetSportRoomControllerTest {
             .andExpect(status().isBadRequest());
     }
 
-    /**
-     * Gets sport room name test.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void getSportRoomNameTest() throws Exception {
         given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
@@ -96,12 +79,6 @@ class GetSportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 
-
-    /**
-     * Gets sport room name throws exception test.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void getSportRoomNameThrowsExceptionTest() throws Exception {
         doThrow(NoSuchElementException.class).when(sportRoomService).getSportRoom(sportRoomId);
@@ -110,11 +87,6 @@ class GetSportRoomControllerTest {
             .andExpect(status().isBadRequest());
     }
 
-    /**
-     * Gets maximum capacity.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void getMaximumCapacity() throws Exception {
         given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
@@ -125,11 +97,6 @@ class GetSportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 
-    /**
-     * Gets minimum capacity.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void getMinimumCapacity() throws Exception {
         given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
@@ -140,11 +107,6 @@ class GetSportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 
-    /**
-     * Gets max capacity throws exception test.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void getMaxCapacityThrowsExceptionTest() throws Exception {
         doThrow(NoSuchElementException.class).when(sportRoomService).getSportRoom(sportRoomId);
@@ -153,11 +115,6 @@ class GetSportRoomControllerTest {
             .andExpect(status().isBadRequest());
     }
 
-    /**
-     * Gets min capacity throws exception test.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void getMinCapacityThrowsExceptionTest() throws Exception {
         doThrow(NoSuchElementException.class).when(sportRoomService).getSportRoom(sportRoomId);
@@ -166,11 +123,6 @@ class GetSportRoomControllerTest {
             .andExpect(status().isBadRequest());
     }
 
-    /**
-     * Gets field sport.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void getFieldSport() throws Exception {
         given(sportRoomService.getSportRoom(sportFieldId)).willReturn(hockeyField);
@@ -181,11 +133,6 @@ class GetSportRoomControllerTest {
         verify(sportRoomService).getSportRoom(sportFieldId);
     }
 
-    /**
-     * Gets field sport throws exception.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void getFieldSportThrowsException() throws Exception {
         doThrow(NoSuchElementException.class).when(sportRoomService).getSportRoom(sportRoomId);
