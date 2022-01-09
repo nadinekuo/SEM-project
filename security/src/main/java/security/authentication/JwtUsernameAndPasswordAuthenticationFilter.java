@@ -67,7 +67,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter
                     Collections.emptyList());
 
             // Authentication manager authenticate the user, and use
-            // AuthenticationController::loadByUsername() method to load the user.
+            // UserDetailServiceImpl::loadByUsername() method to load the user.
             return authManager.authenticate(authToken);
 
         } catch (IOException e) {

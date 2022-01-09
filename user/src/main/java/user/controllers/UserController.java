@@ -39,8 +39,9 @@ public class UserController {
      * @param userService the user service
      */
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ObjectMapper objectMapper) {
         this.userService = userService;
+        this.objectMapper = objectMapper;
     }
 
     /**
