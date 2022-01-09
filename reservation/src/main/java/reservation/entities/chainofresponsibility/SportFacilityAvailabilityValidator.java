@@ -31,7 +31,9 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
                                               ReservationController reservationController) {
         this.reservationService = reservationService;
         this.reservationController = reservationController;
-        this.sportFacilityCommunicator = this.reservationController.getSportFacilityCommunicator();
+        this.sportFacilityCommunicator = this.reservationController
+         .getSportFacilityCommunicator();
+        //this.sportFacilityCommunicator = sportFacilityCommunicator;
     }
 
     @Override

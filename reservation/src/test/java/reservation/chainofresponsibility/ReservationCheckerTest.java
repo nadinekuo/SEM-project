@@ -88,7 +88,7 @@ class ReservationCheckerTest {
             new SportFacilityAvailabilityValidator(reservationService, reservationController);
         userBalanceHandler.setNext(sportFacilityHandler);
         ReservationValidator capacityHandler =
-            new TeamRoomCapacityValidator(reservationService, reservationController);
+            new TeamRoomCapacityValidator(reservationController);
         sportFacilityHandler.setNext(capacityHandler);
         Reservation reservation = new Reservation();
         reservation.setTypeOfReservation(ReservationType.SPORTS_ROOM);

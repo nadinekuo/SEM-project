@@ -76,7 +76,7 @@ public class ReservationChecker {
             // For sport fields (hold 1 sport),
             // the team size requirements of that sport is also checked
             ReservationValidator capacityHandler =
-                new TeamRoomCapacityValidator(reservationService, controller);
+                new TeamRoomCapacityValidator(controller);
             sportFacilityHandler.setNext(capacityHandler);
         }
         return userBalanceHandler;

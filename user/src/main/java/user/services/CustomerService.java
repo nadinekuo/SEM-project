@@ -13,9 +13,9 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
 
     /**
-     * Instantiates a new Customer service
+     * Instantiates a new Customer service.
      *
-     * @param customerRepository
+     * @param customerRepository customer repository
      */
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
@@ -24,18 +24,18 @@ public class CustomerService {
     /**
      * Gets the Customer from the Customer repository.
      *
-     * @param CustomerId
+     * @param customerId customer id
      * @return the Customer, else throw IllegalStateException
      */
-    public Customer getCustomerById(long CustomerId) {
-        return customerRepository.findById(CustomerId).orElseThrow(() -> new NoSuchElementException(
-            "Customer with id " + CustomerId + " does not exist!"));
+    public Customer getCustomerById(long customerId) {
+        return customerRepository.findById(customerId).orElseThrow(() -> new NoSuchElementException(
+            "Customer with id " + customerId + " does not exist!"));
     }
 
     /**
-     * The Customer is persisted into the database using customerRepository
+     * The Customer is persisted into the database using customerRepository.
      *
-     * @param customer
+     * @param customer customer
      * @return the Customer which is saved.
      */
     public Customer saveCustomer(Customer customer) {

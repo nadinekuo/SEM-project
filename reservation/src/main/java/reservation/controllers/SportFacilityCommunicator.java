@@ -64,7 +64,7 @@ public class SportFacilityCommunicator {
      */
     public int getSportRoomMaximumCapacity(Long sportRoomId) throws HttpClientErrorException {
 
-        String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/getMaximumCapacity";
+        String methodSpecificUrl = "/getSportRoomServices/" + sportRoomId.toString() + "/getMaximumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
         ResponseEntity<String> response =
@@ -79,8 +79,8 @@ public class SportFacilityCommunicator {
      * @param sportRoomId the sport room id
      * @return the sport room minimum capacity
      */
-    public int getSportRoomMinimumCapacity(Long sportRoomId) throws HttpClientErrorException {
-        String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/getMinimumCapacity";
+    public int getSportRoomMinimumCapacity(Long sportRoomId) {
+        String methodSpecificUrl = "/getSportRoomServices/" + sportRoomId.toString() + "/getMinimumCapacity";
 
         // Call to SportRoomController in Sport Facilities microservice
         ResponseEntity<String> response =
@@ -128,7 +128,7 @@ public class SportFacilityCommunicator {
      */
     public String getSportFieldSport(Long sportFieldId) throws HttpClientErrorException{
 
-        String methodSpecificUrl = "/sportRoom/" + sportFieldId.toString() + "/getSport";
+        String methodSpecificUrl = "/getSportRoomServices/" + sportFieldId.toString() + "/getSport";
 
         // Call to SportRoomController in Sport Facilities microservice
         ResponseEntity<String> relatedSport =

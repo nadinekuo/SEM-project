@@ -24,7 +24,7 @@ public class Customer extends User {
     @JoinTable(name = "user_groups", joinColumns = {
         @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable =
             false)
-    }, inverseJoinColumns = {
+        }, inverseJoinColumns = {
         @JoinColumn(name = "group_id", referencedColumnName = "groupId", nullable = false,
             updatable = false)
     })

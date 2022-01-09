@@ -29,16 +29,15 @@ import reservation.services.ReservationService;
 @RequestMapping("reservation")
 public class ReservationController {
 
-
     private final transient ReservationService reservationService;
     @Autowired
     private final transient RestTemplate restTemplate;
     @Autowired
     private final transient ReservationChecker reservationChecker;
 
-    private SportFacilityCommunicator sportFacilityCommunicator;
+    private final SportFacilityCommunicator sportFacilityCommunicator;
 
-    private UserFacilityCommunicator userFacilityCommunicator;
+    private final UserFacilityCommunicator userFacilityCommunicator;
 
     /**
      * Instantiates a new Reservation controller.

@@ -96,7 +96,7 @@ public class GroupController {
     /**
      * returns the group by group name.
      *
-     * @param groupName
+     * @param groupName the group name
      * @return the Group
      */
     @GetMapping("/groupName/{groupName}")
