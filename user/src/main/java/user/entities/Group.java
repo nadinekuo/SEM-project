@@ -144,11 +144,6 @@ public class Group {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(groupId);
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

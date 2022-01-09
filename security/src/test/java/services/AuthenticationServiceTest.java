@@ -1,12 +1,12 @@
 package services;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import security.services.AuthenticationService;
-
-import static org.junit.Assert.assertNotNull;
 
 /**
  * The type Authentication service test.

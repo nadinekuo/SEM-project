@@ -195,11 +195,6 @@ public class Sport {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(sportName, teamSport);
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
