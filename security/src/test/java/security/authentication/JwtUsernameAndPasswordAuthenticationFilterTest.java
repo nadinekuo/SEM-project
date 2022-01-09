@@ -35,7 +35,7 @@ class JwtUsernameAndPasswordAuthenticationFilterTest {
     private AuthenticationManager authManager;
 
     @Test
-    public void attemptAuthentication() throws JSONException {
+    public void attemptAuthenticationTest() throws JSONException {
         JSONObject object = new JSONObject();
         object.put("username", "erwin");
         object.put("password", "randomstring");
@@ -50,7 +50,7 @@ class JwtUsernameAndPasswordAuthenticationFilterTest {
     }
 
     @Test
-    public void successfulAuthentication() throws ServletException, IOException {
+    public void successfulAuthenticationTest() throws ServletException, IOException {
         MockHttpServletResponse response = new MockHttpServletResponse();
         JwtUsernameAndPasswordAuthenticationFilter filter =
             new JwtUsernameAndPasswordAuthenticationFilter(authManager, jwtConfig);

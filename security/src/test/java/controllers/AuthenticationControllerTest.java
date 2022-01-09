@@ -37,20 +37,11 @@ public class AuthenticationControllerTest {
 
     private static final String userUrl = "http://eureka-user";
 
-    /**
-     * The Authentication Controller.
-     */
     AuthenticationController authenticationController;
 
-    /**
-     * The Authentication service.
-     */
     @Mock
     transient AuthenticationService authenticationService;
 
-    /**
-     * The Rest template.
-     */
     @Mock
     transient RestTemplate restTemplate;
 
