@@ -20,7 +20,6 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.entities.chainofresponsibility.InvalidReservationException;
 import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
-import reservation.services.ReservationService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TeamRoomCapacityValidatorTest {
@@ -44,10 +43,11 @@ public class TeamRoomCapacityValidatorTest {
         reservationController = mock(ReservationController.class);
         sportFacilityCommunicator = mock(SportFacilityCommunicator.class);
         userFacilityCommunicator = mock(UserFacilityCommunicator.class);
-        when(reservationController.getSportFacilityCommunicator()).thenReturn(sportFacilityCommunicator);
-        when(reservationController.getUserFacilityCommunicator()).thenReturn(userFacilityCommunicator);
-        this.teamRoomCapacityValidator =
-            new TeamRoomCapacityValidator(reservationController);
+        when(reservationController.getSportFacilityCommunicator()).thenReturn(
+            sportFacilityCommunicator);
+        when(reservationController.getUserFacilityCommunicator()).thenReturn(
+            userFacilityCommunicator);
+        this.teamRoomCapacityValidator = new TeamRoomCapacityValidator(reservationController);
 
         groupReservation = new Reservation(ReservationType.SPORTS_ROOM, "Hall 1", 3L, 13L,
             LocalDateTime.of(2022, 02, 3, 20, 30), 84L, madeByPremiumUser);
