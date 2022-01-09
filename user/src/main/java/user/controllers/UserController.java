@@ -41,7 +41,6 @@ public class UserController {
     @Autowired
     public UserController(UserService userService, ObjectMapper objectMapper) {
         this.userService = userService;
-        this.restTemplate = userService.restTemplate();
         this.objectMapper = objectMapper;
     }
 
