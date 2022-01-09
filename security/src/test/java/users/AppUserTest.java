@@ -18,7 +18,6 @@ public class AppUserTest {
 
     /**
      * Sets up the tests
-     *
      */
     @BeforeEach
     void setup() {

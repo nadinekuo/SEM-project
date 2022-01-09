@@ -13,19 +13,6 @@ application-production.properties
 
 
 # Copy the following to your local git/info/exclude folder! (cannot be put in this shared gitignore)
-
-### JetBrains template
-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
-#
-#*.iml
-#
-### Directory-based project format:
-#.idea/
-#
-#
-## IntelliJ
-#/out/
-
 # MR
 /codemr
 
