@@ -161,6 +161,7 @@ public class ReservationController {
      * @param date          the date
      * @return the response entity
      */
+    //TODO catch parse exception and write test for it
     @PostMapping("/{userId}/{equipmentName}/{date}/{madeByPremiumUser}/makeEquipmentBooking")
     @ResponseBody
     public ResponseEntity<?> makeEquipmentReservation(@PathVariable Long userId,
