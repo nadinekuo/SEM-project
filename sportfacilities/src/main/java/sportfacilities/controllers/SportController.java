@@ -39,8 +39,6 @@ public class SportController {
      * @param sportName the sport name
      * @return the sport max team size
      */
-    
-    //TODO return correct type instead of string
     @GetMapping("/{sportName}/getMaxTeamSize")
     @ResponseBody
     public ResponseEntity<String> getSportMaxTeamSize(@PathVariable String sportName) {
