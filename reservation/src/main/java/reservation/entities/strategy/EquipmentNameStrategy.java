@@ -9,9 +9,6 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.entities.strategy.ReservationSortingStrategy;
 
-/**
- * The type Equipment name strategy.
- */
 public class EquipmentNameStrategy implements ReservationSortingStrategy {
 
 
@@ -32,9 +29,6 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
         Collections.sort(list, new ReservationComparator());
     }
 
-    /**
-     * The type Reservation comparator.
-     */
     protected class ReservationComparator implements Comparator {
         @Override
         public int compare(Object o1, Object o2) {

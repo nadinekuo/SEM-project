@@ -11,9 +11,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-/**
- * The type Customer.
- */
 @Entity
 @Table(name = "customers")
 public class Customer extends User {

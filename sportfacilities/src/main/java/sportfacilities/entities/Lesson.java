@@ -9,9 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-/**
- * The type Lesson.
- */
 @Entity
 @Table(name = "lessons")
 public class Lesson {

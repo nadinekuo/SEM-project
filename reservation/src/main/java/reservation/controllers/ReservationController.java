@@ -21,9 +21,6 @@ import reservation.entities.chainofresponsibility.InvalidReservationException;
 import reservation.entities.chainofresponsibility.ReservationChecker;
 import reservation.services.ReservationService;
 
-/**
- * The type Reservation controller.
- */
 @RestController
 @RequestMapping("reservation")
 public class ReservationController {

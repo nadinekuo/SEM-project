@@ -14,9 +14,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-/**
- * The type Sport.
- */
 @Entity
 @Table(name = "sports")
 public class Sport {

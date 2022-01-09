@@ -12,9 +12,6 @@ import sportfacilities.controllers.EquipmentController;
 import sportfacilities.entities.Equipment;
 import sportfacilities.repositories.EquipmentRepository;
 
-/**
- * The type Equipment service.
- */
 @Service
 public class EquipmentService {
 

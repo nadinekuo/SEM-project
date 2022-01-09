@@ -8,9 +8,6 @@ import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
 import reservation.entities.strategy.ReservationSortingStrategy;
 
-/**
- * The type Basic premium user strategy.
- */
 public class BasicPremiumUserStrategy implements ReservationSortingStrategy {
 
 
@@ -39,9 +36,6 @@ public class BasicPremiumUserStrategy implements ReservationSortingStrategy {
         Collections.sort(list, new ReservationComparator());
     }
 
-    /**
-     * The type Reservation comparator.
-     */
     protected static class ReservationComparator implements Comparator {
         @Override
         public int compare(Object o1, Object o2) {

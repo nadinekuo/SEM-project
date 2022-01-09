@@ -18,9 +18,6 @@ import sportfacilities.entities.Sport;
 import sportfacilities.services.EquipmentService;
 import sportfacilities.services.SportService;
 
-/**
- * The type Equipment controller.
- */
 @RestController
 @RequestMapping("equipment")
 public class EquipmentController {
