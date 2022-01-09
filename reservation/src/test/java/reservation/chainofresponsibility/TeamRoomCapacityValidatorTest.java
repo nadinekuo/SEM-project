@@ -20,7 +20,6 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.entities.chainofresponsibility.InvalidReservationException;
 import reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
-import reservation.services.ReservationService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TeamRoomCapacityValidatorTest {
@@ -29,7 +28,6 @@ public class TeamRoomCapacityValidatorTest {
     private final transient Reservation reservation1;
 
     private final transient ReservationController reservationController;
-    private final transient ReservationService reservationService;
     private final transient SportFacilityCommunicator sportFacilityCommunicator;
     private final transient UserFacilityCommunicator userFacilityCommunicator;
     // Class under test:
@@ -42,10 +40,14 @@ public class TeamRoomCapacityValidatorTest {
      */
     public TeamRoomCapacityValidatorTest() {
 
-        reservationService = mock(ReservationService.class);
         reservationController = mock(ReservationController.class);
-        this.teamRoomCapacityValidator =
-            new TeamRoomCapacityValidator(reservationService, reservationController);
+        sportFacilityCommunicator = mock(SportFacilityCommunicator.class);
+        userFacilityCommunicator = mock(UserFacilityCommunicator.class);
+        when(reservationController.getSportFacilityCommunicator()).thenReturn(
+            sportFacilityCommunicator);
+        when(reservationController.getUserFacilityCommunicator()).thenReturn(
+            userFacilityCommunicator);
+        this.teamRoomCapacityValidator = new TeamRoomCapacityValidator(reservationController);
 
         groupReservation = new Reservation(ReservationType.SPORTS_ROOM, "Hall 1", 3L, 13L,
             LocalDateTime.of(2022, 02, 3, 20, 30), 84L, madeByPremiumUser);
@@ -53,8 +55,6 @@ public class TeamRoomCapacityValidatorTest {
         reservation1 = new Reservation(ReservationType.EQUIPMENT, "hockey", 1L, 42L,
             LocalDateTime.of(2022, 10, 05, 16, 00), madeByPremiumUser);
         reservation1.setId(53L);
-        this.sportFacilityCommunicator = reservationController.getSportFacilityCommunicator();
-        this.userFacilityCommunicator = reservationController.getUserFacilityCommunicator();
         sportName = "soccer";
     }
 

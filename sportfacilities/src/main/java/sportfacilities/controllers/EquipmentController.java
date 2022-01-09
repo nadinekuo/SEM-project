@@ -69,7 +69,7 @@ public class EquipmentController {
      */
     @GetMapping("/{equipmentId}/getEquipmentName")
     @ResponseBody
-    public ResponseEntity<?> getEquipmentName(@PathVariable Long equipmentId) {
+    public ResponseEntity<String> getEquipmentName(@PathVariable Long equipmentId) {
         try {
             String equipmentName = equipmentService.getEquipmentName(equipmentId);
             return new ResponseEntity<>(equipmentName, HttpStatus.OK);
@@ -103,7 +103,7 @@ public class EquipmentController {
      */
     @PutMapping("/{equipmentName}/{relatedSportName}/addNewEquipment/admin")
     @ResponseBody
-    public ResponseEntity<?> addNewEquipment(@PathVariable String equipmentName,
+    public ResponseEntity<String> addNewEquipment(@PathVariable String equipmentName,
                                              @PathVariable String relatedSportName) {
         try {
             Sport sport = sportService.getSportById(relatedSportName);
@@ -121,7 +121,7 @@ public class EquipmentController {
      * @return the response
      */
     @DeleteMapping("/{equipmentId}/deleteEquipment/admin")
-    public ResponseEntity<?> deleteEquipment(@PathVariable long equipmentId) {
+    public ResponseEntity<String> deleteEquipment(@PathVariable long equipmentId) {
         try {
             equipmentService.deleteEquipment(equipmentId);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -138,7 +138,7 @@ public class EquipmentController {
      */
     @PutMapping("/{equipmentId}/broughtBack/admin")
     @ResponseBody
-    public ResponseEntity<?> equipmentBroughtBack(@PathVariable Long equipmentId) {
+    public ResponseEntity<String> equipmentBroughtBack(@PathVariable Long equipmentId) {
         try {
             equipmentService.setEquipmentToNotInUse(equipmentId);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -154,7 +154,7 @@ public class EquipmentController {
      */
     @PutMapping("/{equipmentId}/reserved")
     @ResponseBody
-    public ResponseEntity<?> equipmentReserved(@PathVariable Long equipmentId) {
+    public ResponseEntity<String> equipmentReserved(@PathVariable Long equipmentId) {
         try {
             equipmentService.setEquipmentToInUse(equipmentId);
             return new ResponseEntity<>(HttpStatus.OK);

@@ -1,6 +1,7 @@
 package user.services;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -31,22 +32,42 @@ public class UserService {
         this.adminRepository = adminRepository;
     }
 
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
     /**
      * Finds User by id.
      *
      * @param userId - long
      * @return Optional of User having this id
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException NoSuchElementException
      */
     public User getUserById(long userId) {
         return customerRepository.findById(userId).orElseThrow(
             () -> new NoSuchElementException("user with id " + userId + "does not exist!"));
     }
 
-    @Bean
-    @LoadBalanced
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    /**
+     * Finds Customer by userName.
+     *
+     * @param userName - String
+     * @return Optional of Customer having this name
+     */
+    public Optional<Customer> getCustomerByUsername(String userName) {
+        return customerRepository.findCustomerByUsername(userName);
+    }
+
+    /**
+     * Finds Admin by userName.
+     *
+     * @param userName - String
+     * @return Optional of Admin having this name
+     */
+    public Optional<Admin> getAdminByUsername(String userName) {
+        return adminRepository.findAdminByUsername(userName);
     }
 
     /**
@@ -73,10 +94,9 @@ public class UserService {
     }
 
     /**
-     * Upgrade Customer from basic to premium.
+     * Upgrade a customer to premium.
      *
-     * @param customer
-     * @throws NoSuchElementException
+     * @param customer the customer
      */
     public void upgradeCustomer(Customer customer) {
         long id = customer.getId();
@@ -90,9 +110,9 @@ public class UserService {
     /**
      * Check if the Customer exists through the database.
      *
-     * @param username
+     * @param username user name
      * @return true if customer exists, else false
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException NoSuchElementException
      */
     public boolean checkCustomerExists(String username) {
         Customer customer = customerRepository.findByUsername(username).orElseThrow(
@@ -103,9 +123,9 @@ public class UserService {
     /**
      * Check if the admin exists through the database.
      *
-     * @param username
+     * @param username user name
      * @return true if admin exists, else false
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException NoSuchElementException
      */
     public boolean checkAdminExists(String username) {
         Admin admin = adminRepository.findByUsername(username).orElseThrow(

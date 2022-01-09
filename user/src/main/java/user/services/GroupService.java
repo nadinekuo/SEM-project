@@ -90,7 +90,7 @@ public class GroupService {
     /**
      * Gets group by group name.
      *
-     * @param groupName
+     * @param groupName group name
      * @return Group
      */
     public Group getGroupByGroupName(String groupName) {
@@ -112,8 +112,8 @@ public class GroupService {
             () -> new NoSuchElementException("Group with id " + groupId + " does not exist!"));
         oldCustomer.addGroupToUsersGroupList(groupToAdd);
 
-        //customer service only called for the persistence of the updated group attribute of the
-        // customer
+        //customer service only called for the persistence
+        //of the updated group attribute of the customer
         customerService.saveCustomer(oldCustomer);
         return groupToAdd;
 

@@ -65,7 +65,7 @@ public class GetSportRoomController {
      */
     @GetMapping("/{sportRoomId}/getMaximumCapacity")
     @ResponseBody
-    public ResponseEntity<?> getSportRoomMaximumCapacity(@PathVariable Long sportRoomId) {
+    public ResponseEntity<String> getSportRoomMaximumCapacity(@PathVariable Long sportRoomId) {
         try {
             Integer maxCapacity = sportRoomService.getSportRoom(sportRoomId).getMaxCapacity();
             return new ResponseEntity<>(maxCapacity.toString(), HttpStatus.OK);
@@ -82,7 +82,7 @@ public class GetSportRoomController {
      */
     @GetMapping("/{sportRoomId}/getMinimumCapacity")
     @ResponseBody
-    public ResponseEntity<?> getSportRoomMinimumCapacity(@PathVariable Long sportRoomId) {
+    public ResponseEntity<String> getSportRoomMinimumCapacity(@PathVariable Long sportRoomId) {
         try {
             Integer minCapacity = sportRoomService.getSportRoom(sportRoomId).getMinCapacity();
             return new ResponseEntity<>(minCapacity.toString(), HttpStatus.OK);

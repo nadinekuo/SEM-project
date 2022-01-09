@@ -10,16 +10,18 @@ import user.entities.Group;
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
     /**
-     * @param groupId
-     * @return
+     * Find group by group id.
+     *
+     * @param groupId group id
+     * @return Optional of group
      */
     Optional<Group> findByGroupId(Long groupId);
 
     /**
-     * find the Group by group name
+     * Find the Group by group name.
      *
-     * @param groupName
-     * @return the Group
+     * @param groupName group name
+     * @return optional of group
      */
     @Query(value = "SELECT * " + "FROM GROUPS " + "WHERE GROUP_NAME = ?1", nativeQuery = true)
     Optional<Group> findByGroupName(String groupName);

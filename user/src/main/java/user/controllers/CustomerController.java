@@ -19,9 +19,9 @@ public class CustomerController {
     private final CustomerService customerService;
 
     /**
-     * Instantiates a new Customer Controller
+     * Instantiates a new Customer Controller.
      *
-     * @param customerService
+     * @param customerService the customer service
      */
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
@@ -30,7 +30,7 @@ public class CustomerController {
     /**
      * Gets the Customer.
      *
-     * @param id
+     * @param id Long id
      * @return the customer
      */
     @GetMapping("/{id}")

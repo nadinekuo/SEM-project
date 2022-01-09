@@ -38,8 +38,8 @@ public class SportFacilityAvailabilityValidatorTest {
     private final transient SportFacilityCommunicator sportFacilityCommunicator;
     // Class under test:
     private final transient SportFacilityAvailabilityValidator sportFacilityAvailabilityValidator;
-    private transient Long groupId;
     private final transient boolean madeByPremiumUser = true;
+    private transient Long groupId;
 
     /**
      * Constructor for this test suite.
@@ -47,6 +47,9 @@ public class SportFacilityAvailabilityValidatorTest {
     public SportFacilityAvailabilityValidatorTest() {
         reservationService = mock(ReservationService.class);
         reservationController = mock(ReservationController.class);
+        sportFacilityCommunicator = mock(SportFacilityCommunicator.class);
+        when(reservationController.getSportFacilityCommunicator()).thenReturn(
+            sportFacilityCommunicator);
         this.sportFacilityAvailabilityValidator =
             new SportFacilityAvailabilityValidator(reservationService, reservationController);
 
@@ -68,8 +71,6 @@ public class SportFacilityAvailabilityValidatorTest {
         groupReservation = new Reservation(ReservationType.SPORTS_ROOM, "hockey", 3L, 13L,
             LocalDateTime.of(2022, 02, 3, 20, 30), 84L, madeByPremiumUser);
         groupReservation.setId(99L);
-
-        this.sportFacilityCommunicator = reservationController.getSportFacilityCommunicator();
     }
 
     /**

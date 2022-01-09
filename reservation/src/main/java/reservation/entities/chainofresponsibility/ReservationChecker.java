@@ -1,6 +1,7 @@
 package reservation.entities.chainofresponsibility;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
@@ -29,20 +30,19 @@ public class ReservationChecker {
      * @param reservation           the reservation
      * @param reservationController the reservation controller through which API calls to other
      *                              microservices are made
-     * @return boolean - true if Reservation can be made, else false.
      */
-    public boolean checkReservation(Reservation reservation,
-                                    ReservationController reservationController) {
+    public void checkReservation(Reservation reservation,
+                                 ReservationController reservationController)
+        throws InvalidReservationException {
 
         // Returns first validator in chain created for this reservation
         ReservationValidator reservationValidator =
             createChainOfResponsibility(reservation, reservationController);
 
         try {
-            return reservationValidator.handle(reservation);   // Start of chain
-        } catch (InvalidReservationException e) {
-            e.printStackTrace();
-            return false;
+            reservationValidator.handle(reservation);   // Start of chain
+        } catch (InvalidReservationException | HttpClientErrorException e) {
+            throw new InvalidReservationException(e.getMessage());
         }
     }
 
@@ -50,8 +50,8 @@ public class ReservationChecker {
      * Creates Chain of Responsibility object.
      * Having a separate method for this creation, facilitates testability.
      *
-     * @param reservation           - Reservation to be checked
-     * @param controller - API to communicate with other microservices
+     * @param reservation - Reservation to be checked
+     * @param controller  - API to communicate with other microservices
      * @return - The first validator in the chain of responsibility created
      */
     public ReservationValidator createChainOfResponsibility(Reservation reservation,
@@ -74,8 +74,7 @@ public class ReservationChecker {
             //  with the group size of the customers who want to reserve that sports room
             // For sport fields (hold 1 sport),
             // the team size requirements of that sport is also checked
-            ReservationValidator capacityHandler =
-                new TeamRoomCapacityValidator(reservationService, controller);
+            ReservationValidator capacityHandler = new TeamRoomCapacityValidator(controller);
             sportFacilityHandler.setNext(capacityHandler);
         }
         return userBalanceHandler;

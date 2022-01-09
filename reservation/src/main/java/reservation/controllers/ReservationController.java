@@ -1,6 +1,7 @@
 package reservation.controllers;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
+import reservation.entities.chainofresponsibility.InvalidReservationException;
 import reservation.entities.chainofresponsibility.ReservationChecker;
 import reservation.services.ReservationService;
 
@@ -103,6 +105,9 @@ public class ReservationController {
      * @param date        the date
      * @return the response entity
      */
+
+    //TODO communicate with user service to find out if it was made by premium user
+    //TODO maybe bake the exceptions together
     @PostMapping(
         "/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}" + "/makeSportRoomBooking")
     @ResponseBody
@@ -111,12 +116,22 @@ public class ReservationController {
                                                       @PathVariable Long sportRoomId,
                                                       @PathVariable String date,
                                                       @PathVariable Boolean madeByPremiumUser) {
+        LocalDateTime dateTime;
+        try {
+            dateTime = LocalDateTime.parse(date);
+        } catch (DateTimeParseException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
-        LocalDateTime dateTime = LocalDateTime.parse(date);
-
-        String methodSpecificUrl = "/getSportRoomServices/" + sportRoomId + "/getName";
-        String sportRoomName = restTemplate.getForObject(
-            sportFacilityCommunicator.getSportFacilityUrl() + methodSpecificUrl, String.class);
+        String sportRoomName;
+        try {
+            String methodSpecificUrl = "/sportRoom/" + sportRoomId + "/getName";
+            ResponseEntity<String> response = restTemplate.getForEntity(
+                sportFacilityCommunicator.getSportFacilityUrl() + methodSpecificUrl, String.class);
+            sportRoomName = response.getBody();
+        } catch (HttpClientErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
         // Create reservation object, to be passed through chain of responsibility
         Reservation reservation =
@@ -126,13 +141,12 @@ public class ReservationController {
         // Chain of responsibility:
         // If any condition to be checked is violated by this reservation, the respective
         // validator will throw an InvalidReservationException with appropriate message
-        boolean isValid = reservationChecker.checkReservation(reservation, this);
-
-        if (isValid) {
+        try {
+            reservationChecker.checkReservation(reservation, this);
             reservationService.makeSportFacilityReservation(reservation);
             return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Reservation could not be made.", HttpStatus.FORBIDDEN);
+        } catch (InvalidReservationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -144,6 +158,7 @@ public class ReservationController {
      * @param date          the date
      * @return the response entity
      */
+    //TODO catch parse exception and write test for it
     @PostMapping("/{userId}/{equipmentName}/{date}/{madeByPremiumUser}/makeEquipmentBooking")
     @ResponseBody
     public ResponseEntity<?> makeEquipmentReservation(@PathVariable Long userId,
@@ -172,14 +187,13 @@ public class ReservationController {
         // Chain of responsibility:
         // If any condition to be checked is violated by this reservation, the respective
         // validator will throw an InvalidReservationException with appropriate message
-        boolean isValid = reservationChecker.checkReservation(reservation, this);
-
-        if (isValid) {
-            reservationService.makeSportFacilityReservation(reservation);
-            return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Reservation could not be made.", HttpStatus.FORBIDDEN);
+        try {
+            reservationChecker.checkReservation(reservation, this);
+        } catch (InvalidReservationException | HttpClientErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+        reservationService.makeSportFacilityReservation(reservation);
+        return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
 
     }
 

@@ -3,6 +3,7 @@ package reservation.entities.chainofresponsibility;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import reservation.controllers.ReservationController;
 import reservation.controllers.SportFacilityCommunicator;
 import reservation.controllers.UserFacilityCommunicator;
@@ -12,8 +13,6 @@ import reservation.services.ReservationService;
 @Component
 public class TeamRoomCapacityValidator extends BaseValidator {
 
-    //TODO make use of this variable or remove it
-    private final ReservationService reservationService;
     private final ReservationController reservationController;
     private final SportFacilityCommunicator sportFacilityCommunicator;
     private final UserFacilityCommunicator userFacilityCommunicator;
@@ -28,21 +27,18 @@ public class TeamRoomCapacityValidator extends BaseValidator {
      * Note: this validator is only part of the chain for sport room reservations
      * (not equipment reservations)
      *
-     * @param reservationService    -  the reservation service containing logic
      * @param reservationController the reservation controller to communicate with other
      *                              microservices
      */
     @Autowired
-    public TeamRoomCapacityValidator(ReservationService reservationService,
-                                     ReservationController reservationController) {
-        this.reservationService = reservationService;
+    public TeamRoomCapacityValidator(ReservationController reservationController) {
         this.reservationController = reservationController;
         this.sportFacilityCommunicator = this.reservationController.getSportFacilityCommunicator();
         this.userFacilityCommunicator = this.reservationController.getUserFacilityCommunicator();
     }
 
     @Override
-    public boolean handle(Reservation reservation) throws InvalidReservationException {
+    public void handle(Reservation reservation) throws InvalidReservationException {
 
         long roomId = reservation.getSportFacilityReservedId();
 
@@ -50,7 +46,8 @@ public class TeamRoomCapacityValidator extends BaseValidator {
         // since that was checked by the SportFacilityAvailabilityValidator
 
         // Halls can hold multiple (team) sports, whereas fields are tied to 1 team sport.
-        boolean isSportHall = sportFacilityCommunicator.getIsSportHall(roomId);
+        boolean isSportHall;
+        isSportHall = sportFacilityCommunicator.getIsSportHall(roomId);
 
         boolean isGroupReservation = (reservation.getGroupId() != -1);
         int groupSize;
@@ -93,6 +90,6 @@ public class TeamRoomCapacityValidator extends BaseValidator {
                     + "\n\n Your group size: " + groupSize);
         }
 
-        return super.checkNext(reservation);
+        super.checkNext(reservation);
     }
 }

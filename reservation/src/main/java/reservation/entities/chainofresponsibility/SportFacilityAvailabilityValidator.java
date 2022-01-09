@@ -31,11 +31,13 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
                                               ReservationController reservationController) {
         this.reservationService = reservationService;
         this.reservationController = reservationController;
-        this.sportFacilityCommunicator = this.reservationController.getSportFacilityCommunicator();
+        this.sportFacilityCommunicator = this.reservationController
+         .getSportFacilityCommunicator();
+        //this.sportFacilityCommunicator = sportFacilityCommunicator;
     }
 
     @Override
-    public boolean handle(Reservation reservation) throws InvalidReservationException {
+    public void handle(Reservation reservation) throws InvalidReservationException {
 
         checkTime(reservation);
 
@@ -52,7 +54,7 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
                 throw new InvalidReservationException("Equipment name invalid or not in stock!");
             }
         }
-        return super.checkNext(reservation);
+        super.checkNext(reservation);
     }
 
     /**
