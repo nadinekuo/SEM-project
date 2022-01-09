@@ -270,10 +270,20 @@ public class Reservation {
             + ", startingTime=" + startingTime + '}';
     }
 
+    /**
+     * Gets boolean made by premium user.
+     *
+     * @return Boolean madeByPremiumUser
+     */
     public Boolean getMadeByPremiumUser() {
         return madeByPremiumUser;
     }
 
+    /**
+     * Sets boolean made by premium user.
+     *
+     * @param madeByPremiumUser boolean made by premium user
+     */
     public void setMadeByPremiumUser(Boolean madeByPremiumUser) {
         this.madeByPremiumUser = madeByPremiumUser;
     }
