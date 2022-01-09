@@ -107,7 +107,6 @@ public class ReservationController {
      */
 
     //TODO communicate with user service to find out if it was made by premium user
-    //TODO maybe bake the exceptions together
     @PostMapping(
         "/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}" + "/makeSportRoomBooking")
     @ResponseBody
@@ -116,36 +115,30 @@ public class ReservationController {
                                                       @PathVariable Long sportRoomId,
                                                       @PathVariable String date,
                                                       @PathVariable Boolean madeByPremiumUser) {
-        LocalDateTime dateTime;
         try {
-            dateTime = LocalDateTime.parse(date);
-        } catch (DateTimeParseException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
 
-        String sportRoomName;
-        try {
+            // Can throw DateTimeParseException if the date is wrongly formatted
+            LocalDateTime dateTime = LocalDateTime.parse(date);
+
             String methodSpecificUrl = "/sportRoom/" + sportRoomId + "/getName";
+
+            // Can throw HttpClientException if status is not OK
             ResponseEntity<String> response = restTemplate.getForEntity(
                 sportFacilityCommunicator.getSportFacilityUrl() + methodSpecificUrl, String.class);
-            sportRoomName = response.getBody();
-        } catch (HttpClientErrorException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+            String sportRoomName = response.getBody();
 
-        // Create reservation object, to be passed through chain of responsibility
-        Reservation reservation =
-            new Reservation(ReservationType.SPORTS_ROOM, sportRoomName, userId, sportRoomId,
-                dateTime, groupId, madeByPremiumUser);
+            // Create reservation object, to be passed through chain of responsibility
+            Reservation reservation =
+                new Reservation(ReservationType.SPORTS_ROOM, sportRoomName, userId, sportRoomId,
+                    dateTime, groupId, madeByPremiumUser);
 
-        // Chain of responsibility:
-        // If any condition to be checked is violated by this reservation, the respective
-        // validator will throw an InvalidReservationException with appropriate message
-        try {
+            // Chain of responsibility:
+            // If any condition to be checked is violated by this reservation, the respective
+            // validator will throw an InvalidReservationException with appropriate message
             reservationChecker.checkReservation(reservation, this);
             reservationService.makeSportFacilityReservation(reservation);
             return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
-        } catch (InvalidReservationException e) {
+        } catch (InvalidReservationException | DateTimeParseException | HttpClientErrorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -158,7 +151,6 @@ public class ReservationController {
      * @param date          the date
      * @return the response entity
      */
-    //TODO catch parse exception and write test for it
     @PostMapping("/{userId}/{equipmentName}/{date}/{madeByPremiumUser}/makeEquipmentBooking")
     @ResponseBody
     public ResponseEntity<?> makeEquipmentReservation(@PathVariable Long userId,
@@ -166,18 +158,18 @@ public class ReservationController {
                                                       @PathVariable String date,
                                                       @PathVariable Boolean madeByPremiumUser) {
 
-        LocalDateTime dateTime = LocalDateTime.parse(date);
+        LocalDateTime dateTime;
+        try{
+            dateTime = LocalDateTime.parse(date);
+        } catch (DateTimeParseException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
         Long equipmentId;
         try {
             equipmentId = sportFacilityCommunicator.getFirstAvailableEquipmentId(equipmentName);
-            System.out.println(
-                "######### First available equipment id for " + equipmentName + " =" + " "
-                    + equipmentId);
         } catch (HttpClientErrorException e) {
             equipmentId = -1L;
-            System.out.println(
-                "############ Equipment " + equipmentName + " not available / " + "non-existent!!! "
-                    + "Set id to -1L in ReservationController.");
         }
 
         Reservation reservation =

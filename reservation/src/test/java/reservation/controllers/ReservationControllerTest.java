@@ -171,6 +171,16 @@ public class ReservationControllerTest {
     }
 
     @Test
+    public void makeEquipmentParseExceptionTest() throws Exception {
+        String invalidDate = "invalidDateString";
+
+        mockMvc.perform(
+                post(equipmentBookingUrl, userId, sportFacilityId, invalidDate, madeByPremiumUser))
+            .andExpect(status().isBadRequest()).andReturn();
+
+    }
+
+    @Test
     public void makeEquipmentReservationExceptionTest() throws Exception {
         doThrow(InvalidReservationException.class).when(reservationChecker)
             .checkReservation(any(), any());
