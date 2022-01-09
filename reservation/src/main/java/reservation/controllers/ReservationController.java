@@ -105,8 +105,6 @@ public class ReservationController {
      * @param date        the date
      * @return the response entity
      */
-
-    //TODO communicate with user service to find out if it was made by premium user
     @PostMapping(
         "/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}" + "/makeSportRoomBooking")
     @ResponseBody
@@ -138,7 +136,8 @@ public class ReservationController {
             reservationChecker.checkReservation(reservation, this);
             reservationService.makeSportFacilityReservation(reservation);
             return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
-        } catch (InvalidReservationException | DateTimeParseException | HttpClientErrorException e) {
+        } catch (InvalidReservationException | DateTimeParseException
+            | HttpClientErrorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -159,9 +158,9 @@ public class ReservationController {
                                                       @PathVariable Boolean madeByPremiumUser) {
 
         LocalDateTime dateTime;
-        try{
+        try {
             dateTime = LocalDateTime.parse(date);
-        } catch (DateTimeParseException e){
+        } catch (DateTimeParseException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 

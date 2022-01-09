@@ -17,7 +17,6 @@ import sportfacilities.services.SportRoomService;
 /**
  * The type Sport room controller.
  */
-//TODO make every test use assertJ
 @RestController
 @RequestMapping("sportRoom")
 public class SportRoomController {

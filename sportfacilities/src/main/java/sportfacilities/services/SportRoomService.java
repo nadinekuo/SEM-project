@@ -136,8 +136,6 @@ public class SportRoomService {
      * @param sportRoomId the sport room id
      * @param sportName   the sport name
      */
-
-    //TODO check for duplicates
     public void addSportToSportsHall(Long sportRoomId, String sportName) {
         Sport sport = sportService.getSportById(sportName);
         SportRoom sportHall = getSportRoom(sportRoomId);

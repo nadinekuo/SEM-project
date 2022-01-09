@@ -27,8 +27,6 @@ import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.services.SportRoomService;
 
-//TODO put test in every method name
-
 /**
  * The type Sport room controller test.
  */

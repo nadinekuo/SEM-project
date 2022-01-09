@@ -32,7 +32,6 @@ public class UserController {
 
     private final transient UserService userService;
 
-    //TODO if the restTemplate isn't used we should remove it
     @Autowired
     private final transient RestTemplate restTemplate;
 

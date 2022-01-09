@@ -316,7 +316,6 @@ public class ReservationControllerTest {
     }
 
     // Tests communication with other microservices
-    // TODO: to be tested from the new helper class created (not as mockMVC here)
 
     //    /**
     //     * Gets user is premium.
