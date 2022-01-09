@@ -74,8 +74,20 @@ public class AppUserTest {
     }
 
     @Test
-    void notEqualsTest() {
+    void notEqualsTest0() {
         AppUser appUserTest = new AppUser("erwin", "emma123", "user");
+        assertFalse(appUser.equals(appUserTest));
+    }
+
+    @Test
+    void notEqualsTest1() {
+        AppUser appUserTest = new AppUser("emma", "emma12", "user");
+        assertFalse(appUser.equals(appUserTest));
+    }
+
+    @Test
+    void notEqualsTest2() {
+        AppUser appUserTest = new AppUser("emma", "emma123", "admin");
         assertFalse(appUser.equals(appUserTest));
     }
 
