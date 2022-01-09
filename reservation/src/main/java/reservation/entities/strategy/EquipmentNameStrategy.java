@@ -14,8 +14,6 @@ import reservation.entities.strategy.ReservationSortingStrategy;
  */
 public class EquipmentNameStrategy implements ReservationSortingStrategy {
 
-    transient String equipmentUrl = "http://eureka-equipment";
-
 
     /**
      * Returns the next reservation in order.

@@ -14,9 +14,6 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.repositories.ReservationRepository;
 
-/**
- * The type Reservation service.
- */
 @Service
 @Configuration
 public class ReservationService {
