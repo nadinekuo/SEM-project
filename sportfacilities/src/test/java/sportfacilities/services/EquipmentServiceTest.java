@@ -70,7 +70,7 @@ public class EquipmentServiceTest {
     }
 
     @Test
-    public void ConstructorTest() {
+    public void constructorTest() {
         assertNotNull(equipmentService);
     }
 

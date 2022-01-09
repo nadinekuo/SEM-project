@@ -106,7 +106,7 @@ public class SportRoomServiceTest {
     }
 
     @Test
-    public void ConstructorTest() {
+    public void constructorTest() {
         assertNotNull(sportRoomService);
     }
 

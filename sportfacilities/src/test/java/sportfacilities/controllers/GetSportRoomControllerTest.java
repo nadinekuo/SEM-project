@@ -56,7 +56,8 @@ class GetSportRoomControllerTest {
 
     @Test
     public void getSportRoomTest() throws Exception {
-        mockMvc.perform(get("/getSportRoomServices/{sportRoomId}", sportRoomId)).andExpect(status().isOk())
+        mockMvc.perform(get("/getSportRoomServices/{sportRoomId}", sportRoomId))
+            .andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print());
         verify(sportRoomService).getSportRoom(sportRoomId);
     }

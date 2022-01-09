@@ -57,7 +57,7 @@ public class LessonServiceTest {
     }
 
     @Test
-    public void ConstructorTest() {
+    public void constructorTest() {
         assertNotNull(lessonService);
     }
 
