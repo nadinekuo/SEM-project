@@ -143,13 +143,7 @@ public class Group {
      * @param memberToAdd the member to add
      */
     public void addUserToGroup(Customer memberToAdd) {
-        if (!this.groupMembers.contains(memberToAdd)) {
-            this.groupMembers.add(memberToAdd);
-            this.groupSize++;
-        } else {
-            throw new IllegalStateException(
-                "Customer with id : " + memberToAdd.getId() + " already exists in the group!");
-        }
+        memberToAdd.addGroupToUsersGroupList(this);
     }
 
     @Override

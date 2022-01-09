@@ -40,7 +40,7 @@ public class Equipment {
     /**
      * Instantiates a new Equipment.
      *
-     * @param equipmentId   id
+     * @param equipmentId  id
      * @param name         the name
      * @param relatedSport the related sport
      * @param inUse        if its in use
@@ -116,7 +116,7 @@ public class Equipment {
 
     @Override
     public String toString() {
-        return "Equipment{" + "equipmentId=" + equipmentId + ", name='" + name + '\''
-            + ", relatedSport=" + relatedSport + '}';
+        return "Equipment{" + "equipmentId=" + equipmentId + ", name='" + name + "'"
+            + ", relatedSport=" + relatedSport.getSportName() + '}';
     }
 }
