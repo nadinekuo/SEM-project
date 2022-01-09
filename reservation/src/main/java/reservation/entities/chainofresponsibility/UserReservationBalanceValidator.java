@@ -31,7 +31,7 @@ public class UserReservationBalanceValidator extends BaseValidator {
     }
 
     @Override
-    public boolean handle(Reservation reservation) throws InvalidReservationException {
+    public void handle(Reservation reservation) throws InvalidReservationException {
 
         // We want to count all reservations from 00:00 to 23:59 on the day specified.
         LocalDateTime startingTimeReservation = reservation.getStartingTime();
@@ -61,7 +61,7 @@ public class UserReservationBalanceValidator extends BaseValidator {
                 "Daily limit of 3 reservations per day has been " + "reached!");
         }
 
-        return super.checkNext(reservation);
+        super.checkNext(reservation);
     }
 
 

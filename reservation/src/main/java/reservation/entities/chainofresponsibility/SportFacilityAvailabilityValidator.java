@@ -37,7 +37,7 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
     }
 
     @Override
-    public boolean handle(Reservation reservation) throws InvalidReservationException {
+    public void handle(Reservation reservation) throws InvalidReservationException {
 
         checkTime(reservation);
 
@@ -54,7 +54,7 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
                 throw new InvalidReservationException("Equipment name invalid or not in stock!");
             }
         }
-        return super.checkNext(reservation);
+        super.checkNext(reservation);
     }
 
     /**

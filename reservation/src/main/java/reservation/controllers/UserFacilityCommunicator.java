@@ -1,5 +1,6 @@
 package reservation.controllers;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 public class UserFacilityCommunicator {
@@ -30,9 +31,9 @@ public class UserFacilityCommunicator {
         String methodSpecificUrl = "/group/" + groupId.toString() + "/getGroupSize";
 
         // Call to GroupController in User microservice
-        String response = restTemplate.getForObject(userUrl + methodSpecificUrl, String.class);
-        int groupSize = Integer.valueOf(response);
-        return groupSize;
+        ResponseEntity<String> response = restTemplate.getForEntity(userUrl + methodSpecificUrl,
+            String.class);
+        return Integer.parseInt(response.getBody());
     }
 
 }

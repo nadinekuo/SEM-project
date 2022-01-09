@@ -1,5 +1,6 @@
 package reservation.entities.chainofresponsibility;
 
+import org.springframework.web.client.HttpClientErrorException;
 import reservation.entities.Reservation;
 
 
@@ -12,14 +13,19 @@ public abstract class BaseValidator implements ReservationValidator {
     }
 
 
-    protected boolean checkNext(Reservation reservation) throws InvalidReservationException {
+    protected void checkNext(Reservation reservation) throws InvalidReservationException {
 
         if (next == null) {
-            return true;
+            return;
         }
 
         // Handling the next element in the chain
-        return next.handle(reservation);
+        try{
+            next.handle(reservation);
+        } catch (InvalidReservationException | HttpClientErrorException e){
+            throw new InvalidReservationException(e.getMessage());
+        }
+
     }
 
 

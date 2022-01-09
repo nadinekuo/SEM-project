@@ -61,10 +61,10 @@ public class LessonController {
      */
     @GetMapping("/{lessonId}/getSize")
     @ResponseBody
-    public ResponseEntity<?> getLessonSize(@PathVariable long lessonId) {
+    public ResponseEntity<String> getLessonSize(@PathVariable long lessonId) {
         try {
-            int lessonSize = lessonService.getLessonSize(lessonId);
-            return new ResponseEntity<>(lessonSize, HttpStatus.OK);
+            Integer lessonSize = lessonService.getLessonSize(lessonId);
+            return new ResponseEntity<>(lessonSize.toString(), HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -78,7 +78,8 @@ public class LessonController {
      */
     @PostMapping("/{lessonId}/{size}/setSize/admin")
     @ResponseBody
-    public ResponseEntity<?> setLessonSize(@PathVariable long lessonId, @PathVariable int size) {
+    public ResponseEntity<String> setLessonSize(@PathVariable long lessonId,
+                                               @PathVariable int size) {
         try {
             lessonService.setLessonSize(lessonId, size);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -95,7 +96,7 @@ public class LessonController {
      */
     @GetMapping("/{lessonId}/getStartingTime")
     @ResponseBody
-    public ResponseEntity<?> getLessonStartingTime(@PathVariable long lessonId) {
+    public ResponseEntity<String> getLessonStartingTime(@PathVariable long lessonId) {
         try {
             String startingTime = lessonService.getLessonStartingTime(lessonId);
             return new ResponseEntity<>(startingTime, HttpStatus.OK);
@@ -114,7 +115,7 @@ public class LessonController {
      */
     @PutMapping("/{title}/{startingTime}/{endingTime}/{size}/createNewLesson/admin")
     @ResponseBody
-    public ResponseEntity<?> createNewLesson(@PathVariable String title,
+    public ResponseEntity<String> createNewLesson(@PathVariable String title,
                                              @PathVariable String startingTime,
                                              @PathVariable String endingTime,
                                              @PathVariable int size) {
@@ -135,7 +136,7 @@ public class LessonController {
      */
     @DeleteMapping("/{lessonId}/admin")
     @ResponseBody
-    public ResponseEntity<?> deleteLesson(@PathVariable long lessonId) {
+    public ResponseEntity<String> deleteLesson(@PathVariable long lessonId) {
         try {
             lessonService.deleteLesson(lessonId);
             return new ResponseEntity<>(HttpStatus.OK);

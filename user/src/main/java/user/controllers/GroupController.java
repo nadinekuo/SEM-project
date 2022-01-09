@@ -7,7 +7,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import user.entities.Customer;
 import user.entities.Group;
@@ -128,7 +134,7 @@ public class GroupController {
      */
     @PutMapping("/addCustomer/{groupId}/{customerId}")
     public ResponseEntity<?> addCustomerToGroup(@PathVariable long customerId,
-                                                    @PathVariable long groupId) {
+                                                @PathVariable long groupId) {
         try {
             groupService.addCustomerToGroup(customerId, groupId);
             return new ResponseEntity<>("Customer added successfully to the group!", HttpStatus.OK);
@@ -148,21 +154,17 @@ public class GroupController {
      */
     @PostMapping("/reservation/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking")
     public ResponseEntity<?> makeGroupReservation(@PathVariable long groupId,
-                                                       @PathVariable long sportRoomId,
-                                                       @PathVariable String date) {
+                                                  @PathVariable long sportRoomId,
+                                                  @PathVariable String date) {
 
         List<Customer> customers = groupService.getUsersInaGroup(groupId);
 
         for (Customer customer : customers) {
 
-            String url = reservationUrl
-                + "/reservation"
-                + "/" + customer.getId()
-                + "/" + groupId
-                + "/" + sportRoomId
-                + "/" + date
-                + "/" + customer.isPremiumUser()
-                + "/" + "makeSportRoomBooking";
+            String url =
+                reservationUrl + "/reservation" + "/" + customer.getId() + "/" + groupId + "/"
+                    + sportRoomId + "/" + date + "/" + customer.isPremiumUser() + "/"
+                    + "makeSportRoomBooking";
 
             restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(customer), String.class);
         }

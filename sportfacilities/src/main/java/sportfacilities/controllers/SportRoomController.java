@@ -43,7 +43,7 @@ public class SportRoomController {
      */
     @GetMapping("/{sportRoomId}/exists")
     @ResponseBody
-    public ResponseEntity<?> sportRoomExists(@PathVariable Long sportRoomId) {
+    public ResponseEntity<String> sportRoomExists(@PathVariable Long sportRoomId) {
         Boolean exists = sportRoomService.sportRoomExists(sportRoomId);
         return new ResponseEntity<>(exists.toString(), HttpStatus.OK);
     }
@@ -56,7 +56,7 @@ public class SportRoomController {
      */
     @GetMapping("/{sportRoomId}/isHall")
     @ResponseBody
-    public ResponseEntity<?> sportRoomIsHall(@PathVariable Long sportRoomId) {
+    public ResponseEntity<String> sportRoomIsHall(@PathVariable Long sportRoomId) {
         try {
             Boolean isHall = sportRoomService.getSportRoom(sportRoomId).getIsSportsHall();
             return new ResponseEntity<>(isHall.toString(), HttpStatus.OK);

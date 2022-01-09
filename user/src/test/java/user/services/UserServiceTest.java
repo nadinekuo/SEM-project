@@ -1,9 +1,13 @@
 package user.services;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,16 +42,16 @@ class UserServiceTest {
     //    @InjectMocks
     private transient UserService userService;
 
+    public UserServiceTest() {
+        admin = new Admin("admin", "password");
+        customer = new Customer("erwin", "password", true);
+    }
+
     @BeforeEach
     void setUp() {
         customerRepository = Mockito.mock(UserRepository.class);
         adminRepository = Mockito.mock(UserRepository.class);
         userService = new UserService(customerRepository, adminRepository);
-    }
-
-    public UserServiceTest() {
-        admin = new Admin("admin", "password");
-        customer = new Customer("erwin", "password", true);
     }
 
     @Test

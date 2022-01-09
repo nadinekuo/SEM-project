@@ -21,7 +21,7 @@ public class CustomerController {
     /**
      * Instantiates a new Customer Controller.
      *
-     * @param customerService customer service
+     * @param customerService the customer service
      */
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;

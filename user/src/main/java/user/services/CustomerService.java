@@ -28,9 +28,8 @@ public class CustomerService {
      * @return the Customer, else throw IllegalStateException
      */
     public Customer getCustomerById(long customerId) {
-        return customerRepository.findById(customerId).orElseThrow(
-                () -> new NoSuchElementException("Customer with id "
-                        + customerId + " does not exist!"));
+        return customerRepository.findById(customerId).orElseThrow(() -> new NoSuchElementException(
+            "Customer with id " + customerId + " does not exist!"));
     }
 
     /**

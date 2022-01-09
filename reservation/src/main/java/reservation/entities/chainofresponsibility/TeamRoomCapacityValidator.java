@@ -3,6 +3,7 @@ package reservation.entities.chainofresponsibility;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import reservation.controllers.ReservationController;
 import reservation.controllers.SportFacilityCommunicator;
 import reservation.controllers.UserFacilityCommunicator;
@@ -37,7 +38,7 @@ public class TeamRoomCapacityValidator extends BaseValidator {
     }
 
     @Override
-    public boolean handle(Reservation reservation) throws InvalidReservationException {
+    public void handle(Reservation reservation) throws InvalidReservationException {
 
         long roomId = reservation.getSportFacilityReservedId();
 
@@ -45,7 +46,8 @@ public class TeamRoomCapacityValidator extends BaseValidator {
         // since that was checked by the SportFacilityAvailabilityValidator
 
         // Halls can hold multiple (team) sports, whereas fields are tied to 1 team sport.
-        boolean isSportHall = sportFacilityCommunicator.getIsSportHall(roomId);
+        boolean isSportHall;
+        isSportHall = sportFacilityCommunicator.getIsSportHall(roomId);
 
         boolean isGroupReservation = (reservation.getGroupId() != -1);
         int groupSize;
@@ -88,6 +90,6 @@ public class TeamRoomCapacityValidator extends BaseValidator {
                     + "\n\n Your group size: " + groupSize);
         }
 
-        return super.checkNext(reservation);
+        super.checkNext(reservation);
     }
 }
