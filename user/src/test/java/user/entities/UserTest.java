@@ -16,19 +16,19 @@ class UserTest {
     }
 
     @Test
-    void setUsername() {
+    void setUsernameTest() {
         emil.setUsername("emil234");
         assertThat(emil.getUsername()).isEqualTo("emil234");
     }
 
     @Test
-    void setPassword() {
+    void setPasswordTest() {
         emil.setPassword("pwd123");
         assertThat(emil.getPassword()).isEqualTo("pwd123");
     }
 
     @Test
-    void equalsTest() {
+    void equalsTestTest() {
         User user = null;
         assertFalse(arslan.equals(user));
     }

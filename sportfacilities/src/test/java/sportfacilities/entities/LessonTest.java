@@ -21,39 +21,39 @@ class LessonTest {
     }
 
     @Test
-    void setSize() {
+    void setSizeTest() {
         tango.setSize(15);
         assertThat(tango.getSize()).isEqualTo(15);
     }
 
     @Test
-    void setLessonId() {
+    void setLessonIdTest() {
         tango.setLessonId(42L);
         assertThat(tango.getLessonId()).isEqualTo(42L);
     }
 
     @Test
-    void setTitle() {
+    void setTitleTest() {
         tango.setTitle("tango1");
         assertThat(tango.getTitle()).isEqualTo("tango1");
     }
 
     @Test
-    void setStartingTime() {
+    void setStartingTimeTest() {
         LocalDateTime startingDate = LocalDateTime.of(2021, 2, 2, 2, 2);
         tango.setStartingTime(startingDate);
         assertThat(tango.getStartingTime()).isEqualTo(startingDate);
     }
 
     @Test
-    void setEndingTime() {
+    void setEndingTimeTest() {
         LocalDateTime endingDate = LocalDateTime.of(2021, 2, 2, 2, 2);
         tango.setEndingTime(endingDate);
         assertThat(tango.getEndingTime()).isEqualTo(endingDate);
     }
 
     @Test
-    void testEquals() {
+    void equalsTest() {
         tango.setLessonId(20L);
         hiit.setLessonId(15L);
         assertThat(tango.equals(hiit)).isFalse();

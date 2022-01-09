@@ -36,19 +36,19 @@ class GroupTest {
     }
 
     @Test
-    void setGroupId() {
+    void setGroupIdTest() {
         group1.setGroupId(56L);
         assertThat(group1.getGroupId()).isEqualTo(56L);
     }
 
     @Test
-    void setGroupName() {
+    void setGroupNameTest() {
         group1.setGroupName("basketballTeam1");
         assertThat(group1.getGroupName()).isEqualTo("basketballTeam1");
     }
 
     @Test
-    void getGroupMembers() {
+    void getGroupMembersTest() {
         List<Customer> customers = group2.getGroupMembers();
         for (int i = 0; i < customers.size(); i++) {
             if (i == 0) {
@@ -63,7 +63,7 @@ class GroupTest {
     }
 
     @Test
-    void setGroupMembers() {
+    void setGroupMembersTest() {
         List<Customer> newCustomerList = Arrays.asList(arslan, emil, nadine);
 
         group2.setGroupMembers(newCustomerList);
@@ -80,19 +80,19 @@ class GroupTest {
     }
 
     @Test
-    void setGroupSize() {
+    void setGroupSizeTest() {
         group2.setGroupSize(6);
         assertThat(group2.getGroupSize()).isEqualTo(6);
     }
 
     @Test
-    void testEquals() {
+    void testEqualsTest() {
         Group group = null;
         assertFalse(group1.equals(group));
     }
 
     @Test
-    void addUserToGroup() {
+    void addUserToGroupTest() {
         arslan.setGroupsForTeamSports(new ArrayList<>());
         group2.addUserToGroup(arslan);
         assertThat(group2.getGroupSize()).isEqualTo(4L);

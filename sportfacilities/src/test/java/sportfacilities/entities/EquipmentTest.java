@@ -28,43 +28,43 @@ class EquipmentTest {
     }
 
     @Test
-    void setInUse() {
+    void setInUseTest() {
         hockeyStick.setInUse(false);
         assertThat(hockeyStick.isInUse()).isFalse();
     }
 
     @Test
-    void setEquipmentId() {
+    void setEquipmentIdTest() {
         hockeyStick.setEquipmentId(4L);
         assertThat(hockeyStick.getEquipmentId()).isEqualTo(4L);
     }
 
     @Test
-    void setName() {
+    void setNameTest() {
         hockeyStick.setName("hockeyStick1");
         assertThat(hockeyStick.getName()).isEqualTo("hockeyStick1");
     }
 
     @Test
-    void setRelatedSport() {
+    void setRelatedSportTest() {
         hockeyStick.setRelatedSport(football);
         assertThat(hockeyStick.getRelatedSport()).isEqualTo(football);
     }
 
     @Test
-    void testEquals() {
+    void testEqualsTest() {
         Equipment hockeyStick1 = hockeyStick;
         assertTrue(hockeyStick.equals(hockeyStick1));
     }
 
     @Test
-    void testNoEquals() {
+    void testNoEqualsTest() {
         Equipment basketBall = null;
         assertFalse(hockeyStick.equals(basketBall));
     }
 
     @Test
-    void testToString() {
+    void toStringTest() {
         String res = "Equipment{equipmentId=6, name='hockey stick', relatedSport=hockey}";
         assertThat(hockeyStick.toString()).isEqualTo(res);
     }

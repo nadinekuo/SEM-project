@@ -33,7 +33,7 @@ class CustomerTest {
     }
 
     @Test
-    void testConstructor() {
+    void ConstructorTest() {
         Customer customer = new Customer("john285", "johnpwd", false);
         assertThat(customer.getUsername()).isEqualTo("john285");
         assertThat(customer.getPassword()).isEqualTo("johnpwd");
@@ -41,7 +41,7 @@ class CustomerTest {
     }
 
     @Test
-    void setPremiumUser() {
+    void setPremiumUserTest() {
         arslan.setPremiumUser(false);
         assertThat(arslan.isPremiumUser()).isFalse();
 
@@ -50,7 +50,7 @@ class CustomerTest {
     }
 
     @Test
-    void getGroupsForTeamSports() {
+    void getGroupsForTeamSportsTest() {
         arslan.setGroupsForTeamSports(new ArrayList<>());
         assertThat(arslan.getGroupsForTeamSports().isEmpty()).isTrue();
         arslan.addGroupToUsersGroupList(group1);
@@ -64,13 +64,13 @@ class CustomerTest {
     }
 
     @Test
-    void setGroupsForTeamSports() {
+    void setGroupsForTeamSportsTest() {
         arslan.setGroupsForTeamSports(Arrays.asList(group1, group2));
         assertThat(arslan.getGroupsForTeamSports().size()).isEqualTo(2);
     }
 
     @Test
-    void addGroupToUsersGroupList() {
+    void addGroupToUsersGroupListTest() {
         arslan.setGroupsForTeamSports(new ArrayList<>());
         arslan.addGroupToUsersGroupList(group1);
         assertThat(arslan.getGroupsForTeamSports().contains(group1)).isTrue();

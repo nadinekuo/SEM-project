@@ -47,7 +47,7 @@ class SportTest {
     }
 
     @Test
-    void setSportName() {
+    void setSportNameTest() {
         soccer.setSportName("soccer1");
         assertThat(soccer.getSportName()).isEqualTo("soccer1");
     }
@@ -61,7 +61,7 @@ class SportTest {
     }
 
     @Test
-    void addSportToSportLocationThrowsException() {
+    void addSportToSportLocationThrowsExceptionTest() {
         soccer.setSportLocations(new ArrayList<>());
         soccer.addSportToSportLocation(hallX3);
         IllegalStateException thrown = assertThrows(
@@ -72,19 +72,19 @@ class SportTest {
     }
 
     @Test
-    void setTeamSport() {
+    void setTeamSportTest() {
         yoga.setTeamSport(true);
         assertThat(yoga.isTeamSport()).isTrue();
     }
 
     @Test
-    void setMinTeamSize() {
+    void setMinTeamSizeTest() {
         hockey.setMinTeamSize(10);
         assertThat(hockey.getMinTeamSize()).isEqualTo(10);
     }
 
     @Test
-    void setMaxTeamSize() {
+    void setMaxTeamSizeTest() {
         volleyball.setMaxTeamSize(15);
         System.out.println(volleyball.toString());
         assertThat(volleyball.getMaxTeamSize()).isEqualTo(15);
@@ -97,7 +97,7 @@ class SportTest {
     }
 
     @Test
-    void setSportLocations() {
+    void setSportLocationsTest() {
         soccer.setSportLocations(Arrays.asList(hallX1, hallX2));
         assertThat(soccer.getSportLocations().size()).isEqualTo(2);
         assertThat(soccer.getSportLocations().get(0)).isEqualTo(hallX1);
@@ -105,7 +105,7 @@ class SportTest {
     }
 
     @Test
-    void setEquipmentList() {
+    void setEquipmentListTest() {
         soccer.setEquipmentList(Arrays.asList(soccerBall, hockeyStick));
         assertThat(soccer.getEquipmentList().size()).isEqualTo(2);
         assertThat(soccer.getEquipmentList().get(0)).isEqualTo(soccerBall);
