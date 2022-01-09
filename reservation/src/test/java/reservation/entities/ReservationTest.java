@@ -3,12 +3,12 @@ package reservation.entities;
 import static org.junit.Assert.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
+import java.time.Month;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
-import java.time.LocalDateTime;
-import java.time.Month;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +36,7 @@ public class ReservationTest {
     Reservation reservation;
 
     /**
-     * Sets up the tests
+     * Sets up the tests.
      *
      */
     @BeforeEach
@@ -48,7 +48,8 @@ public class ReservationTest {
         startingTime = LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00);
         madeByPremiumUser = false;
 
-        reservation = new Reservation(typeOfReservation, bookedItemName, customerId, sportFacilityReservedId, startingTime, madeByPremiumUser);
+        reservation = new Reservation(typeOfReservation, bookedItemName, customerId,
+                sportFacilityReservedId, startingTime, madeByPremiumUser);
     }
 
     @Test
@@ -103,13 +104,15 @@ public class ReservationTest {
 
     @Test
     void getStartingTimeTest() {
-        assertTrue(reservation.getStartingTime().equals(LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00)));
+        assertTrue(reservation.getStartingTime().equals(
+                LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00)));
     }
 
     @Test
     void setStartingTimeTest() {
         reservation.setStartingTime(LocalDateTime.of(2021, Month.JANUARY, 5, 17, 00));
-        assertTrue(reservation.getStartingTime().equals(LocalDateTime.of(2021, Month.JANUARY, 5, 17, 00)));
+        assertTrue(reservation.getStartingTime().equals(
+                LocalDateTime.of(2021, Month.JANUARY, 5, 17, 00)));
     }
 
     @Test
@@ -151,14 +154,18 @@ public class ReservationTest {
     }
 
     @Test
-    void equalsTrueTest() {typeOfReservation = ReservationType.EQUIPMENT;
+    void equalsTrueTest() {
+        typeOfReservation = ReservationType.EQUIPMENT;
         bookedItemName = "HockeyStick";
         customerId = 1L;
         sportFacilityReservedId = 1L;
         startingTime = LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00);
         madeByPremiumUser = false;
 
-        Reservation check = new Reservation(typeOfReservation, bookedItemName, customerId, sportFacilityReservedId, startingTime, madeByPremiumUser);
+        Reservation check = new Reservation(typeOfReservation, bookedItemName, customerId,
+                sportFacilityReservedId, startingTime, madeByPremiumUser);
+        check.setReservationId(2L);
+        reservation.setReservationId(2L);
         assertTrue(reservation.equals(check));
     }
 
@@ -173,15 +180,41 @@ public class ReservationTest {
     }
 
     @Test
-    void equalsFalseTest() {typeOfReservation = ReservationType.EQUIPMENT;
+    void notEqualTest() {
+        typeOfReservation = ReservationType.EQUIPMENT;
         bookedItemName = "HockeyBall";
         customerId = 1L;
-        sportFacilityReservedId = 1L;
+        sportFacilityReservedId = 2L;
         startingTime = LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00);
-        madeByPremiumUser = false;
+        madeByPremiumUser = true;
 
-        Reservation check = new Reservation(typeOfReservation, bookedItemName, customerId, sportFacilityReservedId, startingTime, madeByPremiumUser);
-        assertTrue(reservation.equals(check));
+        Reservation check = new Reservation(typeOfReservation, bookedItemName, customerId,
+                sportFacilityReservedId, startingTime, madeByPremiumUser);
+        check.setReservationId(2L);
+        reservation.setReservationId(1L);
+        assertFalse(reservation.equals(check));
+    }
+
+    @Test
+    void toStringTest() {
+        reservation.setReservationId(1L);
+        assertEquals("Reservation{" + "reservationId="
+                + reservation.getReservationId() + ", typeOfReservation="
+                + reservation.getTypeOfReservation() + ", customerId="
+                + reservation.getCustomerId() + ", groupId="
+                + reservation.getGroupId() + ", startingTime="
+                + reservation.getStartingTime() + '}', reservation.toString());
+    }
+
+    @Test
+    void getMadeByPremiumUserTest() {
+        assertFalse(reservation.getMadeByPremiumUser());
+    }
+
+    @Test
+    void setMadeByPremiumUserTest() {
+        reservation.setMadeByPremiumUser(true);
+        assertTrue(reservation.getMadeByPremiumUser());
     }
 
 }
