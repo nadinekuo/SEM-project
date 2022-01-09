@@ -52,13 +52,13 @@ class EquipmentTest {
     }
 
     @Test
-    void testEqualsTest() {
+    void equalsTest() {
         Equipment hockeyStick1 = hockeyStick;
         assertTrue(hockeyStick.equals(hockeyStick1));
     }
 
     @Test
-    void testNoEqualsTest() {
+    void notEqualsTest() {
         Equipment basketBall = null;
         assertFalse(hockeyStick.equals(basketBall));
     }
