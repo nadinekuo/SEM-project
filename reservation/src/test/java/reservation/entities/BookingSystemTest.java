@@ -23,13 +23,6 @@ import reservation.services.ReservationService;
 
 public class BookingSystemTest {
 
-    /**
-     * The Reservation service.
-     */
-    @Mock
-    transient ReservationService reservationService;
-
-    ReservationSortingStrategy sortingStrategy = new ChronologicalStrategy();
     transient List<Reservation> userIdStrategy = new ArrayList<>();
     transient BookingSystem bookingSystem = new BookingSystem(new ChronologicalStrategy());
     transient Reservation[] reservations;
@@ -57,13 +50,13 @@ public class BookingSystemTest {
     }
 
     @Test
-    void addReservation() {
+    void addReservationTest() {
         bookingSystem.addReservation(reservations[0]);
         assertEquals(reservations[0], bookingSystem.getNextReservation());
     }
 
     @Test
-    void getNextReservationChronologically() {
+    void getNextReservationChronologicallyTest() {
         BookingSystem chronologicalStrategy = new BookingSystem(new ChronologicalStrategy());
         reservations[1].setStartingTime(reservations[0].getStartingTime());
         reservations[2].setStartingTime(LocalDateTime.of(2020, 1, 1, 0, 1));
@@ -75,14 +68,14 @@ public class BookingSystemTest {
     }
 
     @Test
-    void getNextReservationChronologicallyEmpty() {
+    void getNextReservationChronologicallyEmptyTest() {
         BookingSystem chronologicalStrategy = new BookingSystem(new ChronologicalStrategy());
 
         assertNull(chronologicalStrategy.getNextReservation());
     }
 
     @Test
-    void getNextReservationBasicPremium() {
+    void getNextReservationBasicPremiumTest() {
         BookingSystem userPremiumStrategy =
             new BookingSystem(new BasicPremiumUserStrategy());
 
@@ -99,7 +92,7 @@ public class BookingSystemTest {
     }
 
     @Test
-    void getNextReservationBasicPremiumEmpty() {
+    void getNextReservationBasicPremiumEmptyTest() {
         BookingSystem userPremiumStrategy =
             new BookingSystem(new BasicPremiumUserStrategy());
 
@@ -107,7 +100,7 @@ public class BookingSystemTest {
     }
 
     @Test
-    void getNextReservationEquipmentName() {
+    void getNextReservationEquipmentNameTest() {
         BookingSystem equipmentNameStrategy = new BookingSystem(new EquipmentNameStrategy());
 
         for (int i = 0; i < 6; i++) {
@@ -118,14 +111,14 @@ public class BookingSystemTest {
     }
 
     @Test
-    void getNextReservationEquipmentNameEmpty() {
+    void getNextReservationEquipmentNameEmptyTest() {
         BookingSystem equipmentNameStrategy = new BookingSystem(new EquipmentNameStrategy());
 
         assertNull(equipmentNameStrategy.getNextReservation());
     }
 
     @Test
-    void getNextReservationEquipmentNameNull() {
+    void getNextReservationEquipmentNameNullTest() {
         BookingSystem equipmentNameStrategy = new BookingSystem(new EquipmentNameStrategy());
         equipmentNameStrategy.addReservation(null);
         assertNull(equipmentNameStrategy.getNextReservation());
@@ -133,7 +126,7 @@ public class BookingSystemTest {
 
 
     @Test
-    void getNextReservationEquipmentNameWithDifferentObjects() {
+    void getNextReservationEquipmentNameWithDifferentObjectsTest() {
         BookingSystem equipmentNameStrategy =
             new BookingSystem(new EquipmentNameStrategy());
 
@@ -149,7 +142,7 @@ public class BookingSystemTest {
     }
 
     @Test
-    void getNextReservationEquipmentNameWithDifferentObjects2() {
+    void getNextReservationEquipmentNameWithDifferentObjects2Test() {
         BookingSystem equipmentNameStrategy =
             new BookingSystem(new EquipmentNameStrategy());
 
@@ -165,7 +158,7 @@ public class BookingSystemTest {
     }
 
     @Test
-    void getNextReservationUserId() {
+    void getNextReservationUserIdTest() {
         BookingSystem userIdStrategy = new BookingSystem(new UserIdStrategy());
         for (int i = 0; i < 4; i++) {
             userIdStrategy.addReservation(reservations[i]);
@@ -175,7 +168,7 @@ public class BookingSystemTest {
     }
 
     @Test
-    void getNextReservationUserIdEmpty() {
+    void getNextReservationUserIdEmptyTest() {
         BookingSystem userIdStrategy = new BookingSystem(new UserIdStrategy());
         assertNull(userIdStrategy.getNextReservation());
     }

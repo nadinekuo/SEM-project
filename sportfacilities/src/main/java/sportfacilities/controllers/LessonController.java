@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import sportfacilities.entities.Lesson;
 import sportfacilities.services.LessonService;
 
-/**
- * The type Lesson controller.
- */
 @RestController
 @RequestMapping("lesson")
 public class LessonController {

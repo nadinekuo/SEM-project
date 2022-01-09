@@ -62,12 +62,12 @@ public class TeamRoomCapacityValidatorTest {
      * Test constructor.
      */
     @Test
-    public void testConstructor() {
+    public void constructorTest() {
         assertNotNull(teamRoomCapacityValidator);
     }
 
     @Test
-    public void testSportHallBelowMinCapacity() throws InvalidReservationException {
+    public void sportHallBelowMinCapacityTest() throws InvalidReservationException {
 
         // Sport halls hold multiple sports, so no team size check done
         when(sportFacilityCommunicator.getIsSportHall(anyLong())).thenReturn(true);
@@ -89,7 +89,7 @@ public class TeamRoomCapacityValidatorTest {
     }
 
     @Test
-    public void testSportHallOverMaxCapacity() throws InvalidReservationException {
+    public void sportHallOverMaxCapacityTest() throws InvalidReservationException {
 
         // Sport halls hold multiple sports, so no team size check done
         when(sportFacilityCommunicator.getIsSportHall(anyLong())).thenReturn(true);
@@ -112,7 +112,7 @@ public class TeamRoomCapacityValidatorTest {
     }
 
     @Test
-    public void testValidIndividualReservation() {
+    public void validIndividualReservationTest() {
 
         when(sportFacilityCommunicator.getIsSportHall(anyLong())).thenReturn(true);
         when(sportFacilityCommunicator.getSportRoomMinimumCapacity(anyLong())).thenReturn(1);
@@ -125,7 +125,7 @@ public class TeamRoomCapacityValidatorTest {
     }
 
     @Test
-    public void testSportFieldBelowMinTeamSize() throws InvalidReservationException {
+    public void sportFieldBelowMinTeamSizeTest() throws InvalidReservationException {
 
         // Sport fields hold 1 team sport, so team size check done
         when(sportFacilityCommunicator.getIsSportHall(anyLong())).thenReturn(false);

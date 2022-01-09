@@ -18,27 +18,27 @@ class JwtConfigTest {
     private JwtConfig jwtConfig;
 
     @Test
-    void getUri() {
+    void getUriTest() {
         assertEquals("/eureka-security/**", jwtConfig.getUri());
     }
 
     @Test
-    void getHeader() {
+    void getHeaderTest() {
         assertEquals("Authorization", jwtConfig.getHeader());
     }
 
     @Test
-    void getPrefix() {
+    void getPrefixTest() {
         assertEquals("Bearer ", jwtConfig.getPrefix());
     }
 
     @Test
-    void getExpiration() {
+    void getExpirationTest() {
         assertEquals(86400, jwtConfig.getExpiration());
     }
 
     @Test
-    void getSecret() {
+    void getSecretTest() {
         assertEquals("JwtSecretKey", jwtConfig.getSecret());
     }
 }

@@ -21,9 +21,6 @@ import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.services.SportRoomService;
 
-/**
- * The type Sport room controller test.
- */
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 class SetSportRoomControllerTest {
@@ -39,19 +36,15 @@ class SetSportRoomControllerTest {
     private final transient SportRoom hockeyField =
         new SportRoom("hockeyFieldA", List.of(hockey), 10, 200, true);
     private final transient String sportName = "judo";
-    /**
-     * The Sport room service.
-     */
+
     @Mock
     transient SportRoomService sportRoomService;
-    /**
-     * The Sport service.
-     */
+
     @Autowired
     private transient MockMvc mockMvc;
 
     /**
-     * Sets .
+     * Sets up the tests.
      */
     @BeforeEach
     public void setup() {
@@ -59,13 +52,8 @@ class SetSportRoomControllerTest {
             MockMvcBuilders.standaloneSetup(new SetSportRoomController(sportRoomService)).build();
     }
 
-    /**
-     * Sets minimum capacity.
-     *
-     * @throws Exception the exception
-     */
     @Test
-    public void setMinimumCapacity() throws Exception {
+    public void setMinimumCapacityTest() throws Exception {
         mockMvc.perform(
                 post("/setSportRoomServices/{sportRoomId}/{minCapacity}/setMinimumCapacity/admin",
                     sportRoomId, minCapacity)).andExpect(status().isOk())
@@ -73,13 +61,8 @@ class SetSportRoomControllerTest {
         verify(sportRoomService).setSportRoomMinCapacity(sportRoomId, minCapacity);
     }
 
-    /**
-     * Sets maximum capacity.
-     *
-     * @throws Exception the exception
-     */
     @Test
-    public void setMaximumCapacity() throws Exception {
+    public void setMaximumCapacityTest() throws Exception {
         mockMvc.perform(
                 post("/setSportRoomServices/{sportRoomId}/{maxCapacity}/setMaximumCapacity/admin",
                     sportRoomId, maxCapacity)).andExpect(status().isOk())
@@ -87,11 +70,6 @@ class SetSportRoomControllerTest {
         verify(sportRoomService).setSportRoomMaxCapacity(sportRoomId, maxCapacity);
     }
 
-    /**
-     * Sets sport name test.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void setSportNameTest() throws Exception {
         mockMvc.perform(
@@ -101,11 +79,6 @@ class SetSportRoomControllerTest {
         verify(sportRoomService).setSportRoomName(sportRoomId, hallX1.getSportRoomName());
     }
 
-    /**
-     * Sets sport room name throws exception test.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void setSportRoomNameThrowsExceptionTest() throws Exception {
         doThrow(NoSuchElementException.class).when(sportRoomService)
@@ -116,13 +89,8 @@ class SetSportRoomControllerTest {
                 sportRoomId, sportName)).andExpect(status().isBadRequest());
     }
 
-    /**
-     * Sets max capacity throws exception.
-     *
-     * @throws Exception the exception
-     */
     @Test
-    public void setMaxCapacityThrowsException() throws Exception {
+    public void setMaxCapacityThrowsExceptionTest() throws Exception {
         doThrow(NoSuchElementException.class).when(sportRoomService)
             .setSportRoomMaxCapacity(sportRoomId, maxCapacity);
 
@@ -131,13 +99,8 @@ class SetSportRoomControllerTest {
                 sportRoomId, maxCapacity)).andExpect(status().isBadRequest());
     }
 
-    /**
-     * Sets min capacity throws exception.
-     *
-     * @throws Exception the exception
-     */
     @Test
-    public void setMinCapacityThrowsException() throws Exception {
+    public void setMinCapacityThrowsExceptionTest() throws Exception {
         doThrow(NoSuchElementException.class).when(sportRoomService)
             .setSportRoomMinCapacity(sportRoomId, minCapacity);
 

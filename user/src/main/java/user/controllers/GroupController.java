@@ -19,9 +19,6 @@ import user.entities.Customer;
 import user.entities.Group;
 import user.services.GroupService;
 
-/**
- * The type Group controller.
- */
 @RestController
 @RequestMapping("group")
 public class GroupController {

@@ -65,7 +65,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void testConstructor() {
+    public void constructorTest() {
         assertNotNull(groupService);
     }
 
@@ -104,7 +104,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void getGroupByGroupName() {
+    public void getGroupByGroupNameTest() {
         when(groupRepository.findByGroupName("soccerTeam1")).thenReturn(Optional.of(group1));
 
         assertThat(groupService.getGroupByGroupName("soccerTeam1").getGroupId()).isEqualTo(33L);
