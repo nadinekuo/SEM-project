@@ -1,16 +1,21 @@
 package user.controllers;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import javax.servlet.ServletInputStream;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import user.config.UserDtoConfig;
 import user.entities.Admin;
 import user.entities.Customer;
 import user.services.UserService;
@@ -43,9 +49,13 @@ public class UserControllerTest {
     @Autowired
     private transient MockMvc mockMvc;
 
+    /**
+     * Setup.
+     */
     @BeforeEach
     public void setup() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService)).build();
+        this.mockMvc =
+            MockMvcBuilders.standaloneSetup(new UserController(userService, objectMapper)).build();
 
     }
 
@@ -135,16 +145,163 @@ public class UserControllerTest {
         assertThat(result.getResponse().getContentType()).isNull();
     }
 
-    //    @Test
-    //    void customerRegistrationValidTest() throws Exception {
-    //        UserDtoConfig data = new UserDtoConfig("customer", "password", true);
-    //        Customer customer = new Customer("customer", "password", true);
-    //        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-    //            .thenReturn(data);
-    //        when(userService.getCustomerByUsername("erwin")).thenReturn(Optional.of(customer));
-    //        mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isOk())
-    //            .andDo(MockMvcResultHandlers.print());
-    //        verify(userService).registerCustomer(data);
-    //    }
+    @Test
+    void customerRegistrationValidTest() throws Exception {
+        UserDtoConfig data = new UserDtoConfig("customer", "password", true);
+        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+            .thenReturn(data);
+        when(userService.checkCustomerExists("customer")).thenThrow(NoSuchElementException.class);
+        MvcResult result =
+            mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isOk()).andReturn();
+        Assertions.assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("User has been registered.");
+        verify(userService).registerCustomer(data);
+    }
 
+    @Test
+    void customerRegistrationNameTaken() throws Exception {
+        UserDtoConfig data = new UserDtoConfig("customer", "password", true);
+        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+            .thenReturn(data);
+        when(userService.checkCustomerExists("customer")).thenReturn(true);
+        MvcResult result =
+            mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isBadRequest())
+                .andReturn();
+        Assertions.assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Username is already taken!");
+        verify(userService, never()).registerCustomer(data);
+
+    }
+
+    @Test
+    void customerRegistrationNameNull() throws Exception {
+        UserDtoConfig data = new UserDtoConfig(null, "password", true);
+        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+            .thenReturn(data);
+        MvcResult result =
+            mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isBadRequest())
+                .andReturn();
+        Assertions.assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Fill in all fields.");
+        verify(userService, never()).registerCustomer(data);
+    }
+
+    @Test
+    void customerRegistrationPasswordNull() throws Exception {
+        UserDtoConfig data = new UserDtoConfig("customer", null, true);
+        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+            .thenReturn(data);
+        MvcResult result =
+            mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isBadRequest())
+                .andReturn();
+        Assertions.assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Fill in all fields.");
+        verify(userService, never()).registerCustomer(data);
+    }
+
+    @Test
+    void customerRegistrationNameEmpty() throws Exception {
+        UserDtoConfig data = new UserDtoConfig("", "password", true);
+        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+            .thenReturn(data);
+        MvcResult result =
+            mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isBadRequest())
+                .andReturn();
+        Assertions.assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Fill in all fields.");
+        verify(userService, never()).registerCustomer(data);
+    }
+
+    @Test
+    void customerRegistrationPasswordEmpty() throws Exception {
+        UserDtoConfig data = new UserDtoConfig("customer", "", true);
+        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+            .thenReturn(data);
+        MvcResult result =
+            mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isBadRequest())
+                .andReturn();
+        Assertions.assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Fill in all fields.");
+        verify(userService, never()).registerCustomer(data);
+    }
+
+    @Test
+    void adminRegistrationValidTest() throws Exception {
+        UserDtoConfig data = new UserDtoConfig("admin", "password", true);
+        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+            .thenReturn(data);
+        when(userService.checkAdminExists("admin")).thenThrow(NoSuchElementException.class);
+        MvcResult result =
+            mockMvc.perform(post("/user/registerAdmin/admin")).andExpect(status().isOk())
+                .andReturn();
+        Assertions.assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("User has been registered.");
+        verify(userService).registerAdmin(data);
+    }
+
+    @Test
+    void adminRegistrationNameTaken() throws Exception {
+        UserDtoConfig data = new UserDtoConfig("admin", "password", true);
+        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+            .thenReturn(data);
+        when(userService.checkAdminExists("admin")).thenReturn(true);
+        MvcResult result =
+            mockMvc.perform(post("/user/registerAdmin/admin")).andExpect(status().isBadRequest())
+                .andReturn();
+        Assertions.assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Username is already taken!");
+        verify(userService, never()).registerCustomer(data);
+    }
+
+    @Test
+    void adminRegistrationNameNull() throws Exception {
+        UserDtoConfig data = new UserDtoConfig(null, "password", true);
+        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+            .thenReturn(data);
+        MvcResult result =
+            mockMvc.perform(post("/user/registerAdmin/admin")).andExpect(status().isBadRequest())
+                .andReturn();
+        Assertions.assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Fill in all fields.");
+        verify(userService, never()).registerCustomer(data);
+    }
+
+    @Test
+    void adminRegistrationPasswordNull() throws Exception {
+        UserDtoConfig data = new UserDtoConfig("admin", null, true);
+        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+            .thenReturn(data);
+        MvcResult result =
+            mockMvc.perform(post("/user/registerAdmin/admin")).andExpect(status().isBadRequest())
+                .andReturn();
+        Assertions.assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Fill in all fields.");
+        verify(userService, never()).registerCustomer(data);
+    }
+
+    @Test
+    void adminRegistrationNameEmpty() throws Exception {
+        UserDtoConfig data = new UserDtoConfig("", "password", true);
+        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+            .thenReturn(data);
+        MvcResult result =
+            mockMvc.perform(post("/user/registerAdmin/admin")).andExpect(status().isBadRequest())
+                .andReturn();
+        Assertions.assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Fill in all fields.");
+        verify(userService, never()).registerCustomer(data);
+    }
+
+    @Test
+    void adminRegistrationPasswordEmpty() throws Exception {
+        UserDtoConfig data = new UserDtoConfig("admin", "", true);
+        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
+            .thenReturn(data);
+        MvcResult result =
+            mockMvc.perform(post("/user/registerAdmin/admin")).andExpect(status().isBadRequest())
+                .andReturn();
+        Assertions.assertThat(result.getResponse().getContentAsString())
+            .isEqualTo("Fill in all fields.");
+        verify(userService, never()).registerCustomer(data);
+    }
 }
