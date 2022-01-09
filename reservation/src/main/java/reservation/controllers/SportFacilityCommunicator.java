@@ -31,7 +31,7 @@ public class SportFacilityCommunicator {
      */
     public Boolean getSportsRoomExists(Long sportsRoomId) throws HttpClientErrorException {
 
-        String methodSpecificUrl = "/getSportRoomServices/" + sportsRoomId.toString() + "/exists";
+        String methodSpecificUrl = "/sportRoom/" + sportsRoomId.toString() + "/exists";
 
         // Call to SportRoomController in Sport Facilities microservice
         ResponseEntity<String> response =
@@ -48,7 +48,7 @@ public class SportFacilityCommunicator {
      */
     public Boolean getIsSportHall(Long sportRoomId) throws HttpClientErrorException {
 
-        String methodSpecificUrl = "/getSportRoomServices/" + sportRoomId.toString() + "/isHall";
+        String methodSpecificUrl = "/sportRoom/" + sportRoomId.toString() + "/isHall";
 
         // Call to SportRoomController in Sport Facilities microservice
         ResponseEntity<String> response =
