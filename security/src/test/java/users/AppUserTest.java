@@ -16,6 +16,10 @@ public class AppUserTest {
     String role;
     AppUser appUser;
 
+    /**
+     * Sets up the tests
+     *
+     */
     @BeforeEach
     void setup() {
         username = "emma";
