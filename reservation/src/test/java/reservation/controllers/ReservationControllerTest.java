@@ -124,7 +124,7 @@ public class ReservationControllerTest {
 
     @Test
     public void makeSportRoomReservationHttpClientExceptionTest() throws Exception {
-        String methodSpecificUrl = "/sportRoom/" + sportFacilityId + "/getName";
+        String methodSpecificUrl = "/getSportRoomServices/" + sportFacilityId + "/getName";
 
         when(restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl,
             String.class)).thenThrow(HttpClientErrorException.class);
@@ -171,6 +171,16 @@ public class ReservationControllerTest {
     }
 
     @Test
+    public void makeEquipmentParseExceptionTest() throws Exception {
+        String invalidDate = "invalidDateString";
+
+        mockMvc.perform(
+                post(equipmentBookingUrl, userId, sportFacilityId, invalidDate, madeByPremiumUser))
+            .andExpect(status().isBadRequest()).andReturn();
+
+    }
+
+    @Test
     public void makeEquipmentReservationExceptionTest() throws Exception {
         doThrow(InvalidReservationException.class).when(reservationChecker)
             .checkReservation(any(), any());
@@ -196,7 +206,8 @@ public class ReservationControllerTest {
     @Test
     public void setSportRoomMinimumCapacityTest() {
         Mockito.when(restTemplate.getForEntity(
-                sportFacilityUrl + "/sportRoom/" + equipmentNameValid + "/get", String.class))
+                sportFacilityUrl + "/setSportRoomServices/" + equipmentNameValid + "/get",
+                String.class))
             .thenReturn(ResponseEntity.of(Optional.of(String.valueOf(1L))));
     }
 
