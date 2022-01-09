@@ -32,10 +32,13 @@ public class Admin extends User {
         super(username, password);
     }
 
+    /**
+     * @return String representation of the admin object
+     */
     @Override
     public String toString() {
         return "Admin{" + "id=" + super.getId() + ", username='" + super.getUsername() + '\''
-            + ", password" + "='" + super.getPassword();
+            + ", password" + "='" + super.getPassword() + "'}";
     }
 
 }

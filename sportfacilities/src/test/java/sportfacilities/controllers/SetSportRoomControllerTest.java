@@ -55,8 +55,7 @@ class SetSportRoomControllerTest {
     @Test
     public void setMinimumCapacityTest() throws Exception {
         mockMvc.perform(
-                post("/setSportRoomServices/{sportRoomId}/{minCapacity}/"
-                        + "setMinimumCapacity/admin",
+                post("/setSportRoomServices/{sportRoomId}/{minCapacity}/setMinimumCapacity/admin",
                     sportRoomId, minCapacity)).andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print()).andReturn();
         verify(sportRoomService).setSportRoomMinCapacity(sportRoomId, minCapacity);
@@ -65,8 +64,7 @@ class SetSportRoomControllerTest {
     @Test
     public void setMaximumCapacityTest() throws Exception {
         mockMvc.perform(
-                post("/setSportRoomServices/{sportRoomId}/{maxCapacity}"
-                        + "/setMaximumCapacity/admin",
+                post("/setSportRoomServices/{sportRoomId}/{maxCapacity}/setMaximumCapacity/admin",
                     sportRoomId, maxCapacity)).andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print()).andReturn();
         verify(sportRoomService).setSportRoomMaxCapacity(sportRoomId, maxCapacity);
@@ -75,8 +73,7 @@ class SetSportRoomControllerTest {
     @Test
     public void setSportNameTest() throws Exception {
         mockMvc.perform(
-                post("/setSportRoomServices/{sportRoomId}/{sportRoomName}"
-                        + "/setSportRoomName/admin",
+                post("/setSportRoomServices/{sportRoomId}/{sportRoomName}/setSportRoomName/admin",
                     sportRoomId, hallX1.getSportRoomName())).andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print()).andReturn();
         verify(sportRoomService).setSportRoomName(sportRoomId, hallX1.getSportRoomName());
@@ -88,8 +85,7 @@ class SetSportRoomControllerTest {
             .setSportRoomName(sportRoomId, sportName);
 
         mockMvc.perform(
-            post("/setSportRoomServices/{sportRoomId}/{sportRoomName}"
-                    + "/setSportRoomName/admin",
+            post("/setSportRoomServices/{sportRoomId}/{sportRoomName}/setSportRoomName/admin",
                 sportRoomId, sportName)).andExpect(status().isBadRequest());
     }
 
@@ -99,8 +95,7 @@ class SetSportRoomControllerTest {
             .setSportRoomMaxCapacity(sportRoomId, maxCapacity);
 
         mockMvc.perform(
-            post("/setSportRoomServices/{sportRoomId}/{maxCapacity}"
-                    + "/setMaximumCapacity/admin",
+            post("/setSportRoomServices/{sportRoomId}/{maxCapacity}/setMaximumCapacity/admin",
                 sportRoomId, maxCapacity)).andExpect(status().isBadRequest());
     }
 
@@ -110,8 +105,7 @@ class SetSportRoomControllerTest {
             .setSportRoomMinCapacity(sportRoomId, minCapacity);
 
         mockMvc.perform(
-            post("/setSportRoomServices/{sportRoomId}/{minCapacity}"
-                    + "/setMinimumCapacity/admin",
+            post("/setSportRoomServices/{sportRoomId}/{minCapacity}/setMinimumCapacity/admin",
                 sportRoomId, minCapacity)).andExpect(status().isBadRequest());
     }
 }

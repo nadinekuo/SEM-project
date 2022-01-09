@@ -117,18 +117,10 @@ public class Customer extends User {
     @Override
     public String toString() {
         String res =
-            "Customer{" + "id=" + super.getId() + ", username='" + super.getUsername() + '\''
-                + ", password" + "='" + super.getPassword() + "', ";
+            "Customer{" + "id=" + super.getId() + ", username='" + super.getUsername() + "'"
+                + ", password" + "=" + super.getPassword() + "}";
 
-        if (!groupsForTeamSports.isEmpty()) {
-            res = res + " groups = {";
-            for (Group g : groupsForTeamSports) {
-                res = res + "'" + g.getGroupName() + "'" + ",";
-            }
-            res = res + "}";
-            return res;
-        }
-        return res + "}";
+        return res;
     }
 
 }
