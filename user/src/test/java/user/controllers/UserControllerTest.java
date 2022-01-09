@@ -159,7 +159,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void customerRegistrationNameTaken() throws Exception {
+    void customerRegistrationNameTakenTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("customer", "password", true);
         when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
             .thenReturn(data);
@@ -174,7 +174,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void customerRegistrationNameNull() throws Exception {
+    void customerRegistrationNameNullTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig(null, "password", true);
         when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
             .thenReturn(data);
@@ -187,7 +187,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void customerRegistrationPasswordNull() throws Exception {
+    void customerRegistrationPasswordNullTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("customer", null, true);
         when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
             .thenReturn(data);
@@ -200,7 +200,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void customerRegistrationNameEmpty() throws Exception {
+    void customerRegistrationNameEmptyTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("", "password", true);
         when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
             .thenReturn(data);
@@ -213,7 +213,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void customerRegistrationPasswordEmpty() throws Exception {
+    void customerRegistrationPasswordEmptyTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("customer", "", true);
         when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
             .thenReturn(data);
@@ -240,7 +240,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void adminRegistrationNameTaken() throws Exception {
+    void adminRegistrationNameTakenTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("admin", "password", true);
         when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
             .thenReturn(data);
@@ -254,7 +254,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void adminRegistrationNameNull() throws Exception {
+    void adminRegistrationNameNullTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig(null, "password", true);
         when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
             .thenReturn(data);
@@ -267,7 +267,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void adminRegistrationPasswordNull() throws Exception {
+    void adminRegistrationPasswordNullTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("admin", null, true);
         when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
             .thenReturn(data);
@@ -280,7 +280,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void adminRegistrationNameEmpty() throws Exception {
+    void adminRegistrationNameEmptyTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("", "password", true);
         when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
             .thenReturn(data);
@@ -293,7 +293,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void adminRegistrationPasswordEmpty() throws Exception {
+    void adminRegistrationPasswordEmptyTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("admin", "", true);
         when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
             .thenReturn(data);

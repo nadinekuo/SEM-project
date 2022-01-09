@@ -36,7 +36,7 @@ class JwtTokenAuthenticationFilterTest {
     }
 
     @Test
-    void doFilterHeaderNotNull() throws ServletException, IOException {
+    void doFilterHeaderNotNullTest() throws ServletException, IOException {
         JwtTokenAuthenticationFilter filter = new JwtTokenAuthenticationFilter(jwtConfig);
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Authorization", "Bearer ");

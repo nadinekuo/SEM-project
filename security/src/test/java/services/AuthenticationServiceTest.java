@@ -25,12 +25,12 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void testConstructor() {
+    public void constructorTest() {
         assertNotNull(authenticationService);
     }
 
     @Test
-    public void testRestTemplate() {
+    public void restTemplateTest() {
         assertNotNull(authenticationService.restTemplate());
     }
 }

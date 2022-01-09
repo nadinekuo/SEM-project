@@ -41,7 +41,7 @@ class UserDetailsServiceImplTest {
     }
 
     @Test
-    void loadUserByUsername() {
+    void loadUserByUsernameTest() {
         List<GrantedAuthority> grantedAuthoritiesCustomer =
             AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
         controller.when(() -> AuthenticationController.getCustomerInfo(username))
@@ -51,7 +51,7 @@ class UserDetailsServiceImplTest {
     }
 
     @Test
-    void loadAdminByUsername() {
+    void loadAdminByUsernameTest() {
         List<GrantedAuthority> grantedAuthoritiesAdmin =
             AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN");
         controller.when(() -> AuthenticationController.getCustomerInfo(username)).thenReturn(null);
@@ -62,7 +62,7 @@ class UserDetailsServiceImplTest {
     }
 
     @Test
-    void userNameNotFound() {
+    void userNameNotFoundTest() {
         controller.when(() -> AuthenticationController.getCustomerInfo(username)).thenReturn(null);
         controller.when(() -> AuthenticationController.getAdminInfo(username)).thenReturn(null);
         assertThrows(UsernameNotFoundException.class,
