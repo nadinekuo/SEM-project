@@ -115,7 +115,7 @@ public class ReservationController {
             // Can throw DateTimeParseException if the date is wrongly formatted
             LocalDateTime dateTime = LocalDateTime.parse(date);
 
-            String methodSpecificUrl = "/sportRoom/" + sportRoomId + "/getName";
+            String methodSpecificUrl = "/getSportRoomServices/" + sportRoomId + "/getName";
 
             // Can throw HttpClientException if status is not OK
             ResponseEntity<String> response = restTemplate.getForEntity(
