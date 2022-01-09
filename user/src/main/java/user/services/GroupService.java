@@ -1,5 +1,8 @@
 package user.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -8,10 +11,6 @@ import org.springframework.web.client.RestTemplate;
 import user.entities.Customer;
 import user.entities.Group;
 import user.repositories.GroupRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * The type Group service.
@@ -90,7 +89,8 @@ public class GroupService {
 
     /**
      * Gets group by group name.
-     * @param groupName
+     *
+     * @param groupName group name
      * @return Group
      */
     public Group getGroupByGroupName(String groupName) {
@@ -112,7 +112,8 @@ public class GroupService {
             () -> new NoSuchElementException("Group with id " + groupId + " does not exist!"));
         oldCustomer.addGroupToUsersGroupList(groupToAdd);
 
-        //customer service only called for the persistence of the updated group attribute of the customer
+        //customer service only called for the persistence
+        //of the updated group attribute of the customer
         customerService.saveCustomer(oldCustomer);
         return groupToAdd;
 

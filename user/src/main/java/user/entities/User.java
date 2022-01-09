@@ -1,7 +1,7 @@
 package user.entities;
 
-import javax.persistence.*;
 import java.util.Objects;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
@@ -58,7 +58,7 @@ public abstract class User {
     /**
      * Sets the id.
      *
-     * @param id
+     * @param id user id
      */
     public void setId(long id) {
         this.id = id;
@@ -76,7 +76,7 @@ public abstract class User {
     /**
      * Sets the username.
      *
-     * @param username
+     * @param username user name
      */
     public void setUsername(String username) {
         this.username = username;
@@ -92,9 +92,9 @@ public abstract class User {
     }
 
     /**
-     * Sets the password
+     * Sets the password.
      *
-     * @param password
+     * @param password user password
      */
     public void setPassword(String password) {
         this.password = password;

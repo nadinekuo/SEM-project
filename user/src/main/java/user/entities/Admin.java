@@ -23,7 +23,8 @@ public class Admin extends User {
     }
 
     /**
-     * Initiates a new Admin
+     * Initiates a new Admin.
+     *
      * @param username the username
      * @param password  the password
      */

@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import net.minidev.asm.ex.NoSuchFieldException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,6 +52,8 @@ public class LessonServiceTest {
     void setup() {
         lessonRepository = Mockito.mock(LessonRepository.class);
         lessonService = new LessonService(lessonRepository);
+        when(lessonRepository.findById(lessonId))
+            .thenReturn(java.util.Optional.of(new Lesson(name, startingTime, endingTime, size)));
         lesson1 = new Lesson(name, startingTime, endingTime, size);
 
         when(lessonRepository.findById(lessonId)).thenReturn(java.util.Optional.of(lesson1));
@@ -98,9 +99,7 @@ public class LessonServiceTest {
     public void setLessonSizeTest() throws NoSuchFieldException {
         int newSize = 5;
         lessonService.setLessonSize(lessonId, newSize);
-
         assertEquals(newSize, lessonService.getLessonSize(lessonId));
-        verify(lessonRepository).save(lesson1);
     }
 
     /**
@@ -130,6 +129,7 @@ public class LessonServiceTest {
      */
     @Test
     public void addNewLessonTest() throws NoSuchFieldException {
+        Lesson lesson2 = new Lesson("NewLesson", startingTime, endingTime, 5);
         lessonService.addNewLesson("NewLesson", startingTime, endingTime, 5);
 
         ArgumentCaptor<Lesson> lessonArgumentCaptor = ArgumentCaptor.forClass(Lesson.class);
@@ -137,7 +137,7 @@ public class LessonServiceTest {
         verify(lessonRepository).save(lessonArgumentCaptor.capture());
 
         Lesson capturedLesson = lessonArgumentCaptor.getValue();
-        Assertions.assertEquals(capturedLesson.getTitle(), "NewLesson");
+        assertEquals(capturedLesson.getTitle(), "NewLesson");
     }
 
     /**
