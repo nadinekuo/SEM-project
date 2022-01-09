@@ -63,7 +63,7 @@ class ReservationCheckerTest {
     }
 
     @Test
-    void createChainOfResponsibilityNotSportRoom() {
+    void createChainOfResponsibilityNotSportRoomTest() {
         ReservationChecker reservationChecker = new ReservationChecker(reservationService);
         ReservationController reservationController =
             new ReservationController(reservationService, reservationChecker);
@@ -78,7 +78,7 @@ class ReservationCheckerTest {
     }
 
     @Test
-    void createChainOfResponsibilitySportRoom() {
+    void createChainOfResponsibilitySportRoomTest() {
         ReservationChecker reservationChecker = new ReservationChecker(reservationService);
         ReservationController reservationController =
             new ReservationController(reservationService, reservationChecker);

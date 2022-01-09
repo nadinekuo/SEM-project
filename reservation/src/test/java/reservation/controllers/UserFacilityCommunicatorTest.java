@@ -34,8 +34,6 @@ public class UserFacilityCommunicatorTest {
     @Mock
     transient RestTemplate restTemplate;
 
-    @Autowired
-    private transient MockMvc mockMvc;
 
     /**
      * Sets up the tests .

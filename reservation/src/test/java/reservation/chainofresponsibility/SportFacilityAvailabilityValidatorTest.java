@@ -77,12 +77,12 @@ public class SportFacilityAvailabilityValidatorTest {
      * Test constructor.
      */
     @Test
-    public void testConstructor() {
+    public void constructorTest() {
         assertNotNull(sportFacilityAvailabilityValidator);
     }
 
     @Test
-    public void testInvalidTime() throws InvalidReservationException {
+    public void invalidTimeTest() throws InvalidReservationException {
 
         assertThrows(InvalidReservationException.class, () -> {
             sportFacilityAvailabilityValidator.handle(reservationInvalidTime);
@@ -90,7 +90,7 @@ public class SportFacilityAvailabilityValidatorTest {
     }
 
     @Test
-    public void testInvalidEquipmentId() throws InvalidReservationException {
+    public void invalidEquipmentIdTest() throws InvalidReservationException {
 
         assertThrows(InvalidReservationException.class, () -> {
             sportFacilityAvailabilityValidator.handle(equipmentReservationInvalid);
@@ -98,7 +98,7 @@ public class SportFacilityAvailabilityValidatorTest {
     }
 
     @Test
-    public void testUnavailableSportRoom() throws InvalidReservationException {
+    public void unavailableSportRoomTest() throws InvalidReservationException {
 
         when(reservationService.sportsFacilityIsAvailable(anyLong(), any())).thenReturn(false);
 
@@ -111,7 +111,7 @@ public class SportFacilityAvailabilityValidatorTest {
     }
 
     @Test
-    public void testNonExistentSportRoom() throws InvalidReservationException {
+    public void nonExistentSportRoomTest() throws InvalidReservationException {
 
         // Room is "available" (no reservation for that room yet), but does not exist!
         when(reservationService.sportsFacilityIsAvailable(anyLong(), any())).thenReturn(true);
@@ -128,7 +128,7 @@ public class SportFacilityAvailabilityValidatorTest {
     }
 
     @Test
-    public void validGroupReservation() throws InvalidReservationException {
+    public void validGroupReservationTest() throws InvalidReservationException {
 
         // Assuming reservation with id 5L is another reservation by another group member,
         // for the same room

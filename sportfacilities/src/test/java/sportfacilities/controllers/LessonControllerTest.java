@@ -46,7 +46,6 @@ public class LessonControllerTest {
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(new LessonController(lessonService)).build();
-        //equipmentService.addEquipment(equipment);
     }
 
     @Test

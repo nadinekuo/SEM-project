@@ -88,7 +88,7 @@ class GetSportRoomControllerTest {
     }
 
     @Test
-    public void getMaximumCapacity() throws Exception {
+    public void getMaximumCapacityTest() throws Exception {
         given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
 
         mockMvc.perform(get("/getSportRoomServices/{sportRoomId}/getMaximumCapacity", sportRoomId))
@@ -98,7 +98,7 @@ class GetSportRoomControllerTest {
     }
 
     @Test
-    public void getMinimumCapacity() throws Exception {
+    public void getMinimumCapacityTest() throws Exception {
         given(sportRoomService.getSportRoom(sportRoomId)).willReturn(hallX1);
 
         mockMvc.perform(get("/getSportRoomServices/{sportRoomId}/getMinimumCapacity", sportRoomId))
@@ -124,7 +124,7 @@ class GetSportRoomControllerTest {
     }
 
     @Test
-    public void getFieldSport() throws Exception {
+    public void getFieldSportTest() throws Exception {
         given(sportRoomService.getSportRoom(sportFieldId)).willReturn(hockeyField);
 
         mockMvc.perform(get("/getSportRoomServices/{sportFieldId}/getSport", sportFieldId))
@@ -134,7 +134,7 @@ class GetSportRoomControllerTest {
     }
 
     @Test
-    public void getFieldSportThrowsException() throws Exception {
+    public void getFieldSportThrowsExceptionTest() throws Exception {
         doThrow(NoSuchElementException.class).when(sportRoomService).getSportRoom(sportRoomId);
 
         mockMvc.perform(get("/getSportRoomServices/{sportRoomId}/getSport", sportRoomId))

@@ -93,7 +93,7 @@ public class SportRoomServiceTest {
     }
 
     @Test
-    public void addSportToSportHallTestException() {
+    public void addSportToSportHallExceptionTest() {
         when(sportService.getSportById(yoga.getSportName())).thenReturn(yoga);
         when(sportRoomRepository.findBySportRoomId(id2)).thenReturn(
             Optional.ofNullable(hockeyField));

@@ -53,12 +53,12 @@ public class UserReservationBalanceValidatorTest {
      * Test constructor.
      */
     @Test
-    public void testConstructor() {
+    public void constructorTest() {
         assertNotNull(userReservationBalanceValidator);
     }
 
     @Test
-    public void testBasicUserLimitNotReachedYet() throws InvalidReservationException {
+    public void basicUserLimitNotReachedYetTest() throws InvalidReservationException {
 
         when(reservationService.getUserReservationCountOnDay(startDay, endDay, 1L)).thenReturn(0);
 
@@ -68,7 +68,7 @@ public class UserReservationBalanceValidatorTest {
     }
 
     @Test
-    public void testBasicUserLimitReached() {
+    public void basicUserLimitReachedTest() {
 
         when(reservationService.getUserReservationCountOnDay(startDay, endDay, 1L)).thenReturn(1);
 
@@ -79,7 +79,7 @@ public class UserReservationBalanceValidatorTest {
     }
 
     @Test
-    public void testPremiumUserLimitNotReachedYet() throws InvalidReservationException {
+    public void premiumUserLimitNotReachedYetTest() throws InvalidReservationException {
         reservation1.setMadeByPremiumUser(true);
 
         when(reservationService.getUserReservationCountOnDay(startDay, endDay, 1L)).thenReturn(2);
@@ -90,7 +90,7 @@ public class UserReservationBalanceValidatorTest {
     }
 
     @Test
-    public void testPremiumUserLimitReached() {
+    public void premiumUserLimitReachedTest() {
 
         reservation1.setMadeByPremiumUser(true);
         when(reservationService.getUserReservationCountOnDay(startDay, endDay, 1L)).thenReturn(3);

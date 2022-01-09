@@ -156,7 +156,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void availableSportFacility() {
+    void availableSportFacilityTest() {
 
         when(reservationRepository.findBySportFacilityReservedIdAndTime(anyLong(),
             any())).thenReturn(Optional.empty());   // Facility is unoccupied
@@ -169,7 +169,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void unavailableSportFacility() {
+    void unavailableSportFacilityTest() {
 
         when(reservationRepository.findBySportFacilityReservedIdAndTime(anyLong(),
             any())).thenReturn(Optional.of(75L));   // Facility is reserved for this time already!
