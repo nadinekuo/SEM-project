@@ -12,8 +12,6 @@ import reservation.services.ReservationService;
 @Component
 public class TeamRoomCapacityValidator extends BaseValidator {
 
-    //TODO make use of this variable or remove it
-    private final ReservationService reservationService;
     private final ReservationController reservationController;
     private final SportFacilityCommunicator sportFacilityCommunicator;
     private final UserFacilityCommunicator userFacilityCommunicator;
@@ -28,14 +26,11 @@ public class TeamRoomCapacityValidator extends BaseValidator {
      * Note: this validator is only part of the chain for sport room reservations
      * (not equipment reservations)
      *
-     * @param reservationService    -  the reservation service containing logic
      * @param reservationController the reservation controller to communicate with other
      *                              microservices
      */
     @Autowired
-    public TeamRoomCapacityValidator(ReservationService reservationService,
-                                     ReservationController reservationController) {
-        this.reservationService = reservationService;
+    public TeamRoomCapacityValidator(ReservationController reservationController) {
         this.reservationController = reservationController;
         this.sportFacilityCommunicator = this.reservationController.getSportFacilityCommunicator();
         this.userFacilityCommunicator = this.reservationController.getUserFacilityCommunicator();
