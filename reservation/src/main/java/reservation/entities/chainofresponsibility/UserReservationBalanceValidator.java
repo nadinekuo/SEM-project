@@ -3,7 +3,9 @@ package reservation.entities.chainofresponsibility;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import reservation.controllers.ReservationController;
+import reservation.controllers.UserFacilityCommunicator;
 import reservation.entities.Reservation;
 import reservation.services.ReservationService;
 
@@ -12,6 +14,8 @@ public class UserReservationBalanceValidator extends BaseValidator {
 
     private final ReservationService reservationService;
     private final ReservationController reservationController;
+    private final UserFacilityCommunicator userFacilityCommunicator;
+
 
 
     /**
@@ -28,6 +32,7 @@ public class UserReservationBalanceValidator extends BaseValidator {
                                            ReservationController reservationController) {
         this.reservationService = reservationService;
         this.reservationController = reservationController;
+        this.userFacilityCommunicator = this.reservationController.getUserFacilityCommunicator();
     }
 
     @Override
@@ -41,7 +46,13 @@ public class UserReservationBalanceValidator extends BaseValidator {
         int reservationBalanceOnDate = reservationService
             .getUserReservationCountOnDay(startDay, endDay, reservation.getCustomerId());
 
-        // Communicates with user microservice
+        try{
+            userFacilityCommunicator.getUserExists(reservation.getCustomerId());
+        } catch (HttpClientErrorException e){
+            throw new InvalidReservationException(
+                "user with id " + reservation.getCustomerId() + " does not exist");
+        }
+
         boolean isPremium = reservation.getMadeByPremiumUser();
 
         // Basic users can have 1 sports room reservation per day
