@@ -11,7 +11,7 @@ This system should allow users to:
 This application relies on the following tools:
 - Back-end framework: `Spring`
     - Communication between server and client: `REST JSON API`
-- Database: `H2` for development, `PostgreSQL` for production
+- Database (for all microservices): `H2` for development, `PostgreSQL` for production
     - Communication between server and database: `Hibernate`, `Spring JPA`
 - Build automation tool: `Gradle`
 - Testing framework: `JUnit 5`
