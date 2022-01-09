@@ -20,7 +20,7 @@ class EquipmentTest {
     }
 
     @Test
-    void EquipmentConstructorTest() {
+    void equipmentConstructorTest() {
         Equipment soccerBall = new Equipment("soccer ball", football, false);
         assertThat(soccerBall.getName()).isEqualTo("soccer ball");
         assertThat(soccerBall.getRelatedSport()).isEqualTo(football);

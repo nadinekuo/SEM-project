@@ -13,9 +13,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-/**
- * The type Group.
- */
 @Entity
 @Table(name = "groups")
 public class Group {

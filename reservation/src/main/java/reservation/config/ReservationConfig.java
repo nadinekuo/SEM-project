@@ -1,6 +1,5 @@
 package reservation.config;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.boot.CommandLineRunner;
@@ -10,9 +9,6 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.repositories.ReservationRepository;
 
-/**
- * The type Reservation config.
- */
 @Configuration
 public class ReservationConfig {
 

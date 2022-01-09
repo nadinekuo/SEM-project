@@ -7,9 +7,6 @@ import org.springframework.stereotype.Service;
 import sportfacilities.entities.Lesson;
 import sportfacilities.repositories.LessonRepository;
 
-/**
- * The type Lesson service.
- */
 @Service
 public class LessonService {
 

@@ -23,35 +23,20 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import sportfacilities.entities.Sport;
 import sportfacilities.services.SportService;
 
-/**
- * The type Sport controller test.
- */
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 public class SportControllerTest {
 
-    /**
-     * The Sport service.
-     */
     @Mock
     transient SportService sportService;
-    /**
-     * The Solo sport.
-     */
     transient Sport soloSport;
-    /**
-     * The Team sport.
-     */
     transient Sport teamSport;
-    /**
-     * The Sport name.
-     */
     transient String sportName = "Box";
     @Autowired
     private transient MockMvc mockMvc;
 
     /**
-     * Sets each test.
+     * Sets up the tests.
      */
     @BeforeEach
     public void setup() {
@@ -62,7 +47,7 @@ public class SportControllerTest {
     }
 
     @Test
-    public void getSportMaxTeamSize() throws Exception {
+    public void getSportMaxTeamSizeTest() throws Exception {
 
         given(sportService.getSportById(anyString())).willReturn(teamSport);
 
@@ -73,7 +58,7 @@ public class SportControllerTest {
     }
 
     @Test
-    public void invalidSportNameGetMaxTeamSize() throws Exception {
+    public void invalidSportNameGetMaxTeamSizeTest() throws Exception {
         doThrow(NoSuchElementException.class).when(sportService).getSportById(anyString());
 
         mockMvc.perform(get("/sport/{sportName}/getMaxTeamSize", "bowling"))
@@ -81,7 +66,7 @@ public class SportControllerTest {
     }
 
     @Test
-    public void getSportMinTeamSize() throws Exception {
+    public void getSportMinTeamSizeTest() throws Exception {
 
         given(sportService.getSportById(anyString())).willReturn(teamSport);
 
@@ -92,7 +77,7 @@ public class SportControllerTest {
     }
 
     @Test
-    public void invalidSportNameGetMinTeamSize() throws Exception {
+    public void invalidSportNameGetMinTeamSizeTest() throws Exception {
         doThrow(NoSuchElementException.class).when(sportService).getSportById(anyString());
 
         mockMvc.perform(get("/sport/{sportName}/getMinTeamSize", "bowling"))
