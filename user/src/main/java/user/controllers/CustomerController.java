@@ -43,6 +43,14 @@ public class CustomerController {
         }
     }
 
-
+    @GetMapping("/{userId}/isPremiumUser")
+    public ResponseEntity<String> getCustomerIsPremium(@PathVariable long userId){
+        try{
+            Boolean res = customerService.isCustomerPremium(userId);
+            return new ResponseEntity<>(res.toString(), HttpStatus.OK);
+        } catch (NoSuchElementException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

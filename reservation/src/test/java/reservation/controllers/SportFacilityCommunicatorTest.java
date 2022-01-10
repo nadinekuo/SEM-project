@@ -133,5 +133,21 @@ public class SportFacilityCommunicatorTest {
             .thenReturn(ResponseEntity.of(Optional.of(String.valueOf(5))));
         assertEquals(5, sportFacilityCommunicator.getSportMinTeamSize(sportName));
     }
+
+    @Test
+    public void getLessonNameTest() {
+        Mockito.when(restTemplate.getForEntity(anyString(), any()))
+            .thenReturn(ResponseEntity.of(Optional.of("Spinning")));
+        assertEquals("Spinning", sportFacilityCommunicator.getLessonName(1L));
+    }
+
+    @Test
+    public void getLessonBeginningTest() {
+        Mockito.when(restTemplate.getForEntity(anyString(), any()))
+            .thenReturn(ResponseEntity.of(Optional.of(String.valueOf(LocalDateTime.of(2022, 01, 01, 15,
+                00)))));
+        assertEquals(LocalDateTime.of(2022, 01, 01, 15, 00),
+            sportFacilityCommunicator.getLessonBeginning(1L));
+    }
 }
 

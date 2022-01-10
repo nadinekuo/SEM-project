@@ -197,7 +197,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void getUsersInAGroupThrowsExceptionTest() {
+    public void getUsersInGroupThrowsExceptionTest() {
         when(groupRepository.findByGroupId(42L)).thenReturn(Optional.empty());
         assertThrows(NoSuchElementException.class, () -> {
             groupService.getUsersInaGroup(42L);

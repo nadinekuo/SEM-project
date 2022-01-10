@@ -51,6 +51,23 @@ public class LessonController {
     }
 
     /**
+     * Gets lesson name.
+     *
+     * @param lessonId the lesson id
+     * @return the lesson name
+     */
+    @GetMapping("/{lessonId}/getName")
+    @ResponseBody
+    public ResponseEntity<?> getLessonName(@PathVariable long lessonId) {
+        try {
+            Lesson lesson = lessonService.getLessonById(lessonId);
+            return new ResponseEntity<>(lesson.getTitle(), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
      * Gets lesson size.
      *
      * @param lessonId the lesson id

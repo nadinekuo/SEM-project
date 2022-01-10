@@ -1,6 +1,5 @@
 package user.controllers;
 
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -16,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import user.entities.Customer;
 import user.services.CustomerService;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,7 +23,8 @@ import user.services.CustomerService;
 public class CustomerControllerTest {
 
     private final transient long customerId = 1L;
-
+    private final transient String userName = "emma";
+    private final transient Customer customer = new Customer("Panagiotis", "pass", true);
     @Mock
     transient CustomerService customerService;
     @Autowired
@@ -39,19 +40,31 @@ public class CustomerControllerTest {
     }
 
     @Test
-    public void getCustomerByIdTest() throws Exception {
-        mockMvc.perform(get("/customer/{id}", customerId)).andExpect(status().isOk())
+    void getCustomerByIdTest() throws Exception {
+        when(customerService.getCustomerById(customerId)).thenReturn(customer);
+        mockMvc.perform(get("/customer/{customerId}", customerId)).andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print());
-
-        verify(customerService).getCustomerById(customerId);
     }
 
     @Test
-    public void getCustomerByIdThrowsExceptionTest() throws Exception {
+    void getCustomerByIdThrowsExceptionTest() throws Exception {
         when(customerService.getCustomerById(customerId)).thenThrow(NoSuchElementException.class);
-        mockMvc.perform(get("/customer/{id}", customerId)).andExpect(status().isBadRequest())
-            .andDo(MockMvcResultHandlers.print());
-        verify(customerService).getCustomerById(customerId);
+        mockMvc.perform(get("/customer/{customerId}", customerId))
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    void isUserPremiumTest() throws Exception {
+        when(customerService.isCustomerPremium(customerId)).thenReturn(true);
+        mockMvc.perform(get("/customer/{customerId}/isPremiumUser", customerId))
+            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    void isUserPremiumThrowsExceptionTest() throws Exception {
+        when(customerService.isCustomerPremium(1L)).thenThrow(NoSuchElementException.class);
+        mockMvc.perform(get("/customer/{customerId}/isPremiumUser", customerId))
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
     }
 
 }

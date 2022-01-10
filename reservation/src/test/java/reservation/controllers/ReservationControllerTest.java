@@ -52,6 +52,7 @@ public class ReservationControllerTest {
     private final transient long reservationId = 1L;
     private final transient long invalidId = 13L;
     private final transient long userId = 1L;
+    private final transient long lessonId = 1L;
     private final transient long groupId = 1L;
     private final transient long sportFacilityId = 1L;
     private final transient String equipmentNameValid = "hockeyStick";
@@ -91,13 +92,21 @@ public class ReservationControllerTest {
     transient ReservationChecker reservationChecker;
 
     @Mock
-    transient SportFacilityCommunicator sportFacilityCommunicator;
+    private transient SportFacilityCommunicator sportFacilityCommunicator;
+
+    @Mock
+    private transient UserFacilityCommunicator userFacilityCommunicator;
 
     @Mock
     transient RestTemplate restTemplate;
 
     @Autowired
     private transient MockMvc mockMvc;
+
+    public ReservationControllerTest() {
+        this.sportFacilityCommunicator = mock(SportFacilityCommunicator.class);
+        this.userFacilityCommunicator = mock(UserFacilityCommunicator.class);
+    }
 
     /**
      * Sets up the tests.
@@ -108,7 +117,6 @@ public class ReservationControllerTest {
         Mockito.when(reservationService.restTemplate()).thenReturn(restTemplate);
         this.mockMvc = MockMvcBuilders.standaloneSetup(
             new ReservationController(reservationService, reservationChecker)).build();
-        sportFacilityCommunicator = mock(SportFacilityCommunicator.class);
 
     }
 
@@ -267,6 +275,37 @@ public class ReservationControllerTest {
         mockMvc.perform(
                 get("/reservation/{equipmentId" + "}/lastPersonThatUsedEquipment", invalidId))
             .andExpect(status().isBadRequest()).andReturn();
+
+    }
+
+    @Disabled
+    public void makeLessonReservationFalseNameTest() throws Exception {
+        when(sportFacilityCommunicator.getLessonName(anyLong())).thenThrow(HttpClientErrorException.class);
+        mockMvc.perform(
+                post("/reservation/{userId}/{lessonId}/makeLessonBooking", userId, lessonId))
+            .andExpect(status().isBadRequest()).andReturn();
+    }
+
+    @Disabled
+    public void makeLessonReservationPremiumUserTest() throws Exception {
+        when(restTemplate.getForEntity(anyString(), any())).thenReturn(ResponseEntity.ok("1999-01"
+            + "-06T00:00:00"));
+        when(userFacilityCommunicator.getUserIsPremium(anyLong())).thenThrow(HttpClientErrorException.class);
+        mockMvc.perform(
+                post("/reservation/{userId}/{lessonId}/makeLessonBooking", userId, lessonId))
+            .andExpect(status().isBadRequest()).andReturn();
+    }
+
+    @Disabled
+    public void makeLessonReservationTest() throws Exception {
+        when(sportFacilityCommunicator.getLessonName(anyLong())).thenReturn("Spinning");
+        when(sportFacilityCommunicator.getLessonBeginning(anyLong()))
+            .thenReturn(LocalDateTime.of(2022, 01, 01, 14, 00));
+        when(userFacilityCommunicator.getUserIsPremium(anyLong())).thenReturn(true);
+
+        mockMvc.perform(
+                post("/reservation/{userId}/{lessonId}/makeLessonBooking", userId, lessonId))
+            .andExpect(status().isOk()).andReturn();
 
     }
 

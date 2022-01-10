@@ -44,7 +44,7 @@ public class ReservationTest {
         bookedItemName = "HockeyStick";
         customerId = 1L;
         sportFacilityReservedId = 1L;
-        startingTime = LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00);
+        startingTime = LocalDateTime.of(2022, Month.JANUARY, 5, 14, 00);
         madeByPremiumUser = false;
 
         reservation =
@@ -104,15 +104,15 @@ public class ReservationTest {
 
     @Test
     void getStartingTimeTest() {
-        assertTrue(
-            reservation.getStartingTime().equals(LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00)));
+        assertTrue(reservation.getStartingTime().equals(
+                LocalDateTime.of(2022, Month.JANUARY, 5, 14, 00)));
     }
 
     @Test
     void setStartingTimeTest() {
-        reservation.setStartingTime(LocalDateTime.of(2021, Month.JANUARY, 5, 17, 00));
-        assertTrue(
-            reservation.getStartingTime().equals(LocalDateTime.of(2021, Month.JANUARY, 5, 17, 00)));
+        reservation.setStartingTime(LocalDateTime.of(2021, Month.JANUARY, 5, 15, 00));
+        assertTrue(reservation.getStartingTime().equals(
+                LocalDateTime.of(2021, Month.JANUARY, 5, 15, 00)));
     }
 
     @Test
@@ -159,7 +159,7 @@ public class ReservationTest {
         bookedItemName = "HockeyStick";
         customerId = 1L;
         sportFacilityReservedId = 1L;
-        startingTime = LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00);
+        startingTime = LocalDateTime.of(2022, Month.JANUARY, 5, 14, 00);
         madeByPremiumUser = false;
 
         Reservation check =
@@ -186,7 +186,7 @@ public class ReservationTest {
         bookedItemName = "HockeyBall";
         customerId = 1L;
         sportFacilityReservedId = 2L;
-        startingTime = LocalDateTime.of(2022, Month.JANUARY, 5, 17, 00);
+        startingTime = LocalDateTime.of(2022, Month.JANUARY, 5, 14, 00);
         madeByPremiumUser = true;
 
         Reservation check =
