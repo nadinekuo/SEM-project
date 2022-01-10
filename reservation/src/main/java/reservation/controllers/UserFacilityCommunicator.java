@@ -36,4 +36,14 @@ public class UserFacilityCommunicator {
         return Integer.parseInt(response.getBody());
     }
 
+    public boolean getUserIsPremium(Long userId) {
+
+        String methodSpecificUrl = "/customer/" + userId + "/isPremiumUser";
+
+        // Call to GroupController in User microservice
+        ResponseEntity<String> response = restTemplate.getForEntity(userUrl + methodSpecificUrl,
+            String.class);
+        return Boolean.parseBoolean(response.getBody());
+    }
+
 }

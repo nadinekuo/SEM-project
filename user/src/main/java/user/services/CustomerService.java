@@ -32,6 +32,11 @@ public class CustomerService {
             "Customer with id " + customerId + " does not exist!"));
     }
 
+    public Boolean isCustomerPremium(long customerId){
+        return getCustomerById(customerId).isPremiumUser();
+    }
+
+
     /**
      * The Customer is persisted into the database using customerRepository.
      *

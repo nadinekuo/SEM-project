@@ -186,6 +186,35 @@ public class ReservationController {
     }
 
     /**
+     * Make lesson reservation response entity.
+     *
+     * @param userId   the user id
+     * @param lessonId the lesson id
+     * @return the response entity
+     */
+    @PostMapping("/{userId}/{lessonId}/makeLessonBooking")
+    @ResponseBody
+    public ResponseEntity<?> makeLessonReservation(@PathVariable Long userId,
+                                                   @PathVariable Long lessonId) {
+
+        try{
+            String lessonName = sportFacilityCommunicator.getLessonName(lessonId);
+
+            LocalDateTime lessonBeginning = sportFacilityCommunicator.getLessonBeginning(lessonId);
+
+            Boolean madeByPremiumUser = userFacilityCommunicator.getUserIsPremium(userId);
+            Reservation reservation =
+                        new Reservation(ReservationType.LESSON, lessonName, userId, lessonId,
+                            lessonBeginning, madeByPremiumUser);
+            reservationService.makeSportFacilityReservation(reservation);
+
+            return new ResponseEntity<>("Lesson booking was successful!", HttpStatus.OK);
+        } catch (HttpClientErrorException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
      * Gets last person that used equipment.
      *
      * @param equipmentId the equipment id

@@ -1,5 +1,6 @@
 package user.controllers;
 
+import static java.util.Optional.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -49,9 +50,6 @@ public class UserControllerTest {
     @Autowired
     private transient MockMvc mockMvc;
 
-    /**
-     * Setup.
-     */
     @BeforeEach
     public void setup() {
         this.mockMvc =
@@ -110,7 +108,7 @@ public class UserControllerTest {
     @Test
     void getCustomerInfoTest() throws Exception {
         Customer customer = new Customer();
-        when(userService.getCustomerByUsername(userName)).thenReturn(Optional.of(customer));
+        when(userService.getCustomerByUsername(userName)).thenReturn(of(customer));
         MvcResult result = mockMvc.perform(get("/user/{userName}/getCustomerInfo", userName))
             .andExpect(status().isOk()).andReturn();
         verify(userService).getCustomerByUsername(userName);
@@ -120,7 +118,7 @@ public class UserControllerTest {
     @Test
     void getAdminInfoTest() throws Exception {
         Admin admin = new Admin();
-        when(userService.getAdminByUsername(userName)).thenReturn(Optional.of(admin));
+        when(userService.getAdminByUsername(userName)).thenReturn(of(admin));
         MvcResult result = mockMvc.perform(get("/user/{userName}/getAdminInfo", userName))
             .andExpect(status().isOk()).andReturn();
         verify(userService).getAdminByUsername(userName);
@@ -129,7 +127,7 @@ public class UserControllerTest {
 
     @Test
     void getFalseCustomerInfoTest() throws Exception {
-        when(userService.getCustomerByUsername(userName)).thenReturn(Optional.empty());
+        when(userService.getCustomerByUsername(userName)).thenReturn(empty());
         MvcResult result = mockMvc.perform(get("/user/{userName}/getCustomerInfo", userName))
             .andExpect(status().isBadRequest()).andReturn();
         verify(userService).getCustomerByUsername(userName);
@@ -138,7 +136,7 @@ public class UserControllerTest {
 
     @Test
     void getFalseAdminInfoTest() throws Exception {
-        when(userService.getAdminByUsername(userName)).thenReturn(Optional.empty());
+        when(userService.getAdminByUsername(userName)).thenReturn(empty());
         MvcResult result = mockMvc.perform(get("/user/{userName}/getAdminInfo", userName))
             .andExpect(status().isBadRequest()).andReturn();
         verify(userService).getAdminByUsername(userName);

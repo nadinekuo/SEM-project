@@ -1,5 +1,6 @@
 package reservation.controllers;
 
+import java.time.LocalDateTime;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -174,4 +175,22 @@ public class SportFacilityCommunicator {
         return Integer.parseInt(response.getBody());
     }
 
+    public String getLessonName(long lessonId) throws HttpClientErrorException {
+
+        String methodSpecificUrl = "/lesson/" + lessonId + "/getName";
+
+        ResponseEntity<String> response =
+            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl, String.class);
+
+        return response.getBody();
+    }
+
+    public LocalDateTime getLessonBeginning(Long lessonId) {
+        String methodSpecificUrl = "/lesson/" + lessonId + "/getStartingTime";
+
+        ResponseEntity<String> response =
+            restTemplate.getForEntity(sportFacilityUrl + methodSpecificUrl, String.class);
+
+        return LocalDateTime.parse(response.getBody());
+    }
 }

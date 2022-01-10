@@ -31,7 +31,7 @@ public class LessonService {
      */
     public Lesson getLessonById(long lessonId) {
         return lessonRepository.findById(lessonId).orElseThrow(
-            () -> new NoSuchElementException("Lesson with id " + lessonId + "does not exist!"));
+            () -> new NoSuchElementException("Lesson with id " + lessonId + " does not exist!"));
     }
 
     /**
