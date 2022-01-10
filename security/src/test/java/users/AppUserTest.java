@@ -17,8 +17,7 @@ public class AppUserTest {
     AppUser appUser;
 
     /**
-     * Sets up the tests.
-     *
+     * Sets up the tests
      */
     @BeforeEach
     void setup() {
