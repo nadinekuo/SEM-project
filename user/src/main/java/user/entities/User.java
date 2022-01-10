@@ -20,7 +20,7 @@ public abstract class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
     private long id;
     private String username;
-    private String password;   // Spring Security
+    private String password;
 
     /**
      * Empty constructor needed for Spring JPA.
@@ -53,33 +53,58 @@ public abstract class User {
         this.password = password;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * Sets the id.
+     *
+     * @param id user id
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * Gets username.
+     *
+     * @return the username.
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Sets the username.
+     *
+     * @param username user name
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Gets the password.
+     *
+     * @return password
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Sets the password.
+     *
+     * @param password user password
+     */
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     @Override

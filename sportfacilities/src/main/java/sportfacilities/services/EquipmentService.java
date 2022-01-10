@@ -12,9 +12,6 @@ import sportfacilities.controllers.EquipmentController;
 import sportfacilities.entities.Equipment;
 import sportfacilities.repositories.EquipmentRepository;
 
-/**
- * The type Equipment service.
- */
 @Service
 public class EquipmentService {
 
@@ -93,8 +90,7 @@ public class EquipmentService {
      * @param equipmentName the equipment name
      * @return the available equipment ids by name
      */
-    
-    //TODO potentially distinguish between the equipment doesn't exist or if its fully booked
+
     public Long getAvailableEquipmentIdsByName(String equipmentName) {
 
         return

@@ -11,9 +11,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-/**
- * The type Customer.
- */
 @Entity
 @Table(name = "customers")
 public class Customer extends User {
@@ -23,8 +20,8 @@ public class Customer extends User {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_groups", joinColumns = {
         @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable =
-            false)},
-        inverseJoinColumns = {
+            false)
+        }, inverseJoinColumns = {
         @JoinColumn(name = "group_id", referencedColumnName = "groupId", nullable = false,
             updatable = false)
     })
@@ -102,14 +99,6 @@ public class Customer extends User {
         this.groupsForTeamSports = groupsForTeamSports;
     }
 
-    //    public boolean isPremiumSubscription() {
-    //        return premiumSubscription;
-    //    }
-
-    //    public void setPremiumSubscription(boolean premiumSubscription) {
-    //        this.premiumSubscription = premiumSubscription;
-    //    }
-
     /**
      * Add group to users group list.
      *
@@ -128,18 +117,10 @@ public class Customer extends User {
     @Override
     public String toString() {
         String res =
-            "Customer{" + "id=" + super.getId() + ", username='" + super.getUsername() + '\''
-                + ", password" + "='" + super.getPassword() + "', ";
+            "Customer{" + "id=" + super.getId() + ", username='" + super.getUsername() + "'"
+                + ", password" + "=" + super.getPassword() + "}";
 
-        if (!groupsForTeamSports.isEmpty()) {
-            res = res + " groups = {";
-            for (Group g : groupsForTeamSports) {
-                res = res + "'" + g.getGroupName() + "'" + ",";
-            }
-            res = res + "}";
-            return res;
-        }
-        return res + "}";
+        return res;
     }
 
 }

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reservation.controllers.ReservationController;
+import reservation.controllers.SportFacilityCommunicator;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.services.ReservationService;
@@ -13,6 +14,7 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
 
     private final ReservationService reservationService;
     private final ReservationController reservationController;
+    private final SportFacilityCommunicator sportFacilityCommunicator;
 
     /**
      * Instantiates a new Sport facility availability validator.
@@ -29,10 +31,13 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
                                               ReservationController reservationController) {
         this.reservationService = reservationService;
         this.reservationController = reservationController;
+        this.sportFacilityCommunicator = this.reservationController
+         .getSportFacilityCommunicator();
+        //this.sportFacilityCommunicator = sportFacilityCommunicator;
     }
 
     @Override
-    public boolean handle(Reservation reservation) throws InvalidReservationException {
+    public void handle(Reservation reservation) throws InvalidReservationException {
 
         checkTime(reservation);
 
@@ -49,7 +54,7 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
                 throw new InvalidReservationException("Equipment name invalid or not in stock!");
             }
         }
-        return super.checkNext(reservation);
+        super.checkNext(reservation);
     }
 
     /**
@@ -106,7 +111,7 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
 
         // Call Sports Facilities service: check if sports room exists
         // Even if the room was "available", it may not necessarily exist!
-        boolean sportsRoomExists = reservationController.getSportsRoomExists(sportsRoomId);
+        boolean sportsRoomExists = sportFacilityCommunicator.getSportsRoomExists(sportsRoomId);
         if (!sportsRoomExists) {
             throw new InvalidReservationException("Sports room does not exist.");
         }

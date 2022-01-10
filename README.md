@@ -1,4 +1,36 @@
-# CSE2115 - Project
+# CSE2115 - SEM Project: Sports Centre Booking System
+
+The aim of this project is to build a backend application for a sports centre.
+This system should allow users to:
+- register for lessons within the pre-allocated lessons slots (from 9:00 to 16:00)
+- reserve the sport fields (e.g., soccer field) and some equipment for the time-slots with no lessons
+
+
+## Frameworks used 
+
+This application relies on the following tools:
+- Back-end framework: `Spring`
+    - Communication between server and client: `REST JSON API`
+- Database (for all microservices): `H2` for development, `PostgreSQL` for production
+    - Communication between server and database: `Hibernate`, `Spring JPA`
+- Build automation tool: `Gradle`
+- Testing framework: `JUnit 5`
+- Code style checker: `CheckStyle`
+
+
+## Group members (group 25a)
+
+| 📸 | Name | 
+|---|---|
+| ![](https://eu.ui-avatars.com/api/?name=AB&length=4&size=50&color=DDD&background=777&font-size=0.325) |   Arslan Bhatti |  
+| ![](https://eu.ui-avatars.com/api/?name=EW&length=4&size=50&color=DDD&background=777&font-size=0.325) |   Emma Wiegers |  
+| ![](https://eu.ui-avatars.com/api/?name=EM&length=4&size=50&color=DDD&background=777&font-size=0.325) |   Emil Malmsten |
+| ![](https://eu.ui-avatars.com/api/?name=EL&length=4&size=50&color=DDD&background=777&font-size=0.325) |   Erwin Li |
+| ![](https://eu.ui-avatars.com/api/?name=NK&length=4&size=50&color=DDD&background=777&font-size=0.325) |   Nadine Kuo |   
+| ![](https://eu.ui-avatars.com/api/?name=PC&length=4&size=50&color=DDD&background=777&font-size=0.325) |   Panagiotis Chatziioannou | 
+
+
+
 
 ### Running 
 `gradle bootRun`

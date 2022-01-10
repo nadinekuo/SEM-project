@@ -9,9 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-/**
- * The type Lesson.
- */
 @Entity
 @Table(name = "lessons")
 public class Lesson {
@@ -139,11 +136,6 @@ public class Lesson {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(lessonId);
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -157,6 +149,6 @@ public class Lesson {
 
     @Override
     public String toString() {
-        return "Lesson{" + "lessonId=" + lessonId + ", title='" + title;
+        return "Lesson{" + "lessonId=" + lessonId + ", title='" + title + "'}";
     }
 }

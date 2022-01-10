@@ -3,16 +3,19 @@ package reservation.entities.chainofresponsibility;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import reservation.controllers.ReservationController;
+import reservation.controllers.SportFacilityCommunicator;
+import reservation.controllers.UserFacilityCommunicator;
 import reservation.entities.Reservation;
 import reservation.services.ReservationService;
 
 @Component
 public class TeamRoomCapacityValidator extends BaseValidator {
 
-    //TODO make use of this variable or remove it
-    private final ReservationService reservationService;
     private final ReservationController reservationController;
+    private final SportFacilityCommunicator sportFacilityCommunicator;
+    private final UserFacilityCommunicator userFacilityCommunicator;
 
 
     /**
@@ -24,19 +27,18 @@ public class TeamRoomCapacityValidator extends BaseValidator {
      * Note: this validator is only part of the chain for sport room reservations
      * (not equipment reservations)
      *
-     * @param reservationService    -  the reservation service containing logic
      * @param reservationController the reservation controller to communicate with other
      *                              microservices
      */
     @Autowired
-    public TeamRoomCapacityValidator(ReservationService reservationService,
-                                     ReservationController reservationController) {
-        this.reservationService = reservationService;
+    public TeamRoomCapacityValidator(ReservationController reservationController) {
         this.reservationController = reservationController;
+        this.sportFacilityCommunicator = this.reservationController.getSportFacilityCommunicator();
+        this.userFacilityCommunicator = this.reservationController.getUserFacilityCommunicator();
     }
 
     @Override
-    public boolean handle(Reservation reservation) throws InvalidReservationException {
+    public void handle(Reservation reservation) throws InvalidReservationException {
 
         long roomId = reservation.getSportFacilityReservedId();
 
@@ -44,14 +46,15 @@ public class TeamRoomCapacityValidator extends BaseValidator {
         // since that was checked by the SportFacilityAvailabilityValidator
 
         // Halls can hold multiple (team) sports, whereas fields are tied to 1 team sport.
-        boolean isSportHall = reservationController.getIsSportHall(roomId);
+        boolean isSportHall;
+        isSportHall = sportFacilityCommunicator.getIsSportHall(roomId);
 
         boolean isGroupReservation = (reservation.getGroupId() != -1);
         int groupSize;
 
         // Make request to user service controller to get group size
         if (isGroupReservation) {
-            groupSize = reservationController.getGroupSize(reservation.getGroupId());
+            groupSize = userFacilityCommunicator.getGroupSize(reservation.getGroupId());
         } else {
             groupSize = 1;
         }
@@ -60,9 +63,9 @@ public class TeamRoomCapacityValidator extends BaseValidator {
         // we check whether group size adheres to the sport's min and max team size constraints.
         if (!isSportHall) {
 
-            String sportName = reservationController.getSportFieldSport(roomId);
-            int minTeamSize = reservationController.getSportMinTeamSize(sportName);
-            int maxTeamSize = reservationController.getSportMaxTeamSize(sportName);
+            String sportName = sportFacilityCommunicator.getSportFieldSport(roomId);
+            int minTeamSize = sportFacilityCommunicator.getSportMinTeamSize(sportName);
+            int maxTeamSize = sportFacilityCommunicator.getSportMaxTeamSize(sportName);
 
             if (groupSize < minTeamSize || groupSize > maxTeamSize) {
                 throw new InvalidReservationException(
@@ -73,8 +76,8 @@ public class TeamRoomCapacityValidator extends BaseValidator {
 
         }
 
-        int roomMinCapacity = reservationController.getSportRoomMinimumCapacity(roomId);
-        int roomMaxCapacity = reservationController.getSportRoomMaximumCapacity(roomId);
+        int roomMinCapacity = sportFacilityCommunicator.getSportRoomMinimumCapacity(roomId);
+        int roomMaxCapacity = sportFacilityCommunicator.getSportRoomMaximumCapacity(roomId);
 
         // A single user/group has full access to the reserved sports room, meaning no other
         // customers can enter that room during that time slot.
@@ -87,6 +90,6 @@ public class TeamRoomCapacityValidator extends BaseValidator {
                     + "\n\n Your group size: " + groupSize);
         }
 
-        return super.checkNext(reservation);
+        super.checkNext(reservation);
     }
 }

@@ -6,9 +6,6 @@ import org.springframework.stereotype.Service;
 import sportfacilities.entities.Sport;
 import sportfacilities.repositories.SportRepository;
 
-/**
- * The type Sport service.
- */
 @Service
 public class SportService {
     private final transient SportRepository sportRepository;

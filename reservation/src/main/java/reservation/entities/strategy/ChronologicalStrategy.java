@@ -15,7 +15,7 @@ public class ChronologicalStrategy implements ReservationSortingStrategy {
      * @return the next reservation
      */
     public Reservation getNextReservation(List<Reservation> reservations) {
-        if (reservations == null || reservations.isEmpty()) {
+        if (reservations.isEmpty()) {
             return null;
         }
         this.sort(reservations);
@@ -26,9 +26,6 @@ public class ChronologicalStrategy implements ReservationSortingStrategy {
         Collections.sort(list, new ReservationComparator());
     }
 
-    /**
-     * The type Reservation comparator.
-     */
     protected class ReservationComparator implements Comparator {
         @Override
         public int compare(Object o1, Object o2) {

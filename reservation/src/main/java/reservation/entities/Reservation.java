@@ -10,9 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-/**
- * The type Reservation.
- */
 @Entity
 @Table(name = "reservations")
 public class Reservation {
@@ -255,11 +252,6 @@ public class Reservation {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(reservationId);
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -278,10 +270,20 @@ public class Reservation {
             + ", startingTime=" + startingTime + '}';
     }
 
+    /**
+     * Gets boolean made by premium user.
+     *
+     * @return Boolean madeByPremiumUser
+     */
     public Boolean getMadeByPremiumUser() {
         return madeByPremiumUser;
     }
 
+    /**
+     * Sets boolean made by premium user.
+     *
+     * @param madeByPremiumUser boolean made by premium user
+     */
     public void setMadeByPremiumUser(Boolean madeByPremiumUser) {
         this.madeByPremiumUser = madeByPremiumUser;
     }

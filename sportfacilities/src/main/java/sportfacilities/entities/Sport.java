@@ -1,5 +1,6 @@
 package sportfacilities.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 import java.util.Objects;
@@ -12,11 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
-/**
- * The type Sport.
- */
 @Entity
 @Table(name = "sports")
 public class Sport {
@@ -33,9 +30,10 @@ public class Sport {
         @JoinColumn(name = "sport_name", referencedColumnName = "sportName", nullable = false,
             updatable = false)
         }, inverseJoinColumns = {
-        @JoinColumn(name = "sportroom_id", referencedColumnName = "sportRoomId", nullable =
-            false, updatable = false)
+        @JoinColumn(name = "sportroom_id", referencedColumnName = "sportRoomId", nullable = false,
+            updatable = false)
     })
+    @JsonIgnoreProperties("sports")
     private List<SportRoom> sportLocations;
 
     @OneToMany(mappedBy = "relatedSport", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
@@ -48,8 +46,6 @@ public class Sport {
     public Sport() {
     }
 
-
-
     /**
      * Instantiates a new Sport.
      *
@@ -57,7 +53,7 @@ public class Sport {
      * @param minTeamSize the min team size
      * @param maxTeamSize the max team size
      */
-    public Sport(String sportName,  int minTeamSize, int maxTeamSize) {
+    public Sport(String sportName, int minTeamSize, int maxTeamSize) {
         this.sportName = sportName;
         this.teamSport = true;
         this.minTeamSize = minTeamSize;
@@ -74,6 +70,20 @@ public class Sport {
         this.teamSport = false;
         this.minTeamSize = 1;
         this.maxTeamSize = -1;
+    }
+
+    /**
+     * Add sport to a sportroom.
+     *
+     * @param sportRoom the sport room
+     */
+    public void addSportToSportLocation(SportRoom sportRoom) {
+        if (!sportLocations.contains(sportRoom)) {
+            this.sportLocations.add(sportRoom);
+        } else {
+            throw new IllegalStateException(
+                this.getSportName() + " already exists for this sport location");
+        }
     }
 
     /**
@@ -185,11 +195,6 @@ public class Sport {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(sportName, teamSport);
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -203,6 +208,7 @@ public class Sport {
 
     @Override
     public String toString() {
-        return "" + sportName + "";
+        return "Sport{" + "sportName='" + sportName + "'" + ", teamSport=" + teamSport
+            + ", minTeamSize=" + minTeamSize + ", maxTeamSize=" + maxTeamSize + '}';
     }
 }

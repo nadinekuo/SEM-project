@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import sportfacilities.entities.Sport;
 import sportfacilities.services.SportService;
 
-/**
- * The type Sport controller.
- */
 @RestController
 @RequestMapping("sport")
 public class SportController {
@@ -39,8 +36,6 @@ public class SportController {
      * @param sportName the sport name
      * @return the sport max team size
      */
-    
-    //TODO return correct type instead of string
     @GetMapping("/{sportName}/getMaxTeamSize")
     @ResponseBody
     public ResponseEntity<String> getSportMaxTeamSize(@PathVariable String sportName) {
@@ -79,7 +74,8 @@ public class SportController {
      */
     @PutMapping("/{sportName}/{minCapacity}/{maxCapacity}/addTeamSport/admin")
     @ResponseBody
-    public ResponseEntity<?> addSport(@PathVariable String sportName, @PathVariable int minCapacity,
+    public ResponseEntity<String> addSport(@PathVariable String sportName,
+                                       @PathVariable int minCapacity,
                                       @PathVariable int maxCapacity) {
 
         sportService.addSport(new Sport(sportName, minCapacity, maxCapacity));
@@ -94,7 +90,7 @@ public class SportController {
      */
     @PutMapping("/{sportName}/addNonTeamSport/admin")
     @ResponseBody
-    public ResponseEntity<?> addSport(@PathVariable String sportName) {
+    public ResponseEntity<String> addSport(@PathVariable String sportName) {
 
         sportService.addSport(new Sport(sportName));
         return new ResponseEntity<>(HttpStatus.OK);

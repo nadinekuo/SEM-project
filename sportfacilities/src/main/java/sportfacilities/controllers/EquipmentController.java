@@ -18,18 +18,12 @@ import sportfacilities.entities.Sport;
 import sportfacilities.services.EquipmentService;
 import sportfacilities.services.SportService;
 
-/**
- * The type Equipment controller.
- */
 @RestController
 @RequestMapping("equipment")
 public class EquipmentController {
 
     private final transient EquipmentService equipmentService;
     private final transient SportService sportService;
-
-    @Autowired
-    private final transient RestTemplate restTemplate;
 
     /**
      * Autowired constructor for the class.
@@ -40,7 +34,6 @@ public class EquipmentController {
     @Autowired
     public EquipmentController(EquipmentService equipmentService, SportService sportService) {
         this.equipmentService = equipmentService;
-        this.restTemplate = equipmentService.restTemplate();
         this.sportService = sportService;
     }
 
@@ -69,7 +62,7 @@ public class EquipmentController {
      */
     @GetMapping("/{equipmentId}/getEquipmentName")
     @ResponseBody
-    public ResponseEntity<?> getEquipmentName(@PathVariable Long equipmentId) {
+    public ResponseEntity<String> getEquipmentName(@PathVariable Long equipmentId) {
         try {
             String equipmentName = equipmentService.getEquipmentName(equipmentId);
             return new ResponseEntity<>(equipmentName, HttpStatus.OK);
@@ -89,9 +82,9 @@ public class EquipmentController {
     public ResponseEntity<String> getAvailableEquipment(@PathVariable String equipmentName) {
         try {
             Long equipmentId = equipmentService.getAvailableEquipmentIdsByName(equipmentName);
-            return ResponseEntity.ok(equipmentId.toString());
+            return new ResponseEntity<>(equipmentId.toString(), HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -103,7 +96,7 @@ public class EquipmentController {
      */
     @PutMapping("/{equipmentName}/{relatedSportName}/addNewEquipment/admin")
     @ResponseBody
-    public ResponseEntity<?> addNewEquipment(@PathVariable String equipmentName,
+    public ResponseEntity<String> addNewEquipment(@PathVariable String equipmentName,
                                              @PathVariable String relatedSportName) {
         try {
             Sport sport = sportService.getSportById(relatedSportName);
@@ -121,7 +114,7 @@ public class EquipmentController {
      * @return the response
      */
     @DeleteMapping("/{equipmentId}/deleteEquipment/admin")
-    public ResponseEntity<?> deleteEquipment(@PathVariable long equipmentId) {
+    public ResponseEntity<String> deleteEquipment(@PathVariable long equipmentId) {
         try {
             equipmentService.deleteEquipment(equipmentId);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -138,7 +131,7 @@ public class EquipmentController {
      */
     @PutMapping("/{equipmentId}/broughtBack/admin")
     @ResponseBody
-    public ResponseEntity<?> equipmentBroughtBack(@PathVariable Long equipmentId) {
+    public ResponseEntity<String> equipmentBroughtBack(@PathVariable Long equipmentId) {
         try {
             equipmentService.setEquipmentToNotInUse(equipmentId);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -154,7 +147,7 @@ public class EquipmentController {
      */
     @PutMapping("/{equipmentId}/reserved")
     @ResponseBody
-    public ResponseEntity<?> equipmentReserved(@PathVariable Long equipmentId) {
+    public ResponseEntity<String> equipmentReserved(@PathVariable Long equipmentId) {
         try {
             equipmentService.setEquipmentToInUse(equipmentId);
             return new ResponseEntity<>(HttpStatus.OK);

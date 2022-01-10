@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import reservation.controllers.ReservationController;
+import reservation.controllers.SportFacilityCommunicator;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.entities.chainofresponsibility.InvalidReservationException;
@@ -33,10 +34,12 @@ public class SportFacilityAvailabilityValidatorTest {
 
     private final transient ReservationController reservationController;
     private final transient ReservationService reservationService;
+
+    private final transient SportFacilityCommunicator sportFacilityCommunicator;
     // Class under test:
     private final transient SportFacilityAvailabilityValidator sportFacilityAvailabilityValidator;
-    private transient Long groupId;
     private final transient boolean madeByPremiumUser = true;
+    private transient Long groupId;
 
     /**
      * Constructor for this test suite.
@@ -44,6 +47,9 @@ public class SportFacilityAvailabilityValidatorTest {
     public SportFacilityAvailabilityValidatorTest() {
         reservationService = mock(ReservationService.class);
         reservationController = mock(ReservationController.class);
+        sportFacilityCommunicator = mock(SportFacilityCommunicator.class);
+        when(reservationController.getSportFacilityCommunicator()).thenReturn(
+            sportFacilityCommunicator);
         this.sportFacilityAvailabilityValidator =
             new SportFacilityAvailabilityValidator(reservationService, reservationController);
 
@@ -71,12 +77,12 @@ public class SportFacilityAvailabilityValidatorTest {
      * Test constructor.
      */
     @Test
-    public void testConstructor() {
+    public void constructorTest() {
         assertNotNull(sportFacilityAvailabilityValidator);
     }
 
     @Test
-    public void testInvalidTime() throws InvalidReservationException {
+    public void invalidTimeTest() throws InvalidReservationException {
 
         assertThrows(InvalidReservationException.class, () -> {
             sportFacilityAvailabilityValidator.handle(reservationInvalidTime);
@@ -84,7 +90,7 @@ public class SportFacilityAvailabilityValidatorTest {
     }
 
     @Test
-    public void testInvalidEquipmentId() throws InvalidReservationException {
+    public void invalidEquipmentIdTest() throws InvalidReservationException {
 
         assertThrows(InvalidReservationException.class, () -> {
             sportFacilityAvailabilityValidator.handle(equipmentReservationInvalid);
@@ -92,7 +98,7 @@ public class SportFacilityAvailabilityValidatorTest {
     }
 
     @Test
-    public void testUnavailableSportRoom() throws InvalidReservationException {
+    public void unavailableSportRoomTest() throws InvalidReservationException {
 
         when(reservationService.sportsFacilityIsAvailable(anyLong(), any())).thenReturn(false);
 
@@ -105,11 +111,11 @@ public class SportFacilityAvailabilityValidatorTest {
     }
 
     @Test
-    public void testNonExistentSportRoom() throws InvalidReservationException {
+    public void nonExistentSportRoomTest() throws InvalidReservationException {
 
         // Room is "available" (no reservation for that room yet), but does not exist!
         when(reservationService.sportsFacilityIsAvailable(anyLong(), any())).thenReturn(true);
-        when(reservationController.getSportsRoomExists(anyLong())).thenReturn(false);
+        when(sportFacilityCommunicator.getSportsRoomExists(anyLong())).thenReturn(false);
 
         assertThrows(InvalidReservationException.class, () -> {
             sportFacilityAvailabilityValidator.handle(sportRoomReservation);
@@ -117,17 +123,17 @@ public class SportFacilityAvailabilityValidatorTest {
         verify(reservationService).sportsFacilityIsAvailable(
             sportRoomReservation.getSportFacilityReservedId(),
             sportRoomReservation.getStartingTime());
-        verify(reservationController).getSportsRoomExists(
+        verify(sportFacilityCommunicator).getSportsRoomExists(
             sportRoomReservation.getSportFacilityReservedId());
     }
 
     @Test
-    public void validGroupReservation() throws InvalidReservationException {
+    public void validGroupReservationTest() throws InvalidReservationException {
 
         // Assuming reservation with id 5L is another reservation by another group member,
         // for the same room
         when(reservationService.findByGroupIdAndTime(anyLong(), any())).thenReturn(5L);
-        when(reservationController.getSportsRoomExists(anyLong())).thenReturn(true);
+        when(sportFacilityCommunicator.getSportsRoomExists(anyLong())).thenReturn(true);
 
         assertDoesNotThrow(() -> {
             sportFacilityAvailabilityValidator.handle(groupReservation);
@@ -135,7 +141,7 @@ public class SportFacilityAvailabilityValidatorTest {
 
         verify(reservationService).findByGroupIdAndTime(groupReservation.getGroupId(),
             groupReservation.getStartingTime());
-        verify(reservationController).getSportsRoomExists(
+        verify(sportFacilityCommunicator).getSportsRoomExists(
             groupReservation.getSportFacilityReservedId());
     }
 

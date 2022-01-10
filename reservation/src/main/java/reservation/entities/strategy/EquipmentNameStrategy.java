@@ -9,12 +9,7 @@ import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
 import reservation.entities.strategy.ReservationSortingStrategy;
 
-/**
- * The type Equipment name strategy.
- */
 public class EquipmentNameStrategy implements ReservationSortingStrategy {
-
-    transient String equipmentUrl = "http://eureka-equipment";
 
 
     /**
@@ -23,7 +18,7 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
      * @param reservations list of reservations to be sorted
      */
     public Reservation getNextReservation(List<Reservation> reservations) {
-        if (reservations == null || reservations.isEmpty()) {
+        if (reservations.isEmpty()) {
             return null;
         }
         this.sort(reservations);
@@ -34,9 +29,6 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
         Collections.sort(list, new ReservationComparator());
     }
 
-    /**
-     * The type Reservation comparator.
-     */
     protected class ReservationComparator implements Comparator {
         @Override
         public int compare(Object o1, Object o2) {
@@ -49,9 +41,6 @@ public class EquipmentNameStrategy implements ReservationSortingStrategy {
             } else if (!reservation1.getTypeOfReservation().equals(ReservationType.EQUIPMENT)
                 && reservation2.getTypeOfReservation().equals(ReservationType.EQUIPMENT)) {
                 return 1;
-            } else if (!reservation1.getTypeOfReservation().equals(ReservationType.EQUIPMENT)
-                && !reservation2.getTypeOfReservation().equals(ReservationType.EQUIPMENT)) {
-                return 0;
             } else {
 
                 String name1 = reservation1.getBookedItemName();

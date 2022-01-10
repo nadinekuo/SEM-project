@@ -6,9 +6,6 @@ import java.util.List;
 import reservation.entities.Reservation;
 import reservation.entities.strategy.ReservationSortingStrategy;
 
-/**
- * The type User id strategy.
- */
 public class UserIdStrategy implements ReservationSortingStrategy {
 
     /**
@@ -23,7 +20,7 @@ public class UserIdStrategy implements ReservationSortingStrategy {
      * @param reservations list of reservations to be sorted
      */
     public Reservation getNextReservation(List<Reservation> reservations) {
-        if (reservations == null || reservations.isEmpty()) {
+        if (reservations.isEmpty()) {
             return null;
         }
         this.sort(reservations);
@@ -34,9 +31,6 @@ public class UserIdStrategy implements ReservationSortingStrategy {
         Collections.sort(list, new ReservationComparator());
     }
 
-    /**
-     * The type Reservation comparator.
-     */
     protected class ReservationComparator implements Comparator {
         @Override
         public int compare(Object o1, Object o2) {

@@ -1,7 +1,9 @@
 package user.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -34,31 +36,19 @@ class GroupTest {
     }
 
     @Test
-    void getGroupId() {
-        assertThat(group1.getGroupId()).isEqualTo(33L);
-        assertThat(group2.getGroupId()).isEqualTo(42L);
-    }
-
-    @Test
-    void setGroupId() {
+    void setGroupIdTest() {
         group1.setGroupId(56L);
         assertThat(group1.getGroupId()).isEqualTo(56L);
     }
 
     @Test
-    void getGroupName() {
-        assertThat(group1.getGroupName()).isEqualTo("soccerTeam1");
-        assertThat(group2.getGroupName()).isEqualTo("volleyballTeam3");
-    }
-
-    @Test
-    void setGroupName() {
+    void setGroupNameTest() {
         group1.setGroupName("basketballTeam1");
         assertThat(group1.getGroupName()).isEqualTo("basketballTeam1");
     }
 
     @Test
-    void getGroupMembers() {
+    void getGroupMembersTest() {
         List<Customer> customers = group2.getGroupMembers();
         for (int i = 0; i < customers.size(); i++) {
             if (i == 0) {
@@ -73,7 +63,7 @@ class GroupTest {
     }
 
     @Test
-    void setGroupMembers() {
+    void setGroupMembersTest() {
         List<Customer> newCustomerList = Arrays.asList(arslan, emil, nadine);
 
         group2.setGroupMembers(newCustomerList);
@@ -90,22 +80,21 @@ class GroupTest {
     }
 
     @Test
-    void getGroupSize() {
-        assertThat(group1.getGroupSize()).isEqualTo(6L);
-        assertThat(group2.getGroupSize()).isEqualTo(3L);
-    }
-
-    @Test
-    void setGroupSize() {
+    void setGroupSizeTest() {
         group2.setGroupSize(6);
         assertThat(group2.getGroupSize()).isEqualTo(6);
     }
 
-    //    @Test
-    //    void addUserToGroup() {
-    //        //arslan.setGroupsForTeamSports(new ArrayList<>());
-    //        //arslan.addGroupToUsersGroupList(group2);
-    //        group2.addUserToGroup(arslan);
-    //        assertThat(group2.getGroupSize()).isEqualTo(4L);
-    //    }
+    @Test
+    void testEqualsTest() {
+        Group group = null;
+        assertFalse(group1.equals(group));
+    }
+
+    @Test
+    void addUserToGroupTest() {
+        arslan.setGroupsForTeamSports(new ArrayList<>());
+        group2.addUserToGroup(arslan);
+        assertThat(group2.getGroupSize()).isEqualTo(4L);
+    }
 }

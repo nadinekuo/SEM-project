@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,7 +65,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void testConstructor() {
+    public void constructorTest() {
         assertNotNull(groupService);
     }
 
@@ -78,7 +79,6 @@ public class GroupServiceTest {
     public void getGroupByIdTest() {
         when(groupRepository.findByGroupId(33L)).thenReturn(Optional.of(group1));
 
-
         Group result = groupService.getGroupById(33L);
 
         assertThat(result).isNotNull();
@@ -90,7 +90,7 @@ public class GroupServiceTest {
     public void getNonExistingGroupByIdTest() {
         when(groupRepository.findByGroupId(33L)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(NoSuchElementException.class, () -> {
             groupService.getGroupById(33L);
         });
     }
@@ -104,12 +104,29 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void getGroupByGroupName() {
+    public void getGroupSizeThrowsExceptionTest() throws Exception {
+        when(groupRepository.findByGroupId(33L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            groupService.getGroupSizeById(33L);
+        });
+    }
+
+    @Test
+    public void getGroupByGroupNameTest() {
         when(groupRepository.findByGroupName("soccerTeam1")).thenReturn(Optional.of(group1));
 
         assertThat(groupService.getGroupByGroupName("soccerTeam1").getGroupId()).isEqualTo(33L);
         assertThat(groupService.getGroupByGroupName("soccerTeam1").getGroupSize()).isEqualTo(6L);
         verify(groupRepository, times(2)).findByGroupName("soccerTeam1");
+    }
+
+    @Test
+    public void getGroupByGroupNameThrowsExceptionTest() throws Exception {
+        when(groupRepository.findByGroupName("soccerTeam1")).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> {
+            groupService.getGroupByGroupName("soccerTeam1");
+        });
     }
 
     @Test
@@ -125,7 +142,7 @@ public class GroupServiceTest {
     public void createAlreadyExistingGroupTest() {
         when(groupRepository.findByGroupName("soccerTeam1")).thenReturn(Optional.of(group1));
 
-        assertThrows(IllegalStateException.class, () -> groupService.createGroup("soccerTeam1"));
+        assertThrows(IllegalArgumentException.class, () -> groupService.createGroup("soccerTeam1"));
         verify(groupRepository, times(1)).findByGroupName("soccerTeam1");
     }
 
@@ -142,7 +159,19 @@ public class GroupServiceTest {
 
         assertThat(groupService.addCustomerToGroup(1L, 42L).getGroupSize()).isEqualTo(4L);
         verify(groupRepository, times(1)).findByGroupId(42L);
+    }
 
+    @Test
+    public void addCustomerToGroupThrowsExceptionTest() {
+        arslan.setId(1L);
+        arslan.setGroupsForTeamSports(new ArrayList<>());
+
+        when(customerService.getCustomerById(1L)).thenReturn(arslan);
+        when(groupRepository.findByGroupId(42L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            groupService.addCustomerToGroup(1L, 42L);
+        });
     }
 
     @Test
@@ -167,6 +196,12 @@ public class GroupServiceTest {
         assertThat(groupService.getUsersInaGroup(42L).size()).isEqualTo(3L);
     }
 
-    //testing build pass
+    @Test
+    public void getUsersInGroupThrowsExceptionTest() {
+        when(groupRepository.findByGroupId(42L)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> {
+            groupService.getUsersInaGroup(42L);
+        });
+    }
 
 }

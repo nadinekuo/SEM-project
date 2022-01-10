@@ -12,9 +12,6 @@ import sportfacilities.entities.Sport;
 import sportfacilities.entities.SportRoom;
 import sportfacilities.repositories.SportRoomRepository;
 
-/**
- * The type Sport room service.
- */
 @Service
 public class SportRoomService {
     private final transient SportRoomRepository sportRoomRepository;
@@ -136,8 +133,6 @@ public class SportRoomService {
      * @param sportRoomId the sport room id
      * @param sportName   the sport name
      */
-
-    //TODO check for duplicates
     public void addSportToSportsHall(Long sportRoomId, String sportName) {
         Sport sport = sportService.getSportById(sportName);
         SportRoom sportHall = getSportRoom(sportRoomId);

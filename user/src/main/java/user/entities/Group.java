@@ -13,9 +13,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-/**
- * The type Group.
- */
 @Entity
 @Table(name = "groups")
 public class Group {
@@ -143,18 +140,7 @@ public class Group {
      * @param memberToAdd the member to add
      */
     public void addUserToGroup(Customer memberToAdd) {
-        if (!this.groupMembers.contains(memberToAdd)) {
-            this.groupMembers.add(memberToAdd);
-            this.groupSize++;
-        } else {
-            throw new IllegalStateException(
-                "Customer with id : " + memberToAdd.getId() + " already exists in the group!");
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(groupId);
+        memberToAdd.addGroupToUsersGroupList(this);
     }
 
     @Override

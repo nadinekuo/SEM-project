@@ -1,6 +1,7 @@
 package user.controllers;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -18,9 +19,6 @@ import user.entities.Customer;
 import user.entities.Group;
 import user.services.GroupService;
 
-/**
- * The type Group controller.
- */
 @RestController
 @RequestMapping("group")
 public class GroupController {
@@ -55,10 +53,8 @@ public class GroupController {
         try {
             Integer groupSize = groupService.getGroupSizeById(groupId);
             return new ResponseEntity<String>(groupSize.toString(), HttpStatus.OK);
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            System.out.println("Group with id " + groupId + " does not exist!!");
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -69,8 +65,13 @@ public class GroupController {
      * @return the group by id
      */
     @GetMapping("/{id}")
-    public Group getGroupById(@PathVariable long id) {
-        return groupService.getGroupById(id);
+    public ResponseEntity<?> getGroupById(@PathVariable long id) {
+        try {
+            Group group = groupService.getGroupById(id);
+            return new ResponseEntity<>(group, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -80,13 +81,29 @@ public class GroupController {
      * @return the users in a group
      */
     @GetMapping("/getCustomers/{id}")
-    public List<Customer> getUsersInaGroup(@PathVariable long id) {
-        return groupService.getUsersInaGroup(id);
+    public ResponseEntity<?> getUsersInaGroup(@PathVariable long id) {
+        try {
+            List<Customer> customers = groupService.getUsersInaGroup(id);
+            return new ResponseEntity<>(customers, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
+    /**
+     * returns the group by group name.
+     *
+     * @param groupName the group name
+     * @return the Group
+     */
     @GetMapping("/groupName/{groupName}")
-    public Group getGroupByGroupName(@PathVariable String groupName) {
-        return groupService.getGroupByGroupName(groupName);
+    public ResponseEntity<?> getGroupByGroupName(@PathVariable String groupName) {
+        try {
+            Group group = groupService.getGroupByGroupName(groupName);
+            return new ResponseEntity<>(group, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -96,11 +113,12 @@ public class GroupController {
      * @return the response entity
      */
     @PostMapping("/create/{groupName}")
-    public ResponseEntity<String> createGroup(@PathVariable String groupName) {
-        if (groupService.createGroup(groupName)) {
+    public ResponseEntity<?> createGroup(@PathVariable String groupName) {
+        try {
+            groupService.createGroup(groupName);
             return new ResponseEntity<>("Group created successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Group creation unsuccessful", HttpStatus.FORBIDDEN);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -112,10 +130,15 @@ public class GroupController {
      * @return the response entity
      */
     @PutMapping("/addCustomer/{groupId}/{customerId}")
-    public ResponseEntity<Group> addCustomerToGroup(@PathVariable long customerId,
-                                                    @PathVariable long groupId) {
-        Group g = groupService.addCustomerToGroup(customerId, groupId);
-        return ResponseEntity.ok(g);
+    public ResponseEntity<?> addCustomerToGroup(@PathVariable long customerId,
+                                                @PathVariable long groupId) {
+        try {
+            groupService.addCustomerToGroup(customerId, groupId);
+            return new ResponseEntity<>("Customer added successfully to the group!", HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     /**
@@ -127,32 +150,20 @@ public class GroupController {
      * @return the response entity
      */
     @PostMapping("/reservation/{groupId}/{sportRoomId}/{date}/makeSportRoomBooking")
-    public ResponseEntity<String> makeGroupReservation(@PathVariable long groupId,
-                                                       @PathVariable long sportRoomId,
-                                                       @PathVariable String date) {
+    public ResponseEntity<?> makeGroupReservation(@PathVariable long groupId,
+                                                  @PathVariable long sportRoomId,
+                                                  @PathVariable String date) {
 
-        String methodSpecificUrl = "/reservation";
-
-        List<Customer> customers;
-        customers = groupService.getUsersInaGroup(groupId);
+        List<Customer> customers = groupService.getUsersInaGroup(groupId);
 
         for (Customer customer : customers) {
 
-            String url = reservationUrl
-                + methodSpecificUrl
-                + "/" + customer.getId()
-                + "/" + groupId
-                + "/" + date
-                + "/" + sportRoomId
-                + "/" + customer.isPremiumUser()
-                + "/" + "makeSportRoomBooking";
+            String url =
+                reservationUrl + "/reservation" + "/" + customer.getId() + "/" + groupId + "/"
+                    + sportRoomId + "/" + date + "/" + customer.isPremiumUser() + "/"
+                    + "makeSportRoomBooking";
 
-            System.out.println("customer Id : " + customer.getId());
-            System.out.println(url);
-
-            //call the makeSportRoomReservation API
             restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(customer), String.class);
-
         }
         return new ResponseEntity<>("Group Reservation Successful", HttpStatus.OK);
     }

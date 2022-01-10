@@ -3,9 +3,7 @@ package reservation.services;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -23,150 +21,122 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
-import reservation.controllers.ReservationController;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
-import reservation.entities.chainofresponsibility.InvalidReservationException;
 import reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import reservation.repositories.ReservationRepository;
 
-/**
- * The type Reservation service test.
- */
 @ExtendWith(MockitoExtension.class)
 public class ReservationServiceTest {
 
+    private static final boolean madeByPremiumUser = true;
     private final transient Reservation reservation1;
     private final transient Reservation reservation2;
     private final transient Reservation groupReservation1;
-
+    private final transient long reservationId1;
+    private final transient long reservationId2;
+    private final transient long groupReservationId;
+    LocalDateTime time1;
     @Mock
     private transient ReservationRepository reservationRepository;
-
     @Mock
     private transient UserReservationBalanceValidator userReservationBalanceValidator;
-
     private transient ReservationService reservationService;
-    private static boolean madeByPremiumUser = true;
 
     /**
      * Instantiates a new Reservation service test.
      */
     public ReservationServiceTest() {
-        reservation1 = new Reservation(ReservationType.EQUIPMENT, "hockey", 1L, 42L,
-            LocalDateTime.of(2022, 10, 05, 16, 00), madeByPremiumUser);
-        reservation1.setId(53L);
+        reservationId1 = 1L;
+        reservationId2 = 2L;
+        groupReservationId = 99L;
+        time1 = LocalDateTime.of(2022, 10, 05, 16, 00);
+
+        reservation1 =
+            new Reservation(ReservationType.EQUIPMENT, "hockey", 1L, 42L, time1, madeByPremiumUser);
+        reservation1.setId(reservationId1);
         reservation2 = new Reservation(ReservationType.SPORTS_ROOM, "hockey", 2L, 25L,
             LocalDateTime.of(2022, 10, 05, 17, 45), madeByPremiumUser);
-        reservation2.setId(84L);
+        reservation2.setId(reservationId2);
         groupReservation1 = new Reservation(ReservationType.SPORTS_ROOM, "Hall 1", 3L, 13L,
             LocalDateTime.of(2022, 02, 3, 20, 30), 84L, madeByPremiumUser);
-        groupReservation1.setId(99L);
+        groupReservation1.setId(groupReservationId);
     }
 
     /**
-     * Sets test attributes.
+     * Sets up test attributes.
      */
     @BeforeEach
     void setup() {
         reservationService = new ReservationService(reservationRepository);
     }
 
-    /**
-     * Test constructor.
-     */
     @Test
-    public void testConstructor() {
+    public void constructorTest() {
         assertNotNull(reservationService);
     }
 
-    /**
-     * Gets reservation test.
-     */
     @Test
     void getReservationTest() {
+        when(reservationRepository.findById(reservationId1)).thenReturn(Optional.of(reservation1));
 
-        when(reservationRepository.findById(53L)).thenReturn(Optional.of(reservation1));
-
-        Reservation result = reservationService.getReservation(53L);
+        Reservation result = reservationService.getReservation(reservationId1);
 
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(53L);
+        assertThat(result.getId()).isEqualTo(reservationId1);
         assertThat(result.getTypeOfReservation() == ReservationType.EQUIPMENT);
-        verify(reservationRepository, times(1)).findById(53L);
+        verify(reservationRepository, times(1)).findById(reservationId1);
     }
 
-    /**
-     * Delete reservation test.
-     */
+    @Test
+    void getReservationThrowsExceptionTest() {
+        when(reservationRepository.findById(reservationId1)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class,
+            () -> reservationService.getReservation(reservationId1));
+
+    }
+
+    @Test
+    void findByGroupIdAndTimeTest() {
+        when(reservationRepository.findByGroupIdAndTime(groupReservationId, time1)).thenReturn(
+            Optional.of(reservationId1));
+        assertThat(reservationService.findByGroupIdAndTime(groupReservationId, time1)).isEqualTo(
+            reservationId1);
+    }
+
+    @Test
+    void findByGroupIdAndTimeNullTest() {
+        when(reservationRepository.findByGroupIdAndTime(groupReservationId, time1)).thenReturn(
+            Optional.empty());
+        assertThat(reservationService.findByGroupIdAndTime(groupReservationId, time1)).isEqualTo(
+            null);
+    }
+
     @Test
     void deleteReservationTest() {
 
-        when(reservationRepository.existsById(53L)).thenReturn(true);
+        when(reservationRepository.existsById(reservationId1)).thenReturn(true);
 
         assertDoesNotThrow(() -> {
-            reservationService.deleteReservation(53L);
+            reservationService.deleteReservation(reservationId1);
         });
 
-        verify(reservationRepository, times(1)).deleteById(53L);
+        verify(reservationRepository, times(1)).deleteById(reservationId1);
     }
 
-    /**
-     * Delete non existing reservation test.
-     */
     @Test
     void deleteNonExistingReservationTest() {
 
-        when(reservationRepository.existsById(53L)).thenReturn(false);
+        when(reservationRepository.existsById(reservationId1)).thenReturn(false);
 
         assertThrows(NoSuchElementException.class, () -> {
-            reservationService.deleteReservation(53L);
+            reservationService.deleteReservation(reservationId1);
         });
         verify(reservationRepository, never()).deleteById(any());
     }
 
-    /**
-     * Valid reservation passed through chain of responsibility.
-     * Validator is mocked, since their logic is tested in the Validator unit tests.
-     */
-    @Test
-    void checkValidReservationTest() throws InvalidReservationException {
-
-        ReservationService reservationServiceSpy =
-            Mockito.spy(new ReservationService(reservationRepository));
-        Mockito.doReturn(userReservationBalanceValidator).when(reservationServiceSpy)
-            .createChainOfResponsibility(any(), any());
-
-        when(userReservationBalanceValidator.handle(reservation1)).thenReturn(true);
-
-        assertTrue(reservationServiceSpy.checkReservation(reservation1,
-            new ReservationController(reservationServiceSpy)));
-    }
-
-    /**
-     * Invalid reservation passed through chain of responsibility.
-     * Validator is mocked, since their logic is tested in the Validator unit tests.
-     */
-    @Test
-    void checkInvalidReservationTest() throws InvalidReservationException {
-
-        ReservationService reservationServiceSpy =
-            Mockito.spy(new ReservationService(reservationRepository));
-        Mockito.doReturn(userReservationBalanceValidator).when(reservationServiceSpy)
-            .createChainOfResponsibility(any(), any());
-
-        when(userReservationBalanceValidator.handle(reservation1)).thenReturn(false);
-
-        assertFalse(reservationServiceSpy.checkReservation(reservation1,
-            new ReservationController(reservationServiceSpy)));
-    }
-
-    /**
-     * Count one sport facility reservation test.
-     */
     @Test
     void countOneSportFacilityReservationTest() {
 
@@ -185,11 +155,8 @@ public class ReservationServiceTest {
             start, end, 1L);
     }
 
-    /**
-     * Available sport facility.
-     */
     @Test
-    void availableSportFacility() {
+    void availableSportFacilityTest() {
 
         when(reservationRepository.findBySportFacilityReservedIdAndTime(anyLong(),
             any())).thenReturn(Optional.empty());   // Facility is unoccupied
@@ -201,11 +168,8 @@ public class ReservationServiceTest {
             LocalDateTime.of(2022, 10, 05, 16, 00));
     }
 
-    /**
-     * Unavailable sport facility.
-     */
     @Test
-    void unavailableSportFacility() {
+    void unavailableSportFacilityTest() {
 
         when(reservationRepository.findBySportFacilityReservedIdAndTime(anyLong(),
             any())).thenReturn(Optional.of(75L));   // Facility is reserved for this time already!
@@ -217,25 +181,19 @@ public class ReservationServiceTest {
             LocalDateTime.of(2022, 10, 05, 16, 00));
     }
 
-    /**
-     * Make sport facility reservation test.
-     */
     @Test
     void makeSportFacilityReservationTest() {
 
         when(reservationRepository.save(reservation1)).thenReturn(reservation1);
 
         Reservation result = reservationService.makeSportFacilityReservation(reservation1);
-        assertThat(result.getId()).isEqualTo(53L);
+        assertThat(result.getId()).isEqualTo(reservationId1);
         assertThat(result.getStartingTime()).isEqualTo(LocalDateTime.of(2022, 10, 05, 16, 00));
 
         verify(reservationRepository, times(1)).save(reservation1);
 
     }
 
-    /**
-     * Gets last person that used equipment test.
-     */
     @Test
     void getLastPersonThatUsedEquipmentTest() {
         List<Reservation> reservations = new ArrayList<>();
@@ -253,9 +211,6 @@ public class ReservationServiceTest {
 
     }
 
-    /**
-     * Rest template test.
-     */
     @Test
     public void restTemplateTest() {
         RestTemplate restTemplate = reservationService.restTemplate();

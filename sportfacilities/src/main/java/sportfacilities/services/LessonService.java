@@ -7,9 +7,6 @@ import org.springframework.stereotype.Service;
 import sportfacilities.entities.Lesson;
 import sportfacilities.repositories.LessonRepository;
 
-/**
- * The type Lesson service.
- */
 @Service
 public class LessonService {
 
@@ -34,7 +31,7 @@ public class LessonService {
      */
     public Lesson getLessonById(long lessonId) {
         return lessonRepository.findById(lessonId).orElseThrow(
-            () -> new NoSuchElementException("Lesson with id " + lessonId + "does not exist!"));
+            () -> new NoSuchElementException("Lesson with id " + lessonId + " does not exist!"));
     }
 
     /**
@@ -57,8 +54,7 @@ public class LessonService {
      * @param size     the size
      */
     public void setLessonSize(long lessonId, int size) {
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(
-            () -> new NoSuchElementException("Lesson with id " + lessonId + "does not exist!"));
+        Lesson lesson = getLessonById(lessonId);
         lesson.setSize(size);
         lessonRepository.save(lesson);
     }
@@ -70,8 +66,7 @@ public class LessonService {
      * @return the lesson size
      */
     public int getLessonSize(long lessonId) {
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(
-            () -> new NoSuchElementException("Lesson with id " + lessonId + "does not exist!"));
+        Lesson lesson = getLessonById(lessonId);
         return lesson.getSize();
     }
 
@@ -82,8 +77,7 @@ public class LessonService {
      * @return the lesson starting time
      */
     public String getLessonStartingTime(long lessonId) {
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(
-            () -> new NoSuchElementException("Lesson with id " + lessonId + "does not exist!"));
+        Lesson lesson = getLessonById(lessonId);
         return lesson.getStartingTime().toString();
     }
 
@@ -93,8 +87,7 @@ public class LessonService {
      * @param lessonId the lesson id
      */
     public void deleteLesson(long lessonId) throws NoSuchElementException {
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(
-            () -> new NoSuchElementException("Lesson with id " + lessonId + "does not exist!"));
+        Lesson lesson = getLessonById(lessonId);
         lessonRepository.deleteById(lesson.getLessonId());
     }
 }

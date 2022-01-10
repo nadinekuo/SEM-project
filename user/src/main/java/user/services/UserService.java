@@ -1,5 +1,6 @@
 package user.services;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -31,20 +32,42 @@ public class UserService {
         this.adminRepository = adminRepository;
     }
 
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
     /**
      * Finds User by id.
      *
      * @param userId - long
      * @return Optional of User having this id
+     * @throws NoSuchElementException NoSuchElementException
      */
     public User getUserById(long userId) {
-        return customerRepository.findById(userId);
+        return customerRepository.findById(userId).orElseThrow(
+            () -> new NoSuchElementException("user with id " + userId + "does not exist!"));
     }
 
-    @Bean
-    @LoadBalanced
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    /**
+     * Finds Customer by userName.
+     *
+     * @param userName - String
+     * @return Optional of Customer having this name
+     */
+    public Optional<Customer> getCustomerByUsername(String userName) {
+        return customerRepository.findCustomerByUsername(userName);
+    }
+
+    /**
+     * Finds Admin by userName.
+     *
+     * @param userName - String
+     * @return Optional of Admin having this name
+     */
+    public Optional<Admin> getAdminByUsername(String userName) {
+        return adminRepository.findAdminByUsername(userName);
     }
 
     /**
@@ -66,20 +89,48 @@ public class UserService {
      */
     public void registerAdmin(UserDtoConfig data) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        adminRepository
-            .save(new Admin(data.getUsername(), passwordEncoder.encode(data.getPassword())));
+        adminRepository.save(
+            new Admin(data.getUsername(), passwordEncoder.encode(data.getPassword())));
     }
 
+    /**
+     * Upgrade a customer to premium.
+     *
+     * @param customer the customer
+     */
     public void upgradeCustomer(Customer customer) {
+        long id = customer.getId();
+        customerRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("Customer does not exist"));
+
         customer.setPremiumUser(true);
         customerRepository.save(customer);
     }
 
-    public Optional<Customer> checkCustomerExists(String username) {
-        return customerRepository.findByUsername(username);
+    /**
+     * Check if the Customer exists through the database.
+     *
+     * @param username user name
+     * @return true if customer exists, else false
+     * @throws NoSuchElementException NoSuchElementException
+     */
+    public boolean checkCustomerExists(String username) {
+        Customer customer = customerRepository.findByUsername(username).orElseThrow(
+            () -> new NoSuchElementException("User with username " + username + " does not exist"));
+        return true;
     }
 
-    public Optional<Admin> checkAdminExists(String username) {
-        return adminRepository.findByUsername(username);
+    /**
+     * Check if the admin exists through the database.
+     *
+     * @param username user name
+     * @return true if admin exists, else false
+     * @throws NoSuchElementException NoSuchElementException
+     */
+    public boolean checkAdminExists(String username) {
+        Admin admin = adminRepository.findByUsername(username).orElseThrow(
+            () -> new NoSuchElementException(
+                "Admin with username " + username + " does not exist"));
+        return true;
     }
 }
