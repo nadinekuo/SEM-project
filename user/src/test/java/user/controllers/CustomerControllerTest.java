@@ -1,8 +1,7 @@
 package user.controllers;
 
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.NoSuchElementException;
@@ -24,17 +23,16 @@ import user.services.CustomerService;
 public class CustomerControllerTest {
 
     private final transient long customerId = 1L;
-
     private final transient String userName = "emma";
-
     private final transient Customer customer = new Customer("Panagiotis", "pass", true);
-
     @Mock
     transient CustomerService customerService;
-
     @Autowired
     private transient MockMvc mockMvc;
 
+    /**
+     * Sets up the tests.
+     */
     @BeforeEach
     public void setup() {
         this.mockMvc =
@@ -51,24 +49,22 @@ public class CustomerControllerTest {
     @Test
     void getCustomerByIdThrowsExceptionTest() throws Exception {
         when(customerService.getCustomerById(customerId)).thenThrow(NoSuchElementException.class);
-        mockMvc.perform(get("/customer/{customerId}", customerId)).andExpect(status().isBadRequest())
-            .andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(get("/customer/{customerId}", customerId))
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
     }
 
     @Test
     void isUserPremiumTest() throws Exception {
         when(customerService.isCustomerPremium(customerId)).thenReturn(true);
-        mockMvc.perform(get("/customer/{customerId}/isPremiumUser", customerId)).andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(get("/customer/{customerId}/isPremiumUser", customerId))
+            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
     }
 
     @Test
     void isUserPremiumThrowsExceptionTest() throws Exception {
         when(customerService.isCustomerPremium(1L)).thenThrow(NoSuchElementException.class);
-        mockMvc.perform(get("/customer/{customerId}/isPremiumUser", customerId)).andExpect(status().isBadRequest())
-            .andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(get("/customer/{customerId}/isPremiumUser", customerId))
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
     }
-
-
 
 }

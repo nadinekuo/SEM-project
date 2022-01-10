@@ -76,6 +76,14 @@ public class GroupControllerTest {
     }
 
     @Test
+    void getGroupByIdThrowsExceptionTest() throws Exception {
+        when(groupService.getGroupById(groupId)).thenThrow(NoSuchElementException.class);
+        mockMvc.perform(get("/group/{id}/", groupId)).andExpect(status().isBadRequest())
+            .andDo(MockMvcResultHandlers.print());
+        verify(groupService).getGroupById(groupId);
+    }
+
+    @Test
     void getGroupByGroupNameTest() throws Exception {
         mockMvc.perform(get("/group/groupName/{groupName}/", "basketball"))
             .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
@@ -83,9 +91,26 @@ public class GroupControllerTest {
     }
 
     @Test
+    void getGroupByGroupNameThrowsExceptionTest() throws Exception {
+        when(groupService.getGroupByGroupName("basketball")).thenThrow(
+            NoSuchElementException.class);
+        mockMvc.perform(get("/group/groupName/{groupName}/", "basketball"))
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
+        verify(groupService).getGroupByGroupName("basketball");
+    }
+
+    @Test
     void getUsersInGroupTest() throws Exception {
         mockMvc.perform(get("/group/getCustomers/{id}/", groupId)).andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print());
+        verify(groupService).getUsersInaGroup(groupId);
+    }
+
+    @Test
+    void getUsersInGroupThrowsExceptionTest() throws Exception {
+        when(groupService.getUsersInaGroup(groupId)).thenThrow(NoSuchElementException.class);
+        mockMvc.perform(get("/group/getCustomers/{id}/", groupId))
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
         verify(groupService).getUsersInaGroup(groupId);
     }
 
@@ -107,6 +132,14 @@ public class GroupControllerTest {
     void addCustomerToGroupTest() throws Exception {
         mockMvc.perform(put("/group/addCustomer/{groupId}/{customerId}", groupId, 1L))
             .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
+        verify(groupService).addCustomerToGroup(1L, groupId);
+    }
+
+    @Test
+    void addCustomerToGroupThrowsExceptionTest() throws Exception {
+        when(groupService.addCustomerToGroup(1L, groupId)).thenThrow(NoSuchElementException.class);
+        mockMvc.perform(put("/group/addCustomer/{groupId}/{customerId}", groupId, 1L))
+            .andExpect(status().isBadRequest()).andDo(MockMvcResultHandlers.print());
         verify(groupService).addCustomerToGroup(1L, groupId);
     }
 

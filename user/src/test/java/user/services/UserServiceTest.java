@@ -3,11 +3,13 @@ package user.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,6 +66,15 @@ class UserServiceTest {
         when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
         User result = userService.getUserById(1L);
         assertEquals(result, customer);
+    }
+
+    @Test
+    void getUserByIdThrowsException() throws Exception {
+        when(customerRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            userService.getUserById(1L);
+        });
     }
 
     @Test
@@ -140,6 +151,14 @@ class UserServiceTest {
     }
 
     @Test
+    void checkCustomerExistsThrowsExceptionTest() {
+        when(customerRepository.findByUsername("erwin")).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> {
+            userService.checkCustomerExists("erwin");
+        });
+    }
+
+    @Test
     void getAdminByUsernameTest() {
         when(adminRepository.findAdminByUsername("admin")).thenReturn(Optional.of(admin));
         Optional<Admin> result = userService.getAdminByUsername("admin");
@@ -153,6 +172,14 @@ class UserServiceTest {
         boolean result = userService.checkAdminExists("admin");
         verify(adminRepository, times(1)).findByUsername("admin");
         assertTrue(result);
+    }
+
+    @Test
+    void checkAdminExistsThrowsExceptionTest() {
+        when(adminRepository.findByUsername("admin")).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> {
+            userService.checkAdminExists("admin");
+        });
     }
 
     @Test

@@ -1,6 +1,7 @@
 package user.controllers;
 
-import static java.util.Optional.*;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -14,7 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import javax.servlet.ServletInputStream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,6 +50,9 @@ public class UserControllerTest {
     @Autowired
     private transient MockMvc mockMvc;
 
+    /**
+     * Sets up the tests.
+     */
     @BeforeEach
     public void setup() {
         this.mockMvc =
@@ -146,8 +149,8 @@ public class UserControllerTest {
     @Test
     void customerRegistrationValidTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("customer", "password", true);
-        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-            .thenReturn(data);
+        when(objectMapper.readValue(any(ServletInputStream.class),
+            eq(UserDtoConfig.class))).thenReturn(data);
         when(userService.checkCustomerExists("customer")).thenThrow(NoSuchElementException.class);
         MvcResult result =
             mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isOk()).andReturn();
@@ -159,8 +162,8 @@ public class UserControllerTest {
     @Test
     void customerRegistrationNameTakenTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("customer", "password", true);
-        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-            .thenReturn(data);
+        when(objectMapper.readValue(any(ServletInputStream.class),
+            eq(UserDtoConfig.class))).thenReturn(data);
         when(userService.checkCustomerExists("customer")).thenReturn(true);
         MvcResult result =
             mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isBadRequest())
@@ -174,8 +177,8 @@ public class UserControllerTest {
     @Test
     void customerRegistrationNameNullTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig(null, "password", true);
-        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-            .thenReturn(data);
+        when(objectMapper.readValue(any(ServletInputStream.class),
+            eq(UserDtoConfig.class))).thenReturn(data);
         MvcResult result =
             mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isBadRequest())
                 .andReturn();
@@ -187,8 +190,8 @@ public class UserControllerTest {
     @Test
     void customerRegistrationPasswordNullTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("customer", null, true);
-        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-            .thenReturn(data);
+        when(objectMapper.readValue(any(ServletInputStream.class),
+            eq(UserDtoConfig.class))).thenReturn(data);
         MvcResult result =
             mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isBadRequest())
                 .andReturn();
@@ -200,8 +203,8 @@ public class UserControllerTest {
     @Test
     void customerRegistrationNameEmptyTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("", "password", true);
-        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-            .thenReturn(data);
+        when(objectMapper.readValue(any(ServletInputStream.class),
+            eq(UserDtoConfig.class))).thenReturn(data);
         MvcResult result =
             mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isBadRequest())
                 .andReturn();
@@ -213,8 +216,8 @@ public class UserControllerTest {
     @Test
     void customerRegistrationPasswordEmptyTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("customer", "", true);
-        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-            .thenReturn(data);
+        when(objectMapper.readValue(any(ServletInputStream.class),
+            eq(UserDtoConfig.class))).thenReturn(data);
         MvcResult result =
             mockMvc.perform(post("/user/registerCustomer")).andExpect(status().isBadRequest())
                 .andReturn();
@@ -226,8 +229,8 @@ public class UserControllerTest {
     @Test
     void adminRegistrationValidTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("admin", "password", true);
-        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-            .thenReturn(data);
+        when(objectMapper.readValue(any(ServletInputStream.class),
+            eq(UserDtoConfig.class))).thenReturn(data);
         when(userService.checkAdminExists("admin")).thenThrow(NoSuchElementException.class);
         MvcResult result =
             mockMvc.perform(post("/user/registerAdmin/admin")).andExpect(status().isOk())
@@ -240,8 +243,8 @@ public class UserControllerTest {
     @Test
     void adminRegistrationNameTakenTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("admin", "password", true);
-        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-            .thenReturn(data);
+        when(objectMapper.readValue(any(ServletInputStream.class),
+            eq(UserDtoConfig.class))).thenReturn(data);
         when(userService.checkAdminExists("admin")).thenReturn(true);
         MvcResult result =
             mockMvc.perform(post("/user/registerAdmin/admin")).andExpect(status().isBadRequest())
@@ -254,8 +257,8 @@ public class UserControllerTest {
     @Test
     void adminRegistrationNameNullTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig(null, "password", true);
-        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-            .thenReturn(data);
+        when(objectMapper.readValue(any(ServletInputStream.class),
+            eq(UserDtoConfig.class))).thenReturn(data);
         MvcResult result =
             mockMvc.perform(post("/user/registerAdmin/admin")).andExpect(status().isBadRequest())
                 .andReturn();
@@ -267,8 +270,8 @@ public class UserControllerTest {
     @Test
     void adminRegistrationPasswordNullTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("admin", null, true);
-        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-            .thenReturn(data);
+        when(objectMapper.readValue(any(ServletInputStream.class),
+            eq(UserDtoConfig.class))).thenReturn(data);
         MvcResult result =
             mockMvc.perform(post("/user/registerAdmin/admin")).andExpect(status().isBadRequest())
                 .andReturn();
@@ -280,8 +283,8 @@ public class UserControllerTest {
     @Test
     void adminRegistrationNameEmptyTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("", "password", true);
-        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-            .thenReturn(data);
+        when(objectMapper.readValue(any(ServletInputStream.class),
+            eq(UserDtoConfig.class))).thenReturn(data);
         MvcResult result =
             mockMvc.perform(post("/user/registerAdmin/admin")).andExpect(status().isBadRequest())
                 .andReturn();
@@ -293,8 +296,8 @@ public class UserControllerTest {
     @Test
     void adminRegistrationPasswordEmptyTest() throws Exception {
         UserDtoConfig data = new UserDtoConfig("admin", "", true);
-        when(objectMapper.readValue(any(ServletInputStream.class), eq(UserDtoConfig.class)))
-            .thenReturn(data);
+        when(objectMapper.readValue(any(ServletInputStream.class),
+            eq(UserDtoConfig.class))).thenReturn(data);
         MvcResult result =
             mockMvc.perform(post("/user/registerAdmin/admin")).andExpect(status().isBadRequest())
                 .andReturn();

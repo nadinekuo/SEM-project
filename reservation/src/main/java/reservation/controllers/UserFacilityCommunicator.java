@@ -1,6 +1,7 @@
 package reservation.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 public class UserFacilityCommunicator {
@@ -34,6 +35,24 @@ public class UserFacilityCommunicator {
         ResponseEntity<String> response = restTemplate.getForEntity(userUrl + methodSpecificUrl,
             String.class);
         return Integer.parseInt(response.getBody());
+    }
+
+    /**
+     * Gets if  exists.
+     *
+     * @param userId the user id
+     * @return if the user exists
+     * @throws HttpClientErrorException thrown if user does not exist
+     */
+    public boolean getUserExists(Long userId) throws HttpClientErrorException {
+
+        String methodSpecificUrl = "/customer/" + userId;
+
+        ResponseEntity<String> response = restTemplate.getForEntity(userUrl + methodSpecificUrl,
+            String.class);
+
+        return true;
+
     }
 
     public boolean getUserIsPremium(Long userId) {
