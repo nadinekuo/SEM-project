@@ -153,36 +153,37 @@ public class ReservationController {
                                                       @PathVariable String equipmentName,
                                                       @PathVariable String date,
                                                       @PathVariable Boolean madeByPremiumUser) {
-
-        LocalDateTime dateTime;
+        Reservation reservation;
         try {
-            dateTime = LocalDateTime.parse(date);
-        } catch (DateTimeParseException e) {
+            LocalDateTime dateTime = LocalDateTime.parse(date);
+            reservation =
+                    new Reservation(ReservationType.EQUIPMENT, equipmentName,
+                            createEquipmentId(equipmentName), userId, dateTime, madeByPremiumUser);
+            // Chain of responsibility
+            reservationChecker.checkReservation(reservation, this);
+        } catch (InvalidReservationException
+                | HttpClientErrorException | DateTimeParseException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+        reservationService.makeSportFacilityReservation(reservation);
+        return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
+    }
 
+
+    /**
+     * Creates equipment Id.
+     *
+     * @param equipmentName equipment name
+     * @return Long equipmentId
+     */
+    public Long createEquipmentId(String equipmentName) {
         Long equipmentId;
         try {
             equipmentId = sportFacilityCommunicator.getFirstAvailableEquipmentId(equipmentName);
         } catch (HttpClientErrorException e) {
             equipmentId = -1L;
         }
-
-        Reservation reservation =
-            new Reservation(ReservationType.EQUIPMENT, equipmentName, userId, equipmentId, dateTime,
-                madeByPremiumUser);
-
-        // Chain of responsibility:
-        // If any condition to be checked is violated by this reservation, the respective
-        // validator will throw an InvalidReservationException with appropriate message
-        try {
-            reservationChecker.checkReservation(reservation, this);
-        } catch (InvalidReservationException | HttpClientErrorException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        reservationService.makeSportFacilityReservation(reservation);
-        return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
-
+        return equipmentId;
     }
 
     /**
@@ -197,7 +198,7 @@ public class ReservationController {
     public ResponseEntity<?> makeLessonReservation(@PathVariable Long userId,
                                                    @PathVariable Long lessonId) {
 
-        try{
+        try {
             String lessonName = sportFacilityCommunicator.getLessonName(lessonId);
 
             LocalDateTime lessonBeginning = sportFacilityCommunicator.getLessonBeginning(lessonId);
@@ -209,7 +210,7 @@ public class ReservationController {
             reservationService.makeSportFacilityReservation(reservation);
 
             return new ResponseEntity<>("Lesson booking was successful!", HttpStatus.OK);
-        } catch (HttpClientErrorException e){
+        } catch (HttpClientErrorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
