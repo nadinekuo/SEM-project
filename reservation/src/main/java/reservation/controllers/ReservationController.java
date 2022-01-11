@@ -111,25 +111,16 @@ public class ReservationController {
                                                       @PathVariable String date,
                                                       @PathVariable Boolean madeByPremiumUser) {
         try {
-
             // Can throw DateTimeParseException if the date is wrongly formatted
             LocalDateTime dateTime = LocalDateTime.parse(date);
-
-            String methodSpecificUrl = "/getSportRoomServices/" + sportRoomId + "/getName";
-
-            // Can throw HttpClientException if status is not OK
-            ResponseEntity<String> response = restTemplate.getForEntity(
-                sportFacilityCommunicator.getSportFacilityUrl() + methodSpecificUrl, String.class);
-            String sportRoomName = response.getBody();
+            String sportRoomName = getSportRoomName(sportRoomId);
 
             // Create reservation object, to be passed through chain of responsibility
             Reservation reservation =
                 new Reservation(ReservationType.SPORTS_ROOM, sportRoomName, userId, sportRoomId,
-                    dateTime, groupId, madeByPremiumUser);
+                       dateTime, groupId, madeByPremiumUser);
 
             // Chain of responsibility:
-            // If any condition to be checked is violated by this reservation, the respective
-            // validator will throw an InvalidReservationException with appropriate message
             reservationChecker.checkReservation(reservation, this);
             reservationService.makeSportFacilityReservation(reservation);
             return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
@@ -137,6 +128,23 @@ public class ReservationController {
             | HttpClientErrorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * Get sport room name.
+     *
+     * @param sportRoomId sport room id
+     * @return String sport room name
+     */
+    public String getSportRoomName(Long sportRoomId) {
+        String methodSpecificUrl = "/getSportRoomServices/" + sportRoomId + "/getName";
+
+        // Can throw HttpClientException if status is not OK
+        ResponseEntity<String> response = restTemplate.getForEntity(
+                sportFacilityCommunicator.getSportFacilityUrl() + methodSpecificUrl, String.class);
+        String sportRoomName = response.getBody();
+
+        return sportRoomName;
     }
 
     /**
@@ -153,20 +161,19 @@ public class ReservationController {
                                                       @PathVariable String equipmentName,
                                                       @PathVariable String date,
                                                       @PathVariable Boolean madeByPremiumUser) {
-        Reservation reservation;
         try {
             LocalDateTime dateTime = LocalDateTime.parse(date);
-            reservation =
+            Reservation reservation =
                     new Reservation(ReservationType.EQUIPMENT, equipmentName,
                             createEquipmentId(equipmentName), userId, dateTime, madeByPremiumUser);
             // Chain of responsibility
             reservationChecker.checkReservation(reservation, this);
+            reservationService.makeSportFacilityReservation(reservation);
+            return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
         } catch (InvalidReservationException
                 | HttpClientErrorException | DateTimeParseException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        reservationService.makeSportFacilityReservation(reservation);
-        return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
     }
 
 

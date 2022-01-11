@@ -46,9 +46,9 @@ public class UserReservationBalanceValidator extends BaseValidator {
         int reservationBalanceOnDate = reservationService
             .getUserReservationCountOnDay(startDay, endDay, reservation.getCustomerId());
 
-        try{
+        try {
             userFacilityCommunicator.getUserExists(reservation.getCustomerId());
-        } catch (HttpClientErrorException e){
+        } catch (HttpClientErrorException e) {
             throw new InvalidReservationException(
                 "user with id " + reservation.getCustomerId() + " does not exist");
         }

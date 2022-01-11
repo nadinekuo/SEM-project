@@ -175,6 +175,13 @@ public class SportFacilityCommunicator {
         return Integer.parseInt(response.getBody());
     }
 
+    /**
+     * Get the lesson name.
+     *
+     * @param lessonId lesson id
+     * @return String lesson name
+     * @throws HttpClientErrorException HttpClientErrorException
+     */
     public String getLessonName(long lessonId) throws HttpClientErrorException {
 
         String methodSpecificUrl = "/lesson/" + lessonId + "/getName";
@@ -185,6 +192,12 @@ public class SportFacilityCommunicator {
         return response.getBody();
     }
 
+    /**
+     * Get beginning of the lesson.
+     *
+     * @param lessonId lesson id
+     * @return the time of beginning of the lesson
+     */
     public LocalDateTime getLessonBeginning(Long lessonId) {
         String methodSpecificUrl = "/lesson/" + lessonId + "/getStartingTime";
 
