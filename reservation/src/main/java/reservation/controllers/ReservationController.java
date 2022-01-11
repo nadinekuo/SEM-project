@@ -3,6 +3,8 @@ package reservation.controllers;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.NoSuchElementException;
+
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -153,25 +155,16 @@ public class ReservationController {
                                                       @PathVariable String equipmentName,
                                                       @PathVariable String date,
                                                       @PathVariable Boolean madeByPremiumUser) {
-
         LocalDateTime dateTime;
         try {
-            dateTime = LocalDateTime.parse(date);
+            dateTime = checkDate(date);
         } catch (DateTimeParseException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        Long equipmentId;
-        try {
-            equipmentId = sportFacilityCommunicator.getFirstAvailableEquipmentId(equipmentName);
-        } catch (HttpClientErrorException e) {
-            equipmentId = -1L;
-        }
-
         Reservation reservation =
-            new Reservation(ReservationType.EQUIPMENT, equipmentName, userId, equipmentId, dateTime,
-                madeByPremiumUser);
-
+                new Reservation(ReservationType.EQUIPMENT, equipmentName, createId(equipmentName),
+                        userId, dateTime, madeByPremiumUser);
         // Chain of responsibility:
         // If any condition to be checked is violated by this reservation, the respective
         // validator will throw an InvalidReservationException with appropriate message
@@ -183,6 +176,29 @@ public class ReservationController {
         reservationService.makeSportFacilityReservation(reservation);
         return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
 
+    }
+
+    public LocalDateTime checkDate(String date) {
+        LocalDateTime dateTime;
+        try {
+            dateTime = LocalDateTime.parse(date);
+        } catch (DateTimeParseException exception) {
+            throw exception;
+        }
+
+        return dateTime;
+
+    }
+
+    public Long createId(String equipmentName) {
+        Long equipmentId;
+        try {
+            equipmentId = sportFacilityCommunicator.getFirstAvailableEquipmentId(equipmentName);
+        } catch (HttpClientErrorException e) {
+            equipmentId = -1L;
+        }
+
+        return equipmentId;
     }
 
     /**
