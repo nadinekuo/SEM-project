@@ -157,7 +157,7 @@ public class ReservationController {
                                                       @PathVariable Boolean madeByPremiumUser) {
         Reservation reservation;
         try {
-             LocalDateTime dateTime = LocalDateTime.parse(date);
+            LocalDateTime dateTime = LocalDateTime.parse(date);
             reservation =
                     new Reservation(ReservationType.EQUIPMENT, equipmentName, createId(equipmentName),
                             userId, dateTime, madeByPremiumUser);
