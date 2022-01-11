@@ -3,8 +3,6 @@ package reservation.controllers;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.NoSuchElementException;
-
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -159,11 +157,12 @@ public class ReservationController {
         try {
             LocalDateTime dateTime = LocalDateTime.parse(date);
             reservation =
-                    new Reservation(ReservationType.EQUIPMENT, equipmentName, createId(equipmentName),
-                            userId, dateTime, madeByPremiumUser);
+                    new Reservation(ReservationType.EQUIPMENT, equipmentName,
+                            createId(equipmentName), userId, dateTime, madeByPremiumUser);
             // Chain of responsibility
             reservationChecker.checkReservation(reservation, this);
-        } catch (InvalidReservationException | HttpClientErrorException | DateTimeParseException e) {
+        } catch (InvalidReservationException
+                | HttpClientErrorException | DateTimeParseException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         reservationService.makeSportFacilityReservation(reservation);
@@ -199,7 +198,7 @@ public class ReservationController {
     public ResponseEntity<?> makeLessonReservation(@PathVariable Long userId,
                                                    @PathVariable Long lessonId) {
 
-        try{
+        try {
             String lessonName = sportFacilityCommunicator.getLessonName(lessonId);
 
             LocalDateTime lessonBeginning = sportFacilityCommunicator.getLessonBeginning(lessonId);
@@ -211,7 +210,7 @@ public class ReservationController {
             reservationService.makeSportFacilityReservation(reservation);
 
             return new ResponseEntity<>("Lesson booking was successful!", HttpStatus.OK);
-        } catch (HttpClientErrorException e){
+        } catch (HttpClientErrorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
