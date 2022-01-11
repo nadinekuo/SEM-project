@@ -158,7 +158,7 @@ public class ReservationController {
             LocalDateTime dateTime = LocalDateTime.parse(date);
             reservation =
                     new Reservation(ReservationType.EQUIPMENT, equipmentName,
-                            createId(equipmentName), userId, dateTime, madeByPremiumUser);
+                            createEquipmentId(equipmentName), userId, dateTime, madeByPremiumUser);
             // Chain of responsibility
             reservationChecker.checkReservation(reservation, this);
         } catch (InvalidReservationException
@@ -176,7 +176,7 @@ public class ReservationController {
      * @param equipmentName equipment name
      * @return Long equipmentId
      */
-    public Long createId(String equipmentName) {
+    public Long createEquipmentId(String equipmentName) {
         Long equipmentId;
         try {
             equipmentId = sportFacilityCommunicator.getFirstAvailableEquipmentId(equipmentName);
