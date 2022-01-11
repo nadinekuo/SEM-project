@@ -171,6 +171,12 @@ public class ReservationController {
     }
 
 
+    /**
+     * Creates equipment Id.
+     *
+     * @param equipmentName equipment name
+     * @return Long equipmentId
+     */
     public Long createId(String equipmentName) {
         Long equipmentId;
         try {
