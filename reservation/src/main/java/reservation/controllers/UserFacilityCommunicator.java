@@ -55,6 +55,12 @@ public class UserFacilityCommunicator {
 
     }
 
+    /**
+     * Get boolean whether user is premium.
+     *
+     * @param userId user id
+     * @return boolean userIsPremium
+     */
     public boolean getUserIsPremium(Long userId) {
 
         String methodSpecificUrl = "/customer/" + userId + "/isPremiumUser";

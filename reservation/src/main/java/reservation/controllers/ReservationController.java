@@ -111,32 +111,64 @@ public class ReservationController {
                                                       @PathVariable String date,
                                                       @PathVariable Boolean madeByPremiumUser) {
         try {
-
             // Can throw DateTimeParseException if the date is wrongly formatted
             LocalDateTime dateTime = LocalDateTime.parse(date);
+            String sportRoomName = getSportRoomName(sportRoomId);
 
-            String methodSpecificUrl = "/getSportRoomServices/" + sportRoomId + "/getName";
-
-            // Can throw HttpClientException if status is not OK
-            ResponseEntity<String> response = restTemplate.getForEntity(
-                sportFacilityCommunicator.getSportFacilityUrl() + methodSpecificUrl, String.class);
-            String sportRoomName = response.getBody();
-
-            // Create reservation object, to be passed through chain of responsibility
-            Reservation reservation =
-                new Reservation(ReservationType.SPORTS_ROOM, sportRoomName, userId, sportRoomId,
-                    dateTime, groupId, madeByPremiumUser);
-
-            // Chain of responsibility:
-            // If any condition to be checked is violated by this reservation, the respective
-            // validator will throw an InvalidReservationException with appropriate message
-            reservationChecker.checkReservation(reservation, this);
-            reservationService.makeSportFacilityReservation(reservation);
+            createAndCheckReservation(sportRoomName, userId,
+                    sportRoomId, dateTime, groupId, madeByPremiumUser);
             return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
         } catch (InvalidReservationException | DateTimeParseException
-            | HttpClientErrorException e) {
+                | HttpClientErrorException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * Create and check the reservation.
+     *
+     * @param sportRoomName sport room name
+     * @param userId user id
+     * @param sportRoomId sport room id
+     * @param dateTime date and time
+     * @param groupId group id
+     * @param madeByPremiumUser boolean premium or not
+     * @return Reservation
+     * @throws InvalidReservationException e
+     */
+    public Reservation createAndCheckReservation(String sportRoomName, Long userId,
+                                                 Long sportRoomId, LocalDateTime dateTime,
+                                                 Long groupId, boolean madeByPremiumUser)
+            throws InvalidReservationException {
+        // Create reservation object, to be passed through chain of responsibility
+        Reservation reservation =
+                new Reservation(ReservationType.SPORTS_ROOM, sportRoomName, userId, sportRoomId,
+                        dateTime, groupId, madeByPremiumUser);
+        try {
+            // Chain of responsibility:
+            reservationChecker.checkReservation(reservation, this);
+            reservationService.makeSportFacilityReservation(reservation);
+            return reservation;
+        } catch (InvalidReservationException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Get sport room name.
+     *
+     * @param sportRoomId sport room id
+     * @return String sport room name
+     */
+    public String getSportRoomName(Long sportRoomId) {
+        String methodSpecificUrl = "/getSportRoomServices/" + sportRoomId + "/getName";
+
+        // Can throw HttpClientException if status is not OK
+        ResponseEntity<String> response = restTemplate.getForEntity(
+                sportFacilityCommunicator.getSportFacilityUrl() + methodSpecificUrl, String.class);
+        String sportRoomName = response.getBody();
+
+        return sportRoomName;
     }
 
     /**
@@ -155,17 +187,17 @@ public class ReservationController {
                                                       @PathVariable Boolean madeByPremiumUser) {
         try {
             LocalDateTime dateTime = LocalDateTime.parse(date);
-             Reservation reservation =
+            Reservation reservation =
                     new Reservation(ReservationType.EQUIPMENT, equipmentName,
                             createEquipmentId(equipmentName), userId, dateTime, madeByPremiumUser);
             // Chain of responsibility
             reservationChecker.checkReservation(reservation, this);
             reservationService.makeSportFacilityReservation(reservation);
+            return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
         } catch (InvalidReservationException
                 | HttpClientErrorException | DateTimeParseException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
     }
 
 
