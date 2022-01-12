@@ -56,7 +56,7 @@ public class UserFacilityCommunicator {
     }
 
     /**
-     * Get boolean whether user is premium
+     * Get boolean whether user is premium.
      *
      * @param userId user id
      * @return boolean userIsPremium

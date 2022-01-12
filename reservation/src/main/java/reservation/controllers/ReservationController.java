@@ -115,18 +115,42 @@ public class ReservationController {
             LocalDateTime dateTime = LocalDateTime.parse(date);
             String sportRoomName = getSportRoomName(sportRoomId);
 
-            // Create reservation object, to be passed through chain of responsibility
-            Reservation reservation =
-                new Reservation(ReservationType.SPORTS_ROOM, sportRoomName, userId, sportRoomId,
-                       dateTime, groupId, madeByPremiumUser);
+            createAndCheckReservation(sportRoomName, userId,
+                    sportRoomId, dateTime, groupId, madeByPremiumUser);
+            return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
+        } catch (InvalidReservationException | DateTimeParseException
+                | HttpClientErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
+    /**
+     * Create and check the reservation.
+     *
+     * @param sportRoomName sport room name
+     * @param userId user id
+     * @param sportRoomId sport room id
+     * @param dateTime date and time
+     * @param groupId group id
+     * @param madeByPremiumUser boolean premium or not
+     * @return Reservation
+     * @throws InvalidReservationException e
+     */
+    public Reservation createAndCheckReservation(String sportRoomName, Long userId,
+                                                 Long sportRoomId, LocalDateTime dateTime,
+                                                 Long groupId, boolean madeByPremiumUser)
+            throws InvalidReservationException {
+        // Create reservation object, to be passed through chain of responsibility
+        Reservation reservation =
+                new Reservation(ReservationType.SPORTS_ROOM, sportRoomName, userId, sportRoomId,
+                        dateTime, groupId, madeByPremiumUser);
+        try {
             // Chain of responsibility:
             reservationChecker.checkReservation(reservation, this);
             reservationService.makeSportFacilityReservation(reservation);
-            return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
-        } catch (InvalidReservationException | DateTimeParseException
-            | HttpClientErrorException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return reservation;
+        } catch (InvalidReservationException e) {
+            throw e;
         }
     }
 
