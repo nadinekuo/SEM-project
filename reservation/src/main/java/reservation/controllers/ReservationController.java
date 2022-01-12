@@ -153,19 +153,18 @@ public class ReservationController {
                                                       @PathVariable String equipmentName,
                                                       @PathVariable String date,
                                                       @PathVariable Boolean madeByPremiumUser) {
-        Reservation reservation;
         try {
             LocalDateTime dateTime = LocalDateTime.parse(date);
-            reservation =
+             Reservation reservation =
                     new Reservation(ReservationType.EQUIPMENT, equipmentName,
                             createEquipmentId(equipmentName), userId, dateTime, madeByPremiumUser);
             // Chain of responsibility
             reservationChecker.checkReservation(reservation, this);
+            reservationService.makeSportFacilityReservation(reservation);
         } catch (InvalidReservationException
                 | HttpClientErrorException | DateTimeParseException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        reservationService.makeSportFacilityReservation(reservation);
         return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
     }
 
