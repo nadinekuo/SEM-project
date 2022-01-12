@@ -115,7 +115,7 @@ public class ReservationController {
             LocalDateTime dateTime = LocalDateTime.parse(date);
             String sportRoomName = getSportRoomName(sportRoomId);
 
-            createAndCheckReservation(sportRoomName, userId,
+            createAndCheckSportRoomReservation(sportRoomName, userId,
                     sportRoomId, dateTime, groupId, madeByPremiumUser);
             return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
         } catch (InvalidReservationException | DateTimeParseException
@@ -125,7 +125,7 @@ public class ReservationController {
     }
 
     /**
-     * Create and check the reservation.
+     * Create and check the sport room reservation.
      *
      * @param sportRoomName sport room name
      * @param userId user id
@@ -136,7 +136,7 @@ public class ReservationController {
      * @return Reservation
      * @throws InvalidReservationException e
      */
-    public Reservation createAndCheckReservation(String sportRoomName, Long userId,
+    public Reservation createAndCheckSportRoomReservation(String sportRoomName, Long userId,
                                                  Long sportRoomId, LocalDateTime dateTime,
                                                  Long groupId, boolean madeByPremiumUser)
             throws InvalidReservationException {
@@ -187,16 +187,37 @@ public class ReservationController {
                                                       @PathVariable Boolean madeByPremiumUser) {
         try {
             LocalDateTime dateTime = LocalDateTime.parse(date);
+            createAndCheckEquipmentReservation(equipmentName, userId, dateTime, madeByPremiumUser);
+            return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
+        } catch (InvalidReservationException
+                | HttpClientErrorException | DateTimeParseException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Create and check the equipment reservation.
+     *
+     * @param equipmentName equipment name
+     * @param userId user id
+     * @param dateTime date and time
+     * @param madeByPremiumUser boolean premium or not
+     * @return Reservation
+     * @throws InvalidReservationException e
+     */
+    public Reservation createAndCheckEquipmentReservation(String equipmentName, Long userId,
+                                                          LocalDateTime dateTime, boolean madeByPremiumUser)
+            throws InvalidReservationException {
+        try {
             Reservation reservation =
                     new Reservation(ReservationType.EQUIPMENT, equipmentName,
                             createEquipmentId(equipmentName), userId, dateTime, madeByPremiumUser);
             // Chain of responsibility
             reservationChecker.checkReservation(reservation, this);
             reservationService.makeSportFacilityReservation(reservation);
-            return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
-        } catch (InvalidReservationException
-                | HttpClientErrorException | DateTimeParseException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return reservation;
+        } catch (InvalidReservationException e) {
+            throw e;
         }
     }
 
