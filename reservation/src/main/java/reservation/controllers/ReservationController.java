@@ -113,9 +113,7 @@ public class ReservationController {
         try {
             // Can throw DateTimeParseException if the date is wrongly formatted
             LocalDateTime dateTime = LocalDateTime.parse(date);
-            String sportRoomName = getSportRoomName(sportRoomId);
-
-            createAndCheckSportRoomReservation(sportRoomName, userId,
+            createAndCheckSportRoomReservation(getSportRoomName(sportRoomId), userId,
                     sportRoomId, dateTime, groupId, madeByPremiumUser);
             return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
         } catch (InvalidReservationException | DateTimeParseException
