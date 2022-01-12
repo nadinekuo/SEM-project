@@ -125,7 +125,7 @@ public class ReservationController {
     }
 
     /**
-     * Create and check the reservation.
+     * Create and check the sport room reservation.
      *
      * @param sportRoomName sport room name
      * @param userId user id
@@ -195,6 +195,16 @@ public class ReservationController {
         }
     }
 
+    /**
+     * Create and check the equipment reservation.
+     *
+     * @param equipmentName equipment name
+     * @param userId user id
+     * @param dateTime date and time
+     * @param madeByPremiumUser boolean premium or not
+     * @return Reservation
+     * @throws InvalidReservationException e
+     */
     public Reservation createAndCheckEquipmentReservation(String equipmentName, Long userId,
                                                           LocalDateTime dateTime, boolean madeByPremiumUser)
             throws InvalidReservationException {
