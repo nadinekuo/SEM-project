@@ -209,7 +209,7 @@ public class ReservationController {
         try {
             Reservation reservation =
                     new Reservation(ReservationType.EQUIPMENT, equipmentName,
-                            createEquipmentId(equipmentName), userId, dateTime, madeByPremiumUser);
+                            getAvailableEquipmentId(equipmentName), userId, dateTime, madeByPremiumUser);
             // Chain of responsibility
             reservationChecker.checkReservation(reservation, this);
             reservationService.makeSportFacilityReservation(reservation);
@@ -226,7 +226,7 @@ public class ReservationController {
      * @param equipmentName equipment name
      * @return Long equipmentId
      */
-    public Long createEquipmentId(String equipmentName) {
+    public Long getAvailableEquipmentId(String equipmentName) {
         Long equipmentId;
         try {
             equipmentId = sportFacilityCommunicator.getFirstAvailableEquipmentId(equipmentName);
