@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.web.client.HttpClientErrorException;
@@ -25,15 +24,14 @@ import reservation.services.ReservationService;
 @RunWith(MockitoJUnitRunner.class)
 public class UserReservationBalanceValidatorTest {
 
-    LocalDateTime startDay;
-    LocalDateTime endDay;
     private final transient Reservation reservation1;
     private final transient ReservationController reservationController;
     private final transient ReservationService reservationService;
     private final transient UserFacilityCommunicator userFacilityCommunicator;
     // Class under test:
     private final transient UserReservationBalanceValidator userReservationBalanceValidator;
-
+    LocalDateTime startDay;
+    LocalDateTime endDay;
 
     /**
      * Constructor for this test suite.
@@ -42,6 +40,8 @@ public class UserReservationBalanceValidatorTest {
         userFacilityCommunicator = mock(UserFacilityCommunicator.class);
         reservationService = mock(ReservationService.class);
         reservationController = mock(ReservationController.class);
+        when(reservationController.getUserFacilityCommunicator())
+            .thenReturn(userFacilityCommunicator);
         this.userReservationBalanceValidator =
             new UserReservationBalanceValidator(reservationService, reservationController);
 
@@ -49,10 +49,10 @@ public class UserReservationBalanceValidatorTest {
             LocalDateTime.of(2022, 10, 05, 16, 00), false);
         reservation1.setId(53L);
 
-        startDay = LocalDateTime.parse(
-            reservation1.getStartingTime().toString().substring(0, 10) + "T00:00:00");
-        endDay = LocalDateTime.parse(
-            reservation1.getStartingTime().toString().substring(0, 10) + "T23:59:59");
+        startDay = LocalDateTime
+            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T00:00:00");
+        endDay = LocalDateTime
+            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T23:59:59");
     }
 
     /**

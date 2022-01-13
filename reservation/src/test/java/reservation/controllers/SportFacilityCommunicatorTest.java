@@ -16,14 +16,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
 import reservation.entities.Reservation;
 import reservation.entities.ReservationType;
-import reservation.entities.chainofresponsibility.ReservationChecker;
 import reservation.services.ReservationService;
 
 @ExtendWith(MockitoExtension.class)
@@ -143,9 +140,8 @@ public class SportFacilityCommunicatorTest {
 
     @Test
     public void getLessonBeginningTest() {
-        Mockito.when(restTemplate.getForEntity(anyString(), any()))
-            .thenReturn(ResponseEntity.of(Optional.of(String.valueOf(LocalDateTime.of(2022, 01, 01, 15,
-                00)))));
+        Mockito.when(restTemplate.getForEntity(anyString(), any())).thenReturn(
+            ResponseEntity.of(Optional.of(String.valueOf(LocalDateTime.of(2022, 01, 01, 15, 00)))));
         assertEquals(LocalDateTime.of(2022, 01, 01, 15, 00),
             sportFacilityCommunicator.getLessonBeginning(1L));
     }
