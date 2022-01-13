@@ -113,8 +113,8 @@ public class ReservationController {
         try {
             // Can throw DateTimeParseException if the date is wrongly formatted
             LocalDateTime dateTime = LocalDateTime.parse(date);
-            createAndCheckSportRoomReservation(getSportRoomName(sportRoomId), userId, sportRoomId,
-                dateTime, groupId, madeByPremiumUser);
+            createAndCheckSportRoomReservation(getSportRoomName(sportRoomId), userId,
+                    sportRoomId, dateTime, groupId, madeByPremiumUser);
             return new ResponseEntity<>("Reservation successful!", HttpStatus.OK);
         } catch (InvalidReservationException
             | DateTimeParseException | HttpClientErrorException e) {
@@ -209,8 +209,10 @@ public class ReservationController {
                                                           boolean madeByPremiumUser)
         throws InvalidReservationException {
         try {
-            Reservation reservation = new Reservation(ReservationType.EQUIPMENT, equipmentName,
-                createEquipmentId(equipmentName), userId, dateTime, madeByPremiumUser);
+            Reservation reservation =
+                    new Reservation(ReservationType.EQUIPMENT, equipmentName,
+                            getAvailableEquipmentId(equipmentName),
+                        userId, dateTime, madeByPremiumUser);
             // Chain of responsibility
             reservationChecker.checkReservation(reservation, this);
             reservationService.makeSportFacilityReservation(reservation);
@@ -220,13 +222,14 @@ public class ReservationController {
         }
     }
 
+
     /**
      * Creates equipment Id.
      *
      * @param equipmentName equipment name
      * @return Long equipmentId
      */
-    public Long createEquipmentId(String equipmentName) {
+    public Long getAvailableEquipmentId(String equipmentName) {
         Long equipmentId;
         try {
             equipmentId = sportFacilityCommunicator.getFirstAvailableEquipmentId(equipmentName);

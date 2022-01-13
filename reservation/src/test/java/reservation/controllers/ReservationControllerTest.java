@@ -278,7 +278,8 @@ public class ReservationControllerTest {
     //        when(sportFacilityCommunicator.getLessonName(anyLong()))
     //            .thenThrow(HttpClientErrorException.class);
     //        mockMvc
-    //            .perform(post("/reservation/{userId}/{lessonId}/makeLessonBooking", userId, lessonId))
+    //            .perform(post("/reservation/{userId}/{lessonId}/makeLessonBooking",
+    //            userId, lessonId))
     //            .andExpect(status().isBadRequest()).andReturn();
     //    }
     //
@@ -289,7 +290,8 @@ public class ReservationControllerTest {
     //        when(userFacilityCommunicator.getUserIsPremium(anyLong()))
     //            .thenThrow(HttpClientErrorException.class);
     //        mockMvc
-    //            .perform(post("/reservation/{userId}/{lessonId}/makeLessonBooking", userId, lessonId))
+    //            .perform(post("/reservation/{userId}/{lessonId}/makeLessonBooking",
+    //            userId, lessonId))
     //            .andExpect(status().isBadRequest()).andReturn();
     //    }
     //
@@ -301,7 +303,8 @@ public class ReservationControllerTest {
     //        when(userFacilityCommunicator.getUserIsPremium(anyLong())).thenReturn(true);
     //
     //        mockMvc
-    //            .perform(post("/reservation/{userId}/{lessonId}/makeLessonBooking", userId, lessonId))
+    //            .perform(post("/reservation/{userId}/{lessonId}/makeLessonBooking",
+    //            userId, lessonId))
     //            .andExpect(status().isOk()).andReturn();
     //
     //    }
