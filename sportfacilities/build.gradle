@@ -1,16 +1,1 @@
-plugins {
-    id 'jacoco'
-}
-
-group = 'sem.sportfacilities'
-
-test {
-    finalizedBy jacocoTestReport
-}
-jacocoTestReport {
-    dependsOn test
-}
-
-jacoco {
-    toolVersion = "0.8.7"
-}
+mainClassName = 'nl.tudelft.sem.sportFacilities.SportFacilitiesApplication'

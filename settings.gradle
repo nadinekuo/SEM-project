@@ -1,4 +1,4 @@
-rootProject.name = 'template'
+rootProject.name = 'sem'
 include 'eureka-service'
 include 'gateway'
 include 'user'

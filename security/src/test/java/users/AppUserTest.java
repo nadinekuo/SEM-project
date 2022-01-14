@@ -5,9 +5,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import nl.tudelft.sem.security.users.AppUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import security.users.AppUser;
 
 public class AppUserTest {
 
@@ -17,7 +17,7 @@ public class AppUserTest {
     AppUser appUser;
 
     /**
-     * Sets up the tests
+     * Sets up the tests.
      */
     @BeforeEach
     void setup() {

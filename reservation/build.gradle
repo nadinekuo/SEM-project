@@ -1,16 +1,2 @@
-plugins {
-    id 'jacoco'
-}
+mainClassName = 'nl.tudelft.sem.reservation.ReservationApplication'
 
-group = 'sem.reservation'
-
-test {
-    finalizedBy jacocoTestReport
-}
-jacocoTestReport {
-    dependsOn test
-}
-
-jacoco {
-    toolVersion = "0.8.7"
-}
