@@ -10,6 +10,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.NoSuchElementException;
+import nl.tudelft.sem.sportfacilities.entities.Equipment;
+import nl.tudelft.sem.sportfacilities.entities.Sport;
+import nl.tudelft.sem.sportfacilities.services.EquipmentService;
+import nl.tudelft.sem.sportfacilities.services.SportService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,10 +26,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import nl.tudelft.sem.sportfacilities.entities.Equipment;
-import nl.tudelft.sem.sportfacilities.entities.Sport;
-import nl.tudelft.sem.sportfacilities.services.EquipmentService;
-import nl.tudelft.sem.sportfacilities.services.SportService;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc

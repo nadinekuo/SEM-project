@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import nl.tudelft.sem.user.entities.Customer;
+import nl.tudelft.sem.user.entities.Group;
 import nl.tudelft.sem.user.services.GroupService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,8 +28,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
-import nl.tudelft.sem.user.entities.Customer;
-import nl.tudelft.sem.user.entities.Group;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc

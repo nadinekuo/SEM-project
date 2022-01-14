@@ -4,12 +4,12 @@ import java.util.List;
 import nl.tudelft.sem.user.entities.Admin;
 import nl.tudelft.sem.user.entities.Customer;
 import nl.tudelft.sem.user.entities.Group;
+import nl.tudelft.sem.user.repositories.GroupRepository;
+import nl.tudelft.sem.user.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import nl.tudelft.sem.user.repositories.GroupRepository;
-import nl.tudelft.sem.user.repositories.UserRepository;
 
 @Configuration
 public class UserGroupsConfig {

@@ -3,14 +3,14 @@ package nl.tudelft.sem.sportfacilities.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import nl.tudelft.sem.sportfacilities.entities.Sport;
+import nl.tudelft.sem.sportfacilities.entities.SportRoom;
 import nl.tudelft.sem.sportfacilities.repositories.SportRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import nl.tudelft.sem.sportfacilities.entities.Sport;
-import nl.tudelft.sem.sportfacilities.entities.SportRoom;
 
 @Service
 public class SportRoomService {

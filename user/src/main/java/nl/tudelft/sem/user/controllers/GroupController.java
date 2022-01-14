@@ -2,6 +2,9 @@ package nl.tudelft.sem.user.controllers;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import nl.tudelft.sem.user.entities.Customer;
+import nl.tudelft.sem.user.entities.Group;
+import nl.tudelft.sem.user.services.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -15,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import nl.tudelft.sem.user.entities.Customer;
-import nl.tudelft.sem.user.entities.Group;
-import nl.tudelft.sem.user.services.GroupService;
 
 @RestController
 @RequestMapping("group")

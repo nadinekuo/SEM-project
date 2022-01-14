@@ -2,9 +2,9 @@ package nl.tudelft.sem.user.services;
 
 import java.util.NoSuchElementException;
 import nl.tudelft.sem.user.entities.Customer;
+import nl.tudelft.sem.user.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import nl.tudelft.sem.user.repositories.CustomerRepository;
 
 @Service
 public class CustomerService {
@@ -32,10 +32,9 @@ public class CustomerService {
             "Customer with id " + customerId + " does not exist!"));
     }
 
-    public Boolean isCustomerPremium(long customerId){
+    public Boolean isCustomerPremium(long customerId) {
         return getCustomerById(customerId).isPremiumUser();
     }
-
 
     /**
      * The Customer is persisted into the database using customerRepository.

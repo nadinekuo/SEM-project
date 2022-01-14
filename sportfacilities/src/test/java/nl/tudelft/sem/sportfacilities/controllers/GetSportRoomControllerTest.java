@@ -8,6 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import nl.tudelft.sem.sportfacilities.entities.Sport;
+import nl.tudelft.sem.sportfacilities.entities.SportRoom;
+import nl.tudelft.sem.sportfacilities.services.SportRoomService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,9 +22,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import nl.tudelft.sem.sportfacilities.entities.Sport;
-import nl.tudelft.sem.sportfacilities.entities.SportRoom;
-import nl.tudelft.sem.sportfacilities.services.SportRoomService;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -57,8 +57,7 @@ class GetSportRoomControllerTest {
     @Test
     public void getSportRoomTest() throws Exception {
         mockMvc.perform(get("/getSportRoomServices/{sportRoomId}", sportRoomId))
-            .andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
         verify(sportRoomService).getSportRoom(sportRoomId);
     }
 

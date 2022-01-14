@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import nl.tudelft.sem.user.entities.Customer;
+import nl.tudelft.sem.user.entities.Group;
+import nl.tudelft.sem.user.repositories.GroupRepository;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,9 +21,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
-import nl.tudelft.sem.user.entities.Customer;
-import nl.tudelft.sem.user.entities.Group;
-import nl.tudelft.sem.user.repositories.GroupRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class GroupServiceTest {

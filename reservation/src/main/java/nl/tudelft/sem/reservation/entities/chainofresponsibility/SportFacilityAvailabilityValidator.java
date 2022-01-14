@@ -1,13 +1,13 @@
 package nl.tudelft.sem.reservation.entities.chainofresponsibility;
 
 import java.time.LocalDateTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import nl.tudelft.sem.reservation.controllers.ReservationController;
 import nl.tudelft.sem.reservation.controllers.SportFacilityCommunicator;
 import nl.tudelft.sem.reservation.entities.Reservation;
 import nl.tudelft.sem.reservation.entities.ReservationType;
 import nl.tudelft.sem.reservation.services.ReservationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class SportFacilityAvailabilityValidator extends BaseValidator {
@@ -31,8 +31,7 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
                                               ReservationController reservationController) {
         this.reservationService = reservationService;
         this.reservationController = reservationController;
-        this.sportFacilityCommunicator = this.reservationController
-         .getSportFacilityCommunicator();
+        this.sportFacilityCommunicator = this.reservationController.getSportFacilityCommunicator();
         //this.sportFacilityCommunicator = sportFacilityCommunicator;
     }
 
@@ -95,18 +94,17 @@ public class SportFacilityAvailabilityValidator extends BaseValidator {
         boolean isGroupReservation = (reservation.getGroupId() != -1);
 
         boolean sportsRoomAvailable;
-        if (isGroupReservation && reservationService
-            .findByGroupIdAndTime(reservation.getGroupId(), reservation.getStartingTime())
-            != null) {
+        if (isGroupReservation && reservationService.findByGroupIdAndTime(reservation.getGroupId(),
+            reservation.getStartingTime()) != null) {
             sportsRoomAvailable = true;
         } else {
-            sportsRoomAvailable = reservationService
-                .sportsFacilityIsAvailable(sportsRoomId, reservation.getStartingTime());
+            sportsRoomAvailable = reservationService.sportsFacilityIsAvailable(sportsRoomId,
+                reservation.getStartingTime());
         }
         if (!sportsRoomAvailable) {
             throw new InvalidReservationException(
-                "Sports room is already booked for this time " + "slot: " + reservation
-                    .getStartingTime());
+                "Sports room is already booked for this time " + "slot: "
+                    + reservation.getStartingTime());
         }
 
         // Call Sports Facilities service: check if sports room exists

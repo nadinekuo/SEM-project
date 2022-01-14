@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import nl.tudelft.sem.reservation.entities.Reservation;
 import nl.tudelft.sem.reservation.entities.ReservationType;
+import nl.tudelft.sem.reservation.repositories.ReservationRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import nl.tudelft.sem.reservation.repositories.ReservationRepository;
 
 @Configuration
 public class ReservationConfig {
@@ -18,7 +18,6 @@ public class ReservationConfig {
      * @param reservationRepository the reservation repository
      * @return the command line runner
      */
-
 
     @Bean
     CommandLineRunner reservationCommandLineRunner(ReservationRepository reservationRepository) {

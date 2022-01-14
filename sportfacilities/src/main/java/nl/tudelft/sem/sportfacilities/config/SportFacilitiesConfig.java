@@ -2,9 +2,6 @@ package nl.tudelft.sem.sportfacilities.config;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import nl.tudelft.sem.sportfacilities.entities.Equipment;
 import nl.tudelft.sem.sportfacilities.entities.Lesson;
 import nl.tudelft.sem.sportfacilities.entities.Sport;
@@ -13,6 +10,9 @@ import nl.tudelft.sem.sportfacilities.repositories.EquipmentRepository;
 import nl.tudelft.sem.sportfacilities.repositories.LessonRepository;
 import nl.tudelft.sem.sportfacilities.repositories.SportRepository;
 import nl.tudelft.sem.sportfacilities.repositories.SportRoomRepository;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SportFacilitiesConfig {
@@ -34,12 +34,11 @@ public class SportFacilitiesConfig {
 
             lessonRepository.saveAll(List.of(lesson1, lesson2, lesson3, lesson4));
 
-
             String boxString = "boxingGloves";
 
-            Sport soccer = new Sport("soccer",  6, 11);
-            Sport hockey = new Sport("hockey",  7, 14);
-            Sport volleyball = new Sport("volleyball",  4, 12);
+            Sport soccer = new Sport("soccer", 6, 11);
+            Sport hockey = new Sport("hockey", 7, 14);
+            Sport volleyball = new Sport("volleyball", 4, 12);
             Sport tennis = new Sport("tennis", 4, 13);
             Sport yoga = new Sport("yoga");
             Sport zumba = new Sport("zumba");

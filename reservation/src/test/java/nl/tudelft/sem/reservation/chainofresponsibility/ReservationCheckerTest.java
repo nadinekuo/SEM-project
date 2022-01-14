@@ -11,6 +11,7 @@ import nl.tudelft.sem.reservation.controllers.ReservationController;
 import nl.tudelft.sem.reservation.entities.Reservation;
 import nl.tudelft.sem.reservation.entities.ReservationType;
 import nl.tudelft.sem.reservation.entities.chainofresponsibility.InvalidReservationException;
+import nl.tudelft.sem.reservation.entities.chainofresponsibility.ReservationChecker;
 import nl.tudelft.sem.reservation.entities.chainofresponsibility.ReservationValidator;
 import nl.tudelft.sem.reservation.entities.chainofresponsibility.SportFacilityAvailabilityValidator;
 import nl.tudelft.sem.reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
@@ -21,7 +22,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import nl.tudelft.sem.reservation.entities.chainofresponsibility.ReservationChecker;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationCheckerTest {
@@ -87,8 +87,7 @@ class ReservationCheckerTest {
         ReservationValidator sportFacilityHandler =
             new SportFacilityAvailabilityValidator(reservationService, reservationController);
         userBalanceHandler.setNext(sportFacilityHandler);
-        ReservationValidator capacityHandler =
-            new TeamRoomCapacityValidator(reservationController);
+        ReservationValidator capacityHandler = new TeamRoomCapacityValidator(reservationController);
         sportFacilityHandler.setNext(capacityHandler);
         Reservation reservation = new Reservation();
         reservation.setTypeOfReservation(ReservationType.SPORTS_ROOM);

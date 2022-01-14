@@ -13,6 +13,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import nl.tudelft.sem.sportfacilities.entities.Equipment;
+import nl.tudelft.sem.sportfacilities.entities.Sport;
+import nl.tudelft.sem.sportfacilities.repositories.EquipmentRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,9 +27,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.web.client.RestTemplate;
-import nl.tudelft.sem.sportfacilities.entities.Equipment;
-import nl.tudelft.sem.sportfacilities.entities.Sport;
-import nl.tudelft.sem.sportfacilities.repositories.EquipmentRepository;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)

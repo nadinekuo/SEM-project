@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import nl.tudelft.sem.reservation.controllers.ReservationController;
 import nl.tudelft.sem.reservation.controllers.SportFacilityCommunicator;
+import nl.tudelft.sem.reservation.controllers.UserFacilityCommunicator;
 import nl.tudelft.sem.reservation.entities.Reservation;
 import nl.tudelft.sem.reservation.entities.ReservationType;
 import nl.tudelft.sem.reservation.entities.chainofresponsibility.InvalidReservationException;
@@ -19,7 +20,6 @@ import nl.tudelft.sem.reservation.entities.chainofresponsibility.TeamRoomCapacit
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import nl.tudelft.sem.reservation.controllers.UserFacilityCommunicator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TeamRoomCapacityValidatorTest {

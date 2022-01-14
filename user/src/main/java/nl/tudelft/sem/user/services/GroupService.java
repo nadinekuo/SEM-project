@@ -3,14 +3,14 @@ package nl.tudelft.sem.user.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import nl.tudelft.sem.user.entities.Customer;
+import nl.tudelft.sem.user.entities.Group;
+import nl.tudelft.sem.user.repositories.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import nl.tudelft.sem.user.entities.Customer;
-import nl.tudelft.sem.user.entities.Group;
-import nl.tudelft.sem.user.repositories.GroupRepository;
 
 @Service
 public class GroupService {

@@ -1,13 +1,13 @@
 package nl.tudelft.sem.sportfacilities.services;
 
 import java.util.NoSuchElementException;
+import nl.tudelft.sem.sportfacilities.entities.Equipment;
+import nl.tudelft.sem.sportfacilities.repositories.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import nl.tudelft.sem.sportfacilities.entities.Equipment;
-import nl.tudelft.sem.sportfacilities.repositories.EquipmentRepository;
 
 @Service
 public class EquipmentService {
@@ -90,9 +90,8 @@ public class EquipmentService {
 
     public Long getAvailableEquipmentIdsByName(String equipmentName) {
 
-        return
-            equipmentRepository.findAvailableEquipment(equipmentName).orElseThrow(
-                () -> new NoSuchElementException("Currently this equipment is fully booked"));
+        return equipmentRepository.findAvailableEquipment(equipmentName).orElseThrow(
+            () -> new NoSuchElementException("Currently this equipment is fully booked"));
 
     }
 

@@ -1,13 +1,13 @@
 package nl.tudelft.sem.reservation.entities.chainofresponsibility;
 
 import java.time.LocalDateTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import nl.tudelft.sem.reservation.controllers.ReservationController;
 import nl.tudelft.sem.reservation.controllers.UserFacilityCommunicator;
 import nl.tudelft.sem.reservation.entities.Reservation;
 import nl.tudelft.sem.reservation.services.ReservationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Component
 public class UserReservationBalanceValidator extends BaseValidator {
@@ -16,14 +16,12 @@ public class UserReservationBalanceValidator extends BaseValidator {
     private final ReservationController reservationController;
     private final UserFacilityCommunicator userFacilityCommunicator;
 
-
-
     /**
      * Instantiates a new User Reservation Balance validator.
-     *  Checks:
-     *  - whether daily limit on sports room reservations is not reached yet
+     * Checks:
+     * - whether daily limit on sports room reservations is not reached yet
      *
-     * @param reservationService  -  the reservation service containing logic
+     * @param reservationService    -  the reservation service containing logic
      * @param reservationController the reservation controller to communicate with other
      *                              microservices
      */
@@ -43,8 +41,9 @@ public class UserReservationBalanceValidator extends BaseValidator {
         LocalDateTime startDay = getStartOfDay(startingTimeReservation);
         LocalDateTime endDay = getEndOfDay(startingTimeReservation);
 
-        int reservationBalanceOnDate = reservationService
-            .getUserReservationCountOnDay(startDay, endDay, reservation.getCustomerId());
+        int reservationBalanceOnDate =
+            reservationService.getUserReservationCountOnDay(startDay, endDay,
+                reservation.getCustomerId());
 
         try {
             userFacilityCommunicator.getUserExists(reservation.getCustomerId());
@@ -70,8 +69,6 @@ public class UserReservationBalanceValidator extends BaseValidator {
         super.checkNext(reservation);
     }
 
-
-
     /**
      * Gets the first second of a certain day.
      *
@@ -91,7 +88,5 @@ public class UserReservationBalanceValidator extends BaseValidator {
     private LocalDateTime getEndOfDay(LocalDateTime startingTime) {
         return LocalDateTime.parse(startingTime.toString().substring(0, 10) + "T23:59:59");
     }
-
-
 
 }

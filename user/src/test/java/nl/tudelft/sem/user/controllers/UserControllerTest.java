@@ -16,6 +16,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.NoSuchElementException;
 import javax.servlet.ServletInputStream;
+import nl.tudelft.sem.user.config.UserDtoConfig;
+import nl.tudelft.sem.user.entities.Admin;
+import nl.tudelft.sem.user.entities.Customer;
+import nl.tudelft.sem.user.services.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,10 +32,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import nl.tudelft.sem.user.config.UserDtoConfig;
-import nl.tudelft.sem.user.entities.Admin;
-import nl.tudelft.sem.user.entities.Customer;
-import nl.tudelft.sem.user.services.UserService;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc

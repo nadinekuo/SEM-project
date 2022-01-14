@@ -11,6 +11,11 @@ import static org.mockito.Mockito.when;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import nl.tudelft.sem.user.config.UserDtoConfig;
+import nl.tudelft.sem.user.entities.Admin;
+import nl.tudelft.sem.user.entities.Customer;
+import nl.tudelft.sem.user.entities.User;
+import nl.tudelft.sem.user.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -20,11 +25,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
-import nl.tudelft.sem.user.config.UserDtoConfig;
-import nl.tudelft.sem.user.entities.Admin;
-import nl.tudelft.sem.user.entities.Customer;
-import nl.tudelft.sem.user.entities.User;
-import nl.tudelft.sem.user.repositories.UserRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 class UserServiceTest {

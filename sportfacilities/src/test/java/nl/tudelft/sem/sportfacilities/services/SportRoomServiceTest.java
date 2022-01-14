@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import nl.tudelft.sem.sportfacilities.entities.Sport;
+import nl.tudelft.sem.sportfacilities.entities.SportRoom;
+import nl.tudelft.sem.sportfacilities.repositories.SportRoomRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,24 +27,19 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
-import nl.tudelft.sem.sportfacilities.entities.Sport;
-import nl.tudelft.sem.sportfacilities.entities.SportRoom;
-import nl.tudelft.sem.sportfacilities.repositories.SportRoomRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class SportRoomServiceTest {
 
+    private final transient Long id1 = 34L;
+    private final transient Long id2 = 84L;
+    private final transient long id3 = 38L;
+    private final transient long idHockey = 42L;
     private transient Sport hockey;
     private transient Sport yoga;
     private transient Sport soccer;
-    private final transient Long id1 = 34L;
     private transient SportRoom hallX2;
-
-    private final transient Long id2 = 84L;
     private transient SportRoom hallX3;
-    private final transient long id3 = 38L;
-    private final transient long idHockey = 42L;
-
     private transient SportRoom hockeyField;
     private transient SportRoom hallX1;
 

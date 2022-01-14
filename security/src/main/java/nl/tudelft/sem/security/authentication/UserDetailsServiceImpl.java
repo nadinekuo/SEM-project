@@ -4,6 +4,7 @@ import static nl.tudelft.sem.security.controllers.AuthenticationController.getAd
 import static nl.tudelft.sem.security.controllers.AuthenticationController.getCustomerInfo;
 
 import java.util.List;
+import nl.tudelft.sem.security.users.AppUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -11,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import nl.tudelft.sem.security.users.AppUser;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

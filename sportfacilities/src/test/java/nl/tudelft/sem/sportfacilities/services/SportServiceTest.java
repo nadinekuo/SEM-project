@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -15,13 +14,13 @@ import static org.mockito.Mockito.when;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import nl.tudelft.sem.sportfacilities.entities.Sport;
+import nl.tudelft.sem.sportfacilities.repositories.SportRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import nl.tudelft.sem.sportfacilities.repositories.SportRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class SportServiceTest {
@@ -31,17 +30,8 @@ public class SportServiceTest {
 
     private transient SportService sportService;
 
-
-    private transient Sport volleyball;
-    private transient Sport yoga;
-
-    /**
-     * Sets up the tests.
-     */
-    @BeforeEach
-    void setup() {
-        sportService = new SportService(sportRepository);
-    }
+    private final transient Sport volleyball;
+    private final transient Sport yoga;
 
     /**
      * Instantiates a new Sport service test.
@@ -49,6 +39,14 @@ public class SportServiceTest {
     public SportServiceTest() {
         volleyball = new Sport("volleyball", 4, 12);
         yoga = new Sport("yoga");
+    }
+
+    /**
+     * Sets up the tests.
+     */
+    @BeforeEach
+    void setup() {
+        sportService = new SportService(sportRepository);
     }
 
     @Test
@@ -106,8 +104,7 @@ public class SportServiceTest {
 
         sportService.addSport(yoga);
 
-        ArgumentCaptor<Sport> sportArgumentCaptor =
-            ArgumentCaptor.forClass(Sport.class);
+        ArgumentCaptor<Sport> sportArgumentCaptor = ArgumentCaptor.forClass(Sport.class);
 
         verify(sportRepository).save(sportArgumentCaptor.capture());
 

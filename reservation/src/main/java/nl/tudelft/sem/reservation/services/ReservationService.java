@@ -4,15 +4,15 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import nl.tudelft.sem.reservation.entities.Reservation;
+import nl.tudelft.sem.reservation.entities.ReservationType;
+import nl.tudelft.sem.reservation.repositories.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import nl.tudelft.sem.reservation.entities.Reservation;
-import nl.tudelft.sem.reservation.entities.ReservationType;
-import nl.tudelft.sem.reservation.repositories.ReservationRepository;
 
 @Service
 @Configuration
@@ -68,8 +68,9 @@ public class ReservationService {
     public int getUserReservationCountOnDay(LocalDateTime start, LocalDateTime end,
                                             Long customerId) {
 
-        List<Reservation> reservationsOnDay = reservationRepository
-            .findReservationByStartingTimeBetweenAndCustomerId(start, end, customerId);
+        List<Reservation> reservationsOnDay =
+            reservationRepository.findReservationByStartingTimeBetweenAndCustomerId(start, end,
+                customerId);
         int count = 0;
 
         // Customers have a limit on the number of sport rooms to be reserved
@@ -141,7 +142,6 @@ public class ReservationService {
         return new RestTemplate();
     }
 
-    
 }
 
 

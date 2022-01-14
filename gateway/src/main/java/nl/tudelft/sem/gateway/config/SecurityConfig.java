@@ -1,7 +1,7 @@
 package nl.tudelft.sem.gateway.config;
 
-import nl.tudelft.sem.gateway.filters.JwtTokenAuthenticationFilter;
 import javax.servlet.http.HttpServletResponse;
+import nl.tudelft.sem.gateway.filters.JwtTokenAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

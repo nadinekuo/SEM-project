@@ -1,6 +1,9 @@
 package nl.tudelft.sem.sportfacilities.controllers;
 
 import java.util.NoSuchElementException;
+import nl.tudelft.sem.sportfacilities.entities.Sport;
+import nl.tudelft.sem.sportfacilities.entities.SportRoom;
+import nl.tudelft.sem.sportfacilities.services.SportRoomService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,14 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import nl.tudelft.sem.sportfacilities.entities.Sport;
-import nl.tudelft.sem.sportfacilities.entities.SportRoom;
-import nl.tudelft.sem.sportfacilities.services.SportRoomService;
 
 @RestController
 @RequestMapping("getSportRoomServices")
 public class GetSportRoomController {
-
 
     private final transient SportRoomService sportRoomService;
 

@@ -1,10 +1,10 @@
 package nl.tudelft.sem.sportfacilities.services;
 
 import java.util.NoSuchElementException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import nl.tudelft.sem.sportfacilities.entities.Sport;
 import nl.tudelft.sem.sportfacilities.repositories.SportRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class SportService {

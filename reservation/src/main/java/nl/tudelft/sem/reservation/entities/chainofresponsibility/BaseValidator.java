@@ -1,7 +1,7 @@
 package nl.tudelft.sem.reservation.entities.chainofresponsibility;
 
-import org.springframework.web.client.HttpClientErrorException;
 import nl.tudelft.sem.reservation.entities.Reservation;
+import org.springframework.web.client.HttpClientErrorException;
 
 public abstract class BaseValidator implements ReservationValidator {
 

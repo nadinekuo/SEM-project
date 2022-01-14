@@ -1,12 +1,11 @@
 package nl.tudelft.sem.reservation.entities.chainofresponsibility;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import nl.tudelft.sem.reservation.controllers.ReservationController;
 import nl.tudelft.sem.reservation.controllers.SportFacilityCommunicator;
 import nl.tudelft.sem.reservation.controllers.UserFacilityCommunicator;
 import nl.tudelft.sem.reservation.entities.Reservation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class TeamRoomCapacityValidator extends BaseValidator {
@@ -14,7 +13,6 @@ public class TeamRoomCapacityValidator extends BaseValidator {
     private final ReservationController reservationController;
     private final SportFacilityCommunicator sportFacilityCommunicator;
     private final UserFacilityCommunicator userFacilityCommunicator;
-
 
     /**
      * Instantiates a new Team / Room capacity validator.

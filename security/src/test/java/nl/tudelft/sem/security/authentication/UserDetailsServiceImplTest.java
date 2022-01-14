@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
+import nl.tudelft.sem.security.controllers.AuthenticationController;
+import nl.tudelft.sem.security.users.AppUser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,8 +15,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import nl.tudelft.sem.security.controllers.AuthenticationController;
-import nl.tudelft.sem.security.users.AppUser;
 
 class UserDetailsServiceImplTest {
 

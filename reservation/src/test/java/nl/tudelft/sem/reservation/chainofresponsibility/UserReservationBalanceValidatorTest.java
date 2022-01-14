@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import nl.tudelft.sem.reservation.controllers.ReservationController;
+import nl.tudelft.sem.reservation.controllers.UserFacilityCommunicator;
 import nl.tudelft.sem.reservation.entities.Reservation;
 import nl.tudelft.sem.reservation.entities.ReservationType;
 import nl.tudelft.sem.reservation.entities.chainofresponsibility.InvalidReservationException;
@@ -19,7 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.web.client.HttpClientErrorException;
-import nl.tudelft.sem.reservation.controllers.UserFacilityCommunicator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserReservationBalanceValidatorTest {
@@ -40,8 +40,8 @@ public class UserReservationBalanceValidatorTest {
         userFacilityCommunicator = mock(UserFacilityCommunicator.class);
         reservationService = mock(ReservationService.class);
         reservationController = mock(ReservationController.class);
-        when(reservationController.getUserFacilityCommunicator())
-            .thenReturn(userFacilityCommunicator);
+        when(reservationController.getUserFacilityCommunicator()).thenReturn(
+            userFacilityCommunicator);
         this.userReservationBalanceValidator =
             new UserReservationBalanceValidator(reservationService, reservationController);
 
@@ -49,10 +49,10 @@ public class UserReservationBalanceValidatorTest {
             LocalDateTime.of(2022, 10, 05, 16, 00), false);
         reservation1.setId(53L);
 
-        startDay = LocalDateTime
-            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T00:00:00");
-        endDay = LocalDateTime
-            .parse(reservation1.getStartingTime().toString().substring(0, 10) + "T23:59:59");
+        startDay = LocalDateTime.parse(
+            reservation1.getStartingTime().toString().substring(0, 10) + "T00:00:00");
+        endDay = LocalDateTime.parse(
+            reservation1.getStartingTime().toString().substring(0, 10) + "T23:59:59");
     }
 
     /**
@@ -114,8 +114,8 @@ public class UserReservationBalanceValidatorTest {
 
     @Test
     public void userDoesNotExistTest() {
-        when(userFacilityCommunicator.getUserExists(anyLong()))
-            .thenThrow(HttpClientErrorException.class);
+        when(userFacilityCommunicator.getUserExists(anyLong())).thenThrow(
+            HttpClientErrorException.class);
         when(reservationService.getUserReservationCountOnDay(any(), any(), any())).thenReturn(0);
 
         assertThrows(InvalidReservationException.class,

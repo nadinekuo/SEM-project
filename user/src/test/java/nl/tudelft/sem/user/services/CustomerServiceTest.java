@@ -8,13 +8,13 @@ import static org.mockito.Mockito.when;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import nl.tudelft.sem.user.entities.Customer;
+import nl.tudelft.sem.user.repositories.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import nl.tudelft.sem.user.entities.Customer;
-import nl.tudelft.sem.user.repositories.CustomerRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class CustomerServiceTest {

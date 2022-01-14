@@ -2,17 +2,17 @@ package nl.tudelft.sem.user.services;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import nl.tudelft.sem.user.config.UserDtoConfig;
+import nl.tudelft.sem.user.entities.Admin;
+import nl.tudelft.sem.user.entities.Customer;
+import nl.tudelft.sem.user.entities.User;
+import nl.tudelft.sem.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import nl.tudelft.sem.user.config.UserDtoConfig;
-import nl.tudelft.sem.user.entities.Admin;
-import nl.tudelft.sem.user.entities.Customer;
-import nl.tudelft.sem.user.entities.User;
-import nl.tudelft.sem.user.repositories.UserRepository;
 
 @Service
 public class UserService {
