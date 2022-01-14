@@ -23,9 +23,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import security.controllers.AuthenticationController;
-import security.services.AuthenticationService;
-import security.users.AppUser;
+import nl.tudelft.sem.security.controllers.AuthenticationController;
+import nl.tudelft.sem.security.services.AuthenticationService;
+import nl.tudelft.sem.security.users.AppUser;
 
 /**
  * The type Authentication Controller test.

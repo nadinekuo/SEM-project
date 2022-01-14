@@ -1,8 +1,9 @@
 plugins {
     id 'jacoco'
+
 }
 
-group = 'sem.reservation'
+mainClassName = 'nl.tudelft.sem.reservation.ReservationApplication'
 
 test {
     finalizedBy jacocoTestReport

@@ -2,7 +2,7 @@ plugins {
     id 'jacoco'
 }
 
-group = 'sem.user'
+mainClassName = 'nl.tudelft.sem.user.UserApplication'
 
 test {
     finalizedBy jacocoTestReport

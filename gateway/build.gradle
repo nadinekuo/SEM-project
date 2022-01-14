@@ -2,7 +2,7 @@ plugins {
     id 'jacoco'
 }
 
-group = 'sem.gateway'
+mainClassName = 'nl.tudelft.sem.gateway.GatewayApplication'
 
 test {
     finalizedBy jacocoTestReport

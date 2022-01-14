@@ -4,10 +4,8 @@ buildscript {
         //Needed only for SNAPSHOT versions
         //maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
-    dependencies {
-        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.5.2'
-    }
 }
+
 
 
 plugins {
@@ -22,13 +20,11 @@ plugins {
     // PMD
     id 'pmd'
 
-    // PITest
-    id 'info.solidsoft.pitest' version '1.5.2'
+    id 'info.solidsoft.pitest' version '1.5.2' apply false
 }
 
 allprojects {
 
-    group = 'com.torenda'
     sourceCompatibility = '11'
 
     repositories {
@@ -44,16 +40,30 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'pmd'
+    apply plugin: 'info.solidsoft.pitest'
 
 
-    group = 'nl.tudelft.cse.sem.template'
-    version = '0.0.1-SNAPSHOT'
+    group = 'nl.tudelft.sem'
+    version = '0.1.0-SNAPSHOT'
     sourceCompatibility = 11
     targetCompatibility = 11
 
     repositories {
         mavenCentral()
         maven { url 'https://repo.spring.io/milestone' }
+    }
+
+    pitest {
+        junit5PluginVersion = '0.12'
+        // noinspection all
+        targetClasses = ['nl.tudelft.sem.*']
+        pitestVersion = '1.5.1'
+        // noinspection all
+        threads = 4
+        // noinspection all
+        outputFormats = ['XML', 'HTML']
+        // noinspection all
+        timestampedReports = false
     }
 
     ext {
@@ -115,12 +125,10 @@ subprojects {
         maven { url 'https://repo.spring.io/milestone' }
     }
 
-
-
-
     checkstyle {
         toolVersion "8.37"
         configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+
     }
 
     pmd {
@@ -129,17 +137,6 @@ subprojects {
         ruleSets = []
     }
 
-    apply plugin: 'info.solidsoft.pitest'
-    pitest {
-        //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
-        junit5PluginVersion = '0.12'
-
-        targetClasses = ['nl.tudelft.sem.template.*']  //by default "${project.group}.*"
-        pitestVersion = '1.5.1' //not needed when a default PIT version should be used
-        threads = 4
-        outputFormats = ['XML', 'HTML']
-        timestampedReports = false
-    }
 
     dependencyManagement {
         imports {

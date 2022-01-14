@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import security.services.AuthenticationService;
+import nl.tudelft.sem.security.services.AuthenticationService;
 
 /**
  * The type Authentication service test.
