@@ -17,7 +17,7 @@ import nl.tudelft.sem.reservation.entities.Reservation;
 import nl.tudelft.sem.reservation.entities.ReservationType;
 import nl.tudelft.sem.reservation.entities.chainofresponsibility.InvalidReservationException;
 import nl.tudelft.sem.reservation.entities.chainofresponsibility.TeamRoomCapacityValidator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 

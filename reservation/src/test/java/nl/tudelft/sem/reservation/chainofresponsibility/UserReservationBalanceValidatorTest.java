@@ -16,7 +16,7 @@ import nl.tudelft.sem.reservation.entities.ReservationType;
 import nl.tudelft.sem.reservation.entities.chainofresponsibility.InvalidReservationException;
 import nl.tudelft.sem.reservation.entities.chainofresponsibility.UserReservationBalanceValidator;
 import nl.tudelft.sem.reservation.services.ReservationService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.web.client.HttpClientErrorException;
