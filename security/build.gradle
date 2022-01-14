@@ -1,15 +1,5 @@
-plugins {
-    id 'jacoco'
-}
+mainClassName = 'nl.tudelft.sem.security.SecurityApplication'
 
-group = 'sem.security'
-
-test {
-    finalizedBy jacocoTestReport
-}
-jacocoTestReport {
-    dependsOn test
-}
 
 dependencies {
 
@@ -17,8 +7,4 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     testCompile "org.mockito:mockito-inline:+"
     testCompile "org.mockito:mockito-core:+"
-}
-
-jacoco {
-    toolVersion = "0.8.7"
 }
