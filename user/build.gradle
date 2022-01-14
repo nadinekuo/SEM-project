@@ -1,16 +1,1 @@
-plugins {
-    id 'jacoco'
-}
-
 mainClassName = 'nl.tudelft.sem.user.UserApplication'
-
-test {
-    finalizedBy jacocoTestReport
-}
-jacocoTestReport {
-    dependsOn test
-}
-
-jacoco {
-    toolVersion = "0.8.7"
-}

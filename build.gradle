@@ -41,6 +41,7 @@ subprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'pmd'
     apply plugin: 'info.solidsoft.pitest'
+    apply plugin: 'jacoco'
 
 
     group = 'nl.tudelft.sem'
@@ -118,6 +119,11 @@ subprojects {
     test {
         useJUnitPlatform()
 
+        jacoco {
+            enabled = true
+            includes = ['nl.tudelft.sem.*']
+            excludes = []
+        }
     }
 
     repositories {
@@ -141,6 +147,23 @@ subprojects {
     dependencyManagement {
         imports {
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+    jacocoTestCoverageVerification() {
+        // Ensure this works after testing.
+        dependsOn test
+        violationRules {
+            rule {
+                enabled = true
+                element = 'CLASS'
+                includes = ['nl.tudelft.sem.*']
+                limit {
+                    counter = 'BRANCH'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.1
+                }
+            }
         }
     }
 
