@@ -159,8 +159,11 @@ public class ReservationControllerTest {
             ResponseEntity.ok("" + sportFacilityId));
         doNothing().when(reservationChecker).checkReservation(any(), any());
 
-        MvcResult result = mockMvc.perform(post(sportRoomBookingUrl, userId, groupId, sportFacilityId, bookableDate,
-            madeByPremiumUser)).andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
+        MvcResult result =
+                mockMvc.perform(post(sportRoomBookingUrl, userId, groupId,
+                        sportFacilityId, bookableDate, madeByPremiumUser))
+                        .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
+                        .andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Reservation successful!");
     }
@@ -209,9 +212,11 @@ public class ReservationControllerTest {
         when(restTemplate.getForEntity(anyString(), any())).thenReturn(
             ResponseEntity.ok("" + sportFacilityId));
 
-        MvcResult result = mockMvc.perform(
-                        post(equipmentBookingUrl, userId, sportFacilityId, bookableDate, madeByPremiumUser))
-                .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
+        MvcResult result =
+                mockMvc.perform(post(equipmentBookingUrl, userId,
+                                sportFacilityId, bookableDate, madeByPremiumUser))
+                .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
+                        .andReturn();
 
         assertThat(result.getResponse().getContentAsString()).isEqualTo("Reservation successful!");
     }
@@ -285,44 +290,4 @@ public class ReservationControllerTest {
             .andExpect(status().isBadRequest()).andReturn();
 
     }
-
-//
-//    @Test
-//    public void makeLessonReservationTest() throws Exception {
-//        when(sportFacilityCommunicator.getLessonName(anyLong())).thenReturn("Spinning");
-//        when(sportFacilityCommunicator.getLessonBeginning(anyLong()))
-//                .thenReturn(LocalDateTime.of(2022, 01, 01, 12, 00));
-//        when(userFacilityCommunicator.getUserIsPremium(anyLong())).thenReturn(true);
-//
-//        MvcResult result = mockMvc
-//                .perform(post(lessonBookingUrl, userId, lessonId))
-//                .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
-//
-//        assertThat(result.getResponse().getContentAsString()).isEqualTo("Reservation successful!");
-//    }
-
-//    @Test
-//    public void makeLessonReservationFalseNameTest() throws Exception {
-//        when(sportFacilityCommunicator.getLessonName(anyLong()))
-//                .thenThrow(HttpClientErrorException.class);
-//        mockMvc
-//                .perform(post("/reservation/{userId}/{lessonId}/makeLessonBooking",
-//                        userId, lessonId))
-//                .andExpect(status().isBadRequest()).andReturn();
-//    }
-
-//    @Disabled
-//    public void makeLessonReservationPremiumUserTest() throws Exception {
-//        when(restTemplate.getForEntity(anyString(), any()))
-//            .thenReturn(ResponseEntity.ok("1999-01" + "-06T00:00:00"));
-//        when(userFacilityCommunicator.getUserIsPremium(anyLong()))
-//            .thenThrow(HttpClientErrorException.class);
-//        mockMvc
-//            .perform(post("/reservation/{userId}/{lessonId}/makeLessonBooking",
-//            userId, lessonId))
-//            .andExpect(status().isBadRequest()).andReturn();
-//    }
-//
-
-
 }
