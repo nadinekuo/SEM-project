@@ -1,6 +1,7 @@
 package nl.tudelft.sem.reservation.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -74,8 +75,7 @@ public class ReservationControllerTest {
         "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}"
             + "/makeSportRoomBooking";
     transient String lessonBookingUrl =
-        "/reservation/{userId}/{groupId}/{sportRoomId}/{date}/{madeByPremiumUser}"
-            + "/makeSportRoomBooking";
+            "/reservation/{userId}/{lessonId}/makeLessonBooking";
     transient DateTimeFormatter dateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     transient LocalDateTime bookableDate =
@@ -226,8 +226,10 @@ public class ReservationControllerTest {
     @Test
     public void getReservationTest() throws Exception {
         MvcResult result = mockMvc.perform(get("/reservation/{reservationId}", reservationId))
-            .andExpect(status().isOk()).andReturn();
+                .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
         verify(reservationService).getReservation(reservationId);
+
+        assertThat(result.getResponse().getContentAsString()).isEqualTo("Successful!");
     }
 
     @Test
@@ -251,9 +253,11 @@ public class ReservationControllerTest {
 
     @Test
     public void deleteReservationTest() throws Exception {
-        mockMvc.perform(delete("/reservation/{reservationId}", reservationId))
-            .andExpect(status().isOk());
+        MvcResult result = mockMvc.perform(delete("/reservation/{reservationId}", reservationId))
+                .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
         verify(reservationService).deleteReservation(reservationId);
+
+        assertThat(result.getResponse().getContentAsString()).isEqualTo("Successful!");
     }
 
     @Test
@@ -282,6 +286,21 @@ public class ReservationControllerTest {
 
     }
 
+//
+//    @Test
+//    public void makeLessonReservationTest() throws Exception {
+//        when(sportFacilityCommunicator.getLessonName(anyLong())).thenReturn("Spinning");
+//        when(sportFacilityCommunicator.getLessonBeginning(anyLong()))
+//                .thenReturn(LocalDateTime.of(2022, 01, 01, 12, 00));
+//        when(userFacilityCommunicator.getUserIsPremium(anyLong())).thenReturn(true);
+//
+//        MvcResult result = mockMvc
+//                .perform(post(lessonBookingUrl, userId, lessonId))
+//                .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
+//
+//        assertThat(result.getResponse().getContentAsString()).isEqualTo("Reservation successful!");
+//    }
+
 //    @Test
 //    public void makeLessonReservationFalseNameTest() throws Exception {
 //        when(sportFacilityCommunicator.getLessonName(anyLong()))
@@ -304,18 +323,6 @@ public class ReservationControllerTest {
 //            .andExpect(status().isBadRequest()).andReturn();
 //    }
 //
-//    @Disabled
-//    public void makeLessonReservationTest() throws Exception {
-//        when(sportFacilityCommunicator.getLessonName(anyLong())).thenReturn("Spinning");
-//        when(sportFacilityCommunicator.getLessonBeginning(anyLong()))
-//            .thenReturn(LocalDateTime.of(2022, 01, 01, 14, 00));
-//        when(userFacilityCommunicator.getUserIsPremium(anyLong())).thenReturn(true);
-//
-//        mockMvc
-//            .perform(post("/reservation/{userId}/{lessonId}/makeLessonBooking",
-//            userId, lessonId))
-//            .andExpect(status().isOk()).andReturn();
-//
-//    }
+
 
 }
