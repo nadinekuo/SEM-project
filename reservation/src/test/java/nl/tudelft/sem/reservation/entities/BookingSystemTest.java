@@ -70,8 +70,7 @@ public class BookingSystemTest {
 
     @Test
     void getNextReservationBasicPremiumTest() {
-        BookingSystem userPremiumStrategy =
-            new BookingSystem(new BasicPremiumUserStrategy());
+        BookingSystem userPremiumStrategy = new BookingSystem(new BasicPremiumUserStrategy());
 
         for (int i = 0; i < 5; i++) {
             userPremiumStrategy.addReservation(reservations[i]);
@@ -87,8 +86,7 @@ public class BookingSystemTest {
 
     @Test
     void getNextReservationBasicPremiumEmptyTest() {
-        BookingSystem userPremiumStrategy =
-            new BookingSystem(new BasicPremiumUserStrategy());
+        BookingSystem userPremiumStrategy = new BookingSystem(new BasicPremiumUserStrategy());
 
         assertNull(userPremiumStrategy.getNextReservation());
     }
@@ -118,11 +116,9 @@ public class BookingSystemTest {
         assertNull(equipmentNameStrategy.getNextReservation());
     }
 
-
     @Test
     void getNextReservationEquipmentNameWithDifferentObjectsTest() {
-        BookingSystem equipmentNameStrategy =
-            new BookingSystem(new EquipmentNameStrategy());
+        BookingSystem equipmentNameStrategy = new BookingSystem(new EquipmentNameStrategy());
 
         for (int i = 0; i < 6; i++) {
             equipmentNameStrategy.addReservation(reservations[i]);
@@ -137,8 +133,7 @@ public class BookingSystemTest {
 
     @Test
     void getNextReservationEquipmentNameWithDifferentObjects2Test() {
-        BookingSystem equipmentNameStrategy =
-            new BookingSystem(new EquipmentNameStrategy());
+        BookingSystem equipmentNameStrategy = new BookingSystem(new EquipmentNameStrategy());
 
         for (int i = 0; i < 4; i++) {
             equipmentNameStrategy.addReservation(reservations[i]);
@@ -152,6 +147,49 @@ public class BookingSystemTest {
     }
 
     @Test
+    void getNextReservationEquipmentNameWithDifferentObjects3Test() {
+        BookingSystem equipmentNameStrategy = new BookingSystem(new EquipmentNameStrategy());
+
+        for (int i = 0; i < 2; i++) {
+            equipmentNameStrategy.addReservation(reservations[i]);
+        }
+
+        reservations[1].setTypeOfReservation(ReservationType.LESSON);
+
+        assertEquals(reservations[0], equipmentNameStrategy.getNextReservation());
+    }
+
+    @Test
+    void getNextReservationEquipmentNameWithDifferentObjects4Test() {
+        BookingSystem equipmentNameStrategy = new BookingSystem(new EquipmentNameStrategy());
+
+        for (int i = 0; i < 6; i++) {
+            equipmentNameStrategy.addReservation(reservations[i]);
+        }
+
+        reservations[0].setTypeOfReservation(ReservationType.LESSON);
+        reservations[1].setTypeOfReservation(ReservationType.LESSON);
+        reservations[3].setTypeOfReservation(ReservationType.LESSON);
+        reservations[4].setTypeOfReservation(ReservationType.LESSON);
+        assertEquals(reservations[5], equipmentNameStrategy.getNextReservation());
+    }
+
+    @Test
+    void getNextReservationEquipmentNameWithDifferentObjects5Test() {
+        BookingSystem equipmentNameStrategy = new BookingSystem(new EquipmentNameStrategy());
+
+        for (int i = 0; i < 4; i++) {
+            equipmentNameStrategy.addReservation(reservations[i]);
+        }
+
+        reservations[0].setTypeOfReservation(ReservationType.LESSON);
+        reservations[2].setTypeOfReservation(ReservationType.LESSON);
+
+        reservations[1].setStartingTime(LocalDateTime.of(2020, 10 + 1, 1, 1, 1));
+        assertEquals(reservations[3], equipmentNameStrategy.getNextReservation());
+    }
+
+    @Test
     void getNextReservationUserIdTest() {
         BookingSystem userIdStrategy = new BookingSystem(new UserIdStrategy());
         for (int i = 0; i < 4; i++) {
@@ -159,6 +197,17 @@ public class BookingSystemTest {
         }
 
         assertEquals(reservations[0], userIdStrategy.getNextReservation());
+    }
+
+    @Test
+    void getNextReservationUserId2Test() {
+        BookingSystem userIdStrategy = new BookingSystem(new UserIdStrategy());
+        for (int i = 0; i < 4; i++) {
+            userIdStrategy.addReservation(reservations[i]);
+        }
+        reservations[0].setCustomerId(2L);
+
+        assertEquals(reservations[1], userIdStrategy.getNextReservation());
     }
 
     @Test
@@ -173,8 +222,8 @@ public class BookingSystemTest {
             bookingSystem.addReservation(reservations[i]);
 
         }
-        assertEquals("BookingSystem{bookings=[" + reservations[0].toString() + ", "
-                + reservations[1].toString() + ", " + reservations[2].toString() + "]}",
-            bookingSystem.toString());
+        assertEquals(
+            "BookingSystem{bookings=[" + reservations[0].toString() + ", " + reservations[1]
+                .toString() + ", " + reservations[2].toString() + "]}", bookingSystem.toString());
     }
 }
