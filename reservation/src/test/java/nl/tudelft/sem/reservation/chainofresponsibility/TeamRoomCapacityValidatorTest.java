@@ -43,10 +43,12 @@ public class TeamRoomCapacityValidatorTest {
         reservationController = mock(ReservationController.class);
         sportFacilityCommunicator = mock(SportFacilityCommunicator.class);
         userFacilityCommunicator = mock(UserFacilityCommunicator.class);
+
         when(reservationController.getSportFacilityCommunicator()).thenReturn(
             sportFacilityCommunicator);
         when(reservationController.getUserFacilityCommunicator()).thenReturn(
             userFacilityCommunicator);
+
         this.teamRoomCapacityValidator = new TeamRoomCapacityValidator(reservationController);
 
         groupReservation = new Reservation(ReservationType.SPORTS_ROOM, "Hall 1", 3L, 13L,
@@ -111,18 +113,6 @@ public class TeamRoomCapacityValidatorTest {
             groupReservation.getSportFacilityReservedId());
     }
 
-    @Test
-    public void validIndividualReservationTest() {
-
-        when(sportFacilityCommunicator.getIsSportHall(anyLong())).thenReturn(true);
-        when(sportFacilityCommunicator.getSportRoomMinimumCapacity(anyLong())).thenReturn(1);
-        when(sportFacilityCommunicator.getSportRoomMaximumCapacity(anyLong())).thenReturn(100);
-
-        // Individual group size is by default 1, so between min and max.
-        assertDoesNotThrow(() -> {
-            teamRoomCapacityValidator.handle(reservation1);
-        });
-    }
 
     @Test
     public void sportFieldBelowMinTeamSizeTest() throws InvalidReservationException {
@@ -147,5 +137,83 @@ public class TeamRoomCapacityValidatorTest {
         verify(sportFacilityCommunicator).getSportMinTeamSize(sportName);
         verify(sportFacilityCommunicator).getSportMaxTeamSize(sportName);
     }
+
+
+    @Test
+    public void sportFieldOverMaxTeamSizeTest() throws InvalidReservationException {
+
+        // Sport fields hold 1 team sport, so team size check done
+        when(sportFacilityCommunicator.getIsSportHall(anyLong())).thenReturn(false);
+        when(userFacilityCommunicator.getGroupSize(anyLong())).thenReturn(51);
+        when(sportFacilityCommunicator.getSportFieldSport(anyLong())).thenReturn(sportName);
+        // Group size > max team size, so invalid
+        when(sportFacilityCommunicator.getSportMinTeamSize(anyString())).thenReturn(8);
+        when(sportFacilityCommunicator.getSportMaxTeamSize(anyString())).thenReturn(50);
+
+        assertThrows(InvalidReservationException.class, () -> {
+            teamRoomCapacityValidator.handle(groupReservation);
+        });
+
+        verify(sportFacilityCommunicator).getIsSportHall(
+            groupReservation.getSportFacilityReservedId());
+        verify(userFacilityCommunicator).getGroupSize(groupReservation.getGroupId());
+        verify(sportFacilityCommunicator).getSportFieldSport(
+            groupReservation.getSportFacilityReservedId());
+        verify(sportFacilityCommunicator).getSportMinTeamSize(sportName);
+        verify(sportFacilityCommunicator).getSportMaxTeamSize(sportName);
+    }
+
+
+    @Test
+    public void validIndividualReservationTest() {
+
+        when(sportFacilityCommunicator.getIsSportHall(anyLong())).thenReturn(true);
+        when(sportFacilityCommunicator.getSportRoomMinimumCapacity(anyLong())).thenReturn(1);
+        when(sportFacilityCommunicator.getSportRoomMaximumCapacity(anyLong())).thenReturn(100);
+
+        // Individual group size is by default 1, so between min and max.
+        assertDoesNotThrow(() -> {
+            teamRoomCapacityValidator.handle(reservation1);
+        });
+    }
+
+    @Test
+    public void validGroupReservationLowerBoundaryTest() {
+
+        // Sport fields hold 1 team sport, so team size check done
+        when(sportFacilityCommunicator.getIsSportHall(anyLong())).thenReturn(false);
+        when(userFacilityCommunicator.getGroupSize(anyLong())).thenReturn(8);
+        when(sportFacilityCommunicator.getSportFieldSport(anyLong())).thenReturn(sportName);
+        // Group size between min and max team size (exactly equal to min), so valid.
+        when(sportFacilityCommunicator.getSportMinTeamSize(anyString())).thenReturn(8);
+        when(sportFacilityCommunicator.getSportMaxTeamSize(anyString())).thenReturn(15);
+        // Group size between min and max room capacity (exactly equal to min), so valid.
+        when(sportFacilityCommunicator.getSportRoomMinimumCapacity(anyLong())).thenReturn(8);
+        when(sportFacilityCommunicator.getSportRoomMaximumCapacity(anyLong())).thenReturn(24);
+
+        assertDoesNotThrow(() -> {
+            teamRoomCapacityValidator.handle(groupReservation);
+        });
+    }
+
+    @Test
+    public void validGroupReservationUpperBoundaryTest() {
+
+        // Sport fields hold 1 team sport, so team size check done
+        when(sportFacilityCommunicator.getIsSportHall(anyLong())).thenReturn(false);
+        when(userFacilityCommunicator.getGroupSize(anyLong())).thenReturn(15);
+        when(sportFacilityCommunicator.getSportFieldSport(anyLong())).thenReturn(sportName);
+        // Group size between min and max team size (exactly equal to max), so valid.
+        when(sportFacilityCommunicator.getSportMinTeamSize(anyString())).thenReturn(8);
+        when(sportFacilityCommunicator.getSportMaxTeamSize(anyString())).thenReturn(15);
+        // Group size between min and max capacity (exactly equal to max)), so valid.
+        when(sportFacilityCommunicator.getSportRoomMinimumCapacity(anyLong())).thenReturn(8);
+        when(sportFacilityCommunicator.getSportRoomMaximumCapacity(anyLong())).thenReturn(15);
+
+        assertDoesNotThrow(() -> {
+            teamRoomCapacityValidator.handle(groupReservation);
+        });
+    }
+
 
 }
