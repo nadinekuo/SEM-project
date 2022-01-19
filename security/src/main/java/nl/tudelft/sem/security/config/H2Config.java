@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Profile("development")
 @Configuration
-@EnableJpaRepositories("security")
+@EnableJpaRepositories("nl.tudelft.sem.security")
 @PropertySource("application-dev.properties")
 @EnableTransactionManagement
 public class H2Config {
