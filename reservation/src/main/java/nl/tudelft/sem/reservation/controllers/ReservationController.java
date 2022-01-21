@@ -31,7 +31,7 @@ public class ReservationController {
     @Autowired
     private final transient ReservationChecker reservationChecker;
 
-    private SportFacilityCommunicator sportFacilityCommunicator;
+    private final SportFacilityCommunicator sportFacilityCommunicator;
 
     private final UserFacilityCommunicator userFacilityCommunicator;
 
