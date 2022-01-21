@@ -107,8 +107,9 @@ public class ReservationControllerTest {
     public void setup() {
         Mockito.when(reservationService.restTemplate()).thenReturn(restTemplate);
         this.mockMvc = MockMvcBuilders.standaloneSetup(
-            new ReservationController(reservationService, reservationChecker)).build();
+            new ReservationController(reservationService, reservationChecker, sportFacilityCommunicator)).build();
         controller = new ReservationController(reservationService, reservationChecker);
+
     }
 
     @Test

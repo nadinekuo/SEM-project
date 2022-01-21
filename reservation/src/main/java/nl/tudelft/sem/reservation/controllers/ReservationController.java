@@ -31,7 +31,7 @@ public class ReservationController {
     @Autowired
     private final transient ReservationChecker reservationChecker;
 
-    private final SportFacilityCommunicator sportFacilityCommunicator;
+    private SportFacilityCommunicator sportFacilityCommunicator;
 
     private final UserFacilityCommunicator userFacilityCommunicator;
 
@@ -49,6 +49,24 @@ public class ReservationController {
         this.sportFacilityCommunicator = new SportFacilityCommunicator(this.restTemplate);
         this.userFacilityCommunicator = new UserFacilityCommunicator(this.restTemplate);
     }
+
+
+    public ReservationController(ReservationService reservationService,
+                                 ReservationChecker reservationChecker,
+                                 SportFacilityCommunicator sportFacilityCommunicator) {
+        this.reservationService = reservationService;
+        this.restTemplate = reservationService.restTemplate();
+        this.reservationChecker = reservationChecker;
+        this.sportFacilityCommunicator = sportFacilityCommunicator;
+        this.userFacilityCommunicator = new UserFacilityCommunicator(this.restTemplate);
+    }
+
+
+
+    public void setSportFacilityCommunicator(SportFacilityCommunicator sportFacilityCommunicator) {
+        this.sportFacilityCommunicator = sportFacilityCommunicator;
+    }
+
 
     public SportFacilityCommunicator getSportFacilityCommunicator() {
         return sportFacilityCommunicator;
