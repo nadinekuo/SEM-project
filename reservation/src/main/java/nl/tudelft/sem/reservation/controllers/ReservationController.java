@@ -50,24 +50,6 @@ public class ReservationController {
         this.userFacilityCommunicator = new UserFacilityCommunicator(this.restTemplate);
     }
 
-
-    public ReservationController(ReservationService reservationService,
-                                 ReservationChecker reservationChecker,
-                                 SportFacilityCommunicator sportFacilityCommunicator) {
-        this.reservationService = reservationService;
-        this.restTemplate = reservationService.restTemplate();
-        this.reservationChecker = reservationChecker;
-        this.sportFacilityCommunicator = sportFacilityCommunicator;
-        this.userFacilityCommunicator = new UserFacilityCommunicator(this.restTemplate);
-    }
-
-
-
-    public void setSportFacilityCommunicator(SportFacilityCommunicator sportFacilityCommunicator) {
-        this.sportFacilityCommunicator = sportFacilityCommunicator;
-    }
-
-
     public SportFacilityCommunicator getSportFacilityCommunicator() {
         return sportFacilityCommunicator;
     }

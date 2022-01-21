@@ -107,7 +107,7 @@ public class ReservationControllerTest {
     public void setup() {
         Mockito.when(reservationService.restTemplate()).thenReturn(restTemplate);
         this.mockMvc = MockMvcBuilders.standaloneSetup(
-            new ReservationController(reservationService, reservationChecker, sportFacilityCommunicator)).build();
+            new ReservationController(reservationService, reservationChecker)).build();
         controller = new ReservationController(reservationService, reservationChecker);
 
     }
@@ -291,32 +291,5 @@ public class ReservationControllerTest {
             .andExpect(status().isBadRequest()).andReturn();
 
     }
-
-    @Test
-    public void makeLessonReservationTest() throws Exception{
-        when(restTemplate.getForEntity(anyString(), any())).thenReturn(
-            ResponseEntity.ok("" + lessonId));
-
-        when(sportFacilityCommunicator.getLessonName(lessonId)).thenReturn("Spinning");
-        when(sportFacilityCommunicator.getLessonBeginning(lessonId)).thenReturn(bookableDate);
-        when(userFacilityCommunicator.getUserIsPremium(userId)).thenReturn(true);
-
-        MvcResult result =
-            mockMvc.perform(post(lessonBookingUrl, userId, lessonId))
-                .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print())
-                .andReturn();
-
-        assertThat(result.getResponse().getContentAsString()).isEqualTo("Lesson booking was successful!");
-    }
-
-//    @Test
-//    public void makeLessonReservationHttpClientExceptionTest() throws Exception {
-//
-//    }
-//
-//    @Test
-//    public void makeLessonReservationExceptionTest() throws Exception {
-//
-//    }
 
 }
