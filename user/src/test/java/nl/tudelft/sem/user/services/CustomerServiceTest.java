@@ -1,7 +1,9 @@
 package nl.tudelft.sem.user.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,6 +49,20 @@ public class CustomerServiceTest {
         assertThat(customer.getPassword()).isEqualTo("password1");
 
         verify(customerRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void isCustomerPremiumTrueTest() {
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(arslan));
+
+        assertTrue(customerService.isCustomerPremium(1L));
+    }
+
+    @Test
+    void isCustomerPremiumFalseTest() {
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(arslan));
+        arslan.setPremiumUser(false);
+        assertFalse(customerService.isCustomerPremium(1L));
     }
 
     @Test
