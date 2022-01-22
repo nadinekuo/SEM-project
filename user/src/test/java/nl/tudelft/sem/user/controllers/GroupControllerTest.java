@@ -1,5 +1,7 @@
 package nl.tudelft.sem.user.controllers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -25,6 +27,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
@@ -55,9 +58,10 @@ public class GroupControllerTest {
 
     @Test
     public void getGroupSizeTest() throws Exception {
-        mockMvc.perform(get("/group/{groupId}/getGroupSize", groupId)).andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+        MvcResult result = mockMvc.perform(get("/group/{groupId}/getGroupSize", groupId))
+            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
         verify(groupService).getGroupSizeById(groupId);
+        assertNotNull(result.getResponse().getContentAsString());
     }
 
     @Test
@@ -70,9 +74,10 @@ public class GroupControllerTest {
 
     @Test
     void getGroupByIdTest() throws Exception {
-        mockMvc.perform(get("/group/{id}/", groupId)).andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+        MvcResult result = mockMvc.perform(get("/group/{id}/", groupId)).andExpect(status().isOk())
+            .andDo(MockMvcResultHandlers.print()).andReturn();
         verify(groupService).getGroupById(groupId);
+        assertNotNull(result.getResponse());
     }
 
     @Test
@@ -85,9 +90,11 @@ public class GroupControllerTest {
 
     @Test
     void getGroupByGroupNameTest() throws Exception {
-        mockMvc.perform(get("/group/groupName/{groupName}/", "basketball"))
-            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
+        MvcResult result = mockMvc.perform(get("/group/groupName/{groupName}/", "basketball"))
+            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
         verify(groupService).getGroupByGroupName("basketball");
+
+        assertNotNull(result.getResponse());
     }
 
     @Test
@@ -101,9 +108,12 @@ public class GroupControllerTest {
 
     @Test
     void getUsersInGroupTest() throws Exception {
-        mockMvc.perform(get("/group/getCustomers/{id}/", groupId)).andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+        MvcResult result =
+            mockMvc.perform(get("/group/getCustomers/{id}/", groupId)).andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print()).andReturn();
         verify(groupService).getUsersInaGroup(groupId);
+
+        assertNotNull(result.getResponse());
     }
 
     @Test
@@ -117,8 +127,11 @@ public class GroupControllerTest {
     @Test
     void createGroupValidTest() throws Exception {
         when(groupService.createGroup("basketball")).thenReturn(true);
-        mockMvc.perform(post("/group/create/{groupName}/", "basketball")).andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+        MvcResult result = mockMvc.perform(post("/group/create/{groupName}/", "basketball"))
+            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
+
+        assertThat(result.getResponse().getContentAsString()).isEqualTo(
+            "Group created successfully");
     }
 
     @Test
@@ -130,9 +143,12 @@ public class GroupControllerTest {
 
     @Test
     void addCustomerToGroupTest() throws Exception {
-        mockMvc.perform(put("/group/addCustomer/{groupId}/{customerId}", groupId, 1L))
-            .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
+        MvcResult result =
+            mockMvc.perform(put("/group/addCustomer/{groupId}/{customerId}", groupId, 1L))
+                .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
         verify(groupService).addCustomerToGroup(1L, groupId);
+        assertThat(result.getResponse().getContentAsString()).isEqualTo(
+            "Customer added successfully to the group!");
     }
 
     @Test
@@ -157,13 +173,15 @@ public class GroupControllerTest {
         Group group = new Group("basketball", customers);
         group.setGroupId(groupId);
         when(groupService.getUsersInaGroup(groupId)).thenReturn(customers);
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 post("/group/reservation/{groupId}/{sportRoomId}/{date}" + "/makeSportRoomBooking",
                     groupId, 2L, "2099-01-06T21:00:00")).andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+            .andDo(MockMvcResultHandlers.print()).andReturn();
 
         verify(restTemplate, times(customers.size())).exchange(eq(url), eq(HttpMethod.POST),
             any(HttpEntity.class), eq(String.class));
 
+        assertThat(result.getResponse().getContentAsString()).isEqualTo(
+            "Group Reservation Successful");
     }
 }

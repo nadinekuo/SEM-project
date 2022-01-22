@@ -69,7 +69,7 @@ public class ReservationController {
     public ResponseEntity<?> getReservation(@PathVariable Long reservationId) {
         try {
             reservationService.getReservation(reservationId);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>("Successful!", HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -86,7 +86,7 @@ public class ReservationController {
     public ResponseEntity<?> deleteReservation(@PathVariable Long reservationId) {
         try {
             reservationService.deleteReservation(reservationId);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>("Successful!", HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
